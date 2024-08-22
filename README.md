@@ -21,7 +21,6 @@ KittyBot<PollingReceiver> {
         }
     }
 }.startPolling()
-
 ```
 And more examples are located in [samples](samples/src/main/kotlin) folder.
 
