@@ -1,0 +1,10 @@
+/generated/
+/network/
+/.idea/
+/.gradle/
+/ApiScraper/
+/.kotlin/
+/GenerateAPI/
+/build/
+/kittybot/build/
+/samples/build/
