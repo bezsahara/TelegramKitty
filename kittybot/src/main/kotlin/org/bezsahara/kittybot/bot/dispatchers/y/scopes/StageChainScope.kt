@@ -61,8 +61,6 @@ class StageChainScope(
         stageManager.clearStage(message.chat.id)
     }
 
-    // Return false if supposedNextStage needs to be set to null and this function won't be called, aka optimization.
-    // TODO Make sure user is included
     internal fun exit(supposedNextStage: Pair<List<Stage>, Int>): Boolean {
         if (exitAllowed) {
             val tryNextStage = supposedNextStage.run {
