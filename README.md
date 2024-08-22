@@ -1,4 +1,4 @@
-
+![logo](logo.png)
 
 # What is it?
 TelegramKitty is a fun and user-friendly Koltin Telegram bot library that makes it easy to access all API methods and types, with names that match the official API.
