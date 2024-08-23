@@ -8,7 +8,7 @@ Documentation is also included for all types and methods (was copied from telegr
 First, you will need to install it:
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:1.0.0")
+    implementation("org.bezsahara:kittybot:1.0.1")
 }
 ```
 A simple program would look like:
