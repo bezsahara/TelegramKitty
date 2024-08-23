@@ -4,12 +4,11 @@ import kotlinx.coroutines.channels.Channel
 import org.bezsahara.kittybot.telegram.classes.updates.Update
 
 /**
- * Updater that uses webhook. Remember that you need to set up a webhook
+ * Updater that uses webhook. Remember that you need to set up a webhook.
+ *
+ * @see org.bezsahara.kittybot.bot.KittyBot.setWebhook
+ * @see org.bezsahara.kittybot.bot.onUpdate
  */
-class WebhookReceiver(
-    private val updatesChannel: Channel<Update>
-) : UpdateReceiver<Update> {
-    override suspend fun receiveUpdates(): Update {
-        return updatesChannel.receive()
-    }
+data object WebhookReceiver : UpdateReceiver {
+    override suspend fun receiveUpdates(updateChannel: Channel<Update>) = Unit
 }

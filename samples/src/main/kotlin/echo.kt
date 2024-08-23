@@ -1,4 +1,4 @@
-package org.bezsahara.kittybot
+package org.bezsahara.samples
 
 import org.bezsahara.kittybot.bot.dispatchers.y.text
 import org.bezsahara.kittybot.bot.startPolling

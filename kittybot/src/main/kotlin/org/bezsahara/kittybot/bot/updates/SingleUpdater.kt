@@ -1,24 +1,22 @@
 package org.bezsahara.kittybot.bot.updates
 
-import io.ktor.client.plugins.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
-import org.bezsahara.kittybot.bot.errors.KittyError
-import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.UpdateReceiver
-import org.bezsahara.kittybot.bot.updates.receiver.WebhookReceiver
-import org.bezsahara.kittybot.telegram.utils.TResult
+import org.bezsahara.kittybot.telegram.classes.updates.Update
 import java.util.concurrent.Executors
 
 internal class SingleUpdater(
     bot: KittyBot,
     botDispatchers: FelineDispatcher,
-    updateReceiver: UpdateReceiver<*>,
+    updateReceiver: UpdateReceiver?,
+    private val channel: Channel<Update>,
     private val coroutineDispatcher: ExecutorCoroutineDispatcher =
         Executors
             .newSingleThreadExecutor()
-            .asCoroutineDispatcher()
+            .asCoroutineDispatcher(),
 ) : Aktualisierer(
     bot,
     CoroutineScope(coroutineDispatcher),
@@ -28,26 +26,19 @@ internal class SingleUpdater(
     @Volatile
     var job: Job? = null
 
-    private suspend fun getUpdates() = when (updateReceiver) {
-        is PollingReceiver -> while (true) {
-            try {
-                when (val updates = updateReceiver.receiveUpdates()) {
-                    is TResult.Failure -> throw KittyError(updates.toString())
-                    is TResult.Success -> updates.value.forEach {
-                        applyHandlers(it)
-                    }
-                }
-            } catch (_: HttpRequestTimeoutException) { }
+    private suspend fun getUpdates() {
+        while (true) {
+            applyHandlers(channel.receive())
         }
-
-        is WebhookReceiver -> while (true) {
-            applyHandlers(updateReceiver.receiveUpdates())
-        }
-
     }
 
     override fun start() {
         job = coroutineScope.launch {
+            if (updateReceiver != null) {
+                launch(Dispatchers.IO) {
+                    updateReceiver.receiveUpdates(channel)
+                }
+            }
             getUpdates()
         }
     }

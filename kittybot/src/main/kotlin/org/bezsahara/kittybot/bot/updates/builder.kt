@@ -1,10 +1,10 @@
 package org.bezsahara.kittybot.bot.updates
 
-import kotlinx.coroutines.runBlocking
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.KittyBotConfig
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.errors.hiss
+import org.bezsahara.kittybot.bot.purr
 import org.bezsahara.kittybot.bot.updates.FelineBuilder.PreAction
 import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.UpdateReceiver
@@ -20,7 +20,7 @@ import java.io.File
  * [KittyBotConfig.purr] function or [KittyBotConfig.kittyBot] reference.
  */
 @Suppress("FunctionName", "UNCHECKED_CAST")
-inline fun <reified T : UpdateReceiver<*>> KittyBot(noinline builder: FelineBuilder<T>.() -> Unit): KittyBotConfig<T> {
+inline fun <reified T : UpdateReceiver> KittyBot(noinline builder: FelineBuilder<T>.() -> Unit): KittyBotConfig<T> {
     return when (T::class) {
         PollingReceiver::class -> KittyBotPolling(builder as FelineBuilder<PollingReceiver>.() -> Unit)
         WebhookReceiver::class -> KittyBotWebhook(builder as FelineBuilder<WebhookReceiver>.() -> Unit)
@@ -58,7 +58,7 @@ enum class UpdateOrigin {
     Polling, Webhook
 }
 
-class FelineBuilder<T : UpdateReceiver<*>> internal constructor(
+class FelineBuilder<T : UpdateReceiver> internal constructor(
     val updateOrigin: UpdateOrigin
 ) {
 

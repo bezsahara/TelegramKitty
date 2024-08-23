@@ -7,6 +7,7 @@ import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.ClassDiscriminatorMode
@@ -24,7 +25,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
-class KittyBotConfig<T : UpdateReceiver<*>> internal constructor(
+class KittyBotConfig<T : UpdateReceiver> internal constructor(
     felineDispatcher: FelineDispatcher,
     updaterMode: UpdaterMode,
     updateOrigin: UpdateOrigin,
@@ -55,7 +56,7 @@ class KittyBotConfig<T : UpdateReceiver<*>> internal constructor(
 
     internal val updateReceiver = when (updateOrigin) {
         UpdateOrigin.Polling -> PollingReceiver(tApiClient, pollingTimeout, lastIdRecovery)
-        UpdateOrigin.Webhook -> WebhookReceiver(updatesChannel)
+        UpdateOrigin.Webhook -> null
     }
 
     internal val updater: Aktualisierer = when (updaterMode) {
@@ -63,7 +64,8 @@ class KittyBotConfig<T : UpdateReceiver<*>> internal constructor(
             SingleUpdater(
                 KittyBot(tApiClient),
                 felineDispatcher,
-                updateReceiver
+                updateReceiver,
+                updatesChannel
             )
         }
 
@@ -72,7 +74,8 @@ class KittyBotConfig<T : UpdateReceiver<*>> internal constructor(
                 KittyBot(tApiClient),
                 felineDispatcher,
                 updateReceiver,
-                updaterMode.parallelism
+                updaterMode.parallelism,
+                updatesChannel
             )
         }
     }
@@ -119,6 +122,9 @@ fun KittyBotConfig<WebhookReceiver>.start() {
     updater.start()
 }
 
+/**
+ * Send updates from webhook via a channel.
+ */
 suspend fun KittyBotConfig<WebhookReceiver>.onUpdate(data: String) {
     updatesChannel.send(
             json.decodeFromString(Update.serializer(), data)

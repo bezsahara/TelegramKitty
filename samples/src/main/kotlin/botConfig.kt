@@ -1,4 +1,4 @@
-package org.bezsahara.kittybot
+package org.bezsahara.samples
 
 import org.bezsahara.kittybot.bot.*
 import org.bezsahara.kittybot.bot.dispatchers.x.messageRateFilter

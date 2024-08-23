@@ -1,3 +1,4 @@
+
 plugins {
     kotlin("jvm")
     id("org.jetbrains.dokka") version "1.9.20"
@@ -6,7 +7,7 @@ plugins {
     `maven-publish`
 }
 
-group = "org.bezsahara"
+group = "org.bezsahara.samples"
 version = "1.0-SNAPSHOT"
 
 repositories {

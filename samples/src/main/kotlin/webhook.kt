@@ -1,6 +1,6 @@
 @file:Suppress("DuplicatedCode")
 
-package org.bezsahara.kittybot
+package org.bezsahara.samples
 
 import io.ktor.http.*
 import io.ktor.server.application.*

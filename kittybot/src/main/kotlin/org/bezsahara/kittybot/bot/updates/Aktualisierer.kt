@@ -10,7 +10,7 @@ abstract class Aktualisierer(
     val bot: KittyBot,
     val coroutineScope: CoroutineScope,
     private val botDispatchers: FelineDispatcher,
-    val updateReceiver: UpdateReceiver<*>
+    val updateReceiver: UpdateReceiver?
 ) {
     private val filterHandlerList = botDispatchers.filterHandlerList.toTypedArray()
     private val handlerList = botDispatchers.handlerList.toTypedArray()

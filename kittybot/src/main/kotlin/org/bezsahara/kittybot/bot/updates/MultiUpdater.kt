@@ -1,22 +1,20 @@
 package org.bezsahara.kittybot.bot.updates
 
-import io.ktor.client.plugins.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
-import org.bezsahara.kittybot.bot.errors.KittyError
-import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.UpdateReceiver
-import org.bezsahara.kittybot.bot.updates.receiver.WebhookReceiver
-import org.bezsahara.kittybot.telegram.utils.TResult
+import org.bezsahara.kittybot.telegram.classes.updates.Update
 
 internal class MultiUpdater(
     bot: KittyBot,
     botDispatchers: FelineDispatcher,
-    updateReceiver: UpdateReceiver<*>,
+    updateReceiver: UpdateReceiver?,
     parallelism: Int,
+    private val channel: Channel<Update>
 ) : Aktualisierer(
     bot,
     CoroutineScope(Dispatchers.IO),
@@ -33,40 +31,24 @@ internal class MultiUpdater(
     private var job: Job? = null
 
     private suspend fun getUpdates() = coroutineScope {
-        when (updateReceiver) {
-
-            is PollingReceiver -> while (true) {
-                try {
-                    when (val updates = updateReceiver.receiveUpdates()) {
-                        is TResult.Failure -> throw KittyError(updates.cause.toString())
-                        is TResult.Success -> updates.value.forEach {
-                            semaphore.withPermit {
-                                launch {
-                                    applyHandlers(it)
-                                }
-                            }
-                        }
-                    }
-                } catch (_: HttpRequestTimeoutException) {
-                    println("Timeout!")
-                }
-                yield()
-            }
-
-            is WebhookReceiver -> while (true) {
-                val newUpdate = updateReceiver.receiveUpdates()
-                semaphore.withPermit {
-                    launch {
-                        applyHandlers(newUpdate)
-                    }
+        while (true) {
+            val update = channel.receive()
+            semaphore.withPermit {
+                launch {
+                    applyHandlers(update)
                 }
             }
-
         }
     }
 
     override fun start() {
         job = coroutineScope.launch(Dispatchers.IO) {
+            if (updateReceiver != null) {
+                launch {
+                    updateReceiver.receiveUpdates(channel)
+                }
+            }
+
             getUpdates()
         }
     }

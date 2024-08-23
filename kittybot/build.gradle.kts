@@ -20,7 +20,6 @@ dependencies {
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
     implementation("org.slf4j:slf4j-api:2.0.13")
     implementation("ch.qos.logback:logback-classic:1.5.6")
@@ -54,12 +53,12 @@ publishing {
 
             pom {
                 name.set("TelegramKitty")
-                description.set("A sample Kotlin project for demonstrating Maven publishing")
+                description.set("Library to create Telegram bots")
                 url.set("https://github.com/bezsahara/TelegramKitty")
                 licenses {
                     license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                        name.set("The MIT License")
+                        url.set("https://opensource.org/license/mit")
                     }
                 }
                 developers {
@@ -72,7 +71,7 @@ publishing {
                 scm {
                     connection.set("scm:git:git://github.com/bezsahara/TelegramKitty.git")
                     developerConnection.set("scm:git:ssh://github.com/bezsahara/TelegramKitty.git")
-                    url.set("https://github.com/bezsahara/KotlinPublishTT")
+                    url.set("https://github.com/bezsahara/TelegramKitty")
                 }
             }
         }
