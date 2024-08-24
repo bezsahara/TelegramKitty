@@ -52,71 +52,71 @@ import org.bezsahara.kittybot.telegram.classes.queries.results.ChosenInlineResul
  * @param removedChatBoost Optional. A boost was removed from a chat. The bot must be an administrator in the chat to receive these updates.
  */
 @Serializable(with = UpdateSerializer::class)
-sealed class Update(
-    open val message: Message? = null,
+sealed class Update {
+    open val message: Message? = null
 
     @SerialName("edited_message")
-    open val editedMessage: Message? = null,
+    open val editedMessage: Message? = null
 
     @SerialName("channel_post")
-    open val channelPost: Message? = null,
+    open val channelPost: Message? = null
 
     @SerialName("edited_channel_post")
-    open val editedChannelPost: Message? = null,
+    open val editedChannelPost: Message? = null
 
     @SerialName("business_connection")
-    open val businessConnection: BusinessConnection? = null,
+    open val businessConnection: BusinessConnection? = null
 
     @SerialName("business_message")
-    open val businessMessage: Message? = null,
+    open val businessMessage: Message? = null
 
     @SerialName("edited_business_message")
-    open val editedBusinessMessage: Message? = null,
+    open val editedBusinessMessage: Message? = null
 
     @SerialName("deleted_business_messages")
-    open val deletedBusinessMessages: BusinessMessagesDeleted? = null,
+    open val deletedBusinessMessages: BusinessMessagesDeleted? = null
 
     @SerialName("message_reaction")
-    open val messageReaction: MessageReactionUpdated? = null,
+    open val messageReaction: MessageReactionUpdated? = null
 
     @SerialName("message_reaction_count")
-    open val messageReactionCount: MessageReactionCountUpdated? = null,
+    open val messageReactionCount: MessageReactionCountUpdated? = null
 
     @SerialName("inline_query")
-    open val inlineQuery: InlineQuery? = null,
+    open val inlineQuery: InlineQuery? = null
 
     @SerialName("chosen_inline_result")
-    open val chosenInlineResult: ChosenInlineResult? = null,
+    open val chosenInlineResult: ChosenInlineResult? = null
 
     @SerialName("callback_query")
-    open val callbackQuery: CallbackQuery? = null,
+    open val callbackQuery: CallbackQuery? = null
 
     @SerialName("shipping_query")
-    open val shippingQuery: ShippingQuery? = null,
+    open val shippingQuery: ShippingQuery? = null
 
     @SerialName("pre_checkout_query")
-    open val preCheckoutQuery: PreCheckoutQuery? = null,
+    open val preCheckoutQuery: PreCheckoutQuery? = null
 
-    open val poll: Poll? = null,
+    open val poll: Poll? = null
 
     @SerialName("poll_answer")
-    open val pollAnswer: PollAnswer? = null,
+    open val pollAnswer: PollAnswer? = null
 
     @SerialName("my_chat_member")
-    open val myChatMember: ChatMemberUpdated? = null,
+    open val myChatMember: ChatMemberUpdated? = null
 
     @SerialName("chat_member")
-    open val chatMember: ChatMemberUpdated? = null,
+    open val chatMember: ChatMemberUpdated? = null
 
     @SerialName("chat_join_request")
-    open val chatJoinRequest: ChatJoinRequest? = null,
+    open val chatJoinRequest: ChatJoinRequest? = null
 
     @SerialName("chat_boost")
-    open val chatBoost: ChatBoostUpdated? = null,
+    open val chatBoost: ChatBoostUpdated? = null
 
     @SerialName("removed_chat_boost")
     open val removedChatBoost: ChatBoostRemoved? = null
-) {
+
     @SerialName("update_id")
     internal abstract val updateId: Long
 }
