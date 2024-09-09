@@ -24,8 +24,16 @@ KittyBot<PollingReceiver> {
 ```
 And more examples are located in [samples](samples/src/main/kotlin) folder.
 
-## Polling and Webhooks
-KittyBot supports both polling and webhooks.
+## Features
+### Polling and Webhooks
+KittyBot (TelegramKitty) supports both polling and webhooks.
+### Stage-Based Conversation Flow
+Easy to use stage-based system that guides users through a conversation. 
+Define the stages, and the bot manages user inputs and transitions automatically. Just use the `startStageHandler` function in your dispatchers block.
+### Single and Multi-threaded
+Handlers can be executed in single and multi-threaded environments. You can use the `updaterMode` property in KittyBot builder to specify it.
+
+All these features and many more can be found in [samples](samples/src/main/kotlin) folder.
 
 ## Cats
 It includes several methods to send cat pics) You can find them in [cats.kt](kittybot/src/main/kotlin/org/bezsahara/kittybot/bot/cats.kt)
