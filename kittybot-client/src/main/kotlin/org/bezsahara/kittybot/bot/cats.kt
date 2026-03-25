@@ -95,7 +95,6 @@ suspend fun KittyBot.sendHttpCat(
             .compose(vertxFunctionSend)
             .compose(vertxFunctionBody)
             .coAwait().bytes
-        println("Here")
         sendPhoto(chatId, TelegramFileVertx.Bytes(bytes))
     }
 }
