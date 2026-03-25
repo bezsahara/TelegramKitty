@@ -8,3 +8,17 @@
 /build/
 /kittybot/build/
 /samples/build/
+/generated-client/
+/GenerateAPIV2/
+/data/
+/dataOld/
+/docs/
+/compiler-bug-repro/
+
+# Build outputs in any subproject
+**/build/
+
+# Stray compiled files from ad-hoc local compilation
+*.class
+
+/AGENTS.md

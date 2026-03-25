@@ -1,0 +1,22 @@
+package org.bezsahara.kittybot.telegram.classes.chat.background
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFill
+
+
+/**
+ * The background is filled using the selected color.
+ * 
+ * [link](https://core.telegram.org/bots/api#backgroundfillsolid): https://core.telegram.org/bots/api#backgroundfillsolid
+ * 
+ * @param type Type of the background fill, always "solid"
+ * @param color The color of the background fill in the RGB24 format
+ */
+@Serializable
+data class BackgroundFillSolid(
+    val color: Long
+) : BackgroundFill {
+    override val type: String get() = "solid"
+}
+

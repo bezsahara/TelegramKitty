@@ -1,89 +1,97 @@
 package org.bezsahara.kittybot.bot
 
 
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.contentnegotiation.*
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.ClassDiscriminatorMode
-import kotlinx.serialization.json.Json
+import org.bezsahara.kittybot.bot.builder.ClientBuilder
+import org.bezsahara.kittybot.bot.builder.FelineBuilder
+import org.bezsahara.kittybot.bot.builder.RecoverLastId
+import org.bezsahara.kittybot.bot.builder.UpdateOrigin
+import org.bezsahara.kittybot.bot.builder.UpdaterMode
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
+import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
 import org.bezsahara.kittybot.bot.errors.hiss
+import org.bezsahara.kittybot.bot.json.jsonInstance
 import org.bezsahara.kittybot.bot.updates.*
 import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.UpdateReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.WebhookReceiver
-import org.bezsahara.kittybot.telegram.classes.updates.Update
-import org.bezsahara.kittybot.telegram.client.TApiClient
+import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 
-class KittyBotConfig<T : UpdateReceiver> internal constructor(
+class KittyBotConfig<T : UpdateReceiver>(
     felineDispatcher: FelineDispatcher,
     updaterMode: UpdaterMode,
-    updateOrigin: UpdateOrigin,
+    val updateOrigin: UpdateOrigin,
     pollingTimeout: Long,
     preActions: List<FelineBuilder.PreAction>,
     token: String,
-    lastIdRecovery: RecoverLastId?
+    lastIdRecovery: RecoverLastId?,
+    errorHandler: HandlerErrorHandler,
+    private val apiClientBuilder: ClientBuilder,
+    val allowedUpdates: List<String>?,
+    furballConfig: FurballConfig
 ) {
-    internal val client = HttpClient(CIO) {
-        install(ContentNegotiation)
-        install(HttpTimeout)
-        install(DefaultRequest) {
-            url("https://api.telegram.org/bot$token/")
-        }
-    }
 
-    @OptIn(ExperimentalSerializationApi::class)
-    internal val json = Json {
-        classDiscriminatorMode = ClassDiscriminatorMode.NONE
-        encodeDefaults = true
-        explicitNulls = false
-    }
+    val json get() = jsonInstance
 
     @JvmField
-    internal val updatesChannel = Channel<Update>()
+    val updatesChannel =
+        Channel<Update>(1024)
 
-    private val tApiClient = TApiClient(json, client, token)
+    private val tApiClient = apiClientBuilder.build(token, json)//
 
     internal val updateReceiver = when (updateOrigin) {
-        UpdateOrigin.Polling -> PollingReceiver(tApiClient, pollingTimeout, lastIdRecovery)
+        UpdateOrigin.Polling -> PollingReceiver(tApiClient, pollingTimeout, lastIdRecovery, allowedUpdates)
         UpdateOrigin.Webhook -> null
     }
 
-    internal val updater: Aktualisierer = when (updaterMode) {
-        is UpdaterMode.SingleThread -> {
-            SingleUpdater(
-                KittyBot(tApiClient),
-                felineDispatcher,
-                updateReceiver,
-                updatesChannel
-            )
-        }
+    internal val supervisorJob = SupervisorJob()
+    internal val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
 
-        is UpdaterMode.MultiThread -> {
-            MultiUpdater(
-                KittyBot(tApiClient),
-                felineDispatcher,
-                updateReceiver,
-                updaterMode.parallelism,
-                updatesChannel
-            )
-        }
+    internal val updater: Furball = when (updaterMode) {
+        is UpdaterMode.SingleThread -> SingleUpdater(
+            tApiClient,
+            felineDispatcher,
+            updatesChannel,
+            scope,
+            errorHandler,
+            furballConfig
+        )
+
+        is UpdaterMode.MultiThread -> MultiUpdater(
+            tApiClient,
+            felineDispatcher,
+            updatesChannel,
+            scope,
+            updaterMode.multiIdentity,
+            updaterMode.parallelism,
+            errorHandler,
+            furballConfig
+        )
+
+        is UpdaterMode.Custom -> CustomUpdater(
+            tApiClient,
+            updaterMode.customUpdater,
+            felineDispatcher,
+            updatesChannel,
+            supervisorJob,
+            errorHandler,
+            furballConfig
+        )
     }
 
     @JvmField
     val kittyBot: KittyBot = updater.bot
 
     internal var waitContinuation: Continuation<Int>? = null
+
+    fun close() {
+        updateReceiver?.close()
+        apiClientBuilder.close()
+    }
 
     init {
         runBlocking(Dispatchers.IO) {
@@ -98,10 +106,13 @@ fun KittyBotConfig<PollingReceiver>.startPolling(wait: Boolean = true) {
     if (updateReceiver !is PollingReceiver) {
         hiss("To start polling, you need to set updateOrigin to UpdateOrigin.Polling")
     }
+    CoroutineScope(Dispatchers.IO + supervisorJob).launch {
+        updateReceiver.receiveUpdates(updatesChannel)
+    }
     updater.start()
     if (wait) {
         runBlocking {
-            suspendCoroutine {
+            suspendCancellableCoroutine {
                 waitContinuation = it
             }
         }
@@ -110,12 +121,14 @@ fun KittyBotConfig<PollingReceiver>.startPolling(wait: Boolean = true) {
 }
 
 fun KittyBotConfig<PollingReceiver>.stopPolling() {
-    updater.stop()
+    supervisorJob.cancel()
+    close()
     waitContinuation?.resume(0)
 }
 
 fun KittyBotConfig<WebhookReceiver>.stop() {
-    updater.stop()
+    supervisorJob.cancel()
+    close()
 }
 
 fun KittyBotConfig<WebhookReceiver>.start() {
@@ -125,8 +138,8 @@ fun KittyBotConfig<WebhookReceiver>.start() {
 /**
  * Send updates from webhook via a channel.
  */
-suspend fun KittyBotConfig<WebhookReceiver>.onUpdate(data: String) {
+suspend inline fun KittyBotConfig<WebhookReceiver>.onUpdate(data: String) {
     updatesChannel.send(
-            json.decodeFromString(Update.serializer(), data)
+        json.decodeFromString(Update.serializer(), data)
     )
 }

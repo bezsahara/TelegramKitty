@@ -1,10 +1,6 @@
-
 plugins {
-    kotlin("jvm")
-    id("org.jetbrains.dokka") version "1.9.20"
-    kotlin("plugin.serialization") version "2.0.0"
-    signing
-    `maven-publish`
+    kotlin("jvm") version "2.3.10"
+    kotlin("plugin.serialization") version "2.3.10"
 }
 
 group = "org.bezsahara.samples"
@@ -17,10 +13,7 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     implementation(project(":kittybot"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC.2")
-    implementation("io.ktor:ktor-server-core:2.3.12")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
-    implementation("io.ktor:ktor-server-netty:2.3.12")
+    implementation(project(":kittybot-client"))
 }
 
 tasks.test {
@@ -28,6 +21,18 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(20)
+    jvmToolchain(24)
+}
+
+tasks.register<JavaExec>("runMainKt") {
+    group = "application"
+    description = "Runs org.bezsahara.samples.MainKt with the samples runtime classpath"
+    dependsOn(tasks.classes)
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("org.bezsahara.samples.MainKt")
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(24))
+    })
+    environment("BOT_TOKEN", System.getenv("BOT_TOKEN") ?: "123:ABC")
 }
 

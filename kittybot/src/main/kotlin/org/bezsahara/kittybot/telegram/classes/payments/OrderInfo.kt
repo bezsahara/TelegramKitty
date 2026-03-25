@@ -1,6 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.payments
 
-
+import org.bezsahara.kittybot.telegram.classes.payments.ShippingAddress
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 /**
  * This object represents information about an order.
  * 
- * *[link](https://core.telegram.org/bots/api#orderinfo)*: https://core.telegram.org/bots/api#orderinfo
+ * [link](https://core.telegram.org/bots/api#orderinfo): https://core.telegram.org/bots/api#orderinfo
  * 
  * @param name Optional. User name
  * @param phoneNumber Optional. User's phone number

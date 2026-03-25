@@ -1,6 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.payments
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -8,7 +7,7 @@ import kotlinx.serialization.Serializable
 /**
  * This object represents a shipping address.
  * 
- * *[link](https://core.telegram.org/bots/api#shippingaddress)*: https://core.telegram.org/bots/api#shippingaddress
+ * [link](https://core.telegram.org/bots/api#shippingaddress): https://core.telegram.org/bots/api#shippingaddress
  * 
  * @param countryCode Two-letter ISO 3166-1 alpha-2 country code
  * @param state State, if applicable

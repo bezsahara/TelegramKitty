@@ -1,11 +1,14 @@
 package org.bezsahara.kittybot.bot.dispatchers.y
 
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
+import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
+import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.CommandScope
-import org.bezsahara.kittybot.telegram.classes.updates.MessageUpdate
-import org.bezsahara.kittybot.telegram.classes.updates.Update
+import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.Update
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 
 class CommandHandler(
@@ -24,32 +27,29 @@ class CommandHandler(
 
     private val spaceIndex = command.length
 
-    override fun checkUpdate(update: Update): Boolean {
-        val text = update.message?.text ?: return false
-        return if (text.startsWith(command)) {
-            if (text.length == command.length) {
-                true
-            } else {
-                text[spaceIndex] == ' '
-            }
-        } else {
-            false
-        }
-    }
+    override val allowedKinds: Set<UpdateKind<*>> get() = setOf(MessageUpdate)
 
-    override suspend fun handleUpdate(update: Update, bot: KittyBot) {
-        update as MessageUpdate
-        CommandScope(
-            bot,
-            update.message, // /12345 sdf
-            update.message.text?.let {
-                if (command.length == it.length) {
-                    null
-                } else {
-                    it.substring(spaceIndex + 1, it.length).ifBlank { null }
-                }
-            }
-        ).onSuccess()
+    override suspend fun handleUpdate(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision {
+        val text = (update as MessageUpdate).message.text ?: return Decision.Next
+
+        if (text.startsWith(command)) {
+            CommandScope(
+                bot,
+                update, // /12345 sdf
+                text.let {
+                    if (command.length == it.length) {
+                        null
+                    } else {
+                        if (text.getOrNull(spaceIndex) != ' ') return Decision.Next
+                        it.substring(spaceIndex + 1, it.length).ifBlank { null }
+                    }
+                },
+                handlerContext
+            ).onSuccess()
+            return Decision.Consumed
+        }
+
+        return Decision.Next
     }
 
     internal companion object {
@@ -57,7 +57,7 @@ class CommandHandler(
     }
 }
 
-fun FelineDispatcher.command(
+fun HandlerStore.command(
     command: String,
     onSuccess: suspend CommandScope.() -> Unit
 ) {

@@ -1,47 +1,31 @@
 package org.bezsahara.kittybot.bot.dispatchers.y
 
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
+import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
-import org.bezsahara.kittybot.bot.dispatchers.y.scopes.LambdaScope
-import org.bezsahara.kittybot.bot.dispatchers.y.scopes.MessageScope
-import org.bezsahara.kittybot.telegram.classes.messages.inaccessible.Message
-import org.bezsahara.kittybot.telegram.classes.updates.Update
+import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
+import org.bezsahara.kittybot.bot.dispatchers.y.scopes.UpdateScope
+import org.bezsahara.kittybot.telegram.classes.core.update.Update
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 class LambdaHandler(
     val check: (Update) -> Boolean,
-    val onSuccess: suspend LambdaScope.() -> Unit
+    override val allowedKinds: Set<UpdateKind<*>>?,
+    val onSuccess: suspend UpdateScope.() -> Unit
 ) : Handler {
-    override fun checkUpdate(update: Update): Boolean {
-        return check(update)
-    }
-
-    override suspend fun handleUpdate(update: Update, bot: KittyBot) {
-        LambdaScope(
-            bot, update
-        ).onSuccess()
-    }
-}
-
-class MessageLambdaHandler(
-    val check: (Message) -> Boolean,
-    val onSuccess: suspend MessageScope.() -> Unit
-) : Handler {
-    override fun checkUpdate(update: Update): Boolean {
-        return check(update.message ?: return false)
-    }
-
-    override suspend fun handleUpdate(update: Update, bot: KittyBot) {
-        MessageScope(
-            update.message!!, bot
-        ).onSuccess()
+    override suspend fun handleUpdate(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision {
+        if (check(update)) {
+            UpdateScope(
+                update, bot, handlerContext
+            ).onSuccess()
+            return Decision.Consumed
+        }
+        return Decision.Next
     }
 }
 
-fun FelineDispatcher.messageHandler(check: (Message) -> Boolean, onSuccess: suspend MessageScope.() -> Unit) {
-    addHandler(MessageLambdaHandler(check, onSuccess))
-}
 
-fun FelineDispatcher.handler(check: (Update) -> Boolean, onSuccess: suspend LambdaScope.() -> Unit) {
-    addHandler(LambdaHandler(check, onSuccess))
+fun HandlerStore.handler(check: (Update) -> Boolean, updateKinds: Set<UpdateKind<*>>? = null, onSuccess: suspend UpdateScope.() -> Unit) {
+    addHandler(LambdaHandler(check, updateKinds, onSuccess))
 }

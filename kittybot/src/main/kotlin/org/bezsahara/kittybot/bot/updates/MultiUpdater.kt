@@ -2,58 +2,78 @@ package org.bezsahara.kittybot.bot.updates
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.channels.actor
+import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.sync.withPermit
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
-import org.bezsahara.kittybot.bot.updates.receiver.UpdateReceiver
-import org.bezsahara.kittybot.telegram.classes.updates.Update
+import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
+import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.Update
+import java.util.concurrent.ConcurrentHashMap
+
+fun interface MultiIdentity {
+    fun identify(update: Update): Any?
+
+    companion object {
+        val OfChatIdentity = MultiIdentity {
+            (it as? MessageUpdate)?.message?.chat?.id
+        }
+    }
+}
 
 internal class MultiUpdater(
     bot: KittyBot,
     botDispatchers: FelineDispatcher,
-    updateReceiver: UpdateReceiver?,
+    private val channel: ReceiveChannel<Update>,
+    private val scope: CoroutineScope,
+    private val identity: MultiIdentity,
     parallelism: Int,
-    private val channel: Channel<Update>
-) : Aktualisierer(
+    errorHandler: HandlerErrorHandler,
+    furballConfig: FurballConfig
+) : Furball(
     bot,
-    CoroutineScope(Dispatchers.IO),
     botDispatchers,
-    updateReceiver
+    errorHandler,
+    furballConfig
 ) {
-    init {
-        require(parallelism > 0) { "You need to indicate at least 1" }
-    }
-
     private val semaphore = Semaphore(parallelism)
+    private val buckets = ConcurrentHashMap<Any, Mutex>()
 
-    @Volatile
-    private var job: Job? = null
+    private val mutexFun = java.util.function.Function<Any, Mutex> { Mutex(false) }
 
-    private suspend fun getUpdates() = coroutineScope {
-        while (true) {
-            val update = channel.receive()
-            semaphore.withPermit {
-                launch {
-                    applyHandlers(update)
+    private suspend fun run() = coroutineScope {
+        for (update in channel) {
+            val id = identity.identify(update)
+            semaphore.acquire()
+            launch {
+                if (id == null) {
+                    try {
+                        applyHandlers(update)
+                    } finally {
+                        semaphore.release()
+                    }
+                } else {
+                    val mutex = buckets.computeIfAbsent(id, mutexFun)
+                    mutex.lock(null)
+                    try {
+                        applyHandlers(update)
+                    } finally {
+                        mutex.unlock(null)
+                        semaphore.release()
+                    }
                 }
             }
         }
     }
 
     override fun start() {
-        job = coroutineScope.launch(Dispatchers.IO) {
-            if (updateReceiver != null) {
-                launch {
-                    updateReceiver.receiveUpdates(channel)
-                }
-            }
-
-            getUpdates()
+        scope.launch {
+            run()
         }
-    }
-
-    override fun stop() {
-        job?.cancel()
     }
 }

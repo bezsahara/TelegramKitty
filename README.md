@@ -1,64 +1,162 @@
 ![logo](logo.png)
 
-# What is it?
-TelegramKitty is a fun and user-friendly Koltin Telegram bot library that makes it easy to access all API methods and types, with names that match the official API.
-Documentation is also included for all types and methods (was copied from telegram's website). 
+# TelegramKitty
+TelegramKitty is a Kotlin Telegram Bot API wrapper with generated Telegram types and methods, a handler DSL, and optional transport backends.
 
-# How to use this?
-First, you will need to install it:
+The project is split into two modules:
+
+- `kittybot` - core bot logic, Telegram classes, builder DSL, and custom client SPI
+- `kittybot-client` - default Vert.x-based HTTP client
+
+## Features
+
+- Polling and webhook bots
+- Generated Telegram Bot API methods and types with names close to the official API
+- Dispatcher DSL for handlers
+- Single-thread, multi-thread, and custom update processing
+- Filtering allowed update kinds
+- Startup hooks with `init { ... }`
+- Helpers for skipping old updates with `ensureOnlyNewUpdates(...)`
+- Custom HTTP client support via `CustomClient`
+- `KtorCustomClient` included as a reference implementation
+
+## Installation
+
+Use the default Vert.x client:
+
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:1.0.1")
+    implementation("org.bezsahara:kittybot:2.0.4")
+    implementation("org.bezsahara:kittybot-client:2.0.4")
 }
 ```
-A simple program would look like:
+
+If you want to provide your own HTTP client, `kittybot-client` is not required:
+
 ```kotlin
-KittyBot<PollingReceiver> {
-    this.token = "your_token"
+dependencies {
+    implementation("org.bezsahara:kittybot:2.0.4")
+}
+```
+
+## Polling Example
+
+```kotlin
+val bot = KittyBot<PollingReceiver> {
+    token = System.getenv("BOT_TOKEN")
+    ensureOnlyNewUpdates()
+
     dispatchers {
         text("/start") {
             bot.sendMessage(chatId, "Hi, ${message.chat.firstName}")
         }
     }
-}.startPolling()
+}
+
+bot.startPolling()
 ```
-And more examples are located in [samples](samples/src/main/kotlin) folder.
 
-## Features
-### Polling and Webhooks
-KittyBot (TelegramKitty) supports both polling and webhooks.
-### Stage-Based Conversation Flow
-Easy to use stage-based system that guides users through a conversation. 
-Define the stages, and the bot manages user inputs and transitions automatically. Just use the `startStageHandler` function in your dispatchers block.
-### Single and Multi-threaded
-Handlers can be executed in single and multi-threaded environments. You can use the `updaterMode` property in KittyBot builder to specify it.
+## Webhook Example
 
-All these features and many more can be found in [samples](samples/src/main/kotlin) folder.
+```kotlin
+val token = System.getenv("BOT_TOKEN")
 
-## Cats
-It includes several methods to send cat pics) You can find them in [cats.kt](kittybot/src/main/kotlin/org/bezsahara/kittybot/bot/cats.kt)
+val bot = KittyBot<WebhookReceiver> {
+    this.token = token
+
+    webhook(
+        url = "https://example.com/telegram/$token",
+        deletePreviousWebhook = true
+    )
+
+    dispatchers {
+        text("/start") {
+            bot.sendMessage(chatId, "Hi from webhook mode")
+        }
+    }
+}
+
+bot.start()
+
+// Pass raw Telegram webhook payloads into the bot from your server:
+// bot.onUpdate(payload)
+```
+
+## Custom Clients
+
+If you do not want the default Vert.x transport, provide your own client with `useCustomClient(...)` or `setClientBuilder(...)`.
+
+`kittybot` also includes `KtorCustomClient` as a ready-made `CustomClient` implementation. If you use it, add your own Ktor client dependencies and engine:
+
+```kotlin
+dependencies {
+    implementation("org.bezsahara:kittybot:2.0.4")
+    implementation("io.ktor:ktor-client-core:3.4.0")
+    implementation("io.ktor:ktor-client-cio:3.4.0")
+}
+```
+
+```kotlin
+val bot = KittyBot<PollingReceiver> {
+    token = System.getenv("BOT_TOKEN")
+    useCustomClient(
+        KtorCustomClient(
+            HttpClient(CIO)
+        )
+    )
+
+    dispatchers {
+        text("/start") {
+            bot.sendMessage(chatId, "Running on a custom client")
+        }
+    }
+}
+```
+
+The custom client SPI receives absolute Telegram method URLs, so your implementation only needs to send requests and return raw responses.
+
+## Update Processing
+
+The default updater mode is `UpdaterMode.SingleThread`. You can also switch to:
+
+- `UpdaterMode.MultiThread(...)`
+- `UpdaterMode.Custom(...)`
+
+For example:
+
+```kotlin
+updaterMode = UpdaterMode.MultiThread(MultiIdentity.OfChatIdentity, parallelism = 32)
+```
+
+## Just The API Client
+
+If you only need Telegram API calls without the handler system, use `createTelegramBot(...)`.
+
+## More Examples
+
+See [samples](samples/src/main/kotlin) for polling, webhook, and handler examples.
 
 # License
 Copyright 2024 Hlib Korol
 
-Permission is hereby granted, free of charge, 
+Permission is hereby granted, free of charge,
 to any person obtaining a copy of this software and
-associated documentation files (the “Software”), 
-to deal in the Software without restriction, 
+associated documentation files (the "Software"),
+to deal in the Software without restriction,
 including without limitation the rights to use, copy, modify,
 merge, publish, distribute, sublicense, and/or
 sell copies of the Software, and to permit persons
-to whom the Software is furnished to do so, subject 
+to whom the Software is furnished to do so, subject
 to the following conditions:
 
-The above copyright notice and this permission notice 
-shall be included in all copies or substantial portions 
+The above copyright notice and this permission notice
+shall be included in all copies or substantial portions
 of the Software.
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR 
-ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

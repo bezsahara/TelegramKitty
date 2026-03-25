@@ -1,14 +1,15 @@
 package org.bezsahara.kittybot.telegram.classes.passport
 
-
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.classes.passport.PassportFile
+import kotlin.collections.List
 import kotlinx.serialization.Serializable
 
 
 /**
  * Describes documents or other Telegram Passport elements shared with the bot by the user.
  * 
- * *[link](https://core.telegram.org/bots/api#encryptedpassportelement)*: https://core.telegram.org/bots/api#encryptedpassportelement
+ * [link](https://core.telegram.org/bots/api#encryptedpassportelement): https://core.telegram.org/bots/api#encryptedpassportelement
  * 
  * @param type Element type. One of "personal_details", "passport", "driver_license", "identity_card", "internal_passport", "address", "utility_bill", "bank_statement", "rental_agreement", "passport_registration", "temporary_registration", "phone_number", "email".
  * @param data Optional. Base64-encoded encrypted Telegram Passport element data provided by the user; available only for "personal_details", "passport", "driver_license", "identity_card", "internal_passport" and "address" types. Can be decrypted and verified using the accompanying EncryptedCredentials.
@@ -24,6 +25,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class EncryptedPassportElement(
     val type: String,
+    val hash: String,
     val data: String? = null,
     @SerialName("phone_number") val phoneNumber: String? = null,
     val email: String? = null,
@@ -31,7 +33,6 @@ data class EncryptedPassportElement(
     @SerialName("front_side") val frontSide: PassportFile? = null,
     @SerialName("reverse_side") val reverseSide: PassportFile? = null,
     val selfie: PassportFile? = null,
-    val translation: List<PassportFile>? = null,
-    val hash: String
+    val translation: List<PassportFile>? = null
 )
 

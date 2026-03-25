@@ -1,0 +1,22 @@
+package org.bezsahara.kittybot.telegram.classes.input
+
+import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.classes.input.InputStoryContent
+import kotlinx.serialization.Serializable
+
+
+/**
+ * Describes a photo to post as a story.
+ * 
+ * [link](https://core.telegram.org/bots/api#inputstorycontentphoto): https://core.telegram.org/bots/api#inputstorycontentphoto
+ * 
+ * @param type Type of the content, must be photo
+ * @param photo The photo to post as a story. The photo must be of the size 1080x1920 and must not exceed 10 MB. The photo can't be reused and can only be uploaded as a new file, so you can pass "attach://<file_attach_name>" if the photo was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
+ */
+@Serializable
+data class InputStoryContentPhoto(
+    val photo: String
+) : InputStoryContent {
+    override val type: String get() = "photo"
+}
+

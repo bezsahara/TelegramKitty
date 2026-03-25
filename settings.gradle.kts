@@ -7,3 +7,5 @@ if (file("./network/config/genApi").exists()) {
 }
 include("samples")
 include("kittybot")
+
+include("kittybot-client")

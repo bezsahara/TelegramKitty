@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.serialization") version "2.0.0"
+    kotlin("jvm") version "2.3.10"
+    kotlin("plugin.serialization") version "2.3.10"
     `maven-publish`
     signing
     if (File("./network/config/genApi").exists()) {
@@ -26,16 +26,16 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(20)
+    jvmToolchain(24)
 }
 
-tasks
-    .withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>()
-    .configureEach {
-        compilerOptions
-            .languageVersion
-            .set(
-                org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
-            )
-    }
+//tasks
+//    .withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>()
+//    .configureEach {
+//        compilerOptions
+//            .languageVersion
+//            .set(
+//                org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOT
+//            )
+//    }
 

@@ -1,14 +1,15 @@
 package org.bezsahara.kittybot.telegram.classes.business
 
-
+import org.bezsahara.kittybot.telegram.classes.business.BusinessOpeningHoursInterval
 import kotlinx.serialization.SerialName
+import kotlin.collections.List
 import kotlinx.serialization.Serializable
 
 
 /**
  * Describes the opening hours of a business.
  * 
- * *[link](https://core.telegram.org/bots/api#businessopeninghours)*: https://core.telegram.org/bots/api#businessopeninghours
+ * [link](https://core.telegram.org/bots/api#businessopeninghours): https://core.telegram.org/bots/api#businessopeninghours
  * 
  * @param timeZoneName Unique name of the time zone for which the opening hours are defined
  * @param openingHours List of time intervals describing business opening hours

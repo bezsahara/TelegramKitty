@@ -1,30 +1,37 @@
 package org.bezsahara.kittybot.bot.dispatchers.y
 
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
+import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
+import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.CallScope
-import org.bezsahara.kittybot.telegram.classes.queries.CallbackQuery
-import org.bezsahara.kittybot.telegram.classes.updates.Update
+import org.bezsahara.kittybot.telegram.classes.core.update.CallbackQueryUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.Update
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
+import org.bezsahara.kittybot.telegram.classes.inline.CallbackQuery
 
 class CallHandler(
     private val check: (CallbackQuery) -> Boolean,
     private val onSuccess: suspend CallScope.() -> Unit
 ) : Handler {
-    override fun checkUpdate(update: Update): Boolean {
-        val call = update.callbackQuery ?: return false
-        return check.invoke(call)
-    }
+    override val allowedKinds: Set<UpdateKind<*>> = setOf(CallbackQueryUpdate)
 
-    override suspend fun handleUpdate(update: Update, bot: KittyBot) {
-        CallScope(
-            bot,
-            update.callbackQuery!!
-        ).onSuccess()
+    override suspend fun handleUpdate(
+        update: Update,
+        bot: KittyBot,
+        handlerContext: HandlerContext,
+    ): Decision {
+        val p1 = (update as CallbackQueryUpdate).callbackQuery
+        if (check(p1)) {
+            CallScope(bot, update, handlerContext).onSuccess()
+            return Decision.Consumed
+        }
+        return Decision.Next
     }
 }
 
-fun FelineDispatcher.callback(
+fun HandlerStore.callbackQuery(
     check: (CallbackQuery) -> Boolean,
     onSuccess: suspend CallScope.() -> Unit
 ) {

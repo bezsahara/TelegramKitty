@@ -1,29 +1,28 @@
 package org.bezsahara.kittybot.bot.dispatchers
 
-import org.bezsahara.kittybot.bot.errors.hiss
-import org.bezsahara.kittybot.bot.stages.InMemoryStageManager
-import org.bezsahara.kittybot.bot.stages.StageManager
-import org.bezsahara.kittybot.bot.stages.StageManagerProvider
+import org.bezsahara.kittybot.bot.IdentityScope
 
 
-class FelineDispatcher internal constructor() {
+class FelineDispatcher internal constructor() : HandlerStore {
     @JvmField
-    internal val handlerList = mutableListOf<Handler>()
-    @JvmField
-    internal val filterHandlerList = mutableListOf<FilterHandler>()
-    @JvmField
-    internal var errorHandler: ErrorHandler? = null
-    private val filterBuilder = Filters(filterHandlerList)
+    internal val handlerList = arrayListOf<Handler>()
+    private val filterBuilder = Filters()
 
-    class Filters(
-        private val filterHandlerList: MutableList<FilterHandler>
-    ) {
-        fun addFilterAtIndex(filterHandler: FilterHandler, index: Int = 0) {
-            filterHandlerList.add(index, filterHandler)
+    private var identityScopePrivate = IdentityScope()
+
+    var identityScope: IdentityScope
+        get() = identityScopePrivate
+        set(value) {
+            if (identityScopePrivate.highest() != 0) {
+                error("You can't set IdentityScope because it was already used!")
+            }
+            identityScopePrivate = value
         }
 
-        fun addFilter(filterHandler: FilterHandler) {
-            filterHandlerList.add(filterHandler)
+    // Filters are just handlers that are added in the beginning
+    inner class Filters {
+        fun addFilter(filterHandler: Handler) {
+            handlerList.add(0, filterHandler)
         }
     }
 
@@ -34,25 +33,24 @@ class FelineDispatcher internal constructor() {
         filterBuilder.apply(block)
     }
 
-    /**
-     * Sets a [StageManager] for use by stage handlers.
-     * @param stageManager if set to null, a default impl will be used - InMemoryStageManager
-     */
-    fun useStageManager(stageManager: StageManager? = null) {
-        StageManagerProvider.stageManager = stageManager ?: InMemoryStageManager()
-    }
-
-    /**
-     * Stage manager can be used outside the scope of stage handlers.
-     */
-    val stageManager: StageManager
-        get() = StageManagerProvider.stageManager ?: hiss("StageManager is not set! Use setStageManager")
-
-    fun addHandler(handler: Handler) {
+    override fun addHandler(handler: Handler) {
         handlerList.add(handler)
     }
 
-    fun setErrorHandler(errorHandler: ErrorHandler) {
-        this.errorHandler = errorHandler
+    fun addHandlerFirst(handler: Handler) {
+        handlerList.add(0, handler)
     }
+
+    override val felineDispatcher: FelineDispatcher
+        get() = this
+}
+
+interface HandlerStore {
+    fun addHandler(handler: Handler)
+
+    val felineDispatcher: FelineDispatcher
+}
+
+inline fun <reified T> HandlerStore.attrKeyOf(name: String? = null): AttrKey<T> {
+    return felineDispatcher.identityScope.attrKeyOf<T>(name)
 }

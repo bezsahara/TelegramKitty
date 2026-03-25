@@ -1,28 +1,30 @@
 plugins {
-    kotlin("jvm")
-    kotlin("plugin.serialization") version "2.0.0"
+    kotlin("jvm") version "2.3.10"
+    kotlin("plugin.serialization") version "2.3.10"
     id("org.jetbrains.dokka") version "1.9.20"
     `maven-publish`
     signing
 }
 
 group = "org.bezsahara"
-version = "1.0.1"
+version = "2.0.4"
 
 repositories {
     mavenCentral()
 }
 
-val ktor_version: String = "2.3.11"
+val ktor_version: String = "3.4.0"
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
-    implementation("org.slf4j:slf4j-api:2.0.13")
-    implementation("ch.qos.logback:logback-classic:1.5.6")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    compileOnly("io.ktor:ktor-client-core:${ktor_version}")
+//    implementation("org.slf4j:slf4j-api:2.0.17")
+//    implementation("ch.qos.logback:logback-classic:1.5.19")
+    compileOnly("io.vertx:vertx-web-client:5.0.7")
+    compileOnly("io.vertx:vertx-lang-kotlin-coroutines:5.0.5")
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 }
 
 tasks.test {
@@ -30,8 +32,9 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(20)
+    jvmToolchain(24)
 }
+
 
 tasks.register<Jar>("dokkaJavadocJar") {
     dependsOn(tasks.dokkaJavadoc)

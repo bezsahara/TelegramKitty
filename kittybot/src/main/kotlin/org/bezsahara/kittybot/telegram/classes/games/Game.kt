@@ -1,17 +1,17 @@
 package org.bezsahara.kittybot.telegram.classes.games
 
-
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import kotlin.collections.List
 import org.bezsahara.kittybot.telegram.classes.media.Animation
-import org.bezsahara.kittybot.telegram.classes.media.photos.PhotoSize
-import org.bezsahara.kittybot.telegram.classes.messages.entities.MessageEntity
+import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
+import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 
 
 /**
  * This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.
  * 
- * *[link](https://core.telegram.org/bots/api#game)*: https://core.telegram.org/bots/api#game
+ * [link](https://core.telegram.org/bots/api#game): https://core.telegram.org/bots/api#game
  * 
  * @param title Title of the game
  * @param description Description of the game

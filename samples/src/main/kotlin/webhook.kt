@@ -1,44 +1,37 @@
-@file:Suppress("DuplicatedCode")
-
 package org.bezsahara.samples
 
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
-import org.bezsahara.kittybot.bot.onUpdate
 import org.bezsahara.kittybot.bot.start
-import org.bezsahara.kittybot.bot.updates.KittyBot
+import org.bezsahara.kittybot.bot.builder.KittyBot
+import org.bezsahara.kittybot.bot.builder.webhook
 import org.bezsahara.kittybot.bot.updates.receiver.WebhookReceiver
-import org.bezsahara.kittybot.bot.updates.webhook
 
-@Suppress("UNREACHABLE_CODE")
 fun webhookBot(token: String) {
     val bot = KittyBot<WebhookReceiver> {
         this.token = token
 
-        // set up webhook
+        // The library can register the webhook for you,
+        // but you still need your own HTTP endpoint to receive Telegram POST requests.
         webhook(
-            url = TODO(),
+            url = "https://example.com/telegram/$token",
             deletePreviousWebhook = true
         )
 
         buildBot()
     }
 
+    // In webhook mode the bot does not fetch updates by itself.
+    // start() only starts the handler machinery, then your server forwards payloads through onUpdate(...).
     bot.start()
-    // ktor server
-    val server = embeddedServer(Netty, 8080, "0.0.0.0") {
-        routing {
-            post("/$token") {
-                val data = call.receiveText()
-                bot.onUpdate(data)
-                call.respond(HttpStatusCode.OK)
-            }
-        }
-    }
-    server.start(wait = true)
+
+    // Example server integration:
+    // val server = embeddedServer(Netty, 8080, "0.0.0.0") {
+    //     routing {
+    //         post("/$token") {
+    //             val data = call.receiveText()
+    //             bot.onUpdate(data)
+    //             call.respond(HttpStatusCode.OK)
+    //         }
+    //     }
+    // }
+    // server.start(wait = true)
 }

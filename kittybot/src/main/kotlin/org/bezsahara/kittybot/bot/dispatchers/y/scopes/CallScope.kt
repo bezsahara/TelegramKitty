@@ -1,9 +1,14 @@
 package org.bezsahara.kittybot.bot.dispatchers.y.scopes
 
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.telegram.classes.queries.CallbackQuery
+import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.telegram.classes.core.update.CallbackQueryUpdate
+import org.bezsahara.kittybot.telegram.classes.inline.CallbackQuery
 
 class CallScope(
-    val bot: KittyBot,
-    val callbackQuery: CallbackQuery
-)
+    override val bot: KittyBot,
+    override val update: CallbackQueryUpdate,
+    override val handlerContext: HandlerContext
+) : PayloadScope, HandlerScope<CallbackQueryUpdate>() {
+    val callbackQuery: CallbackQuery get() = update.callbackQuery
+}

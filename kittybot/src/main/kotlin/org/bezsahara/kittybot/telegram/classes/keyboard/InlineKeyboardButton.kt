@@ -1,0 +1,102 @@
+package org.bezsahara.kittybot.telegram.classes.keyboard
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.games.CallbackGame
+import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
+
+
+/**
+ * This object represents one button of an inline keyboard. Exactly one of the optional fields must be used to specify type of the button.
+ * 
+ * [link](https://core.telegram.org/bots/api#inlinekeyboardbutton): https://core.telegram.org/bots/api#inlinekeyboardbutton
+ * 
+ * @param text Label text on the button
+ * @param url Optional. HTTP or tg:// URL to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their identifier without using a username, if this is allowed by their privacy settings.
+ * @param callbackData Optional. Data to be sent in a callback query to the bot when the button is pressed, 1-64 bytes
+ * @param webApp Optional. Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery. Available only in private chats between a user and the bot. Not supported for messages sent on behalf of a Telegram Business account.
+ * @param loginUrl Optional. An HTTPS URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
+ * @param switchInlineQuery Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. May be empty, in which case just the bot's username will be inserted. Not supported for messages sent in channel direct messages chats and on behalf of a Telegram Business account.
+ * @param switchInlineQueryCurrentChat Optional. If set, pressing the button will insert the bot's username and the specified inline query in the current chat's input field. May be empty, in which case only the bot's username will be inserted. This offers a quick way for the user to open your bot in inline mode in the same chat - good for selecting something from multiple options. Not supported in channels and for messages sent in channel direct messages chats and on behalf of a Telegram Business account.
+ * @param switchInlineQueryChosenChat Optional. If set, pressing the button will prompt the user to select one of their chats of the specified type, open that chat and insert the bot's username and the specified inline query in the input field. Not supported for messages sent in channel direct messages chats and on behalf of a Telegram Business account.
+ * @param copyText Optional. Description of the button that copies the specified text to the clipboard.
+ * @param callbackGame Optional. Description of the game that will be launched when the user presses the button. NOTE: This type of button must always be the first button in the first row.
+ * @param pay Optional. Specify True, to send a Pay button. Substrings "⭐" and "XTR" in the buttons's text will be replaced with a Telegram Star icon. NOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.
+ */
+@Serializable(with = IKBSerializer::class)
+sealed class InlineKeyboardButton {
+    abstract val text: String
+
+    open val url: String? get() = null
+    @SerialName("callback_data") open val callbackData: String? get() = null
+    @SerialName("web_app") open val webApp: WebAppInfo? get() = null
+    @SerialName("login_url") open val loginUrl: LoginUrl? get() = null
+    @SerialName("switch_inline_query") open val switchInlineQuery: String? get() = null
+    @SerialName("switch_inline_query_current_chat") open val switchInlineQueryCurrentChat: String? get() = null
+    @SerialName("switch_inline_query_chosen_chat") open val switchInlineQueryChosenChat: SwitchInlineQueryChosenChat? get() = null
+    @SerialName("copy_text") open val copyText: CopyTextButton? get() = null
+    @SerialName("callback_game") open val callbackGame: CallbackGame? get() = null
+    open val pay: Boolean? get() = null
+
+    // ---- Concrete variants (exactly one optional field each) ----
+    @Serializable
+    data class Url(
+        override val text: String,
+        override val url: String
+    ) : InlineKeyboardButton()
+
+    @Serializable
+    data class Callback(
+        override val text: String,
+        @SerialName("callback_data") override val callbackData: String
+    ) : InlineKeyboardButton()
+
+    @Serializable
+    data class WebApp(
+        override val text: String,
+        @SerialName("web_app") override val webApp: WebAppInfo
+    ) : InlineKeyboardButton()
+
+    @Serializable
+    data class ILoginUrl(
+        override val text: String,
+        @SerialName("login_url") override val loginUrl: LoginUrl
+    ) : InlineKeyboardButton()
+
+    @Serializable
+    data class SwitchInline(
+        override val text: String,
+        @SerialName("switch_inline_query") override val switchInlineQuery: String
+    ) : InlineKeyboardButton()
+
+    @Serializable
+    data class SwitchCurrent(
+        override val text: String,
+        @SerialName("switch_inline_query_current_chat") override val switchInlineQueryCurrentChat: String
+    ) : InlineKeyboardButton()
+
+    @Serializable
+    data class SwitchChosen(
+        override val text: String,
+        @SerialName("switch_inline_query_chosen_chat") override val switchInlineQueryChosenChat: SwitchInlineQueryChosenChat
+    ) : InlineKeyboardButton()
+
+    @Serializable
+    data class CopyText(
+        override val text: String,
+        @SerialName("copy_text") override val copyText: CopyTextButton
+    ) : InlineKeyboardButton()
+
+    @Serializable
+    data class ICallbackGame(
+        override val text: String,
+        @SerialName("callback_game") override val callbackGame: CallbackGame
+    ) : InlineKeyboardButton()
+
+    @Serializable
+    data class Pay(
+        override val text: String
+    ) : InlineKeyboardButton() {
+        override val pay: Boolean get() = true
+    }
+}

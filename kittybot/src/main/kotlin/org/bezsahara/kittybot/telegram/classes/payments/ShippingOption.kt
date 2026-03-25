@@ -1,13 +1,15 @@
 package org.bezsahara.kittybot.telegram.classes.payments
 
-
+import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
+import kotlinx.serialization.SerialName
+import kotlin.collections.List
 import kotlinx.serialization.Serializable
 
 
 /**
  * This object represents one shipping option.
  * 
- * *[link](https://core.telegram.org/bots/api#shippingoption)*: https://core.telegram.org/bots/api#shippingoption
+ * [link](https://core.telegram.org/bots/api#shippingoption): https://core.telegram.org/bots/api#shippingoption
  * 
  * @param id Shipping option identifier
  * @param title Option title

@@ -1,15 +1,15 @@
 package org.bezsahara.kittybot.telegram.classes.business
 
-
 import kotlinx.serialization.SerialName
+import kotlin.collections.List
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.classes.chats.Chat
+import org.bezsahara.kittybot.telegram.classes.chat.Chat
 
 
 /**
  * This object is received when messages are deleted from a connected business account.
  * 
- * *[link](https://core.telegram.org/bots/api#businessmessagesdeleted)*: https://core.telegram.org/bots/api#businessmessagesdeleted
+ * [link](https://core.telegram.org/bots/api#businessmessagesdeleted): https://core.telegram.org/bots/api#businessmessagesdeleted
  * 
  * @param businessConnectionId Unique identifier of the business connection
  * @param chat Information about a chat in the business account. The bot may not have access to the chat or the corresponding user.

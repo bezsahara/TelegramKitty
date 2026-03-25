@@ -1,7 +1,9 @@
 package org.bezsahara.kittybot.bot.dispatchers
 
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.telegram.classes.updates.Update
+import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.telegram.classes.core.update.Update
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 /**
  * Can be used to create Handlers that will be triggered only if the specified type of update comes.
@@ -9,22 +11,18 @@ import org.bezsahara.kittybot.telegram.classes.updates.Update
  * @param expect type of update that applies
  */
 abstract class TypeHandler<T: Update>(
-    private val expect: Class<T>
+    private val expect: UpdateKind<T>
 ) : Handler {
+    final override val allowedKinds: Set<UpdateKind<*>> = setOf(expect)
+    final override val identity: HandlerIdentity by HandlerIdentityDelegate()
 
-    // Implement this
-    abstract fun check(update: T): Boolean
+    abstract suspend fun handleUpdateTyped(
+        update: T, bot: KittyBot, handlerContext: HandlerContext
+    ): Decision
 
-    // Implement this
-    abstract suspend fun handle(update: T, bot: KittyBot)
-
-    // Do not implement the following:
-
-    override fun checkUpdate(update: Update): Boolean {
-        return expect.isInstance(update) && check(update as T)
-    }
-
-    override suspend fun handleUpdate(update: Update, bot: KittyBot) {
-        handle(update as T, bot)
-    }
+    final override suspend fun handleUpdate(
+        update: Update,
+        bot: KittyBot,
+        handlerContext: HandlerContext,
+    ): Decision = handleUpdateTyped(update as T, bot, handlerContext)
 }

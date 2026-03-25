@@ -1,7 +1,7 @@
 package org.bezsahara.kittybot.bot.updates.receiver
 
 import kotlinx.coroutines.channels.Channel
-import org.bezsahara.kittybot.telegram.classes.updates.Update
+import org.bezsahara.kittybot.telegram.classes.core.update.Update
 
 /**
  * @see PollingReceiver
