@@ -2,6 +2,7 @@
 
 # TelegramKitty
 TelegramKitty is a Kotlin Telegram Bot API wrapper with generated Telegram types and methods, a handler DSL, and optional transport backends.
+And yes, it can send cat pictures.
 
 The project is split into two modules:
 
@@ -19,6 +20,7 @@ The project is split into two modules:
 - Helpers for skipping old updates with `ensureOnlyNewUpdates(...)`
 - Custom HTTP client support via `CustomClient`
 - `KtorCustomClient` included as a reference implementation
+- Built-in cat helpers via `sendCatPicture(...)`, `sendTheCatApi(...)`, `sendHttpCat(...)`, and `sendTextCat()`
 
 ## Installation
 
@@ -131,6 +133,24 @@ updaterMode = UpdaterMode.MultiThread(MultiIdentity.OfChatIdentity, parallelism 
 ## Just The API Client
 
 If you only need Telegram API calls without the handler system, use `createTelegramBot(...)`.
+
+## Cats
+
+Cat helpers live in [cats.kt](kittybot-client/src/main/kotlin/org/bezsahara/kittybot/bot/cats.kt) and are available when you use the default Vert.x client module.
+
+```kotlin
+text("/cat") {
+    bot.sendCatPicture(chatId)
+}
+
+text("/cat_says") {
+    bot.sendCatPicture(chatId, "TelegramKitty")
+}
+
+text("/httpcat") {
+    bot.sendHttpCat(chatId, 404)
+}
+```
 
 ## More Examples
 
