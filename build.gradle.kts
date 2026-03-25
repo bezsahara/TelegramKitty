@@ -3,9 +3,9 @@ plugins {
     kotlin("plugin.serialization") version "2.3.10"
     `maven-publish`
     signing
-    if (File("./network/config/genApi").exists()) {
-        id("org.bezsahara.generateapi")
-    }
+//    if (File("./network/config/genApi").exists()) {
+//        id("org.bezsahara.generateapi")
+//    }
 }
 
 
@@ -26,7 +26,7 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(24)
+    jvmToolchain(17)
 }
 
 //tasks

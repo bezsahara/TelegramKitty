@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "org.bezsahara"
-version = "2.0.4"
+version = "2.0.5"
 
 repositories {
     mavenCentral()
@@ -30,7 +30,7 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(24)
+    jvmToolchain(17)
 }
 
 tasks.register<Jar>("dokkaJavadocJar") {

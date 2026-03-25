@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "org.bezsahara"
-version = "2.0.4"
+version = "2.0.5"
 
 repositories {
     mavenCentral()
@@ -21,7 +21,7 @@ dependencies {
     compileOnly("io.ktor:ktor-client-core:${ktor_version}")
 //    implementation("org.slf4j:slf4j-api:2.0.17")
 //    implementation("ch.qos.logback:logback-classic:1.5.19")
-    compileOnly("io.vertx:vertx-web-client:5.0.7")
+    compileOnly("io.vertx:vertx-web-client:5.0.8")
     compileOnly("io.vertx:vertx-lang-kotlin-coroutines:5.0.5")
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
@@ -32,7 +32,7 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(24)
+    jvmToolchain(17)
 }
 
 

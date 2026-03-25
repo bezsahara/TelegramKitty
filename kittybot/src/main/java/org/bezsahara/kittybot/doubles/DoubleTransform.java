@@ -30,7 +30,7 @@ final public class DoubleTransform {
      */
 
     /* The precision in bits */
-    static final int P = PRECISION;
+    static final int P = 53;//PRECISION;
 
     /* Exponent width in bits */
     private static final int W = (Double.SIZE - 1) - (P - 1);

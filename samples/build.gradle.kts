@@ -21,18 +21,7 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(24)
+    jvmToolchain(17)
 }
 
-tasks.register<JavaExec>("runMainKt") {
-    group = "application"
-    description = "Runs org.bezsahara.samples.MainKt with the samples runtime classpath"
-    dependsOn(tasks.classes)
-    classpath = sourceSets["main"].runtimeClasspath
-    mainClass.set("org.bezsahara.samples.MainKt")
-    javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(24))
-    })
-    environment("BOT_TOKEN", System.getenv("BOT_TOKEN") ?: "123:ABC")
-}
 
