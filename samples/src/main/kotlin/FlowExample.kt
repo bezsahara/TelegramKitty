@@ -13,9 +13,6 @@ import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
 fun FelineDispatcher.flowExample() {
 
 
-    command("/fa a il") {
-
-    }
     // A flow groups several handlers into ordered sections.
     // Here we use the chat id, so each chat progresses through the flow independently.
     flowHandler({ update, _ -> update.message?.chat?.id?.toString() }) {
