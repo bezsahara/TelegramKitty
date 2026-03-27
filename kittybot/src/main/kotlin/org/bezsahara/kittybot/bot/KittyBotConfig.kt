@@ -9,6 +9,7 @@ import org.bezsahara.kittybot.bot.builder.RecoverLastId
 import org.bezsahara.kittybot.bot.builder.UpdateOrigin
 import org.bezsahara.kittybot.bot.builder.UpdaterMode
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
+import org.bezsahara.kittybot.bot.dispatchers.TypeAwareMap
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
 import org.bezsahara.kittybot.bot.errors.hiss
 import org.bezsahara.kittybot.bot.json.jsonInstance
@@ -32,7 +33,8 @@ class KittyBotConfig<T : UpdateReceiver>(
     errorHandler: HandlerErrorHandler,
     private val apiClientBuilder: ClientBuilder,
     val allowedUpdates: List<String>?,
-    furballConfig: FurballConfig
+    furballConfig: FurballConfig,
+    val botContext: TypeAwareMap
 ) {
 
     val json get() = jsonInstance

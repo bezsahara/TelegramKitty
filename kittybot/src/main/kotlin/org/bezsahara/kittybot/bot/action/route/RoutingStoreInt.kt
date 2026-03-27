@@ -1,32 +1,31 @@
 package org.bezsahara.kittybot.bot.action.route
 
 import org.bezsahara.kittybot.bot.KittyBot
+import org.bezsahara.kittybot.bot.action.other.EmptyHandler
+import org.bezsahara.kittybot.bot.action.other.createBoolUpdateKindArray
 import org.bezsahara.kittybot.bot.action.other.replaceLast
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.ensureHasIdentity
+import org.bezsahara.kittybot.bot.dispatchers.real
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
-inline fun HandlerStore.routingInt(keyGeneratorInt: KeyGeneratorInt, builder: RoutingStrategyInt.() -> Unit) {
-    val rsa = RoutingStrategyInt(keyGeneratorInt, this)
-    rsa.builder()
-    rsa.build()
-}
 
 class RoutingStrategyInt(
     val keyGeneratorInt: KeyGeneratorInt,
-    val original: HandlerStore
-) {
-    val sections = arrayListOf<Pair<Int, RoutingPart>>()
+    original: HandlerStore,
+    val ofKinds: Set<UpdateKind<*>>?
+) : RoutingStrategy<Int>(original) {
 
-    inline fun section(key: Int, block: RoutingPart.() -> Unit) {
+    inline fun section(key: Int, block: HandlerStore.() -> Unit) {
         val r = RoutingPart(original)
         r.block()
-        if (r.handlers.isEmpty()) return
-        sections.add(key to r)
+        if (r.isEmpty()) return
+        addSection(key to r)
     }
 
     fun build() {
@@ -40,29 +39,53 @@ class RoutingStrategyInt(
             error("Duplicate routing keys detected in RoutingStrategyInt")
         }
 
-        val exitHandler = sections.last().second.handlers.replaceLast { it.ensureHasIdentity() }
+        val (exitHandlerIdentityD, actualExit) = computeExits()
 
         val lookup = RoutingMainInt.buildLookup(map.keys, map)
 
-        original.addHandler(RoutingMainInt(keyGeneratorInt, lookup, exitHandler.identity!!))
+        original.addHandler(
+            if (common != null) {
+                RoutingMainIntWithCommon(
+                    keyGeneratorInt,
+                    lookup,
+                    exitDecisionWithDefault = exitHandlerIdentityD,
+                    exitDecision = actualExit,
+                    common!!,
+                    ofKinds
+                )
+            } else {
+                RoutingMainInt(
+                    keyGeneratorInt,
+                    lookup,
+                    exitDecisionWithDefault = exitHandlerIdentityD,
+                    exitDecision = actualExit,
+                    ofKinds
+                )
+            }
+        )
 
-        sections.forEach { (_, part) ->
+        sections.forEachIndexed { index, (_, part) ->
             part.handlers.forEach { original.addHandler(it) }
+            if (default != null || sections.lastIndex != index) {
+                original.addHandler(EmptyHandler(actualExit))
+            }
         }
+
+        default?.handlers?.forEach { original.addHandler(it) }
     }
 }
 
 class RoutingMainInt(
     private val keyGeneratorInt: KeyGeneratorInt,
     private val lookup: Lookup,
-    exitId: HandlerIdentity
+    private val exitDecisionWithDefault: Decision?,
+    private val exitDecision: Decision,
+    override val allowedKinds: Set<UpdateKind<*>>?
 ) : Handler {
 
     abstract class Lookup {
-        abstract operator fun get(key: Int): HandlerIdentity?
+        abstract operator fun get(key: Int): HandlerIdentity
     }
-
-    private val exitDecision = Decision.AfterNextTo(exitId)
 
     override suspend fun handleUpdate(
         update: Update,
@@ -72,7 +95,13 @@ class RoutingMainInt(
         val key = keyGeneratorInt.generate(update, handlerContext)
         if (key == Int.MIN_VALUE) return exitDecision
         val id = lookup[key]
-            ?: error("In RoutingMainInt specified key of `$key` was not found! Check keys u specified")
+        if (id == HandlerIdentity.emptyID) {
+            if (exitDecisionWithDefault == null) {
+                error("In RoutingMainInt specified key of `$key` was not found! And default is not specified!")
+            } else {
+                return exitDecisionWithDefault
+            }
+        }
         return Decision.NextTo(id)
     }
 
@@ -106,17 +135,17 @@ class RoutingMainInt(
     }
 
     private class MapLookup(private val map: HashMap<Int, HandlerIdentity>) : Lookup() {
-        override fun get(key: Int): HandlerIdentity? = map[key]
+        override fun get(key: Int): HandlerIdentity = map[key] ?: HandlerIdentity.emptyID
     }
 
     private class ArrayLookup(
         private val min: Int,
-        private val arr: Array<HandlerIdentity?>
+        private val arr: Array<HandlerIdentity>
     ) : Lookup() {
-        override fun get(key: Int): HandlerIdentity? {
-            val idxL = key.toLong() - min.toLong()
-            if (idxL < 0L || idxL >= arr.size.toLong()) return null
-            return arr[idxL.toInt()]
+        override fun get(key: Int): HandlerIdentity {
+            val idxL = key - min
+            if (idxL < 0L || idxL >= arr.size) return HandlerIdentity.emptyID
+            return arr[idxL]
         }
 
         companion object {
@@ -126,7 +155,7 @@ class RoutingMainInt(
                     return ArrayLookup(min, emptyArray())
                 }
 
-                val arr = arrayOfNulls<HandlerIdentity>(sizeL.toInt())
+                val arr = Array(sizeL.toInt()) { HandlerIdentity.emptyID }
                 map.forEach { (k, id) ->
                     val idx = (k.toLong() - min.toLong()).toInt()
                     arr[idx] = id
@@ -134,5 +163,45 @@ class RoutingMainInt(
                 return ArrayLookup(min, arr)
             }
         }
+    }
+}
+
+class RoutingMainIntWithCommon(
+    private val keyGeneratorInt: KeyGeneratorInt,
+    private val lookup: RoutingMainInt.Lookup,
+    private val exitDecisionWithDefault: Decision?,
+    private val exitDecision: Decision,
+    commonHandler: Handler,
+    override val allowedKinds: Set<UpdateKind<*>>?
+) : Handler {
+
+    private val ach = commonHandler.real()
+    private val accepted = commonHandler.allowedKinds?.let {
+        if (allowedKinds == it) return@let null
+        createBoolUpdateKindArray(it)
+    }
+
+    override suspend fun handleUpdate(
+        update: Update,
+        bot: KittyBot,
+        handlerContext: HandlerContext,
+    ): Decision {
+        val key = keyGeneratorInt.generate(update, handlerContext)
+        if (key == Int.MIN_VALUE) return exitDecision
+        val id = lookup[key]
+        if (id == HandlerIdentity.emptyID) {
+            if (exitDecisionWithDefault == null) {
+                error("In RoutingMainInt specified key of `$key` was not found! And default is not specified!")
+            } else {
+                return exitDecisionWithDefault
+            }
+        }
+        if (accepted == null || accepted[update.ordinal]) {
+            val comD = ach.handleUpdate(update, bot, handlerContext)
+            if (comD !== Decision.Next) {
+                return comD
+            }
+        }
+        return Decision.NextTo(id)
     }
 }

@@ -1,9 +1,10 @@
 package org.bezsahara.kittybot.bot.dispatchers
 
 import org.bezsahara.kittybot.bot.IdentityScope
+import org.bezsahara.kittybot.bot.builder.FelineBuilder
 
-
-class FelineDispatcher internal constructor() : HandlerStore {
+@KittyDsl
+class FelineDispatcher internal constructor(internal val felineBuilder: FelineBuilder<*>) : TransparentHandlerStore {
     @JvmField
     internal val handlerList = arrayListOf<Handler>()
     private val filterBuilder = Filters()
@@ -45,11 +46,22 @@ class FelineDispatcher internal constructor() : HandlerStore {
         get() = this
 }
 
+
+
+@KittyDsl
 interface HandlerStore {
     fun addHandler(handler: Handler)
 
     val felineDispatcher: FelineDispatcher
 }
+
+// Does not change behavior of added handlers
+@KittyDsl
+interface TransparentHandlerStore : HandlerStore
+
+// Can change behaivour of added handlers
+@KittyDsl
+interface ChangingHandlerStore : HandlerStore
 
 inline fun <reified T> HandlerStore.attrKeyOf(name: String? = null): AttrKey<T> {
     return felineDispatcher.identityScope.attrKeyOf<T>(name)

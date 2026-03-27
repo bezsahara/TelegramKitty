@@ -5,6 +5,7 @@ import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
+import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentityDelegate
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 
 class EmptyHandler(private val returns: Decision) : Handler {
@@ -18,5 +19,5 @@ class EmptyHandler(private val returns: Decision) : Handler {
         return returns
     }
 
-    override val identity: HandlerIdentity = HandlerIdentity.createNew()
+    override val identity: HandlerIdentity by HandlerIdentityDelegate()
 }

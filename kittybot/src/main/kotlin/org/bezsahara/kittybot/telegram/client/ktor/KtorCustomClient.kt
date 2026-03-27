@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.client.ktor
 
 import io.ktor.client.*
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.timeout
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
@@ -55,6 +56,11 @@ class KtorCustomClient(
     ): CustomResponse {
         val r = client.request(urlAbs) {
             method = HttpMethod.Post
+            if (isGetUpdates) {
+                timeout {
+                    requestTimeoutMillis = 61000
+                }
+            }
             setBody(ByteArrayContent(json, ContentType.Application.Json, HttpStatusCode.OK))
         }
         return KtorResp(r)

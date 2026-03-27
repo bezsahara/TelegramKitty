@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.client
 
 import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
-import kotlin.reflect.typeOf
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
 import org.bezsahara.kittybot.telegram.classes.input.InputMedia
 import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfo
@@ -37,6 +36,7 @@ import org.bezsahara.kittybot.telegram.classes.passport.PassportElementError
 import org.bezsahara.kittybot.telegram.classes.message.LinkPreviewOptions
 import kotlinx.serialization.builtins.serializer
 import org.bezsahara.kittybot.telegram.classes.chat.ChatPermissions
+import org.bezsahara.kittybot.telegram.utils.TSerials
 import org.bezsahara.kittybot.telegram.classes.chat.ChatInviteLink
 import io.vertx.core.Vertx
 import org.bezsahara.kittybot.telegram.classes.games.GameHighScore
@@ -199,7 +199,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<ChatInviteLink>(
-                json.decodeFromString(Ok.serializer(ChatInviteLink.serializer()), strResult).result
+                json.decodeFromString(TSerials.sChatInviteLink, strResult).result
             )
         } else {
             TResultFailure<ChatInviteLink>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -395,7 +395,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<StarAmount>(
-                json.decodeFromString(Ok.serializer(StarAmount.serializer()), strResult).result
+                json.decodeFromString(TSerials.sStarAmount, strResult).result
             )
         } else {
             TResultFailure<StarAmount>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -488,7 +488,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Story>(
-                json.decodeFromString(Ok.serializer(Story.serializer()), strResult).result
+                json.decodeFromString(TSerials.sStory, strResult).result
             )
         } else {
             TResultFailure<Story>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -569,7 +569,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<MessageId>(
-                json.decodeFromString(Ok.serializer(MessageId.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessageId, strResult).result
             )
         } else {
             TResultFailure<MessageId>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -649,7 +649,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -695,7 +695,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Gifts>(
-                json.decodeFromString(Ok.serializer(Gifts.serializer()), strResult).result
+                json.decodeFromString(TSerials.sGifts, strResult).result
             )
         } else {
             TResultFailure<Gifts>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -755,7 +755,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -902,7 +902,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<List<ChatMember>>(
-                json.decodeFromString(Ok.serializer(ListSerializer(ChatMember.serializer())), strResult).result
+                json.decodeFromString(TSerials.sListChatMember, strResult).result
             )
         } else {
             TResultFailure<List<ChatMember>>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -925,7 +925,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Long>(
-                json.decodeFromString(Ok.serializer(Long.serializer()), strResult).result
+                json.decodeFromString(TSerials.sLong, strResult).result
             )
         } else {
             TResultFailure<Long>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1031,7 +1031,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1076,7 +1076,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1112,7 +1112,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1267,7 +1267,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1290,7 +1290,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<MenuButton>(
-                json.decodeFromString(Ok.serializer(MenuButton.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMenuButton, strResult).result
             )
         } else {
             TResultFailure<MenuButton>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1324,7 +1324,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<List<Update>>(
-                json.decodeFromString(Ok.serializer(ListSerializer(Update.serializer())), strResult).result
+                json.decodeFromString(TSerials.sListUpdate, strResult).result
             )
         } else {
             TResultFailure<List<Update>>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1428,7 +1428,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<List<MessageId>>(
-                json.decodeFromString(Ok.serializer(ListSerializer(MessageId.serializer())), strResult).result
+                json.decodeFromString(TSerials.sListMessageId, strResult).result
             )
         } else {
             TResultFailure<List<MessageId>>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1558,7 +1558,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<BotDescription>(
-                json.decodeFromString(Ok.serializer(BotDescription.serializer()), strResult).result
+                json.decodeFromString(TSerials.sBotDescription, strResult).result
             )
         } else {
             TResultFailure<BotDescription>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1588,7 +1588,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<ChatMember>(
-                json.decodeFromString(Ok.serializer(ChatMember.serializer()), strResult).result
+                json.decodeFromString(TSerials.sChatMember, strResult).result
             )
         } else {
             TResultFailure<ChatMember>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1615,7 +1615,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<UserProfilePhotos>(
-                json.decodeFromString(Ok.serializer(UserProfilePhotos.serializer()), strResult).result
+                json.decodeFromString(TSerials.sUserProfilePhotos, strResult).result
             )
         } else {
             TResultFailure<UserProfilePhotos>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1668,7 +1668,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1704,7 +1704,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<ChatInviteLink>(
-                json.decodeFromString(Ok.serializer(ChatInviteLink.serializer()), strResult).result
+                json.decodeFromString(TSerials.sChatInviteLink, strResult).result
             )
         } else {
             TResultFailure<ChatInviteLink>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1729,7 +1729,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<StarTransactions>(
-                json.decodeFromString(Ok.serializer(StarTransactions.serializer()), strResult).result
+                json.decodeFromString(TSerials.sStarTransactions, strResult).result
             )
         } else {
             TResultFailure<StarTransactions>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1814,7 +1814,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<File>(
-                json.decodeFromString(Ok.serializer(File.serializer()), strResult).result
+                json.decodeFromString(TSerials.sFile, strResult).result
             )
         } else {
             TResultFailure<File>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1852,7 +1852,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<ChatInviteLink>(
-                json.decodeFromString(Ok.serializer(ChatInviteLink.serializer()), strResult).result
+                json.decodeFromString(TSerials.sChatInviteLink, strResult).result
             )
         } else {
             TResultFailure<ChatInviteLink>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1948,7 +1948,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<ChatAdministratorRights>(
-                json.decodeFromString(Ok.serializer(ChatAdministratorRights.serializer()), strResult).result
+                json.decodeFromString(TSerials.sChatAdministratorRights, strResult).result
             )
         } else {
             TResultFailure<ChatAdministratorRights>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -1964,7 +1964,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<User>(
-                json.decodeFromString(Ok.serializer(User.serializer()), strResult).result
+                json.decodeFromString(TSerials.sUser, strResult).result
             )
         } else {
             TResultFailure<User>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -2102,7 +2102,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<List<Sticker>>(
-                json.decodeFromString(Ok.serializer(ListSerializer(Sticker.serializer())), strResult).result
+                json.decodeFromString(TSerials.sListSticker, strResult).result
             )
         } else {
             TResultFailure<List<Sticker>>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -2204,7 +2204,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<ChatInviteLink>(
-                json.decodeFromString(Ok.serializer(ChatInviteLink.serializer()), strResult).result
+                json.decodeFromString(TSerials.sChatInviteLink, strResult).result
             )
         } else {
             TResultFailure<ChatInviteLink>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -2322,7 +2322,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -2390,7 +2390,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<ChatInviteLink>(
-                json.decodeFromString(Ok.serializer(ChatInviteLink.serializer()), strResult).result
+                json.decodeFromString(TSerials.sChatInviteLink, strResult).result
             )
         } else {
             TResultFailure<ChatInviteLink>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -2448,7 +2448,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<BotShortDescription>(
-                json.decodeFromString(Ok.serializer(BotShortDescription.serializer()), strResult).result
+                json.decodeFromString(TSerials.sBotShortDescription, strResult).result
             )
         } else {
             TResultFailure<BotShortDescription>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -2550,7 +2550,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<PreparedInlineMessage>(
-                json.decodeFromString(Ok.serializer(PreparedInlineMessage.serializer()), strResult).result
+                json.decodeFromString(TSerials.sPreparedInlineMessage, strResult).result
             )
         } else {
             TResultFailure<PreparedInlineMessage>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -2708,7 +2708,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -2843,7 +2843,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<OwnedGifts>(
-                json.decodeFromString(Ok.serializer(OwnedGifts.serializer()), strResult).result
+                json.decodeFromString(TSerials.sOwnedGifts, strResult).result
             )
         } else {
             TResultFailure<OwnedGifts>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -2887,7 +2887,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -2935,7 +2935,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<List<Sticker>>(
-                json.decodeFromString(Ok.serializer(ListSerializer(Sticker.serializer())), strResult).result
+                json.decodeFromString(TSerials.sListSticker, strResult).result
             )
         } else {
             TResultFailure<List<Sticker>>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -3057,7 +3057,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<List<BotCommand>>(
-                json.decodeFromString(Ok.serializer(ListSerializer(BotCommand.serializer())), strResult).result
+                json.decodeFromString(TSerials.sListBotCommand, strResult).result
             )
         } else {
             TResultFailure<List<BotCommand>>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -3257,7 +3257,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Story>(
-                json.decodeFromString(Ok.serializer(Story.serializer()), strResult).result
+                json.decodeFromString(TSerials.sStory, strResult).result
             )
         } else {
             TResultFailure<Story>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -3285,7 +3285,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<File>(
-                json.decodeFromString(Ok.serializer(File.serializer()), strResult).result
+                json.decodeFromString(TSerials.sFile, strResult).result
             )
         } else {
             TResultFailure<File>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -3379,7 +3379,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<UserChatBoosts>(
-                json.decodeFromString(Ok.serializer(UserChatBoosts.serializer()), strResult).result
+                json.decodeFromString(TSerials.sUserChatBoosts, strResult).result
             )
         } else {
             TResultFailure<UserChatBoosts>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -3413,7 +3413,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<List<GameHighScore>>(
-                json.decodeFromString(Ok.serializer(ListSerializer(GameHighScore.serializer())), strResult).result
+                json.decodeFromString(TSerials.sListGameHighScore, strResult).result
             )
         } else {
             TResultFailure<List<GameHighScore>>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -3483,7 +3483,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<String>(
-                json.decodeFromString(Ok.serializer(String.serializer()), strResult).result
+                json.decodeFromString(TSerials.sString, strResult).result
             )
         } else {
             TResultFailure<String>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -3610,7 +3610,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -3656,7 +3656,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<WebhookInfo>(
-                json.decodeFromString(Ok.serializer(WebhookInfo.serializer()), strResult).result
+                json.decodeFromString(TSerials.sWebhookInfo, strResult).result
             )
         } else {
             TResultFailure<WebhookInfo>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -3824,7 +3824,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -3852,7 +3852,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<BotName>(
-                json.decodeFromString(Ok.serializer(BotName.serializer()), strResult).result
+                json.decodeFromString(TSerials.sBotName, strResult).result
             )
         } else {
             TResultFailure<BotName>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -3967,7 +3967,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4020,7 +4020,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<ChatFullInfo>(
-                json.decodeFromString(Ok.serializer(ChatFullInfo.serializer()), strResult).result
+                json.decodeFromString(TSerials.sChatFullInfo, strResult).result
             )
         } else {
             TResultFailure<ChatFullInfo>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4084,7 +4084,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<ForumTopic>(
-                json.decodeFromString(Ok.serializer(ForumTopic.serializer()), strResult).result
+                json.decodeFromString(TSerials.sForumTopic, strResult).result
             )
         } else {
             TResultFailure<ForumTopic>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4123,7 +4123,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<List<Message>>(
-                json.decodeFromString(Ok.serializer(ListSerializer(Message.serializer())), strResult).result
+                json.decodeFromString(TSerials.sListMessage, strResult).result
             )
         } else {
             TResultFailure<List<Message>>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4190,7 +4190,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4416,7 +4416,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4467,7 +4467,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<BusinessConnection>(
-                json.decodeFromString(Ok.serializer(BusinessConnection.serializer()), strResult).result
+                json.decodeFromString(TSerials.sBusinessConnection, strResult).result
             )
         } else {
             TResultFailure<BusinessConnection>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4513,7 +4513,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4607,7 +4607,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4641,7 +4641,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Poll>(
-                json.decodeFromString(Ok.serializer(Poll.serializer()), strResult).result
+                json.decodeFromString(TSerials.sPoll, strResult).result
             )
         } else {
             TResultFailure<Poll>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4732,7 +4732,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4774,7 +4774,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4846,7 +4846,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<List<MessageId>>(
-                json.decodeFromString(Ok.serializer(ListSerializer(MessageId.serializer())), strResult).result
+                json.decodeFromString(TSerials.sListMessageId, strResult).result
             )
         } else {
             TResultFailure<List<MessageId>>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4874,7 +4874,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<StickerSet>(
-                json.decodeFromString(Ok.serializer(StickerSet.serializer()), strResult).result
+                json.decodeFromString(TSerials.sStickerSet, strResult).result
             )
         } else {
             TResultFailure<StickerSet>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -4983,7 +4983,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<Message>(
-                json.decodeFromString(Ok.serializer(Message.serializer()), strResult).result
+                json.decodeFromString(TSerials.sMessage, strResult).result
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -5099,7 +5099,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<SentWebAppMessage>(
-                json.decodeFromString(Ok.serializer(SentWebAppMessage.serializer()), strResult).result
+                json.decodeFromString(TSerials.sSentWebAppMessage, strResult).result
             )
         } else {
             TResultFailure<SentWebAppMessage>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -5115,7 +5115,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<StarAmount>(
-                json.decodeFromString(Ok.serializer(StarAmount.serializer()), strResult).result
+                json.decodeFromString(TSerials.sStarAmount, strResult).result
             )
         } else {
             TResultFailure<StarAmount>(json.decodeFromString(TelegramError.serializer(), strResult))
@@ -5168,7 +5168,7 @@ class TApiClient internal constructor(
         }
         return if (statusCode0 in 200..299) {
             TResult<String>(
-                json.decodeFromString(Ok.serializer(String.serializer()), strResult).result
+                json.decodeFromString(TSerials.sString, strResult).result
             )
         } else {
             TResultFailure<String>(json.decodeFromString(TelegramError.serializer(), strResult))

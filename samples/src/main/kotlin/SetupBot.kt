@@ -1,14 +1,18 @@
 package org.bezsahara.samples
 
 import org.bezsahara.kittybot.bot.action.each.testEach
+import org.bezsahara.kittybot.bot.action.other.contextHook
 import org.bezsahara.kittybot.bot.builder.FelineBuilder
+import org.bezsahara.kittybot.bot.builder.UpdaterMode
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.addHandler
+import org.bezsahara.kittybot.bot.dispatchers.attrKeyOf
 import org.bezsahara.kittybot.bot.dispatchers.y.callbackQuery
 import org.bezsahara.kittybot.bot.dispatchers.y.command
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.chatId
 import org.bezsahara.kittybot.bot.dispatchers.y.text
 import org.bezsahara.kittybot.bot.sendHttpCat
+import org.bezsahara.kittybot.bot.updates.MultiIdentity
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommand
 import org.bezsahara.kittybot.telegram.classes.chat.toChatId
 import org.bezsahara.kittybot.telegram.classes.core.update.CallbackQueryUpdate
@@ -42,12 +46,15 @@ fun FelineBuilder<*>.buildBot() {
     // Restrict updates to what this sample actually handles.
     allowUpdatesOf(CallbackQueryUpdate, MessageUpdate)
 
+    updaterMode = UpdaterMode.MultiThread(MultiIdentity.OfUserChatIdentity, 8)
+
     // Centralized error handling for all sample handlers.
     setErrorHandler { throwable, bot, update, _, _ ->
         update.asMessageUpdateOrNull()?.chatIdOrNull()?.let { chatId ->
             val errorText = throwable.message ?: throwable.javaClass.simpleName
             bot.sendMessage(chatId, "Handler failed: $errorText")
         }
+        throwable.printStackTrace()
         Decision.Consumed
     }
 
@@ -64,10 +71,18 @@ fun FelineBuilder<*>.buildBot() {
                 /cat - calling an API helper
                 /route - routing example
                 /wizard - flow example
-                /httpcat 418 - low level addHandler example
+                /files - files example
+                /httpcat [number] - low level addHandler example
                 /error - error handler demo
                 """.trimIndent()
             )
+        }
+
+        val attrKey = attrKeyOf<String>("TestAttribute")
+
+        // You can change context as well to later access it in handlers
+        contextHook { update, handlerContext ->
+            handlerContext[attrKey] = "Current update class is: ${update.javaClass.simpleName}"
         }
 
         command("/id") {
@@ -143,6 +158,7 @@ fun FelineBuilder<*>.buildBot() {
 
         // More advanced dispatcher helpers live in their own sample files.
         routingExample()
+        filesExample()
         flowExample()
     }
 }

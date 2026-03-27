@@ -1,12 +1,16 @@
 package org.bezsahara.kittybot.bot.action.flow
 
-import org.bezsahara.kittybot.bot.KittyBot
+import org.bezsahara.kittybot.bot.action.route.KeyGeneratorInt
 import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 
 fun interface FlowIdentityFinder {
-    fun findOrNull(update: Update): String?
+    fun findOrNull(update: Update, handlerContext: HandlerContext): String?
+
+    companion object {
+        val OfMessageUpdateChatId = FlowIdentityFinder { update, _ -> update.message?.chat?.id?.toString() }
+    }
 }
 
 class FlowIdentityData(
@@ -16,24 +20,14 @@ class FlowIdentityData(
     val args: Any? get() = payload.args
 }
 
-class FlowHandlerBegin(
-    sections: Array<HandlerIdentity>,
-    val flowIdentityFinder: FlowIdentityFinder,
-    val flowIdentityStorage: FlowIdentityStorage,
-    exitHandlerIdentity: HandlerIdentity,
-    val fidAttribute: AttrKey<FlowIdentityData>,
-) : Handler {
-
-    private val exitDecision = Decision.AfterNextTo(exitHandlerIdentity)
-
-    private val sections = Array(sections.size) { Decision.NextTo(sections[it]) }
-
-    override suspend fun handleUpdate(
-        update: Update,
-        bot: KittyBot,
-        handlerContext: HandlerContext,
-    ): Decision {
-        val identity = flowIdentityFinder.findOrNull(update) ?: return exitDecision
+internal class FlowRoutingKeyGenerator(
+    private val flowIdentityFinder: FlowIdentityFinder,
+    private val flowIdentityStorage: FlowIdentityStorage,
+    private val fidAttribute: AttrKey<FlowIdentityData>,
+    private val sectionCount: Int,
+) : KeyGeneratorInt {
+    override fun generate(update: Update, handlerContext: HandlerContext): Int {
+        val identity = flowIdentityFinder.findOrNull(update, handlerContext) ?: return Int.MIN_VALUE
         var stage = flowIdentityStorage[identity]
 
         if (stage == null) {
@@ -42,25 +36,15 @@ class FlowHandlerBegin(
 
         handlerContext[fidAttribute] = FlowIdentityData(identity, stage)
 
-        val stageIdMinusOne = stage.id - 1
+        val stageId = stage.id
 
-        if (stageIdMinusOne < 0) return Decision.Next
+        if (stageId < 0) {
+            error("Flow stage id cannot be negative!")
+        }
+        if (stageId >= sectionCount) {
+            error("Trying to jump to a section that does not exist! Check, maybe you called nextSection on the last section!")
+        }
 
-        if (stageIdMinusOne >= sections.size) error("Trying to jump to a section that does not exist! Check, maybe you called nextSection on the last section!")
-        return sections[stageIdMinusOne]
-    }
-}
-
-class FlowHandlerSectionEnd(
-    exitHandlerIdentity: HandlerIdentity,
-) : Handler {
-    private val exitDecision = Decision.AfterNextTo(exitHandlerIdentity)
-
-    override suspend fun handleUpdate(
-        update: Update,
-        bot: KittyBot,
-        handlerContext: HandlerContext,
-    ): Decision {
-        return exitDecision
+        return stageId
     }
 }

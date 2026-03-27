@@ -9,6 +9,8 @@ import org.bezsahara.kittybot.bot.errors.hiss
 import org.bezsahara.kittybot.bot.updates.CustomUpdaterSetup
 import org.bezsahara.kittybot.bot.updates.MultiIdentity
 import org.bezsahara.kittybot.bot.dispatchers.Decision
+import org.bezsahara.kittybot.bot.dispatchers.TypeAwareMap
+import org.bezsahara.kittybot.bot.dispatchers.prepare
 import org.bezsahara.kittybot.bot.updates.FurballConfig
 import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.UpdateReceiver
@@ -62,7 +64,7 @@ sealed interface UpdaterMode {
      * Updates will be handled on several threads.
      * @param parallelism number of maximum coroutines running together and handling updates.
      */
-    class MultiThread(val multiIdentity: MultiIdentity, val parallelism: Int = 32) : UpdaterMode
+    class MultiThread(val multiIdentity: MultiIdentity, val parallelism: Int = 8) : UpdaterMode
 
     class Custom(val customUpdater: CustomUpdaterSetup) : UpdaterMode
 }
@@ -86,7 +88,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
     internal var pollingTimeoutP: Long = 60
     private var lastIdRecovery: RecoverLastId? = null
 
-    val dispatchers = FelineDispatcher()
+    val dispatchers = FelineDispatcher(this)
 
     /**
      * Same as [ensureOnlyNewUpdatesWithFile] but allows you
@@ -175,11 +177,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
     fun setErrorHandler(h: HandlerErrorHandler) { errorHandler = h }
 
     // If you want to, you can implement your own api client
-    private var apiClientBuilder: ClientBuilder? = null
-
-    fun setClientBuilder(clientBuilder: ClientBuilder) {
-        apiClientBuilder = clientBuilder
-    }
+    var apiClientBuilder: ClientBuilder? = null
 
     fun useCustomClient(customClient: CustomClient) {
         apiClientBuilder = object : ClientBuilder {
@@ -206,6 +204,8 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
         allowedUpdates!!.addAll(cl)
     }
 
+    val botContext = TypeAwareMap()
+
     internal fun build(): KittyBotConfig<T> {
         val deFactoBuilder = try {
             apiClientBuilder ?: tryFindDefaultClient()
@@ -214,6 +214,8 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
                     "Use setClientBuilder or useCustomClient functions to set your client." +
                     "Or include kittybot-client for a default client.", e)
         }
+
+        prepare()
 
         return KittyBotConfig<T>(
             dispatchers,
@@ -226,7 +228,8 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
             errorHandler,
             deFactoBuilder,
             allowedUpdates?.map { it.name },
-            furballConfig
+            furballConfig,
+            botContext
         )
     }
 }

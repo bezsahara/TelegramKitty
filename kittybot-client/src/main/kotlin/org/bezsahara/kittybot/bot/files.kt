@@ -18,11 +18,8 @@ import org.bezsahara.kittybot.telegram.utils.onResult
 import org.bezsahara.kittybot.telegram.utils.unwrapOrNull
 import java.util.function.Function
 
-//internal inline fun <T> notNull(obj: T): Int = if (obj == null) 0 else 1
-
 inline fun KittyBotConfig<*>.purr(block: KittyBot.() -> Unit) {
     kittyBot.block()
-//    arrayOf(2).toList()
 }
 
 inline fun KittyBotConfig<*>.purrBlocking(crossinline block: suspend KittyBot.() -> Unit) =
@@ -46,7 +43,7 @@ suspend fun KittyBot.downloadFileAsByteArray(fileId: String): TResult<ByteArray>
         it.send()
     }).coAwait()
 
-    if (response.headers()["Content-Type"].startsWith("application/json")) {
+    if (response.headers()["Content-Type"]?.startsWith("application/json") == true) {
         return TResultFailure(
             apiClient.json.decodeFromString(
                 TelegramError.serializer(), response.body().coAwait().toString(
@@ -65,7 +62,7 @@ suspend fun KittyBot.downloadFileAsByteArray(file: File): TResult<ByteArray> {
         it.send()
     }).coAwait()
 
-    if (response.headers()["Content-Type"].startsWith("application/json")) {
+    if (response.headers()["Content-Type"]?.startsWith("application/json") == true) {
         return TResultFailure(
             apiClient.json.decodeFromString(
                 TelegramError.serializer(), response.body().coAwait().toString(

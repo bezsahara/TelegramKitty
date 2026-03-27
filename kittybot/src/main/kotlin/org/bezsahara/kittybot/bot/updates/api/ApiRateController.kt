@@ -5,13 +5,18 @@ package org.bezsahara.kittybot.bot.updates.api
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
+import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
+import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 import org.bezsahara.kittybot.telegram.utils.TReturns
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.function.Consumer
+import java.util.function.Function
 import kotlin.math.roundToInt
 
+// Purpose of this class is to make sure you are within api rate limits
+// However, it might be incorrect impl. Telegram does not specify exact rate limiting mechanism
 // Make sure to create just one instance! for one bot
 class ApiRateController(
     private val evictDeltaMillis: Long = 1000 * 60 * 10, // remove chats that are not active for 10 mins
@@ -27,7 +32,7 @@ class ApiRateController(
 
     private val map = ConcurrentHashMap<ChatId, ChatCheck>()
 
-    private var cleaning = AtomicBoolean(false)
+    private val cleaning = AtomicBoolean(false)
 
     private fun cleanMapMaybe() {
         if (map.size > mapThreshold && cleaning.compareAndSet(false, true)) {
@@ -73,8 +78,15 @@ class ApiRateController(
             }
         }
     }
+}
 
-    companion object {
-        val instance by lazy { ApiRateController() }
-    }
+
+private val instances = ConcurrentHashMap<FelineDispatcher, ApiRateController>()
+
+val HandlerStore.apiRateController: ApiRateController get() {
+    return instances.computeIfAbsent(felineDispatcher, Function { ApiRateController() })
+}
+
+suspend inline fun <T: TReturns> HandlerStore.controlApiRate(chatId: ChatId, noinline block: () -> T): T {
+    return apiRateController.submit(chatId, block)
 }

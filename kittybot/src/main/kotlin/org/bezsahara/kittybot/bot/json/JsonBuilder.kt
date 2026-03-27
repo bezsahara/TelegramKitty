@@ -7,11 +7,6 @@ inline fun buildJson(body: UnsafeJsonBuilder.() -> Unit): String {
     return b.toString()
 }
 
-fun test() {
-    buildJson {
-    }
-}
-
 class UnsafeJsonBuilder {
     private val sb = StringBuilder()
 

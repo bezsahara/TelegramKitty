@@ -13,6 +13,7 @@ interface FlowIdentityStorage {
 
 class FlowIdentityStorageInMem : FlowIdentityStorage {
     private val map = ConcurrentHashMap<String, FlowPayload>()
+
     override fun set(identity: String, data: FlowPayload) {
         map[identity] = data
     }

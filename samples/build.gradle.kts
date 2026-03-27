@@ -14,6 +14,11 @@ dependencies {
     testImplementation(kotlin("test"))
     implementation(project(":kittybot"))
     implementation(project(":kittybot-client"))
+//    implementation("org.bezsahara:kittybot:2.0.6")
+//    implementation("org.bezsahara:kittybot-client:2.0.6")
+
+    implementation("io.ktor:ktor-client-core:3.4.0")
+    implementation("io.ktor:ktor-client-cio:3.4.0")
 }
 
 tasks.test {

@@ -20,12 +20,16 @@ fun interface MultiIdentity {
     fun identify(update: Update): Any?
 
     companion object {
-        val OfChatIdentity = MultiIdentity {
+        val OfMessageChatIdentity = MultiIdentity {
             (it as? MessageUpdate)?.message?.chat?.id
         }
+
+        val OfUserChatIdentity = MultiIdentity { it.chatIdOrNull() }
     }
 }
 
+// It tries to process updates sequentially for a given identity
+// While processing identities in parallel
 internal class MultiUpdater(
     bot: KittyBot,
     botDispatchers: FelineDispatcher,

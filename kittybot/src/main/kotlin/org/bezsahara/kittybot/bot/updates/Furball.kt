@@ -4,6 +4,7 @@ import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.CONSUMED
 import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.NEXT
+import org.bezsahara.kittybot.bot.errors.HandlerAwareError
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
@@ -113,7 +114,7 @@ abstract class Furball(
             }
 
             if (hopSafety > hopSafetyLimit) {
-                furballConfig.onRecursionProblem?.invoke() ?: throw HandlerException("It seems there is a recursion problem!")
+                furballConfig.onRecursionProblem?.invoke(hopSafety) ?: throw HandlerException("It seems there is a recursion problem!")
             }
 
             when (res.result) {
