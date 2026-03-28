@@ -2,6 +2,9 @@
 
 package org.bezsahara.kittybot.bot.json
 
+import io.netty.buffer.Unpooled
+import io.vertx.core.buffer.impl.BufferImpl
+import io.vertx.core.internal.buffer.BufferInternal
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
@@ -13,6 +16,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.internal.InternalJsonWriter
 import kotlinx.serialization.json.internal.encodeByWriter
 import org.bezsahara.kittybot.doubles.DoubleTransform
+import java.nio.ByteBuffer
 
 // IDK how a lot of stuff works here, half written by ChatGPT, but appears to work properly!
 // Tested on latin and cyrillic chars
@@ -366,6 +370,23 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
         }
     }
 
+
+    fun toBuffer(): BufferInternal {
+        if (pos == 1) {
+            return BufferStat.EMPTY_JSON
+        }
+        buf[pos-1] = '}'.code.toByte() // overwrite last comma
+        return if (pos == buf.size) {
+            BufferImpl(Unpooled.wrappedBuffer(buf))
+        } else {
+            val b = BufferImpl(pos)
+            b.appendBytes(buf, 0, pos)
+            b
+        }
+    }
+
+    val size9: Int get() = pos
+
     fun reset(shrinkIfOver: Int = 1 shl 20) {
         if (buf.size > shrinkIfOver) buf = ByteArray(256)
         pos = 0
@@ -688,5 +709,7 @@ internal fun stringSize(x0: Long): Int {
 
 
 
-
+internal object BufferStat {
+    @JvmField val EMPTY_JSON: BufferInternal = BufferInternal.buffer(2).appendBytes("{}".toByteArray())
+}
 

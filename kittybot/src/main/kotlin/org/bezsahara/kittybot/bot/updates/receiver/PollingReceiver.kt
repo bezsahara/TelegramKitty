@@ -9,6 +9,7 @@ import org.bezsahara.kittybot.bot.builder.RecoverLastId
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.client.opt.RequestOptions
 import org.bezsahara.kittybot.telegram.utils.TResult
+import org.bezsahara.kittybot.telegram.utils.throwError
 
 /**
  * Updater that uses polling.
@@ -56,7 +57,7 @@ class PollingReceiver(
                     updateChannel.send(resValue[updIdx])
                 }
             } else {
-                throw KittyError(result.toString())
+                result.throwError()
             }
         }
     }

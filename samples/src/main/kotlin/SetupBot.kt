@@ -130,12 +130,12 @@ fun FelineBuilder<*>.buildBot() {
 
         // testEach keeps evaluating handlers in the block even after one consumes the update.
         testEach {
-            text("s") {
-                bot.sendMessage(chatId, "First handler inside testEach matched exactly `s`.")
+            text("cars") {
+                bot.sendMessage(chatId, "First handler inside testEach matched exactly `cars`.")
             }
 
-            text({ it.startsWith("s") }) {
-                bot.sendMessage(chatId, "Second handler inside testEach matched a string starting with `s`.")
+            text({ it.startsWith("cars") }) {
+                bot.sendMessage(chatId, "Second handler inside testEach matched a string starting with `cars`.")
             }
         }
 

@@ -1,6 +1,7 @@
 package org.bezsahara.kittybot.bot
 
 
+import io.netty.util.internal.PlatformDependent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import org.bezsahara.kittybot.bot.builder.ClientBuilder

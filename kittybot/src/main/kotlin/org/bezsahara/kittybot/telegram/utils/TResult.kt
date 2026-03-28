@@ -157,6 +157,11 @@ fun <T> TelegramError.asTResult(): TResult<T> {
     return TResultFailure(this)
 }
 
+internal fun TResult<*>.throwError(): Nothing {
+    val a = (value as? TelegramError) ?: error("value is not a TelegramError")
+    throw TelegramErrorException(a)
+}
+
 @PublishedApi
 internal fun generateErrorMsgForEither(obj: Any, side: Boolean): Throwable {
     if (obj is TelegramError) {

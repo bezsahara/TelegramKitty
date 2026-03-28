@@ -111,9 +111,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putListOfNumberUnsafe("message_ids", messageIds)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) deleteMessagesBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) deleteMessagesBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -159,7 +158,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -189,9 +188,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("chat_id", chatId.value)
                         putStringUnsafe("invite_link", inviteLink)
                         if (name != null) putStringUnsafe("name", name)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) editChatSubscriptionInviteLinkBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) editChatSubscriptionInviteLinkBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -219,9 +217,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("message_thread_id", messageThreadId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) deleteForumTopicBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) deleteForumTopicBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -251,9 +248,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("business_connection_id", businessConnectionId)
                         putNumberUnsafe("chat_id", chatId)
                         putNumberUnsafe("message_id", messageId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) readBusinessMessageBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) readBusinessMessageBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -283,9 +279,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("chat_id", chatId.value)
                         putJsonObject("permissions", ChatPermissions.serializer(), json, permissions)
                         if (useIndependentChatPermissions != null) putBoolUnsafe("use_independent_chat_permissions", useIndependentChatPermissions)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setChatPermissionsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setChatPermissionsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -319,9 +314,8 @@ class TApiClient internal constructor(
                         if (messageId != null) putNumberUnsafe("message_id", messageId)
                         if (inlineMessageId != null) putStringUnsafe("inline_message_id", inlineMessageId)
                         if (replyMarkup != null) putJsonObject("reply_markup", InlineKeyboardMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) editMessageReplyMarkupBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) editMessageReplyMarkupBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -357,9 +351,8 @@ class TApiClient internal constructor(
                         putNumberUnsafe("user_id", userId)
                         if (untilDate != null) putNumberUnsafe("until_date", untilDate)
                         if (revokeMessages != null) putBoolUnsafe("revoke_messages", revokeMessages)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) banChatMemberBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) banChatMemberBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -385,9 +378,8 @@ class TApiClient internal constructor(
                     val bbSize0 = requestOptions?.bufferSize ?: getBusinessAccountStarBalanceBSP.decideCapacity()
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("business_connection_id", businessConnectionId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getBusinessAccountStarBalanceBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getBusinessAccountStarBalanceBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -410,7 +402,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -438,9 +430,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         if (customDescription != null) putStringUnsafe("custom_description", customDescription)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) verifyChatBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) verifyChatBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -478,9 +469,8 @@ class TApiClient internal constructor(
                         if (parseMode != null) putJsonObject("parse_mode", ParseMode.serializer(), json, parseMode)
                         if (captionEntities != null) putListOfJsonObjects("caption_entities", MessageEntity.serializer(), json, captionEntities)
                         if (areas != null) putListOfJsonObjects("areas", StoryArea.serializer(), json, areas)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) editStoryBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) editStoryBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -503,7 +493,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -559,9 +549,8 @@ class TApiClient internal constructor(
                         if (suggestedPostParameters != null) putJsonObject("suggested_post_parameters", SuggestedPostParameters.serializer(), json, suggestedPostParameters)
                         if (replyParameters != null) putJsonObject("reply_parameters", ReplyParameters.serializer(), json, replyParameters)
                         if (replyMarkup != null) putJsonObject("reply_markup", ReplyMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) copyMessageBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) copyMessageBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -589,9 +578,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("message_thread_id", messageThreadId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) reopenForumTopicBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) reopenForumTopicBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -639,9 +627,8 @@ class TApiClient internal constructor(
                         if (suggestedPostParameters != null) putJsonObject("suggested_post_parameters", SuggestedPostParameters.serializer(), json, suggestedPostParameters)
                         if (replyParameters != null) putJsonObject("reply_parameters", ReplyParameters.serializer(), json, replyParameters)
                         if (replyMarkup != null) putJsonObject("reply_markup", ReplyMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendDiceBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendDiceBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -669,9 +656,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putNumberUnsafe("user_id", userId)
                         putStringUnsafe("telegram_payment_charge_id", telegramPaymentChargeId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) refundStarPaymentBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) refundStarPaymentBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -745,9 +731,8 @@ class TApiClient internal constructor(
                         if (suggestedPostParameters != null) putJsonObject("suggested_post_parameters", SuggestedPostParameters.serializer(), json, suggestedPostParameters)
                         if (replyParameters != null) putJsonObject("reply_parameters", ReplyParameters.serializer(), json, replyParameters)
                         if (replyMarkup != null) putJsonObject("reply_markup", ReplyMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendLocationBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendLocationBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -777,9 +762,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("user_id", userId)
                         putStringUnsafe("custom_title", customTitle)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setChatAdministratorCustomTitleBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setChatAdministratorCustomTitleBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -809,9 +793,8 @@ class TApiClient internal constructor(
                         putNumberUnsafe("user_id", userId)
                         if (emojiStatusCustomEmojiId != null) putStringUnsafe("emoji_status_custom_emoji_id", emojiStatusCustomEmojiId)
                         if (emojiStatusExpirationDate != null) putNumberUnsafe("emoji_status_expiration_date", emojiStatusExpirationDate)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setUserEmojiStatusBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setUserEmojiStatusBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -839,9 +822,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putStringUnsafe("title", title)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setChatTitleBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setChatTitleBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -869,9 +851,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         if (description != null) putStringUnsafe("description", description)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setChatDescriptionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setChatDescriptionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -894,7 +875,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -917,7 +898,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -940,7 +921,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putNumberUnsafe("user_id", userId)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -968,9 +949,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("business_connection_id", businessConnectionId)
                         if (isPublic != null) putBoolUnsafe("is_public", isPublic)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) removeBusinessAccountProfilePhotoBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) removeBusinessAccountProfilePhotoBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1102,9 +1082,8 @@ class TApiClient internal constructor(
                         putNumberUnsafe("message_id", messageId)
                         putJsonObject("checklist", InputChecklist.serializer(), json, checklist)
                         if (replyMarkup != null) putJsonObject("reply_markup", InlineKeyboardMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) editMessageChecklistBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) editMessageChecklistBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1132,9 +1111,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putNumberUnsafe("user_id", userId)
                         putListOfJsonObjects("errors", PassportElementError.serializer(), json, errors)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setPassportDataErrorsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setPassportDataErrorsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1162,9 +1140,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         if (chatId != null) putNumberUnsafe("chat_id", chatId)
                         if (menuButton != null) putJsonObject("menu_button", MenuButton.serializer(), json, menuButton)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setChatMenuButtonBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setChatMenuButtonBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1187,7 +1164,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1257,9 +1234,8 @@ class TApiClient internal constructor(
                         if (messageEffectId != null) putStringUnsafe("message_effect_id", messageEffectId)
                         if (replyParameters != null) putJsonObject("reply_parameters", ReplyParameters.serializer(), json, replyParameters)
                         if (replyMarkup != null) putJsonObject("reply_markup", ReplyMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendPollBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendPollBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1282,7 +1258,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         if (chatId != null) putNumberUnsafe("chat_id", chatId)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1314,9 +1290,8 @@ class TApiClient internal constructor(
                         if (limit != null) putNumberUnsafe("limit", limit)
                         if (timeout != null) putNumberUnsafe("timeout", timeout)
                         if (allowedUpdates != null) putListOfStringUnsafe("allowed_updates", allowedUpdates)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getUpdatesBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getUpdatesBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1344,9 +1319,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         if (name != null) putStringUnsafe("name", name)
                         if (languageCode != null) putStringUnsafe("language_code", languageCode)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setMyNameBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setMyNameBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1376,9 +1350,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("business_connection_id", businessConnectionId)
                         putStringUnsafe("first_name", firstName)
                         if (lastName != null) putStringUnsafe("last_name", lastName)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setBusinessAccountNameBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setBusinessAccountNameBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1418,9 +1391,8 @@ class TApiClient internal constructor(
                         if (disableNotification != null) putBoolUnsafe("disable_notification", disableNotification)
                         if (protectContent != null) putBoolUnsafe("protect_content", protectContent)
                         if (removeCaption != null) putBoolUnsafe("remove_caption", removeCaption)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) copyMessagesBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) copyMessagesBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1450,9 +1422,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("chat_id", chatId.value)
                         if (businessConnectionId != null) putStringUnsafe("business_connection_id", businessConnectionId)
                         if (messageId != null) putNumberUnsafe("message_id", messageId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) unpinChatMessageBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) unpinChatMessageBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1486,9 +1457,8 @@ class TApiClient internal constructor(
                         if (messageId != null) putNumberUnsafe("message_id", messageId)
                         if (inlineMessageId != null) putStringUnsafe("inline_message_id", inlineMessageId)
                         if (replyMarkup != null) putJsonObject("reply_markup", InlineKeyboardMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) stopMessageLiveLocationBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) stopMessageLiveLocationBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1520,9 +1490,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("sticker", sticker)
                         putListOfStringUnsafe("emoji_list", emojiList)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setStickerEmojiListBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setStickerEmojiListBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1548,9 +1517,8 @@ class TApiClient internal constructor(
                     val bbSize0 = requestOptions?.bufferSize ?: getMyDescriptionBSP.decideCapacity()
                     JsonByteBuffer(bbSize0).run {
                         if (languageCode != null) putStringUnsafe("language_code", languageCode)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getMyDescriptionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getMyDescriptionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1578,9 +1546,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("user_id", userId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getChatMemberBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getChatMemberBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1607,7 +1574,7 @@ class TApiClient internal constructor(
                         putNumberUnsafe("user_id", userId)
                         if (offset != null) putNumberUnsafe("offset", offset)
                         if (limit != null) putNumberUnsafe("limit", limit)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1694,9 +1661,8 @@ class TApiClient internal constructor(
                         if (expireDate != null) putNumberUnsafe("expire_date", expireDate)
                         if (memberLimit != null) putNumberUnsafe("member_limit", memberLimit)
                         if (createsJoinRequest != null) putBoolUnsafe("creates_join_request", createsJoinRequest)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) createChatInviteLinkBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) createChatInviteLinkBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1721,7 +1687,7 @@ class TApiClient internal constructor(
                     JsonByteBuffer(256).run {
                         if (offset != null) putNumberUnsafe("offset", offset)
                         if (limit != null) putNumberUnsafe("limit", limit)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1749,9 +1715,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putStringUnsafe("sticker_set_name", stickerSetName)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setChatStickerSetBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setChatStickerSetBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1779,9 +1744,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         if (shortDescription != null) putStringUnsafe("short_description", shortDescription)
                         if (languageCode != null) putStringUnsafe("language_code", languageCode)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setMyShortDescriptionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setMyShortDescriptionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1842,9 +1806,8 @@ class TApiClient internal constructor(
                         if (expireDate != null) putNumberUnsafe("expire_date", expireDate)
                         if (memberLimit != null) putNumberUnsafe("member_limit", memberLimit)
                         if (createsJoinRequest != null) putBoolUnsafe("creates_join_request", createsJoinRequest)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) editChatInviteLinkBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) editChatInviteLinkBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1867,7 +1830,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1890,7 +1853,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1940,7 +1903,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         if (forChannels != null) putBoolUnsafe("for_channels", forChannels)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -1984,9 +1947,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("sticker", sticker)
                         putNumberUnsafe("position", position)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setStickerPositionInSetBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setStickerPositionInSetBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2014,9 +1976,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("name", name)
                         if (customEmojiId != null) putStringUnsafe("custom_emoji_id", customEmojiId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setCustomEmojiStickerSetThumbnailBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setCustomEmojiStickerSetThumbnailBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2064,9 +2025,8 @@ class TApiClient internal constructor(
                         putNumberUnsafe("message_id", messageId)
                         if (businessConnectionId != null) putStringUnsafe("business_connection_id", businessConnectionId)
                         if (disableNotification != null) putBoolUnsafe("disable_notification", disableNotification)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) pinChatMessageBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) pinChatMessageBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2092,9 +2052,8 @@ class TApiClient internal constructor(
                     val bbSize0 = requestOptions?.bufferSize ?: getCustomEmojiStickersBSP.decideCapacity()
                     JsonByteBuffer(bbSize0).run {
                         putListOfStringUnsafe("custom_emoji_ids", customEmojiIds)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getCustomEmojiStickersBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getCustomEmojiStickersBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2126,9 +2085,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("owned_gift_id", ownedGiftId)
                         if (keepOriginalDetails != null) putBoolUnsafe("keep_original_details", keepOriginalDetails)
                         if (starCount != null) putNumberUnsafe("star_count", starCount)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) upgradeGiftBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) upgradeGiftBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2164,9 +2122,8 @@ class TApiClient internal constructor(
                         if (isPersonal != null) putBoolUnsafe("is_personal", isPersonal)
                         if (nextOffset != null) putStringUnsafe("next_offset", nextOffset)
                         if (button != null) putJsonObject("button", InlineQueryResultsButton.serializer(), json, button)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) answerInlineQueryBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) answerInlineQueryBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2194,9 +2151,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putStringUnsafe("invite_link", inviteLink)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) revokeChatInviteLinkBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) revokeChatInviteLinkBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2224,9 +2180,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("business_connection_id", businessConnectionId)
                         putNumberUnsafe("star_count", starCount)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) transferBusinessAccountStarsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) transferBusinessAccountStarsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2256,9 +2211,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("pre_checkout_query_id", preCheckoutQueryId)
                         putBoolUnsafe("ok", ok)
                         if (errorMessage != null) putStringUnsafe("error_message", errorMessage)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) answerPreCheckoutQueryBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) answerPreCheckoutQueryBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2312,9 +2266,8 @@ class TApiClient internal constructor(
                         if (suggestedPostParameters != null) putJsonObject("suggested_post_parameters", SuggestedPostParameters.serializer(), json, suggestedPostParameters)
                         if (replyParameters != null) putJsonObject("reply_parameters", ReplyParameters.serializer(), json, replyParameters)
                         if (replyMarkup != null) putJsonObject("reply_markup", ReplyMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendMessageBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendMessageBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2346,9 +2299,8 @@ class TApiClient internal constructor(
                         putJsonObject("action", ChatAction.serializer(), json, action)
                         if (businessConnectionId != null) putStringUnsafe("business_connection_id", businessConnectionId)
                         if (messageThreadId != null) putNumberUnsafe("message_thread_id", messageThreadId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendChatActionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendChatActionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2380,9 +2332,8 @@ class TApiClient internal constructor(
                         putNumberUnsafe("subscription_period", subscriptionPeriod)
                         putNumberUnsafe("subscription_price", subscriptionPrice)
                         if (name != null) putStringUnsafe("name", name)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) createChatSubscriptionInviteLinkBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) createChatSubscriptionInviteLinkBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2410,9 +2361,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("message_id", messageId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) deleteMessageBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) deleteMessageBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2438,9 +2388,8 @@ class TApiClient internal constructor(
                     val bbSize0 = requestOptions?.bufferSize ?: getMyShortDescriptionBSP.decideCapacity()
                     JsonByteBuffer(bbSize0).run {
                         if (languageCode != null) putStringUnsafe("language_code", languageCode)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getMyShortDescriptionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getMyShortDescriptionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2472,9 +2421,8 @@ class TApiClient internal constructor(
                         putBoolUnsafe("ok", ok)
                         if (shippingOptions != null) putListOfJsonObjects("shipping_options", ShippingOption.serializer(), json, shippingOptions)
                         if (errorMessage != null) putStringUnsafe("error_message", errorMessage)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) answerShippingQueryBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) answerShippingQueryBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2502,9 +2450,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("business_connection_id", businessConnectionId)
                         putStringUnsafe("owned_gift_id", ownedGiftId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) convertGiftToStarsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) convertGiftToStarsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2540,9 +2487,8 @@ class TApiClient internal constructor(
                         if (allowBotChats != null) putBoolUnsafe("allow_bot_chats", allowBotChats)
                         if (allowGroupChats != null) putBoolUnsafe("allow_group_chats", allowGroupChats)
                         if (allowChannelChats != null) putBoolUnsafe("allow_channel_chats", allowChannelChats)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) savePreparedInlineMessageBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) savePreparedInlineMessageBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2570,9 +2516,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("business_connection_id", businessConnectionId)
                         putNumberUnsafe("story_id", storyId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) deleteStoryBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) deleteStoryBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2608,9 +2553,8 @@ class TApiClient internal constructor(
                         if (text != null) putStringUnsafe("text", text)
                         if (textParseMode != null) putStringUnsafe("text_parse_mode", textParseMode)
                         if (textEntities != null) putListOfJsonObjects("text_entities", MessageEntity.serializer(), json, textEntities)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) giftPremiumSubscriptionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) giftPremiumSubscriptionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2642,9 +2586,8 @@ class TApiClient internal constructor(
                         putNumberUnsafe("message_thread_id", messageThreadId)
                         if (name != null) putStringUnsafe("name", name)
                         if (iconCustomEmojiId != null) putStringUnsafe("icon_custom_emoji_id", iconCustomEmojiId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) editForumTopicBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) editForumTopicBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2698,9 +2641,8 @@ class TApiClient internal constructor(
                         if (suggestedPostParameters != null) putJsonObject("suggested_post_parameters", SuggestedPostParameters.serializer(), json, suggestedPostParameters)
                         if (replyParameters != null) putJsonObject("reply_parameters", ReplyParameters.serializer(), json, replyParameters)
                         if (replyMarkup != null) putJsonObject("reply_markup", ReplyMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendContactBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendContactBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2723,7 +2665,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2757,9 +2699,8 @@ class TApiClient internal constructor(
                         putJsonObject("permissions", ChatPermissions.serializer(), json, permissions)
                         if (useIndependentChatPermissions != null) putBoolUnsafe("use_independent_chat_permissions", useIndependentChatPermissions)
                         if (untilDate != null) putNumberUnsafe("until_date", untilDate)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) restrictChatMemberBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) restrictChatMemberBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2789,9 +2730,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("business_connection_id", businessConnectionId)
                         putJsonObject("photo", InputProfilePhoto.serializer(), json, photo)
                         if (isPublic != null) putBoolUnsafe("is_public", isPublic)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setBusinessAccountProfilePhotoBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setBusinessAccountProfilePhotoBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2833,9 +2773,8 @@ class TApiClient internal constructor(
                         if (sortByPrice != null) putBoolUnsafe("sort_by_price", sortByPrice)
                         if (offset != null) putStringUnsafe("offset", offset)
                         if (limit != null) putNumberUnsafe("limit", limit)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getBusinessAccountGiftsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getBusinessAccountGiftsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2877,9 +2816,8 @@ class TApiClient internal constructor(
                         if (disableNotification != null) putBoolUnsafe("disable_notification", disableNotification)
                         if (protectContent != null) putBoolUnsafe("protect_content", protectContent)
                         if (suggestedPostParameters != null) putJsonObject("suggested_post_parameters", SuggestedPostParameters.serializer(), json, suggestedPostParameters)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) forwardMessageBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) forwardMessageBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2909,9 +2847,8 @@ class TApiClient internal constructor(
                         putNumberUnsafe("user_id", userId)
                         putStringUnsafe("telegram_payment_charge_id", telegramPaymentChargeId)
                         putBoolUnsafe("is_canceled", isCanceled)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) editUserStarSubscriptionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) editUserStarSubscriptionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2957,9 +2894,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("business_connection_id", businessConnectionId)
                         putBoolUnsafe("show_gift_button", showGiftButton)
                         putJsonObject("accepted_gift_types", AcceptedGiftTypes.serializer(), json, acceptedGiftTypes)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setBusinessAccountGiftSettingsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setBusinessAccountGiftSettingsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -2987,9 +2923,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("business_connection_id", businessConnectionId)
                         if (bio != null) putStringUnsafe("bio", bio)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setBusinessAccountBioBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setBusinessAccountBioBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3017,9 +2952,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("sender_chat_id", senderChatId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) unbanChatSenderChatBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) unbanChatSenderChatBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3047,9 +2981,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         if (scope != null) putJsonObject("scope", BotCommandScope.serializer(), json, scope)
                         if (languageCode != null) putStringUnsafe("language_code", languageCode)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getMyCommandsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getMyCommandsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3110,9 +3043,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("sticker", sticker)
                         if (maskPosition != null) putJsonObject("mask_position", MaskPosition.serializer(), json, maskPosition)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setStickerMaskPositionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setStickerMaskPositionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3140,9 +3072,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putNumberUnsafe("user_id", userId)
                         if (customDescription != null) putStringUnsafe("custom_description", customDescription)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) verifyUserBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) verifyUserBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3165,7 +3096,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         if (dropPendingUpdates != null) putBoolUnsafe("drop_pending_updates", dropPendingUpdates)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3203,9 +3134,8 @@ class TApiClient internal constructor(
                         if (text != null) putStringUnsafe("text", text)
                         if (textParseMode != null) putStringUnsafe("text_parse_mode", textParseMode)
                         if (textEntities != null) putListOfJsonObjects("text_entities", MessageEntity.serializer(), json, textEntities)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendGiftBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendGiftBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3247,9 +3177,8 @@ class TApiClient internal constructor(
                         if (areas != null) putListOfJsonObjects("areas", StoryArea.serializer(), json, areas)
                         if (postToChatPage != null) putBoolUnsafe("post_to_chat_page", postToChatPage)
                         if (protectContent != null) putBoolUnsafe("protect_content", protectContent)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) postStoryBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) postStoryBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3275,9 +3204,8 @@ class TApiClient internal constructor(
                     val bbSize0 = requestOptions?.bufferSize ?: getFileBSP.decideCapacity()
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("file_id", fileId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getFileBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getFileBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3309,9 +3237,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("owned_gift_id", ownedGiftId)
                         putNumberUnsafe("new_owner_chat_id", newOwnerChatId)
                         if (starCount != null) putNumberUnsafe("star_count", starCount)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) transferGiftBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) transferGiftBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3339,9 +3266,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("sticker", sticker)
                         if (keywords != null) putListOfStringUnsafe("keywords", keywords)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setStickerKeywordsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setStickerKeywordsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3369,9 +3295,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("user_id", userId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getUserChatBoostsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getUserChatBoostsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3403,9 +3328,8 @@ class TApiClient internal constructor(
                         if (chatId != null) putNumberUnsafe("chat_id", chatId)
                         if (messageId != null) putNumberUnsafe("message_id", messageId)
                         if (inlineMessageId != null) putStringUnsafe("inline_message_id", inlineMessageId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getGameHighScoresBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getGameHighScoresBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3473,9 +3397,8 @@ class TApiClient internal constructor(
                         if (sendPhoneNumberToProvider != null) putBoolUnsafe("send_phone_number_to_provider", sendPhoneNumberToProvider)
                         if (sendEmailToProvider != null) putBoolUnsafe("send_email_to_provider", sendEmailToProvider)
                         if (isFlexible != null) putBoolUnsafe("is_flexible", isFlexible)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) createInvoiceLinkBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) createInvoiceLinkBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3498,7 +3421,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3521,7 +3444,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3549,9 +3472,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putStringUnsafe("name", name)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) editGeneralForumTopicBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) editGeneralForumTopicBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3630,9 +3552,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("sender_chat_id", senderChatId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) banChatSenderChatBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) banChatSenderChatBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3678,9 +3599,8 @@ class TApiClient internal constructor(
                         putListOfJsonObjects("commands", BotCommand.serializer(), json, commands)
                         if (scope != null) putJsonObject("scope", BotCommandScope.serializer(), json, scope)
                         if (languageCode != null) putStringUnsafe("language_code", languageCode)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setMyCommandsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setMyCommandsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3722,9 +3642,8 @@ class TApiClient internal constructor(
                         if (entities != null) putListOfJsonObjects("entities", MessageEntity.serializer(), json, entities)
                         if (linkPreviewOptions != null) putJsonObject("link_preview_options", LinkPreviewOptions.serializer(), json, linkPreviewOptions)
                         if (replyMarkup != null) putJsonObject("reply_markup", InlineKeyboardMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) editMessageTextBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) editMessageTextBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3814,9 +3733,8 @@ class TApiClient internal constructor(
                         if (suggestedPostParameters != null) putJsonObject("suggested_post_parameters", SuggestedPostParameters.serializer(), json, suggestedPostParameters)
                         if (replyParameters != null) putJsonObject("reply_parameters", ReplyParameters.serializer(), json, replyParameters)
                         if (replyMarkup != null) putJsonObject("reply_markup", InlineKeyboardMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendInvoiceBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendInvoiceBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3842,9 +3760,8 @@ class TApiClient internal constructor(
                     val bbSize0 = requestOptions?.bufferSize ?: getMyNameBSP.decideCapacity()
                     JsonByteBuffer(bbSize0).run {
                         if (languageCode != null) putStringUnsafe("language_code", languageCode)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getMyNameBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getMyNameBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3876,9 +3793,8 @@ class TApiClient internal constructor(
                         putNumberUnsafe("message_id", messageId)
                         if (reaction != null) putListOfJsonObjects("reaction", ReactionType.serializer(), json, reaction)
                         if (isBig != null) putBoolUnsafe("is_big", isBig)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setMessageReactionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setMessageReactionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3908,9 +3824,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("user_id", userId)
                         if (onlyIfBanned != null) putBoolUnsafe("only_if_banned", onlyIfBanned)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) unbanChatMemberBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) unbanChatMemberBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -3987,9 +3902,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         if (rights != null) putJsonObject("rights", ChatAdministratorRights.serializer(), json, rights)
                         if (forChannels != null) putBoolUnsafe("for_channels", forChannels)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setMyDefaultAdministratorRightsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setMyDefaultAdministratorRightsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4012,7 +3926,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4040,9 +3954,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         if (scope != null) putJsonObject("scope", BotCommandScope.serializer(), json, scope)
                         if (languageCode != null) putStringUnsafe("language_code", languageCode)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) deleteMyCommandsBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) deleteMyCommandsBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4074,9 +3987,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("name", name)
                         if (iconColor != null) putNumberUnsafe("icon_color", iconColor)
                         if (iconCustomEmojiId != null) putStringUnsafe("icon_custom_emoji_id", iconCustomEmojiId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) createForumTopicBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) createForumTopicBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4242,9 +4154,8 @@ class TApiClient internal constructor(
                         if (canPinMessages != null) putBoolUnsafe("can_pin_messages", canPinMessages)
                         if (canManageTopics != null) putBoolUnsafe("can_manage_topics", canManageTopics)
                         if (canManageDirectMessages != null) putBoolUnsafe("can_manage_direct_messages", canManageDirectMessages)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) promoteChatMemberBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) promoteChatMemberBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4272,9 +4183,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("message_thread_id", messageThreadId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) unpinAllForumTopicMessagesBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) unpinAllForumTopicMessagesBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4302,9 +4212,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("business_connection_id", businessConnectionId)
                         if (username != null) putStringUnsafe("username", username)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setBusinessAccountUsernameBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setBusinessAccountUsernameBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4342,9 +4251,8 @@ class TApiClient internal constructor(
                         if (chatId != null) putNumberUnsafe("chat_id", chatId)
                         if (messageId != null) putNumberUnsafe("message_id", messageId)
                         if (inlineMessageId != null) putStringUnsafe("inline_message_id", inlineMessageId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setGameScoreBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setGameScoreBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4406,9 +4314,8 @@ class TApiClient internal constructor(
                         if (suggestedPostParameters != null) putJsonObject("suggested_post_parameters", SuggestedPostParameters.serializer(), json, suggestedPostParameters)
                         if (replyParameters != null) putJsonObject("reply_parameters", ReplyParameters.serializer(), json, replyParameters)
                         if (replyMarkup != null) putJsonObject("reply_markup", ReplyMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendPaidMediaBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendPaidMediaBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4431,7 +4338,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4457,9 +4364,8 @@ class TApiClient internal constructor(
                     val bbSize0 = requestOptions?.bufferSize ?: getBusinessConnectionBSP.decideCapacity()
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("business_connection_id", businessConnectionId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getBusinessConnectionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getBusinessConnectionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4503,9 +4409,8 @@ class TApiClient internal constructor(
                         if (messageEffectId != null) putStringUnsafe("message_effect_id", messageEffectId)
                         if (replyParameters != null) putJsonObject("reply_parameters", ReplyParameters.serializer(), json, replyParameters)
                         if (replyMarkup != null) putJsonObject("reply_markup", InlineKeyboardMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendGameBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendGameBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4533,9 +4438,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("user_id", userId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) declineChatJoinRequestBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) declineChatJoinRequestBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4597,9 +4501,8 @@ class TApiClient internal constructor(
                         if (suggestedPostParameters != null) putJsonObject("suggested_post_parameters", SuggestedPostParameters.serializer(), json, suggestedPostParameters)
                         if (replyParameters != null) putJsonObject("reply_parameters", ReplyParameters.serializer(), json, replyParameters)
                         if (replyMarkup != null) putJsonObject("reply_markup", ReplyMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendVenueBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendVenueBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4631,9 +4534,8 @@ class TApiClient internal constructor(
                         putNumberUnsafe("message_id", messageId)
                         if (businessConnectionId != null) putStringUnsafe("business_connection_id", businessConnectionId)
                         if (replyMarkup != null) putJsonObject("reply_markup", InlineKeyboardMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) stopPollBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) stopPollBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4661,9 +4563,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("user_id", userId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) approveChatJoinRequestBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) approveChatJoinRequestBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4764,9 +4665,8 @@ class TApiClient internal constructor(
                         if (messageEffectId != null) putStringUnsafe("message_effect_id", messageEffectId)
                         if (replyParameters != null) putJsonObject("reply_parameters", ReplyParameters.serializer(), json, replyParameters)
                         if (replyMarkup != null) putJsonObject("reply_markup", InlineKeyboardMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) sendChecklistBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) sendChecklistBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4796,9 +4696,8 @@ class TApiClient internal constructor(
                         putNumberUnsafe("chat_id", chatId)
                         putNumberUnsafe("message_id", messageId)
                         if (comment != null) putStringUnsafe("comment", comment)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) declineSuggestedPostBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) declineSuggestedPostBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4836,9 +4735,8 @@ class TApiClient internal constructor(
                         if (directMessagesTopicId != null) putNumberUnsafe("direct_messages_topic_id", directMessagesTopicId)
                         if (disableNotification != null) putBoolUnsafe("disable_notification", disableNotification)
                         if (protectContent != null) putBoolUnsafe("protect_content", protectContent)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) forwardMessagesBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) forwardMessagesBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4864,9 +4762,8 @@ class TApiClient internal constructor(
                     val bbSize0 = requestOptions?.bufferSize ?: getStickerSetBSP.decideCapacity()
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("name", name)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) getStickerSetBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) getStickerSetBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -4912,9 +4809,8 @@ class TApiClient internal constructor(
                         if (heading != null) putNumberUnsafe("heading", heading)
                         if (proximityAlertRadius != null) putNumberUnsafe("proximity_alert_radius", proximityAlertRadius)
                         if (replyMarkup != null) putJsonObject("reply_markup", InlineKeyboardMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) editMessageLiveLocationBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) editMessageLiveLocationBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5001,9 +4897,8 @@ class TApiClient internal constructor(
                     val bbSize0 = requestOptions?.bufferSize ?: deleteStickerFromSetBSP.decideCapacity()
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("sticker", sticker)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) deleteStickerFromSetBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) deleteStickerFromSetBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5031,9 +4926,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("business_connection_id", businessConnectionId)
                         putListOfNumberUnsafe("message_ids", messageIds)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) deleteBusinessMessagesBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) deleteBusinessMessagesBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5059,9 +4953,8 @@ class TApiClient internal constructor(
                     val bbSize0 = requestOptions?.bufferSize ?: deleteStickerSetBSP.decideCapacity()
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("name", name)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) deleteStickerSetBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) deleteStickerSetBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5089,9 +4982,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("web_app_query_id", webAppQueryId)
                         putJsonObject("result", InlineQueryResult.serializer(), json, result)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) answerWebAppQueryBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) answerWebAppQueryBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5135,9 +5027,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("name", name)
                         putStringUnsafe("title", title)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setStickerSetTitleBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setStickerSetTitleBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5160,7 +5051,7 @@ class TApiClient internal constructor(
                 .compose(Function { vReq ->
                     JsonByteBuffer(256).run {
                         putStringUnsafe("chat_id", chatId.value)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5223,9 +5114,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe("chat_id", chatId.value)
                         putNumberUnsafe("message_thread_id", messageThreadId)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) closeForumTopicBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) closeForumTopicBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5257,9 +5147,8 @@ class TApiClient internal constructor(
                         putStringUnsafe("name", name)
                         putStringUnsafe("old_sticker", oldSticker)
                         putJsonObject("sticker", InputSticker.serializer(), json, sticker)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) replaceStickerInSetBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) replaceStickerInSetBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5293,9 +5182,8 @@ class TApiClient internal constructor(
                         if (showAlert != null) putBoolUnsafe("show_alert", showAlert)
                         if (url != null) putStringUnsafe("url", url)
                         if (cacheTime != null) putNumberUnsafe("cache_time", cacheTime)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) answerCallbackQueryBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) answerCallbackQueryBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5323,9 +5211,8 @@ class TApiClient internal constructor(
                     JsonByteBuffer(bbSize0).run {
                         if (description != null) putStringUnsafe("description", description)
                         if (languageCode != null) putStringUnsafe("language_code", languageCode)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) setMyDescriptionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) setMyDescriptionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5352,7 +5239,7 @@ class TApiClient internal constructor(
                         putNumberUnsafe("chat_id", chatId)
                         putNumberUnsafe("message_id", messageId)
                         if (sendDate != null) putNumberUnsafe("send_date", sendDate)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(toByteArray())))
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5382,9 +5269,8 @@ class TApiClient internal constructor(
                         putNumberUnsafe("user_id", userId)
                         putStringUnsafe("name", name)
                         putJsonObject("sticker", InputSticker.serializer(), json, sticker)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) addStickerToSetBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) addStickerToSetBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5420,9 +5306,8 @@ class TApiClient internal constructor(
                         putListOfJsonObjects("stickers", InputSticker.serializer(), json, stickers)
                         if (stickerType != null) putStringUnsafe("sticker_type", stickerType)
                         if (needsRepainting != null) putBoolUnsafe("needs_repainting", needsRepainting)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) createNewStickerSetBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) createNewStickerSetBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
@@ -5464,9 +5349,8 @@ class TApiClient internal constructor(
                         if (captionEntities != null) putListOfJsonObjects("caption_entities", MessageEntity.serializer(), json, captionEntities)
                         if (showCaptionAboveMedia != null) putBoolUnsafe("show_caption_above_media", showCaptionAboveMedia)
                         if (replyMarkup != null) putJsonObject("reply_markup", InlineKeyboardMarkup.serializer(), json, replyMarkup)
-                        val b00 = toByteArray()
-                        if (requestOptions == null) editMessageCaptionBSP.record(b00.size, bbSize0)
-                        vReq.send(BufferInternal.buffer(Unpooled.wrappedBuffer(b00)))
+                        if (requestOptions == null) editMessageCaptionBSP.record(size9, bbSize0)
+                        vReq.send(toBuffer())
                     }
                 })
                 .coAwait()
