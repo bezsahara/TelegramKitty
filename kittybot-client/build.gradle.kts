@@ -6,8 +6,8 @@ plugins {
     signing
 }
 
-group = "org.bezsahara"
-version = "2.0.6"
+group = rootProject.group
+version = rootProject.version
 
 repositories {
     mavenCentral()
