@@ -11,6 +11,7 @@ import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.ensureHasIdentity
 import org.bezsahara.kittybot.bot.dispatchers.real
 import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.bot.updates.IntIntHashMap
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
@@ -134,8 +135,14 @@ class RoutingMainInt(
         }
     }
 
-    private class MapLookup(private val map: HashMap<Int, HandlerIdentity>) : Lookup() {
-        override fun get(key: Int): HandlerIdentity = map[key] ?: HandlerIdentity.emptyID
+    private class MapLookup(map: HashMap<Int, HandlerIdentity>) : Lookup() {
+        private val map = IntIntHashMap(missingValue = Int.MIN_VALUE).also {
+            map.forEach { (i, identity) ->
+                it[i] = identity.value
+            }
+        }
+
+        override fun get(key: Int): HandlerIdentity = HandlerIdentity(map[key])
     }
 
     private class ArrayLookup(

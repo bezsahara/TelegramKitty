@@ -89,6 +89,10 @@ fun FelineBuilder<*>.buildBot() {
             bot.sendMessage(chatId, "Current chat id: ${message.chat.id}")
         }
 
+        command("/echo", "Echo what you put after the command", addToBotCommands = true) {
+            bot.sendMessage(chatId, "You said: ${commandArgs ?: "Nothing"}")
+        }
+
         // A regular text handler.
         text("hi") {
             bot.sendMessage(chatId, "Hi back. Try /menu, /route or /wizard next.")

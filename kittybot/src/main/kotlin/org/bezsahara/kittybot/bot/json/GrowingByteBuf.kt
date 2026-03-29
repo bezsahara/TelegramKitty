@@ -102,6 +102,10 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
         buf[pos++] = b.toByte()
     }
 
+    private inline fun putUnsafe(b: Byte) {
+        buf[pos++] = b
+    }
+
     fun putComma() {
         put(','.code.toByte())
     }
@@ -143,10 +147,10 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
     }
 
     // Json ---
-    fun putStringUnsafe(key: String, value: String) {
+    fun putStringUnsafe(key: ByteArray, value: String) {
         ensure(1)
         buf[pos++] = QUOTE
-        write(key)
+        writeArr(key)
         ensure(2)
         buf[pos++] = QUOTE
         buf[pos++] = DOUBLE_DOT
@@ -154,10 +158,10 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
         putComma()
     }
 
-    fun <T> putJsonObject(key: String, serializer: KSerializer<T>, json: Json, value: T) {
+    fun <T> putJsonObject(key: ByteArray, serializer: KSerializer<T>, json: Json, value: T) {
         ensure(1)
         buf[pos++] = QUOTE
-        write(key)
+        writeArr(key)
         ensure(2)
         buf[pos++] = QUOTE
         buf[pos++] = DOUBLE_DOT
@@ -165,10 +169,10 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
         putComma()
     }
 
-    fun putNumberUnsafe(key: String, v: Long) {
+    fun putNumberUnsafe(key: ByteArray, v: Long) {
         ensure(1)
         buf[pos++] = QUOTE
-        write(key)
+        writeArr(key)
         ensure(2)
         buf[pos++] = QUOTE
         buf[pos++] = DOUBLE_DOT
@@ -176,10 +180,10 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
         putComma()
     }
 
-    fun putNumberUnsafe(key: String, v: Double) {
+    fun putNumberUnsafe(key: ByteArray, v: Double) {
         ensure(1)
         buf[pos++] = QUOTE
-        write(key)
+        writeArr(key)
         ensure(2)
         buf[pos++] = QUOTE
         buf[pos++] = DOUBLE_DOT
@@ -187,10 +191,10 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
         putComma()
     }
 
-    fun putListOfStringUnsafe(key: String, value: List<String>) {
+    fun putListOfStringUnsafe(key: ByteArray, value: List<String>) {
         ensure(1)
         buf[pos++] = QUOTE
-        write(key)
+        writeArr(key)
         ensure(3)
         val p = pos
         pos += 3
@@ -213,15 +217,14 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
     }
 
     fun <T> putListOfJsonObjects(
-        key: String,
+        key: ByteArray,
         serializer: KSerializer<T>,
         json: Json,
         values: List<T>
     ) {
         ensure(1)
-        val buf = buf
         buf[pos++] = QUOTE
-        write(key)
+        writeArr(key)
         ensure(3)
         val p = pos
         pos += 3
@@ -243,39 +246,34 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
         putComma()
     }
 
-    fun putListOfNumberUnsafe(key: String, value: List<Number>) {
-        put(QUOTE); write(key); put(QUOTE); put(DOUBLE_DOT); put(BRACKET_LEFT)
+    fun putListOfLongUnsafe(key: ByteArray, value: List<Long>) {
+        put(QUOTE); writeArr(key); put(QUOTE); put(DOUBLE_DOT); put(BRACKET_LEFT)
         val n = value.size
         if (n != 0) {
             var i = 0
-            when (val firstValue = value[i]) {
-                is Long -> {
-                    writeLong(firstValue)
-                    i++
-                    while (i < n) {
-                        put(','.code.toByte())
-                        writeLong(value[i].toLong())
-                        i++
-                    }
-                }
-                is Double -> {
-                    writeDouble(firstValue)
-                    i++
-                    while (i < n) {
-                        put(','.code.toByte())
-                        writeDouble(value[i].toDouble())
-                        i++
-                    }
-                }
-                else -> {
-                    writeNumberElement(firstValue)
-                    i++
-                    while (i < n) {
-                        put(','.code.toByte())
-                        writeNumberElement(value[i])
-                        i++
-                    }
-                }
+            writeLong(value[i])
+            i++
+            while (i < n) {
+                put(','.code.toByte())
+                writeLong(value[i])
+                i++
+            }
+        }
+        put(BRACKET_RIGHT)
+        putComma()
+    }
+
+    fun putListOfDoubleUnsafe(key: ByteArray, value: List<Double>) {
+        put(QUOTE); writeArr(key); put(QUOTE); put(DOUBLE_DOT); put(BRACKET_LEFT)
+        val n = value.size
+        if (n != 0) {
+            var i = 0
+            writeDouble(value[i])
+            i++
+            while (i < n) {
+                put(','.code.toByte())
+                writeDouble(value[i])
+                i++
             }
         }
         put(BRACKET_RIGHT)
@@ -296,9 +294,9 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
         }
     }
     
-    fun putBoolUnsafe(key: String, boolean: Boolean) {
+    fun putBoolUnsafe(key: ByteArray, boolean: Boolean) {
         put('\"'.code)
-        write(key)
+        writeArr(key)
         put('\"'.code)
         put(DOUBLE_DOT)
         putBool(boolean)
@@ -307,9 +305,10 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
 
     // ---- booleans ----
     fun putBool(b: Boolean) {
-        val p = pos; val local = buf
+        val p = pos;
         if (b) {
             ensure(4)
+            val local = buf
             local[p    ] = 't'.code.toByte()
             local[p + 1] = 'r'.code.toByte()
             local[p + 2] = 'u'.code.toByte()
@@ -317,6 +316,7 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
             pos = p + 4
         } else {
             ensure(5)
+            val local = buf
             local[p    ] = 'f'.code.toByte()
             local[p + 1] = 'a'.code.toByte()
             local[p + 2] = 'l'.code.toByte()
@@ -389,7 +389,8 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
 
     fun reset(shrinkIfOver: Int = 1 shl 20) {
         if (buf.size > shrinkIfOver) buf = ByteArray(256)
-        pos = 0
+        buf[0] = '{'.code.toByte()
+        pos = 1
     }
 
     fun putQuote() {
@@ -484,59 +485,50 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
     // ---- 3) write JSON-quoted string (with escapes) ----
     override fun writeQuoted(text: String) {
         put(QUOTE)
-        val n = text.length
+
         var i = 0
+        val n = text.length
 
-        // Fast path: write contiguous "safe" chars (>= ' ', not \ or ", not U+2028/U+2029)
         while (i < n) {
-            val ch = text[i]
-            if (ch < ' ' || ch == '"' || ch == '\\' || ch == '\u2028' || ch == '\u2029') break
-
-            // ASCII burst if possible
-            if (ch.code < 0x80) {
-                val start = i
-                var end = start + 1
-                while (end < n) {
-                    val c2 = text[end]
-                    if (c2.code >= 0x80 || c2 < ' ' || c2 == '"' || c2 == '\\' || c2 == '\u2028' || c2 == '\u2029') break
-                    end++
-                }
-                putAsciiRun(text, start, end)
-                i = end
-            } else {
-                i += writeCodePointUtf8(text, i)
+            // Fast ASCII-safe burst
+            val start = i
+            while (i < n) {
+                val c = text[i].code
+                if (c >= 0x80 || ASCII_ESCAPE[c] != 0.toByte()) break
+                i++
             }
-        }
 
-        if (i == n) {
-            put(QUOTE)
-            return
-        }
+            if (i > start) {
+                putAsciiRun(text, start, i)
+                if (i >= n) break
+            }
 
-        // Slow path with escapes
-        while (i < n) {
-            val ch = text[i]
+            val c = text[i].code
+
             when {
-                ch == '"' -> { ensure(2); putUnsafe('\\'.code); putUnsafe('"'.code); i++ }
-                ch == '\\' -> { ensure(2); putUnsafe('\\'.code); putUnsafe('\\'.code); i++ }
-                ch < ' ' -> {
-                    when (ch) {
-                        '\b' -> { ensure(2); putUnsafe('\\'.code); putUnsafe('b'.code) }
-                        '\n' -> { ensure(2); putUnsafe('\\'.code); putUnsafe('n'.code) }
-                        '\r' -> { ensure(2); putUnsafe('\\'.code); putUnsafe('r'.code) }
-                        '\t' -> { ensure(2); putUnsafe('\\'.code); putUnsafe('t'.code) }
-                        '\u000C' -> { ensure(2); putUnsafe('\\'.code); putUnsafe('f'.code) }
-                        else -> writeUnicodeEscape(ch.code)
+                c < 0x80 -> {
+                    val esc = ASCII_ESCAPE[c]
+                    if (esc == 1.toByte()) {
+                        writeUnicodeEscape(c)   // \u00XX
+                    } else {
+                        ensure(2)
+                        putUnsafe('\\'.code)
+                        putUnsafe(esc)          // \" \\ \n \r \t \b \f
                     }
                     i++
                 }
-                ch == '\u2028' || ch == '\u2029' -> { writeUnicodeEscape(ch.code); i++ }
+
+                c == 0x2028 || c == 0x2029 -> {
+                    writeUnicodeEscape(c)
+                    i++
+                }
+
                 else -> {
-                    // Non-ASCII safe char => UTF-8
                     i += writeCodePointUtf8(text, i)
                 }
             }
         }
+
         put(QUOTE)
     }
 
@@ -664,10 +656,17 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
     private fun writeUnicodeEscape(code: Int) {
         ensure(6)
         putUnsafe('\\'.code); putUnsafe('u'.code)
-        putUnsafe(HEX[(code ushr 12) and 0xF].toInt())
-        putUnsafe(HEX[(code ushr 8) and 0xF].toInt())
-        putUnsafe(HEX[(code ushr 4) and 0xF].toInt())
-        putUnsafe(HEX[code and 0xF].toInt())
+        putUnsafe(HEX[(code ushr 12) and 0xF])
+        putUnsafe(HEX[(code ushr 8) and 0xF])
+        putUnsafe(HEX[(code ushr 4) and 0xF])
+        putUnsafe(HEX[code and 0xF])
+    }
+    
+    private fun writeArr(bytes: ByteArray) {
+        val bs = bytes.size
+        ensure(bs)
+        System.arraycopy(bytes, 0, buf, pos, bs)
+        pos += bs
     }
 
     override fun release() {}
@@ -686,6 +685,22 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter, Appendabl
             '8'.code.toByte(), '9'.code.toByte(), 'A'.code.toByte(), 'B'.code.toByte(),
             'C'.code.toByte(), 'D'.code.toByte(), 'E'.code.toByte(), 'F'.code.toByte()
         )
+
+        private val ASCII_ESCAPE = ByteArray(128).apply {
+            this['"'.code] = '"'.code.toByte()
+            this['\\'.code] = '\\'.code.toByte()
+            this['\b'.code] = 'b'.code.toByte()
+            this['\n'.code] = 'n'.code.toByte()
+            this['\r'.code] = 'r'.code.toByte()
+            this['\t'.code] = 't'.code.toByte()
+            this['\u000C'.code] = 'f'.code.toByte()
+
+            var i = 0
+            while (i < 0x20) {
+                if (this[i] == 0.toByte()) this[i] = 1 // means \u00XX
+                i++
+            }
+        }
     }
 }
 

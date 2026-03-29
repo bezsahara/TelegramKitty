@@ -77,8 +77,7 @@ abstract class KittyBot {
      */
     abstract suspend fun deleteMessages(
         chatId: ChatId,
-        messageIds: List<Long>,
-        requestOptions: RequestOptions? = null
+        messageIds: List<Long>
     ): TResult<Boolean> 
 
     /**
@@ -117,8 +116,7 @@ abstract class KittyBot {
     abstract suspend fun editChatSubscriptionInviteLink(
         chatId: ChatId,
         inviteLink: String,
-        name: String? = null,
-        requestOptions: RequestOptions? = null
+        name: String? = null
     ): TResult<ChatInviteLink> 
 
     /**
@@ -131,8 +129,7 @@ abstract class KittyBot {
      */
     abstract suspend fun deleteForumTopic(
         chatId: ChatId,
-        messageThreadId: Long,
-        requestOptions: RequestOptions? = null
+        messageThreadId: Long
     ): TResult<Boolean> 
 
     /**
@@ -147,8 +144,7 @@ abstract class KittyBot {
     abstract suspend fun readBusinessMessage(
         businessConnectionId: String,
         chatId: Long,
-        messageId: Long,
-        requestOptions: RequestOptions? = null
+        messageId: Long
     ): TResult<Boolean> 
 
     /**
@@ -163,8 +159,7 @@ abstract class KittyBot {
     abstract suspend fun setChatPermissions(
         chatId: ChatId,
         permissions: ChatPermissions,
-        useIndependentChatPermissions: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        useIndependentChatPermissions: Boolean? = null
     ): TResult<Boolean> 
 
     /**
@@ -201,8 +196,7 @@ abstract class KittyBot {
         chatId: ChatId,
         userId: Long,
         untilDate: Long? = null,
-        revokeMessages: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        revokeMessages: Boolean? = null
     ): TResult<Boolean> 
 
     /**
@@ -213,8 +207,7 @@ abstract class KittyBot {
      * @param businessConnectionId Unique identifier of the business connection
      */
     abstract suspend fun getBusinessAccountStarBalance(
-        businessConnectionId: String,
-        requestOptions: RequestOptions? = null
+        businessConnectionId: String
     ): TResult<StarAmount> 
 
     /**
@@ -238,8 +231,7 @@ abstract class KittyBot {
      */
     abstract suspend fun verifyChat(
         chatId: ChatId,
-        customDescription: String? = null,
-        requestOptions: RequestOptions? = null
+        customDescription: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -329,8 +321,7 @@ abstract class KittyBot {
      */
     abstract suspend fun reopenForumTopic(
         chatId: ChatId,
-        messageThreadId: Long,
-        requestOptions: RequestOptions? = null
+        messageThreadId: Long
     ): TResult<Boolean> 
 
     /**
@@ -377,8 +368,7 @@ abstract class KittyBot {
      */
     abstract suspend fun refundStarPayment(
         userId: Long,
-        telegramPaymentChargeId: String,
-        requestOptions: RequestOptions? = null
+        telegramPaymentChargeId: String
     ): TResult<Boolean> 
 
     /**
@@ -445,8 +435,7 @@ abstract class KittyBot {
     abstract suspend fun setChatAdministratorCustomTitle(
         chatId: ChatId,
         userId: Long,
-        customTitle: String,
-        requestOptions: RequestOptions? = null
+        customTitle: String
     ): TResult<Boolean> 
 
     /**
@@ -461,8 +450,7 @@ abstract class KittyBot {
     abstract suspend fun setUserEmojiStatus(
         userId: Long,
         emojiStatusCustomEmojiId: String? = null,
-        emojiStatusExpirationDate: Long? = null,
-        requestOptions: RequestOptions? = null
+        emojiStatusExpirationDate: Long? = null
     ): TResult<Boolean> 
 
     /**
@@ -475,8 +463,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setChatTitle(
         chatId: ChatId,
-        title: String,
-        requestOptions: RequestOptions? = null
+        title: String
     ): TResult<Boolean> 
 
     /**
@@ -489,8 +476,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setChatDescription(
         chatId: ChatId,
-        description: String? = null,
-        requestOptions: RequestOptions? = null
+        description: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -536,8 +522,7 @@ abstract class KittyBot {
      */
     abstract suspend fun removeBusinessAccountProfilePhoto(
         businessConnectionId: String,
-        isPublic: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        isPublic: Boolean? = null
     ): TResult<Boolean> 
 
     /**
@@ -663,8 +648,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setChatMenuButton(
         chatId: Long? = null,
-        menuButton: MenuButton? = null,
-        requestOptions: RequestOptions? = null
+        menuButton: MenuButton? = null
     ): TResult<Boolean> 
 
     /**
@@ -773,8 +757,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setMyName(
         name: String? = null,
-        languageCode: String? = null,
-        requestOptions: RequestOptions? = null
+        languageCode: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -789,8 +772,7 @@ abstract class KittyBot {
     abstract suspend fun setBusinessAccountName(
         businessConnectionId: String,
         firstName: String,
-        lastName: String? = null,
-        requestOptions: RequestOptions? = null
+        lastName: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -815,8 +797,7 @@ abstract class KittyBot {
         directMessagesTopicId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        removeCaption: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        removeCaption: Boolean? = null
     ): TResult<List<MessageId>> 
 
     /**
@@ -831,8 +812,7 @@ abstract class KittyBot {
     abstract suspend fun unpinChatMessage(
         chatId: ChatId,
         businessConnectionId: String? = null,
-        messageId: Long? = null,
-        requestOptions: RequestOptions? = null
+        messageId: Long? = null
     ): TResult<Boolean> 
 
     /**
@@ -877,8 +857,7 @@ abstract class KittyBot {
      * @param languageCode A two-letter ISO 639-1 language code or an empty string
      */
     abstract suspend fun getMyDescription(
-        languageCode: String? = null,
-        requestOptions: RequestOptions? = null
+        languageCode: String? = null
     ): TResult<BotDescription> 
 
     /**
@@ -891,8 +870,7 @@ abstract class KittyBot {
      */
     abstract suspend fun getChatMember(
         chatId: ChatId,
-        userId: Long,
-        requestOptions: RequestOptions? = null
+        userId: Long
     ): TResult<ChatMember> 
 
     /**
@@ -969,8 +947,7 @@ abstract class KittyBot {
         name: String? = null,
         expireDate: Long? = null,
         memberLimit: Long? = null,
-        createsJoinRequest: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        createsJoinRequest: Boolean? = null
     ): TResult<ChatInviteLink> 
 
     /**
@@ -996,8 +973,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setChatStickerSet(
         chatId: ChatId,
-        stickerSetName: String,
-        requestOptions: RequestOptions? = null
+        stickerSetName: String
     ): TResult<Boolean> 
 
     /**
@@ -1010,8 +986,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setMyShortDescription(
         shortDescription: String? = null,
-        languageCode: String? = null,
-        requestOptions: RequestOptions? = null
+        languageCode: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -1047,8 +1022,7 @@ abstract class KittyBot {
         name: String? = null,
         expireDate: Long? = null,
         memberLimit: Long? = null,
-        createsJoinRequest: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        createsJoinRequest: Boolean? = null
     ): TResult<ChatInviteLink> 
 
     /**
@@ -1119,8 +1093,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setStickerPositionInSet(
         sticker: String,
-        position: Long,
-        requestOptions: RequestOptions? = null
+        position: Long
     ): TResult<Boolean> 
 
     /**
@@ -1133,8 +1106,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setCustomEmojiStickerSetThumbnail(
         name: String,
-        customEmojiId: String? = null,
-        requestOptions: RequestOptions? = null
+        customEmojiId: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -1159,8 +1131,7 @@ abstract class KittyBot {
         chatId: ChatId,
         messageId: Long,
         businessConnectionId: String? = null,
-        disableNotification: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        disableNotification: Boolean? = null
     ): TResult<Boolean> 
 
     /**
@@ -1189,8 +1160,7 @@ abstract class KittyBot {
         businessConnectionId: String,
         ownedGiftId: String,
         keepOriginalDetails: Boolean? = null,
-        starCount: Long? = null,
-        requestOptions: RequestOptions? = null
+        starCount: Long? = null
     ): TResult<Boolean> 
 
     /**
@@ -1226,8 +1196,7 @@ abstract class KittyBot {
      */
     abstract suspend fun revokeChatInviteLink(
         chatId: ChatId,
-        inviteLink: String,
-        requestOptions: RequestOptions? = null
+        inviteLink: String
     ): TResult<ChatInviteLink> 
 
     /**
@@ -1240,8 +1209,7 @@ abstract class KittyBot {
      */
     abstract suspend fun transferBusinessAccountStars(
         businessConnectionId: String,
-        starCount: Long,
-        requestOptions: RequestOptions? = null
+        starCount: Long
     ): TResult<Boolean> 
 
     /**
@@ -1256,8 +1224,7 @@ abstract class KittyBot {
     abstract suspend fun answerPreCheckoutQuery(
         preCheckoutQueryId: String,
         ok: Boolean,
-        errorMessage: String? = null,
-        requestOptions: RequestOptions? = null
+        errorMessage: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -1315,8 +1282,7 @@ abstract class KittyBot {
         chatId: ChatId,
         action: ChatAction,
         businessConnectionId: String? = null,
-        messageThreadId: Long? = null,
-        requestOptions: RequestOptions? = null
+        messageThreadId: Long? = null
     ): TResult<Boolean> 
 
     /**
@@ -1333,8 +1299,7 @@ abstract class KittyBot {
         chatId: ChatId,
         subscriptionPeriod: Long,
         subscriptionPrice: Long,
-        name: String? = null,
-        requestOptions: RequestOptions? = null
+        name: String? = null
     ): TResult<ChatInviteLink> 
 
     /**
@@ -1357,8 +1322,7 @@ abstract class KittyBot {
      */
     abstract suspend fun deleteMessage(
         chatId: ChatId,
-        messageId: Long,
-        requestOptions: RequestOptions? = null
+        messageId: Long
     ): TResult<Boolean> 
 
     /**
@@ -1369,8 +1333,7 @@ abstract class KittyBot {
      * @param languageCode A two-letter ISO 639-1 language code or an empty string
      */
     abstract suspend fun getMyShortDescription(
-        languageCode: String? = null,
-        requestOptions: RequestOptions? = null
+        languageCode: String? = null
     ): TResult<BotShortDescription> 
 
     /**
@@ -1401,8 +1364,7 @@ abstract class KittyBot {
      */
     abstract suspend fun convertGiftToStars(
         businessConnectionId: String,
-        ownedGiftId: String,
-        requestOptions: RequestOptions? = null
+        ownedGiftId: String
     ): TResult<Boolean> 
 
     /**
@@ -1437,8 +1399,7 @@ abstract class KittyBot {
      */
     abstract suspend fun deleteStory(
         businessConnectionId: String,
-        storyId: Long,
-        requestOptions: RequestOptions? = null
+        storyId: Long
     ): TResult<Boolean> 
 
     /**
@@ -1477,8 +1438,7 @@ abstract class KittyBot {
         chatId: ChatId,
         messageThreadId: Long,
         name: String? = null,
-        iconCustomEmojiId: String? = null,
-        requestOptions: RequestOptions? = null
+        iconCustomEmojiId: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -1548,8 +1508,7 @@ abstract class KittyBot {
         userId: Long,
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean? = null,
-        untilDate: Long? = null,
-        requestOptions: RequestOptions? = null
+        untilDate: Long? = null
     ): TResult<Boolean> 
 
     /**
@@ -1564,8 +1523,7 @@ abstract class KittyBot {
     abstract suspend fun setBusinessAccountProfilePhoto(
         businessConnectionId: String,
         photo: InputProfilePhoto,
-        isPublic: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        isPublic: Boolean? = null
     ): TResult<Boolean> 
 
     /**
@@ -1592,8 +1550,7 @@ abstract class KittyBot {
         excludeUnique: Boolean? = null,
         sortByPrice: Boolean? = null,
         offset: String? = null,
-        limit: Long? = null,
-        requestOptions: RequestOptions? = null
+        limit: Long? = null
     ): TResult<OwnedGifts> 
 
     /**
@@ -1620,8 +1577,7 @@ abstract class KittyBot {
         videoStartTimestamp: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
-        suggestedPostParameters: SuggestedPostParameters? = null,
-        requestOptions: RequestOptions? = null
+        suggestedPostParameters: SuggestedPostParameters? = null
     ): TResult<Message> 
 
     /**
@@ -1636,8 +1592,7 @@ abstract class KittyBot {
     abstract suspend fun editUserStarSubscription(
         userId: Long,
         telegramPaymentChargeId: String,
-        isCanceled: Boolean,
-        requestOptions: RequestOptions? = null
+        isCanceled: Boolean
     ): TResult<Boolean> 
 
     /**
@@ -1660,8 +1615,7 @@ abstract class KittyBot {
     abstract suspend fun setBusinessAccountGiftSettings(
         businessConnectionId: String,
         showGiftButton: Boolean,
-        acceptedGiftTypes: AcceptedGiftTypes,
-        requestOptions: RequestOptions? = null
+        acceptedGiftTypes: AcceptedGiftTypes
     ): TResult<Boolean> 
 
     /**
@@ -1674,8 +1628,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setBusinessAccountBio(
         businessConnectionId: String,
-        bio: String? = null,
-        requestOptions: RequestOptions? = null
+        bio: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -1688,8 +1641,7 @@ abstract class KittyBot {
      */
     abstract suspend fun unbanChatSenderChat(
         chatId: ChatId,
-        senderChatId: Long,
-        requestOptions: RequestOptions? = null
+        senderChatId: Long
     ): TResult<Boolean> 
 
     /**
@@ -1702,8 +1654,7 @@ abstract class KittyBot {
      */
     abstract suspend fun getMyCommands(
         scope: BotCommandScope? = null,
-        languageCode: String? = null,
-        requestOptions: RequestOptions? = null
+        languageCode: String? = null
     ): TResult<List<BotCommand>> 
 
     /**
@@ -1740,8 +1691,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setStickerMaskPosition(
         sticker: String,
-        maskPosition: MaskPosition? = null,
-        requestOptions: RequestOptions? = null
+        maskPosition: MaskPosition? = null
     ): TResult<Boolean> 
 
     /**
@@ -1754,8 +1704,7 @@ abstract class KittyBot {
      */
     abstract suspend fun verifyUser(
         userId: Long,
-        customDescription: String? = null,
-        requestOptions: RequestOptions? = null
+        customDescription: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -1830,8 +1779,7 @@ abstract class KittyBot {
      * @param fileId File identifier to get information about
      */
     abstract suspend fun getFile(
-        fileId: String,
-        requestOptions: RequestOptions? = null
+        fileId: String
     ): TResult<File> 
 
     /**
@@ -1848,8 +1796,7 @@ abstract class KittyBot {
         businessConnectionId: String,
         ownedGiftId: String,
         newOwnerChatId: Long,
-        starCount: Long? = null,
-        requestOptions: RequestOptions? = null
+        starCount: Long? = null
     ): TResult<Boolean> 
 
     /**
@@ -1876,8 +1823,7 @@ abstract class KittyBot {
      */
     abstract suspend fun getUserChatBoosts(
         chatId: ChatId,
-        userId: Long,
-        requestOptions: RequestOptions? = null
+        userId: Long
     ): TResult<UserChatBoosts> 
 
     /**
@@ -1894,8 +1840,7 @@ abstract class KittyBot {
         userId: Long,
         chatId: Long? = null,
         messageId: Long? = null,
-        inlineMessageId: String? = null,
-        requestOptions: RequestOptions? = null
+        inlineMessageId: String? = null
     ): TResult<List<GameHighScore>> 
 
     /**
@@ -1984,8 +1929,7 @@ abstract class KittyBot {
      */
     abstract suspend fun editGeneralForumTopic(
         chatId: ChatId,
-        name: String,
-        requestOptions: RequestOptions? = null
+        name: String
     ): TResult<Boolean> 
 
     /**
@@ -2039,8 +1983,7 @@ abstract class KittyBot {
      */
     abstract suspend fun banChatSenderChat(
         chatId: ChatId,
-        senderChatId: Long,
-        requestOptions: RequestOptions? = null
+        senderChatId: Long
     ): TResult<Boolean> 
 
     /**
@@ -2175,8 +2118,7 @@ abstract class KittyBot {
      * @param languageCode A two-letter ISO 639-1 language code or an empty string
      */
     abstract suspend fun getMyName(
-        languageCode: String? = null,
-        requestOptions: RequestOptions? = null
+        languageCode: String? = null
     ): TResult<BotName> 
 
     /**
@@ -2209,8 +2151,7 @@ abstract class KittyBot {
     abstract suspend fun unbanChatMember(
         chatId: ChatId,
         userId: Long,
-        onlyIfBanned: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        onlyIfBanned: Boolean? = null
     ): TResult<Boolean> 
 
     /**
@@ -2262,8 +2203,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setMyDefaultAdministratorRights(
         rights: ChatAdministratorRights? = null,
-        forChannels: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        forChannels: Boolean? = null
     ): TResult<Boolean> 
 
     /**
@@ -2287,8 +2227,7 @@ abstract class KittyBot {
      */
     abstract suspend fun deleteMyCommands(
         scope: BotCommandScope? = null,
-        languageCode: String? = null,
-        requestOptions: RequestOptions? = null
+        languageCode: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -2305,8 +2244,7 @@ abstract class KittyBot {
         chatId: ChatId,
         name: String,
         iconColor: Long? = null,
-        iconCustomEmojiId: String? = null,
-        requestOptions: RequestOptions? = null
+        iconCustomEmojiId: String? = null
     ): TResult<ForumTopic> 
 
     /**
@@ -2437,8 +2375,7 @@ abstract class KittyBot {
         canEditMessages: Boolean? = null,
         canPinMessages: Boolean? = null,
         canManageTopics: Boolean? = null,
-        canManageDirectMessages: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        canManageDirectMessages: Boolean? = null
     ): TResult<Boolean> 
 
     /**
@@ -2451,8 +2388,7 @@ abstract class KittyBot {
      */
     abstract suspend fun unpinAllForumTopicMessages(
         chatId: ChatId,
-        messageThreadId: Long,
-        requestOptions: RequestOptions? = null
+        messageThreadId: Long
     ): TResult<Boolean> 
 
     /**
@@ -2465,8 +2401,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setBusinessAccountUsername(
         businessConnectionId: String,
-        username: String? = null,
-        requestOptions: RequestOptions? = null
+        username: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -2489,8 +2424,7 @@ abstract class KittyBot {
         disableEditMessage: Boolean? = null,
         chatId: Long? = null,
         messageId: Long? = null,
-        inlineMessageId: String? = null,
-        requestOptions: RequestOptions? = null
+        inlineMessageId: String? = null
     ): TResult.Either<Message, Boolean> 
 
     /**
@@ -2556,8 +2490,7 @@ abstract class KittyBot {
      * @param businessConnectionId Unique identifier of the business connection
      */
     abstract suspend fun getBusinessConnection(
-        businessConnectionId: String,
-        requestOptions: RequestOptions? = null
+        businessConnectionId: String
     ): TResult<BusinessConnection> 
 
     /**
@@ -2600,8 +2533,7 @@ abstract class KittyBot {
      */
     abstract suspend fun declineChatJoinRequest(
         chatId: ChatId,
-        userId: Long,
-        requestOptions: RequestOptions? = null
+        userId: Long
     ): TResult<Boolean> 
 
     /**
@@ -2680,8 +2612,7 @@ abstract class KittyBot {
      */
     abstract suspend fun approveChatJoinRequest(
         chatId: ChatId,
-        userId: Long,
-        requestOptions: RequestOptions? = null
+        userId: Long
     ): TResult<Boolean> 
 
     /**
@@ -2773,8 +2704,7 @@ abstract class KittyBot {
     abstract suspend fun declineSuggestedPost(
         chatId: Long,
         messageId: Long,
-        comment: String? = null,
-        requestOptions: RequestOptions? = null
+        comment: String? = null
     ): TResult<Boolean> 
 
     /**
@@ -2797,8 +2727,7 @@ abstract class KittyBot {
         messageThreadId: Long? = null,
         directMessagesTopicId: Long? = null,
         disableNotification: Boolean? = null,
-        protectContent: Boolean? = null,
-        requestOptions: RequestOptions? = null
+        protectContent: Boolean? = null
     ): TResult<List<MessageId>> 
 
     /**
@@ -2809,8 +2738,7 @@ abstract class KittyBot {
      * @param name Name of the sticker set
      */
     abstract suspend fun getStickerSet(
-        name: String,
-        requestOptions: RequestOptions? = null
+        name: String
     ): TResult<StickerSet> 
 
     /**
@@ -2901,8 +2829,7 @@ abstract class KittyBot {
      * @param sticker File identifier of the sticker
      */
     abstract suspend fun deleteStickerFromSet(
-        sticker: String,
-        requestOptions: RequestOptions? = null
+        sticker: String
     ): TResult<Boolean> 
 
     /**
@@ -2927,8 +2854,7 @@ abstract class KittyBot {
      * @param name Sticker set name
      */
     abstract suspend fun deleteStickerSet(
-        name: String,
-        requestOptions: RequestOptions? = null
+        name: String
     ): TResult<Boolean> 
 
     /**
@@ -2963,8 +2889,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setStickerSetTitle(
         name: String,
-        title: String,
-        requestOptions: RequestOptions? = null
+        title: String
     ): TResult<Boolean> 
 
     /**
@@ -3009,8 +2934,7 @@ abstract class KittyBot {
      */
     abstract suspend fun closeForumTopic(
         chatId: ChatId,
-        messageThreadId: Long,
-        requestOptions: RequestOptions? = null
+        messageThreadId: Long
     ): TResult<Boolean> 
 
     /**
@@ -3047,8 +2971,7 @@ abstract class KittyBot {
         text: String? = null,
         showAlert: Boolean? = null,
         url: String? = null,
-        cacheTime: Long? = null,
-        requestOptions: RequestOptions? = null
+        cacheTime: Long? = null
     ): TResult<Boolean> 
 
     /**
@@ -3061,8 +2984,7 @@ abstract class KittyBot {
      */
     abstract suspend fun setMyDescription(
         description: String? = null,
-        languageCode: String? = null,
-        requestOptions: RequestOptions? = null
+        languageCode: String? = null
     ): TResult<Boolean> 
 
     /**
