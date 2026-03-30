@@ -76,13 +76,17 @@ class ConvOnMsg(
             } catch (e: CancellationException) {
                 throw e
             } catch (t: Throwable) {
-                convInfo.errorHandler.handleException(t, bot, update, handlerContext, this@ConvOnMsg)
+                errorHandler(t)
             } finally {
                 coroutineContext.cancelChildren()
             }
         }
         job.invokeOnCompletion { runtime.finish(peerId, claim) }
         return Decision.Consumed
+    }
+    
+    companion object {
+        var errorHandler: (Throwable) -> Unit = { it.printStackTrace() }
     }
 }
 

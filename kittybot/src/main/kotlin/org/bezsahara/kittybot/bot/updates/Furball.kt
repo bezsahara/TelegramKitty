@@ -46,7 +46,7 @@ abstract class Furball(
 
     // each piece is a number that indicates how far away is next handler with needed type
     private val handlerByKindMap = botDispatchers.handlerList.let { handlers ->
-        val map = arrayOfNulls<IntArray>(23)
+        val map = arrayOfNulls<IntArray>(telegramUpdateKinds.size)
 
         fun Array<IntArray?>.fillIfEmpty(clazz: UpdateKind<*>): IntArray {
             var r = get(clazz.ordinal)

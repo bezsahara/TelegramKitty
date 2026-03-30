@@ -2,6 +2,7 @@ package org.bezsahara.samples
 
 import org.bezsahara.kittybot.bot.action.each.testEach
 import org.bezsahara.kittybot.bot.action.other.contextHook
+import org.bezsahara.kittybot.bot.action.other.handleUnknownUpdate
 import org.bezsahara.kittybot.bot.builder.FelineBuilder
 import org.bezsahara.kittybot.bot.builder.UpdaterMode
 import org.bezsahara.kittybot.bot.dispatchers.Decision
@@ -168,5 +169,10 @@ fun FelineBuilder<*>.buildBot() {
         routingExample()
         filesExample()
         flowExample()
+
+        handleUnknownUpdate {
+            println("Unknown update type was noticed!")
+            println(update.asJsonString())
+        }
     }
 }

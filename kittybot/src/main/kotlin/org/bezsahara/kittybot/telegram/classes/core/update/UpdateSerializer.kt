@@ -10,6 +10,8 @@ import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.bezsahara.kittybot.telegram.classes.business.BusinessConnection
 import org.bezsahara.kittybot.telegram.classes.business.BusinessMessagesDeleted
 import org.bezsahara.kittybot.telegram.classes.chat.ChatJoinRequest
@@ -57,9 +59,10 @@ internal object UpdateSerializer : KSerializer<Update> {
     }
 
     override fun deserialize(decoder: Decoder): Update {
-        val structure = decoder.beginStructure(descriptor)
-
         var updateId: Long = Long.MIN_VALUE
+        val objectStartPos = decoder.getPos()
+
+        val structure = decoder.beginStructure(descriptor)
         var value: UpdateLambda? = null
 
         while (true) {
@@ -115,7 +118,8 @@ internal object UpdateSerializer : KSerializer<Update> {
                 }
 
                 5 -> {
-                    val businessConnection = structure.decodeSerializableElement(descriptor, 5, BusinessConnection.serializer())
+                    val businessConnection =
+                        structure.decodeSerializableElement(descriptor, 5, BusinessConnection.serializer())
                     if (updateId == Long.MIN_VALUE) {
                         value = UpdateLambda { BusinessConnectionUpdate(it, businessConnection) }
                         continue
@@ -145,7 +149,8 @@ internal object UpdateSerializer : KSerializer<Update> {
                 }
 
                 8 -> {
-                    val deletedBusinessMessages = structure.decodeSerializableElement(descriptor, 8, BusinessMessagesDeleted.serializer())
+                    val deletedBusinessMessages =
+                        structure.decodeSerializableElement(descriptor, 8, BusinessMessagesDeleted.serializer())
                     if (updateId == Long.MIN_VALUE) {
                         value = UpdateLambda { DeletedBusinessMessagesUpdate(it, deletedBusinessMessages) }
                         continue
@@ -155,7 +160,8 @@ internal object UpdateSerializer : KSerializer<Update> {
                 }
 
                 9 -> {
-                    val messageReaction = structure.decodeSerializableElement(descriptor, 9, MessageReactionUpdated.serializer())
+                    val messageReaction =
+                        structure.decodeSerializableElement(descriptor, 9, MessageReactionUpdated.serializer())
                     if (updateId == Long.MIN_VALUE) {
                         value = UpdateLambda { MessageReactionUpdate(it, messageReaction) }
                         continue
@@ -165,7 +171,8 @@ internal object UpdateSerializer : KSerializer<Update> {
                 }
 
                 10 -> {
-                    val messageReactionCount = structure.decodeSerializableElement(descriptor, 10, MessageReactionCountUpdated.serializer())
+                    val messageReactionCount =
+                        structure.decodeSerializableElement(descriptor, 10, MessageReactionCountUpdated.serializer())
                     if (updateId == Long.MIN_VALUE) {
                         value = UpdateLambda { MessageReactionCountUpdate(it, messageReactionCount) }
                         continue
@@ -185,7 +192,8 @@ internal object UpdateSerializer : KSerializer<Update> {
                 }
 
                 12 -> {
-                    val chosenInlineResult = structure.decodeSerializableElement(descriptor, 12, ChosenInlineResult.serializer())
+                    val chosenInlineResult =
+                        structure.decodeSerializableElement(descriptor, 12, ChosenInlineResult.serializer())
                     if (updateId == Long.MIN_VALUE) {
                         value = UpdateLambda { ChosenInlineResultUpdate(it, chosenInlineResult) }
                         continue
@@ -215,7 +223,8 @@ internal object UpdateSerializer : KSerializer<Update> {
                 }
 
                 15 -> {
-                    val preCheckoutQuery = structure.decodeSerializableElement(descriptor, 15, PreCheckoutQuery.serializer())
+                    val preCheckoutQuery =
+                        structure.decodeSerializableElement(descriptor, 15, PreCheckoutQuery.serializer())
                     if (updateId == Long.MIN_VALUE) {
                         value = UpdateLambda { PreCheckoutQueryUpdate(it, preCheckoutQuery) }
                         continue
@@ -225,7 +234,8 @@ internal object UpdateSerializer : KSerializer<Update> {
                 }
 
                 16 -> {
-                    val purchasedPaidMedia = structure.decodeSerializableElement(descriptor, 16, PaidMediaPurchased.serializer())
+                    val purchasedPaidMedia =
+                        structure.decodeSerializableElement(descriptor, 16, PaidMediaPurchased.serializer())
                     if (updateId == Long.MIN_VALUE) {
                         value = UpdateLambda { PaidMediaPurchasedUpdate(it, purchasedPaidMedia) }
                         continue
@@ -255,7 +265,8 @@ internal object UpdateSerializer : KSerializer<Update> {
                 }
 
                 19 -> {
-                    val myChatMember = structure.decodeSerializableElement(descriptor, 19, ChatMemberUpdated.serializer())
+                    val myChatMember =
+                        structure.decodeSerializableElement(descriptor, 19, ChatMemberUpdated.serializer())
                     if (updateId == Long.MIN_VALUE) {
                         value = UpdateLambda { MyChatMemberUpdate(it, myChatMember) }
                         continue
@@ -275,7 +286,8 @@ internal object UpdateSerializer : KSerializer<Update> {
                 }
 
                 21 -> {
-                    val chatJoinRequest = structure.decodeSerializableElement(descriptor, 21, ChatJoinRequest.serializer())
+                    val chatJoinRequest =
+                        structure.decodeSerializableElement(descriptor, 21, ChatJoinRequest.serializer())
                     if (updateId == Long.MIN_VALUE) {
                         value = UpdateLambda { ChatJoinRequestUpdate(it, chatJoinRequest) }
                         continue
@@ -295,7 +307,8 @@ internal object UpdateSerializer : KSerializer<Update> {
                 }
 
                 23 -> {
-                    val removedChatBoost = structure.decodeSerializableElement(descriptor, 23, ChatBoostRemoved.serializer())
+                    val removedChatBoost =
+                        structure.decodeSerializableElement(descriptor, 23, ChatBoostRemoved.serializer())
                     if (updateId == Long.MIN_VALUE) {
                         value = UpdateLambda { RemovedChatBoostUpdate(it, removedChatBoost) }
                         continue
@@ -309,10 +322,68 @@ internal object UpdateSerializer : KSerializer<Update> {
         }
 
         structure.endStructure(descriptor)
-        error("Update serializer did not serialize properly! No valid data found for some reason")
+
+        return decoder.reconstructUnknownUpdate(updateId, objectStartPos)
     }
 
     override fun serialize(encoder: Encoder, value: Update) {
         error("Serialization is not supported")
+    }
+
+    // Following is an attempt to recover in case telegram introduces a new update type
+    private fun Decoder.reconstructUnknownUpdate(
+        parsedUpdateId: Long,
+        objectStartPos: Int,
+    ): UnknownUpdate {
+        return tryReconstructUnknownUpdate(parsedUpdateId, objectStartPos)
+            ?: error(
+                "Update serializer could not reconstruct UnknownUpdate. For json: ${
+                    (this as? JsonDecoder)?.let {
+                        if (objectStartPos < 0) return@let null
+                        DecoderHandles.decoderSource(
+                            it
+                        )?.let { str ->
+                            str.substring(objectStartPos, str.length).take(4048)
+                        }
+                    }
+                }"
+            )
+    }
+
+    private fun Decoder.tryReconstructUnknownUpdate(
+        parsedUpdateId: Long,
+        objectStartPos: Int,
+    ): UnknownUpdate? {
+        val jsonDecoder = this as? JsonDecoder ?: return null
+        if (objectStartPos == Int.MIN_VALUE) return null
+
+        val jsonObject = parseToJsonObject(jsonDecoder, this, objectStartPos) ?: return null
+        val updateId = if (parsedUpdateId != Long.MIN_VALUE) {
+            parsedUpdateId
+        } else {
+            jsonObject["update_id"]?.jsonPrimitive?.content?.toLongOrNull()
+                ?: return null
+        }
+        return UnknownUpdate(updateId, jsonObject)
+    }
+
+    private fun parseToJsonObject(
+        jsonDecoder: JsonDecoder,
+        decoder: Decoder,
+        startPos: Int,
+    ): JsonObject? {
+        val source = DecoderHandles.decoderSource(decoder) ?: return null
+        val lexer = DecoderHandles.createFreshLexer(jsonDecoder.json, source) ?: return null
+        DecoderHandles.lexerCurrentPosition(lexer, startPos)
+
+        val freshDecoder = DecoderHandles.createFreshDecoder(jsonDecoder.json, lexer, descriptor) ?: return null
+        val element = freshDecoder.decodeJsonElement()
+        DecoderHandles.decoderCurrentPosition(decoder, DecoderHandles.lexerCurrentPosition(lexer))
+
+        return element as? JsonObject
+    }
+
+    private fun Decoder.getPos(): Int {
+        return DecoderHandles.decoderCurrentPosition(this)
     }
 }

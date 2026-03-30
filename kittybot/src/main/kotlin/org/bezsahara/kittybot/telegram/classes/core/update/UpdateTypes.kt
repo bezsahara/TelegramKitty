@@ -54,7 +54,8 @@ val telegramUpdateKinds: Set<UpdateKind<*>> = setOf(
     ChatMemberUpdate,
     ChatJoinRequestUpdate,
     ChatBoostUpdate,
-    RemovedChatBoostUpdate
+    RemovedChatBoostUpdate,
+    UnknownUpdate
 )
 
 fun UpdateKind<out Update>.toSet(): Set<UpdateKind<out Update>> = setOf(this)

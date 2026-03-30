@@ -5,8 +5,7 @@ import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
 
 class ConvInfo internal constructor(
-    internal val runtime: ConversationRuntime,
-    internal val errorHandler: HandlerErrorHandler
+    internal val runtime: ConversationRuntime
 ) {
     val scope: CoroutineScope
         get() = runtime.scope

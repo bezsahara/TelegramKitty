@@ -27,7 +27,7 @@ class ConversationBuilder(
         runtime = felineBuilder.botContext.getOrPut(ConversationRuntime.BOT_CONTEXT_KEY) {
             ConversationRuntime(CoroutineScope(Dispatchers.IO + sj))
         }
-        convInfo = ConvInfo(runtime, felineBuilder.errorHandlerInternal)
+        convInfo = ConvInfo(runtime)
     }
 
     /**
