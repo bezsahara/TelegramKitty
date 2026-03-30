@@ -35,14 +35,14 @@ fun FelineDispatcher.conversations() {
             launch {
                 receiveMessage { it.text == "/cancel" }.await()
 
-                this@onText.cancel()
+                endConversation()
             }
 
             var pics: List<PhotoSize>? = null
 
             val gettingPics = launch {
                 while (pics == null) {
-                    val nextPics = withTimeoutOrNull(10_000L) {
+                    val nextPics = withTimeoutOrNull(5000) {
                         receivePhotos().await()
                     }
 
@@ -60,12 +60,17 @@ fun FelineDispatcher.conversations() {
             val stopListener = launch {
                 receiveMessage { it.text == "/stop" }.await()
                 bot.sendMessage(chatId, "stopped! tho pic is expected still! to cancel send /cancel")
+                gettingPics.cancel()
             }
 
             gettingPics.invokeOnCompletion { stopListener.cancel() }
             gettingPics.join()
 
-            val fp = pics ?: return@onText
+            if (gettingPics.isCancelled) {
+                pics = receivePhotos().await()
+            }
+
+            val fp = pics ?: error("No pics found!")
 
             bot.sendMessage(chatId, "Pictures received!")
             bot.sendPhoto(chatId, TelegramFile.withId(fp.first().fileId))
