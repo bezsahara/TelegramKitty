@@ -18,7 +18,6 @@ import kotlinx.serialization.json.internal.encodeByWriter
 import org.bezsahara.kittybot.doubles.DoubleTransform
 import java.nio.ByteBuffer
 
-// IDK how a lot of stuff works here, half written by ChatGPT, but appears to work properly!
 // Tested on latin and cyrillic chars
 @Suppress("INVISIBLE_REFERENCE", "NOTHING_TO_INLINE")
 @OptIn(kotlinx.serialization.json.internal.JsonFriendModuleApi::class)
