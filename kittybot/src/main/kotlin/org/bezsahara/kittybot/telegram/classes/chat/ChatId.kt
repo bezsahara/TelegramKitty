@@ -14,6 +14,7 @@ value class ChatId(@JvmField val value: String) {
     constructor(value: Long) : this(value.toString())
 
     fun isAt(): Boolean = value.length > 0 && value[0] == '@'
+    fun isGroupChat(): Boolean = value.toLong() < 0
 }
 
 fun Long.toChatId(): ChatId = ChatId(this.toString())

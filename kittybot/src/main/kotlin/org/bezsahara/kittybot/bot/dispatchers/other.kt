@@ -12,10 +12,10 @@ fun FelineBuilder<*>.prepare() {
     setUpCommands()
 }
 
-internal val botCommandsKey = "bot_commands".toContextHolder()
+internal val botCommandsKey = createTypeAwareKey<MutableList<BotCommand>>()
 
 private fun FelineBuilder<*>.setUpCommands() {
-    val data = botContext.get<List<BotCommand>>(botCommandsKey) ?: return
+    val data = botContext[botCommandsKey] ?: return
     init {
         val previous = getMyCommands().unwrap()
         setMyCommands(data + previous).consume()

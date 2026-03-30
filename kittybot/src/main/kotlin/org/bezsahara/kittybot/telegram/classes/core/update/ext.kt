@@ -1,5 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.core.update
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+
 private inline fun <reified T : Update> Update.asType(): T =
     this as? T ?: error("Expected ${T::class.simpleName}, got ${this::class.simpleName}")
 
@@ -95,3 +98,168 @@ fun Update.asChatJoinRequestUpdateOrNull(): ChatJoinRequestUpdate? = this as? Ch
 fun Update.asChatBoostUpdateOrNull(): ChatBoostUpdate? = this as? ChatBoostUpdate
 
 fun Update.asRemovedChatBoostUpdateOrNull(): RemovedChatBoostUpdate? = this as? RemovedChatBoostUpdate
+
+
+
+
+@OptIn(ExperimentalContracts::class)
+fun Update.isMessageUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isMessageUpdate is MessageUpdate)
+    }
+    return this is MessageUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isEditedMessageUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isEditedMessageUpdate is EditedMessageUpdate)
+    }
+    return this is EditedMessageUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isChannelPostUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isChannelPostUpdate is ChannelPostUpdate)
+    }
+    return this is ChannelPostUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isEditedChannelPostUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isEditedChannelPostUpdate is EditedChannelPostUpdate)
+    }
+    return this is EditedChannelPostUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isBusinessConnectionUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isBusinessConnectionUpdate is BusinessConnectionUpdate)
+    }
+    return this is BusinessConnectionUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isBusinessMessageUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isBusinessMessageUpdate is BusinessMessageUpdate)
+    }
+    return this is BusinessMessageUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isEditedBusinessMessageUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isEditedBusinessMessageUpdate is EditedBusinessMessageUpdate)
+    }
+    return this is EditedBusinessMessageUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isDeletedBusinessMessagesUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isDeletedBusinessMessagesUpdate is DeletedBusinessMessagesUpdate)
+    }
+    return this is DeletedBusinessMessagesUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isMessageReactionUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isMessageReactionUpdate is MessageReactionUpdate)
+    }
+    return this is MessageReactionUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isMessageReactionCountUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isMessageReactionCountUpdate is MessageReactionCountUpdate)
+    }
+    return this is MessageReactionCountUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isInlineQueryUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isInlineQueryUpdate is InlineQueryUpdate)
+    }
+    return this is InlineQueryUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isChosenInlineResultUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isChosenInlineResultUpdate is ChosenInlineResultUpdate)
+    }
+    return this is ChosenInlineResultUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isCallbackQueryUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isCallbackQueryUpdate is CallbackQueryUpdate)
+    }
+    return this is CallbackQueryUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isShippingQueryUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isShippingQueryUpdate is ShippingQueryUpdate)
+    }
+    return this is ShippingQueryUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isPreCheckoutQueryUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isPreCheckoutQueryUpdate is PreCheckoutQueryUpdate)
+    }
+    return this is PreCheckoutQueryUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isPaidMediaPurchasedUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isPaidMediaPurchasedUpdate is PaidMediaPurchasedUpdate)
+    }
+    return this is PaidMediaPurchasedUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isPollUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isPollUpdate is PollUpdate)
+    }
+    return this is PollUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isPollAnswerUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isPollAnswerUpdate is PollAnswerUpdate)
+    }
+    return this is PollAnswerUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isMyChatMemberUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isMyChatMemberUpdate is MyChatMemberUpdate)
+    }
+    return this is MyChatMemberUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isChatMemberUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isChatMemberUpdate is ChatMemberUpdate)
+    }
+    return this is ChatMemberUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isChatJoinRequestUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isChatJoinRequestUpdate is ChatJoinRequestUpdate)
+    }
+    return this is ChatJoinRequestUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isChatBoostUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isChatBoostUpdate is ChatBoostUpdate)
+    }
+    return this is ChatBoostUpdate
+}
+@OptIn(ExperimentalContracts::class)
+fun Update.isRemovedChatBoostUpdate(): Boolean {
+    contract {
+        returns(true) implies (this@isRemovedChatBoostUpdate is RemovedChatBoostUpdate)
+    }
+    return this is RemovedChatBoostUpdate
+}

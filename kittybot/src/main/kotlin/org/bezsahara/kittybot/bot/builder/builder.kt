@@ -81,8 +81,16 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
 
     // Updater mode can be either single or multithreaded or custom
     var updaterMode: UpdaterMode = UpdaterMode.SingleThread
+        set(value) {
+            checkClosed()
+            field = value
+        }
 
     var furballConfig: FurballConfig = FurballConfig.Default
+        set(value) {
+            checkClosed()
+            field = value
+        }
 
     // Timeout is in seconds
     internal var pollingTimeoutP: Long = 60
@@ -95,6 +103,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
      * to implement your own logic of where to save this id.
      */
     fun ensureOnlyNewUpdatesCustom(engine: RecoverLastId) {
+        checkClosed()
         lastIdRecovery = engine
     }
 
@@ -103,6 +112,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
      * does not wait 1 second.
      */
     fun ensureOnlyNewUpdatesWithFile(file: File) {
+        checkClosed()
         if (!file.exists()) {
             file.createNewFile()
         }
@@ -124,6 +134,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
     }
 
     fun ensureOnlyNewUpdates(onSave: (Long?) -> Unit, onRecover: () -> Long?) {
+        checkClosed()
         lastIdRecovery = object : RecoverLastId {
             override fun save(id: Long?) = onSave(id)
             override fun recover(): Long? = onRecover()
@@ -136,10 +147,10 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
      * or if it was killed without a chance to invalidate the last update.
      */
     fun ensureOnlyNewUpdates(tries: Int = 2) {
-        preActions.add(PreAction {
+        init {
             var offset: Long? = -1
             repeat(tries) { i ->
-                val result = it.getUpdates(
+                val result = getUpdates(
                     offset,
                     null,
                     1,
@@ -149,10 +160,10 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
                 if (!result.isNullOrEmpty()) {
                     offset = result.last().updateId + 1
                 } else {
-                    return@PreAction
+                    return@init
                 }
             }
-        })
+        }
     }
 
     /**
@@ -169,17 +180,28 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
     }
 
     fun init(block: suspend KittyBot.() -> Unit) {
+        checkClosed()
         preActions.add(block)
     }
 
     private var errorHandler: HandlerErrorHandler = HandlerErrorHandler { e, _, _, _, _ -> e.printStackTrace(); Decision.Consumed }
+    internal val errorHandlerInternal: HandlerErrorHandler
+        get() = errorHandler
 
-    fun setErrorHandler(h: HandlerErrorHandler) { errorHandler = h }
+    fun setErrorHandler(h: HandlerErrorHandler) {
+        checkClosed()
+        errorHandler = h
+    }
 
     // If you want to, you can implement your own api client
     var apiClientBuilder: ClientBuilder? = null
+        set(value) {
+            checkClosed()
+            field = value
+        }
 
     fun useCustomClient(customClient: CustomClient) {
+        checkClosed()
         apiClientBuilder = object : ClientBuilder {
             override fun build(token: String, json: Json): KittyBot {
                 return TCustomClient(TPathCustom("https://api.telegram.org/bot$token"), customClient, json)
@@ -194,11 +216,13 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
     private var allowedUpdates: HashSet<UpdateKind<*>>? = null
 
     fun allowUpdatesOf(cl: UpdateKind<*>) {
+        checkClosed()
         if (allowedUpdates == null) allowedUpdates = hashSetOf()
         allowedUpdates!!.add(cl)
     }
 
     fun allowUpdatesOf(vararg cl: UpdateKind<*>) {
+        checkClosed()
         if (cl.isEmpty()) return
         if (allowedUpdates == null) allowedUpdates = hashSetOf()
         allowedUpdates!!.addAll(cl)
@@ -206,7 +230,19 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
 
     val botContext = TypeAwareMap()
 
+    private var closed = false
+
+    fun close() {
+        dispatchers.close()
+        closed = true
+    }
+
+    private fun checkClosed() {
+        if (closed) { error("FelineBuilder was already closed!") }
+    }
+
     internal fun build(): KittyBotConfig<T> {
+        checkClosed()
         val deFactoBuilder = try {
             apiClientBuilder ?: tryFindDefaultClient()
         } catch (e: Throwable) {
@@ -217,6 +253,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
 
         prepare()
 
+        close()
         return KittyBotConfig<T>(
             dispatchers,
             updaterMode,

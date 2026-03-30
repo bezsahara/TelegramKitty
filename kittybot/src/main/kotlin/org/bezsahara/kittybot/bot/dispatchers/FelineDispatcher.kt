@@ -23,6 +23,7 @@ class FelineDispatcher internal constructor(internal val felineBuilder: FelineBu
     // Filters are just handlers that are added in the beginning
     inner class Filters {
         fun addFilter(filterHandler: Handler) {
+            checkClosed()
             handlerList.add(0, filterHandler)
         }
     }
@@ -31,19 +32,32 @@ class FelineDispatcher internal constructor(internal val felineBuilder: FelineBu
      * Sets up filters. Filters will be executed before the handlers.
      */
     fun filters(block: Filters.() -> Unit) {
+        checkClosed()
         filterBuilder.apply(block)
     }
 
     override fun addHandler(handler: Handler) {
+        checkClosed()
         handlerList.add(handler)
     }
 
     fun addHandlerFirst(handler: Handler) {
+        checkClosed()
         handlerList.add(0, handler)
     }
 
     override val felineDispatcher: FelineDispatcher
         get() = this
+
+    private var closed = false
+
+    private fun checkClosed() {
+        if (closed) { error("Feline was already closed!") }
+    }
+
+    fun close() {
+        closed = true
+    }
 }
 
 

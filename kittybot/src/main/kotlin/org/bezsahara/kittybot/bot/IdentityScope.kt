@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.bot
 
 import org.bezsahara.kittybot.bot.dispatchers.AttrKey
-import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
 import java.util.concurrent.atomic.AtomicInteger
 
 class IdentityScope {

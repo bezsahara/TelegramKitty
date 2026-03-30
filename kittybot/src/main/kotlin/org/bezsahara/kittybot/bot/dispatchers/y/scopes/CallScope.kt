@@ -9,6 +9,6 @@ class CallScope(
     override val bot: KittyBot,
     override val update: CallbackQueryUpdate,
     override val handlerContext: HandlerContext
-) : PayloadScope, HandlerScope<CallbackQueryUpdate>() {
+) : HandlerScope<CallbackQueryUpdate> {
     val callbackQuery: CallbackQuery get() = update.callbackQuery
 }

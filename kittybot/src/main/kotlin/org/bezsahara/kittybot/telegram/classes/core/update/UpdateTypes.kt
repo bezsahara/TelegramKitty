@@ -5,8 +5,20 @@ import org.bezsahara.kittybot.telegram.classes.business.BusinessMessagesDeleted
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 import org.bezsahara.kittybot.telegram.classes.chat.ChatJoinRequest
 import org.bezsahara.kittybot.telegram.classes.chat.ChatMemberUpdated
+import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostSource
+import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostSourceGiftCode
+import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostSourceGiveaway
+import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostSourcePremium
 import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostRemoved
 import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostUpdated
+import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
+import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberAdministrator
+import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberBanned
+import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberLeft
+import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberMember
+import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberOwner
+import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberRestricted
+import org.bezsahara.kittybot.telegram.classes.chat.toChatId
 import org.bezsahara.kittybot.telegram.classes.inline.CallbackQuery
 import org.bezsahara.kittybot.telegram.classes.inline.ChosenInlineResult
 import org.bezsahara.kittybot.telegram.classes.inline.InlineQuery
@@ -47,6 +59,8 @@ val telegramUpdateKinds: Set<UpdateKind<*>> = setOf(
 
 fun UpdateKind<out Update>.toSet(): Set<UpdateKind<out Update>> = setOf(this)
 
+
+
 /**
  * This object represents an incoming update containing a new message.
  *
@@ -57,7 +71,8 @@ data class MessageUpdate(
     override val message: Message,
 ) : Update() {
     override val ordinal: Int get() = 0
-    override fun chatIdOrNull(): ChatId = ChatId(message.chat.id)
+    override fun chatIdOrNull(): ChatId = message.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId? = message.userIdOrNull()
 
     companion object : UpdateKind<MessageUpdate>(
         0, MessageUpdate::class.java,
@@ -78,7 +93,8 @@ data class EditedMessageUpdate(
     override val editedMessage: Message,
 ) : Update() {
     override val ordinal: Int get() = 1
-    override fun chatIdOrNull(): ChatId = ChatId(editedMessage.chat.id)
+    override fun chatIdOrNull(): ChatId = editedMessage.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId? = editedMessage.userIdOrNull()
 
     companion object : UpdateKind<EditedMessageUpdate>(
         1, EditedMessageUpdate::class.java,
@@ -96,7 +112,8 @@ data class ChannelPostUpdate(
     override val channelPost: Message,
 ) : Update() {
     override val ordinal: Int get() = 2
-    override fun chatIdOrNull(): ChatId = ChatId(channelPost.chat.id)
+    override fun chatIdOrNull(): ChatId = channelPost.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId? = channelPost.userIdOrNull()
 
     companion object : UpdateKind<ChannelPostUpdate>(
         2, ChannelPostUpdate::class.java,
@@ -116,7 +133,8 @@ data class EditedChannelPostUpdate(
     override val editedChannelPost: Message,
 ) : Update() {
     override val ordinal: Int get() = 3
-    override fun chatIdOrNull(): ChatId = ChatId(editedChannelPost.chat.id)
+    override fun chatIdOrNull(): ChatId = editedChannelPost.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId? = editedChannelPost.userIdOrNull()
 
     companion object : UpdateKind<EditedChannelPostUpdate>(
         3, EditedChannelPostUpdate::class.java,
@@ -135,7 +153,8 @@ data class BusinessConnectionUpdate(
     override val businessConnection: BusinessConnection,
 ) : Update() {
     override val ordinal: Int get() = 4
-    override fun chatIdOrNull(): ChatId? = null
+    override fun chatIdOrNull(): ChatId = businessConnection.userChatId.toChatId()
+    override fun userIdOrNull(): ChatId = businessConnection.user.id.toChatId()
 
     companion object : UpdateKind<BusinessConnectionUpdate>(
         4, BusinessConnectionUpdate::class.java,
@@ -153,7 +172,8 @@ data class BusinessMessageUpdate(
     override val businessMessage: Message,
 ) : Update() {
     override val ordinal: Int get() = 5
-    override fun chatIdOrNull(): ChatId = ChatId(businessMessage.chat.id)
+    override fun chatIdOrNull(): ChatId = businessMessage.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId? = businessMessage.userIdOrNull()
 
     companion object : UpdateKind<BusinessMessageUpdate>(
         5, BusinessMessageUpdate::class.java,
@@ -171,7 +191,8 @@ data class EditedBusinessMessageUpdate(
     override val editedBusinessMessage: Message,
 ) : Update() {
     override val ordinal: Int get() = 6
-    override fun chatIdOrNull(): ChatId = ChatId(editedBusinessMessage.chat.id)
+    override fun chatIdOrNull(): ChatId = editedBusinessMessage.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId? = editedBusinessMessage.userIdOrNull()
 
     companion object : UpdateKind<EditedBusinessMessageUpdate>(
         6, EditedBusinessMessageUpdate::class.java,
@@ -189,7 +210,8 @@ data class DeletedBusinessMessagesUpdate(
     override val deletedBusinessMessages: BusinessMessagesDeleted,
 ) : Update() {
     override val ordinal: Int get() = 7
-    override fun chatIdOrNull(): ChatId = ChatId(deletedBusinessMessages.chat.id)
+    override fun chatIdOrNull(): ChatId = deletedBusinessMessages.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId? = null
 
     companion object : UpdateKind<DeletedBusinessMessagesUpdate>(
         7, DeletedBusinessMessagesUpdate::class.java,
@@ -210,7 +232,8 @@ data class MessageReactionUpdate(
     override val messageReaction: MessageReactionUpdated,
 ) : Update() {
     override val ordinal: Int get() = 8
-    override fun chatIdOrNull(): ChatId = ChatId(messageReaction.chat.id)
+    override fun chatIdOrNull(): ChatId = messageReaction.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId? = messageReaction.user?.id?.toChatId()
 
     companion object : UpdateKind<MessageReactionUpdate>(
         8, MessageReactionUpdate::class.java,
@@ -231,7 +254,8 @@ data class MessageReactionCountUpdate(
     override val messageReactionCount: MessageReactionCountUpdated,
 ) : Update() {
     override val ordinal: Int get() = 9
-    override fun chatIdOrNull(): ChatId = ChatId(messageReactionCount.chat.id)
+    override fun chatIdOrNull(): ChatId = messageReactionCount.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId? = null
 
     companion object : UpdateKind<MessageReactionCountUpdate>(
         9, MessageReactionCountUpdate::class.java,
@@ -249,7 +273,8 @@ data class InlineQueryUpdate(
     override val inlineQuery: InlineQuery,
 ) : Update() {
     override val ordinal: Int get() = 10
-    override fun chatIdOrNull(): ChatId = ChatId(inlineQuery.from.id)
+    override fun chatIdOrNull(): ChatId? = null
+    override fun userIdOrNull(): ChatId = inlineQuery.from.id.toChatId()
 
     companion object : UpdateKind<InlineQueryUpdate>(
         10, InlineQueryUpdate::class.java,
@@ -268,7 +293,8 @@ data class ChosenInlineResultUpdate(
     override val chosenInlineResult: ChosenInlineResult,
 ) : Update() {
     override val ordinal: Int get() = 11
-    override fun chatIdOrNull(): ChatId = ChatId(chosenInlineResult.from.id)
+    override fun chatIdOrNull(): ChatId? = null
+    override fun userIdOrNull(): ChatId = chosenInlineResult.from.id.toChatId()
 
     companion object : UpdateKind<ChosenInlineResultUpdate>(
         11, ChosenInlineResultUpdate::class.java,
@@ -286,7 +312,8 @@ data class CallbackQueryUpdate(
     override val callbackQuery: CallbackQuery,
 ) : Update() {
     override val ordinal: Int get() = 12
-    override fun chatIdOrNull(): ChatId = ChatId(callbackQuery.from.id)
+    override fun chatIdOrNull(): ChatId? = callbackQuery.message?.chat?.id?.toChatId()
+    override fun userIdOrNull(): ChatId = callbackQuery.from.id.toChatId()
 
     companion object : UpdateKind<CallbackQueryUpdate>(
         12, CallbackQueryUpdate::class.java,
@@ -304,7 +331,8 @@ data class ShippingQueryUpdate(
     override val shippingQuery: ShippingQuery,
 ) : Update() {
     override val ordinal: Int get() = 13
-    override fun chatIdOrNull(): ChatId = ChatId(shippingQuery.from.id)
+    override fun chatIdOrNull(): ChatId? = null
+    override fun userIdOrNull(): ChatId = shippingQuery.from.id.toChatId()
 
     companion object : UpdateKind<ShippingQueryUpdate>(
         13, ShippingQueryUpdate::class.java,
@@ -322,7 +350,8 @@ data class PreCheckoutQueryUpdate(
     override val preCheckoutQuery: PreCheckoutQuery,
 ) : Update() {
     override val ordinal: Int get() = 14
-    override fun chatIdOrNull(): ChatId = ChatId(preCheckoutQuery.from.id)
+    override fun chatIdOrNull(): ChatId? = null
+    override fun userIdOrNull(): ChatId = preCheckoutQuery.from.id.toChatId()
 
     companion object : UpdateKind<PreCheckoutQueryUpdate>(
         14, PreCheckoutQueryUpdate::class.java,
@@ -336,7 +365,8 @@ data class PaidMediaPurchasedUpdate(
     override val purchasedPaidMedia: PaidMediaPurchased,
 ) : Update() {
     override val ordinal: Int get() = 15
-    override fun chatIdOrNull(): ChatId = ChatId(purchasedPaidMedia.from.id)
+    override fun chatIdOrNull(): ChatId? = null
+    override fun userIdOrNull(): ChatId = purchasedPaidMedia.from.id.toChatId()
 
     companion object : UpdateKind<PaidMediaPurchasedUpdate>(
         15, PaidMediaPurchasedUpdate::class.java,
@@ -356,6 +386,7 @@ data class PollUpdate(
 ) : Update() {
     override val ordinal: Int get() = 16
     override fun chatIdOrNull(): ChatId? = null
+    override fun userIdOrNull(): ChatId? = null
 
     companion object : UpdateKind<PollUpdate>(
         16, PollUpdate::class.java,
@@ -374,7 +405,8 @@ data class PollAnswerUpdate(
     override val pollAnswer: PollAnswer,
 ) : Update() {
     override val ordinal: Int get() = 17
-    override fun chatIdOrNull(): ChatId? = null
+    override fun chatIdOrNull(): ChatId? = pollAnswer.voterChat?.id?.toChatId()
+    override fun userIdOrNull(): ChatId? = pollAnswer.user?.id?.toChatId()
 
     companion object : UpdateKind<PollAnswerUpdate>(
         17, PollAnswerUpdate::class.java,
@@ -393,7 +425,8 @@ data class MyChatMemberUpdate(
     override val myChatMember: ChatMemberUpdated,
 ) : Update() {
     override val ordinal: Int get() = 18
-    override fun chatIdOrNull(): ChatId = ChatId(myChatMember.chat.id)
+    override fun chatIdOrNull(): ChatId = myChatMember.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId = myChatMember.newChatMember.userId()
 
     companion object : UpdateKind<MyChatMemberUpdate>(
         18, MyChatMemberUpdate::class.java,
@@ -413,7 +446,8 @@ data class ChatMemberUpdate(
     override val chatMember: ChatMemberUpdated,
 ) : Update() {
     override val ordinal: Int get() = 19
-    override fun chatIdOrNull(): ChatId = ChatId(chatMember.chat.id)
+    override fun chatIdOrNull(): ChatId = chatMember.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId = chatMember.newChatMember.userId()
 
     companion object : UpdateKind<ChatMemberUpdate>(
         19, ChatMemberUpdate::class.java,
@@ -432,7 +466,8 @@ data class ChatJoinRequestUpdate(
     override val chatJoinRequest: ChatJoinRequest,
 ) : Update() {
     override val ordinal: Int get() = 20
-    override fun chatIdOrNull(): ChatId = ChatId(chatJoinRequest.chat.id)
+    override fun chatIdOrNull(): ChatId = chatJoinRequest.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId = chatJoinRequest.from.id.toChatId()
 
     companion object : UpdateKind<ChatJoinRequestUpdate>(
         20, ChatJoinRequestUpdate::class.java,
@@ -451,7 +486,8 @@ data class ChatBoostUpdate(
     override val chatBoost: ChatBoostUpdated,
 ) : Update() {
     override val ordinal: Int get() = 21
-    override fun chatIdOrNull(): ChatId = ChatId(chatBoost.chat.id)
+    override fun chatIdOrNull(): ChatId = chatBoost.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId? = chatBoost.boost.source.userIdOrNull()
 
     companion object : UpdateKind<ChatBoostUpdate>(
         21, ChatBoostUpdate::class.java,
@@ -470,10 +506,29 @@ data class RemovedChatBoostUpdate(
     override val removedChatBoost: ChatBoostRemoved,
 ) : Update() {
     override val ordinal: Int get() = 22
-    override fun chatIdOrNull(): ChatId = ChatId(removedChatBoost.chat.id)
+    override fun chatIdOrNull(): ChatId = removedChatBoost.chat.id.toChatId()
+    override fun userIdOrNull(): ChatId? = removedChatBoost.source.userIdOrNull()
 
     companion object : UpdateKind<RemovedChatBoostUpdate>(
         22, RemovedChatBoostUpdate::class.java,
         "removed_chat_boost"
     )
+}
+
+
+private fun Message.userIdOrNull(): ChatId? = from?.id?.toChatId()
+
+private fun ChatMember.userId(): ChatId = when (this) {
+    is ChatMemberAdministrator -> user.id.toChatId()
+    is ChatMemberBanned -> user.id.toChatId()
+    is ChatMemberLeft -> user.id.toChatId()
+    is ChatMemberMember -> user.id.toChatId()
+    is ChatMemberOwner -> user.id.toChatId()
+    is ChatMemberRestricted -> user.id.toChatId()
+}
+
+private fun ChatBoostSource.userIdOrNull(): ChatId? = when (this) {
+    is ChatBoostSourceGiftCode -> user.id.toChatId()
+    is ChatBoostSourceGiveaway -> user?.id?.toChatId()
+    is ChatBoostSourcePremium -> user.id.toChatId()
 }

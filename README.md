@@ -1,8 +1,8 @@
 ![logo](logo.png)
 
 # TelegramKitty
-TelegramKitty is a Kotlin Telegram Bot API wrapper with generated Telegram types and methods, a handler DSL, and optional transport backends.
-Designed for low overhead, predictable concurrency, and fast JVM execution. 
+TelegramKitty is a Kotlin Telegram Bot API wrapper with generated Telegram types and methods, a handler DSL, and optional http client.
+It is designed for low overhead, predictable concurrency, and fast JVM execution. 
 TelegramKitty keeps the programming model direct and easy to reason about, 
 with a small API surface and explicit update handling instead of heavy abstraction layers.
 And yes, it can send [cat pictures](#cats).
@@ -11,18 +11,18 @@ The project is split into two modules:
 
 - `kittybot` - core bot logic, Telegram classes, builder DSL, and custom client SPI
 - `kittybot-client` - default Vert.x-based HTTP client
+- `samples` - examples
 
 ## Features
 
 - Polling and webhook bots
-- Generated Telegram Bot API methods and types with names close to the official API
+- Generated Telegram Bot API methods and types with official docs for classes and methods
 - Dispatcher DSL for handlers
+- Conversation API
 - Single-thread, multi-thread, and custom update processing
 - Filtering allowed update kinds
-- Startup hooks with `init { ... }`
 - Helpers for skipping old updates with `ensureOnlyNewUpdates(...)`
-- Custom HTTP client support via `CustomClient`
-- `KtorCustomClient` included as a reference implementation
+- Custom HTTP client support via `CustomClient` (`KtorCustomClient` included as a reference implementation)
 - Built-in cat helpers via `sendCatPicture(...)`, `sendTheCatApi(...)`, `sendHttpCat(...)`, and `sendTextCat()`
 
 ## Installation
@@ -31,8 +31,8 @@ Use the default Vert.x client:
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:2.0.8")
-    implementation("org.bezsahara:kittybot-client:2.0.8")
+    implementation("org.bezsahara:kittybot:2.0.9")
+    implementation("org.bezsahara:kittybot-client:2.0.9")
 }
 ```
 
@@ -40,7 +40,7 @@ If you want to provide your own HTTP client, `kittybot-client` is not required:
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:2.0.8")
+    implementation("org.bezsahara:kittybot:2.0.9")
 }
 ```
 
@@ -54,6 +54,29 @@ val bot = KittyBot<PollingReceiver> {
     dispatchers {
         text("/start") {
             bot.sendMessage(chatId, "Hi, ${message.chat.firstName}")
+        }
+    }
+}
+
+bot.startPolling()
+```
+
+## Conversation Example
+
+```kotlin
+val bot = KittyBot<PollingReceiver> {
+    token = System.getenv("BOT_TOKEN")
+    ensureOnlyNewUpdates()
+
+    dispatchers {
+        buildConversation {
+            onStartCommand {
+                bot.sendMessage(chatId, "Hi! What's your name?")
+                val name = receiveText().await()
+
+                bot.sendMessage(chatId, "Send a picture, $name")
+                val picture = receivePhotos().await()
+            }
         }
     }
 }
@@ -95,7 +118,7 @@ If you do not want the default Vert.x transport, provide your own client with `u
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:2.0.8")
+    implementation("org.bezsahara:kittybot:2.0.9")
     implementation("io.ktor:ktor-client-core:3.4.0")
     implementation("io.ktor:ktor-client-cio:3.4.0")
 }
@@ -160,7 +183,7 @@ text("/httpcat") {
 See [samples](samples/src/main/kotlin) for polling, webhook, and handler examples.
 
 # License
-Copyright 2024 Hlib Korol
+Copyright 2026 Hlib Korol
 
 Permission is hereby granted, free of charge,
 to any person obtaining a copy of this software and

@@ -8,7 +8,7 @@ import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 
 
-abstract class HandlerScope<T : Update> : PayloadScope {
+interface HandlerScope<T : Update> : PayloadScope {
     abstract val bot: KittyBot
     abstract val update: T
 }
@@ -17,7 +17,7 @@ class HandlerScopeImpl<T : Update>(
     override val update: T,
     override val bot: KittyBot,
     override val handlerContext: HandlerContext,
-) : HandlerScope<T>()
+) : HandlerScope<T>
 
 
 @get:JvmName("getChatIdMU")

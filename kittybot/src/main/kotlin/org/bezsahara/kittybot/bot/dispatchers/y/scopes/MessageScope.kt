@@ -18,7 +18,7 @@ open class MessageScope(
     final override val update: MessageUpdate,
     final override val bot: KittyBot,
     final override val handlerContext: HandlerContext
-) : HandlerScope<MessageUpdate>() {
+) : HandlerScope<MessageUpdate> {
     val message: Message get() = update.message
 }
 
@@ -26,5 +26,5 @@ open class UpdateScope(
     override val update: Update,
     override val bot: KittyBot,
     override val handlerContext: HandlerContext
-) : HandlerScope<Update>()
+) : HandlerScope<Update>
 

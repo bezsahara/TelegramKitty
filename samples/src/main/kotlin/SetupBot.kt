@@ -38,7 +38,9 @@ fun FelineBuilder<*>.buildBot() {
                 BotCommand("/route_clear", "Clear the active route"),
                 BotCommand("/wizard", "Start the flow example"),
                 BotCommand("/reset", "Reset the active flow"),
-                BotCommand("/error", "Trigger the error handler sample")
+                BotCommand("/error", "Trigger the error handler sample"),
+                BotCommand("/auth", "Conversation example 1"),
+                BotCommand("/callback", "Conversation example 2"),
             )
         ).consume()
     }
@@ -77,6 +79,8 @@ fun FelineBuilder<*>.buildBot() {
                 """.trimIndent()
             )
         }
+
+        conversations()
 
         val attrKey = attrKeyOf<String>("TestAttribute")
 

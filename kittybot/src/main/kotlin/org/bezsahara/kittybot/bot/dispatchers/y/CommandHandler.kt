@@ -72,7 +72,7 @@ fun HandlerStore.command(
         CommandHandler(command, onSuccess)
     )
     if (addToBotCommands && (description != null && description.length > 1)) {
-        felineDispatcher.felineBuilder.botContext.getOrPut(botCommandsKey) { mutableListOf<BotCommand>() }
+        felineDispatcher.felineBuilder.botContext.getOrPut(botCommandsKey) { mutableListOf() }
             .add(BotCommand(command, description))
     }
 }

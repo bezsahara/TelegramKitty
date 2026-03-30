@@ -9,8 +9,10 @@ import org.bezsahara.kittybot.bot.builder.FelineBuilder
 import org.bezsahara.kittybot.bot.builder.RecoverLastId
 import org.bezsahara.kittybot.bot.builder.UpdateOrigin
 import org.bezsahara.kittybot.bot.builder.UpdaterMode
+import org.bezsahara.kittybot.bot.conv.ConversationRuntime
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.dispatchers.TypeAwareMap
+import org.bezsahara.kittybot.bot.dispatchers.createTypeAwareKey
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
 import org.bezsahara.kittybot.bot.errors.hiss
 import org.bezsahara.kittybot.bot.json.jsonInstance
@@ -31,13 +33,15 @@ class KittyBotConfig<T : UpdateReceiver>(
     preActions: List<FelineBuilder.PreAction>,
     token: String,
     lastIdRecovery: RecoverLastId?,
-    errorHandler: HandlerErrorHandler,
+    val errorHandler: HandlerErrorHandler,
     private val apiClientBuilder: ClientBuilder,
     val allowedUpdates: List<String>?,
     furballConfig: FurballConfig,
     val botContext: TypeAwareMap
 ) {
-
+    init {
+        botContext.kittyBotConfig = this
+    }
     val json get() = jsonInstance
 
     @JvmField
@@ -51,7 +55,7 @@ class KittyBotConfig<T : UpdateReceiver>(
         UpdateOrigin.Webhook -> null
     }
 
-    internal val supervisorJob = SupervisorJob()
+    internal val supervisorJob = botContext.getOrPut(BOT_SUPERVISOR_JOB) { SupervisorJob() }
     internal val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
 
     internal val updater: Furball = when (updaterMode) {
@@ -102,6 +106,11 @@ class KittyBotConfig<T : UpdateReceiver>(
                 it.execute(kittyBot)
             }
         }
+    }
+
+    companion object {
+        @JvmField
+        internal val BOT_SUPERVISOR_JOB = createTypeAwareKey<CompletableJob>("BotSupervisorJob")
     }
 }
 

@@ -134,5 +134,6 @@ sealed class Update {
 
     abstract val ordinal: Int
     abstract fun chatIdOrNull(): ChatId?
+    abstract fun userIdOrNull(): ChatId?
 }
 

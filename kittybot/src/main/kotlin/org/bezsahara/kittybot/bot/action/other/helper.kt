@@ -19,6 +19,10 @@ internal fun createBoolUpdateKindArray(): BooleanArray {
     return BooleanArray(telegramUpdateKinds.size)
 }
 
+internal inline fun <reified T> createArrayOfUKSize(): Array<T?> {
+    return arrayOfNulls(telegramUpdateKinds.size)
+}
+
 internal fun createBoolUpdateKindArray(ofKinds: Collection<UpdateKind<*>>): BooleanArray {
     val array = createBoolUpdateKindArray()
     ofKinds.forEach { updateKind ->
