@@ -1,8 +1,8 @@
 import org.gradle.api.tasks.bundling.Zip
 
 plugins {
-    kotlin("jvm") version "2.3.10"
-    kotlin("plugin.serialization") version "2.3.10"
+    kotlin("jvm") version "2.3.20"
+    kotlin("plugin.serialization") version "2.3.20"
     `maven-publish`
     signing
 //    if (File("./network/config/genApi").exists()) {
