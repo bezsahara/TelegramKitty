@@ -1,7 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.payments
 
+import kotlinx.serialization.json.buildJsonObject
+import org.bezsahara.kittybot.bot.json.PureJsonSerializer
+import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalStateFailed
 import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalState
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.Serializable
 
 
@@ -12,9 +16,13 @@ import kotlinx.serialization.Serializable
  * 
  * @param type Type of the state, always "failed"
  */
-@Serializable
-open class RevenueWithdrawalStateFailed : RevenueWithdrawalState {
+@Serializable(with = RevenueWithdrawalStateFailedJsonSerializer::class)
+object RevenueWithdrawalStateFailed : RevenueWithdrawalState {
     override val type: String get() = "failed"
-    companion object Default : RevenueWithdrawalStateFailed()
 }
+
+
+internal class RevenueWithdrawalStateFailedJsonSerializer : PureJsonSerializer<RevenueWithdrawalStateFailed>("RevenueWithdrawalStateFailed", RevenueWithdrawalStateFailed, buildJsonObject { put("type", JsonPrimitive("failed")) })
+
+
 

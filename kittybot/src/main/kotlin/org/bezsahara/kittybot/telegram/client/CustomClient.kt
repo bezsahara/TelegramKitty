@@ -12,6 +12,7 @@ import java.nio.charset.Charset
  * need to know anything about bot tokens or path building.
  *
  * @see org.bezsahara.kittybot.telegram.client.ktor.KtorCustomClient
+ * @see org.bezsahara.kittybot.telegram.client.jclient.JavaCustomClient
  */
 interface CustomClient {
     /**

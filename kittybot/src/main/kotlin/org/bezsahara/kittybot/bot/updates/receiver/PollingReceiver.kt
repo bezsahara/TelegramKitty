@@ -22,7 +22,7 @@ class PollingReceiver(
     val allowedUpdates: List<String>?
 ) : UpdateReceiver {
     @JvmField
-    @Volatile
+    @Volatile  // TODO remove it.
     var lastUpdateId: Long? = null
     @JvmField internal val timeout = java.lang.Long.valueOf(timeout)
 

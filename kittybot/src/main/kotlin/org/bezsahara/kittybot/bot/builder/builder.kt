@@ -1,5 +1,7 @@
 package org.bezsahara.kittybot.bot.builder
 
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.KittyBotConfig
@@ -33,22 +35,22 @@ import kotlin.properties.Delegates
  * If you just want to create bot, without dispatcher logic. There is [createTelegramBot]
  */
 @Suppress("FunctionName", "UNCHECKED_CAST")
-inline fun <reified T : UpdateReceiver> KittyBot(noinline builder: FelineBuilder<T>.() -> Unit): KittyBotConfig<T> {
+inline fun <reified T : UpdateReceiver> KittyBot(parentJob: Job? = null, noinline builder: FelineBuilder<T>.() -> Unit): KittyBotConfig<T> {
     return when (T::class) {
-        PollingReceiver::class -> KittyBotPolling(builder as FelineBuilder<PollingReceiver>.() -> Unit)
-        WebhookReceiver::class -> KittyBotWebhook(builder as FelineBuilder<WebhookReceiver>.() -> Unit)
+        PollingReceiver::class -> KittyBotPolling(parentJob, builder as FelineBuilder<PollingReceiver>.() -> Unit)
+        WebhookReceiver::class -> KittyBotWebhook(parentJob, builder as FelineBuilder<WebhookReceiver>.() -> Unit)
         else -> error("Unknown update receiver type")
     } as KittyBotConfig<T>
 }
 
 @Suppress("FunctionName")
-fun KittyBotPolling(builder: FelineBuilder<PollingReceiver>.() -> Unit): KittyBotConfig<PollingReceiver> {
-    return FelineBuilder<PollingReceiver>(UpdateOrigin.Polling).apply(builder).build()
+fun KittyBotPolling(parentJob: Job? = null, builder: FelineBuilder<PollingReceiver>.() -> Unit): KittyBotConfig<PollingReceiver> {
+    return FelineBuilder<PollingReceiver>(parentJob, UpdateOrigin.Polling).apply(builder).build()
 }
 
 @Suppress("FunctionName")
-fun KittyBotWebhook(builder: FelineBuilder<WebhookReceiver>.() -> Unit): KittyBotConfig<WebhookReceiver> {
-    return FelineBuilder<WebhookReceiver>(UpdateOrigin.Webhook).apply(builder).build()
+fun KittyBotWebhook(parentJob: Job? = null, builder: FelineBuilder<WebhookReceiver>.() -> Unit): KittyBotConfig<WebhookReceiver> {
+    return FelineBuilder<WebhookReceiver>(parentJob, UpdateOrigin.Webhook).apply(builder).build()
 }
 
 /**
@@ -74,8 +76,20 @@ enum class UpdateOrigin {
 }
 
 class FelineBuilder<T : UpdateReceiver> internal constructor(
+    val parentJob: Job?,
     val updateOrigin: UpdateOrigin
 ) {
+    val botContext = TypeAwareMap()
+
+    init {
+        // TODO need to change job init
+        val supervisorJob = SupervisorJob(parentJob)
+        val r = botContext.getOrPut(KittyBotConfig.BOT_SUPERVISOR_JOB) { supervisorJob }
+        require(r == supervisorJob) {
+            "KittyBot internal error. KittyBotConfig.BOT_SUPERVISOR_JOB was defined before needed definition"
+        }
+    }
+
     // Bot token
     var token: String by Delegates.notNull()
 
@@ -199,6 +213,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
             checkClosed()
             field = value
         }
+    private var useErrorConsumeCB: Boolean = false
 
     fun useCustomClient(customClient: CustomClient) {
         checkClosed()
@@ -211,6 +226,11 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
                 customClient.close()
             }
         }
+    }
+
+    // Changes KittyBot methods impl so they will always throw on error. Instead of you using .unwrap() all the time.
+    fun throwErrorsOnFailure() {
+        useErrorConsumeCB = true
     }
 
     private var allowedUpdates: HashSet<UpdateKind<*>>? = null
@@ -228,7 +248,6 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
         allowedUpdates!!.addAll(cl)
     }
 
-    val botContext = TypeAwareMap()
 
     private var closed = false
 
@@ -243,7 +262,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
 
     internal fun build(): KittyBotConfig<T> {
         checkClosed()
-        val deFactoBuilder = try {
+        var deFactoBuilder = try {
             apiClientBuilder ?: tryFindDefaultClient()
         } catch (e: Throwable) {
             throw IllegalStateException("You did not set clientBuilder! " +
@@ -251,8 +270,11 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
                     "Or include kittybot-client for a default client.", e)
         }
 
-        prepare()
+        if (useErrorConsumeCB) {
+            deFactoBuilder = ConsumeClientBuilder(deFactoBuilder)
+        }
 
+        prepare()
         close()
         return KittyBotConfig<T>(
             dispatchers,

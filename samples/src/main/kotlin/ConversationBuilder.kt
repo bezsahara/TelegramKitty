@@ -1,6 +1,7 @@
 package org.bezsahara.samples
 
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import org.bezsahara.kittybot.bot.conv.buildConversation
@@ -89,7 +90,7 @@ fun FelineDispatcher.conversations() {
                 endConversation()
             }
 
-            while (true) {
+            while (isActive) {
                 val cq = receiveCallbackQuery { it.data?.startsWith(":") == true }.await()
                 val cd = cq.data!![1]
                 val text = when (cd) {

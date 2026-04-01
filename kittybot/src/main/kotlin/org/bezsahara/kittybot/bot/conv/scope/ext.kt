@@ -17,3 +17,7 @@ fun ConversationBuilder.onText(regex: Regex, block: suspend OnMsgScope.() -> Uni
 fun ConversationBuilder.onText(text: String, block: suspend OnMsgScope.() -> Unit) {
     onText({ it.text == text }, block)
 }
+
+fun ConversationBuilder.onMsg(match: FullMsgCheck, block: suspend OnMsgScope.() -> Unit) {
+    on(fullMsgCheckBuilder(match), block)
+}

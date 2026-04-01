@@ -87,6 +87,24 @@ sealed class TelegramFileVertx : TelegramFile {
         final override fun toJsonString(): String = url
     }
 
+    class StringValue(val value: String) : TelegramFileVertx() {
+        override suspend fun execute(
+            builder: MultiPartBuilder,
+            name: String?,
+        ) {
+            if (name == null) return
+            builder.writePart(value, "name=$name")
+        }
+
+        override suspend fun executeCustom(
+            builder: CustomMPB,
+            name: String?,
+        ) {
+            if (name == null) return
+            builder.writePart(value, "name=$name")
+        }
+    }
+
     final override fun asVertx(): TelegramFileVertx {
         return this
     }

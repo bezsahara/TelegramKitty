@@ -15,12 +15,14 @@ import org.bezsahara.kittybot.bot.dispatchers.y.text
 import org.bezsahara.kittybot.bot.sendHttpCat
 import org.bezsahara.kittybot.bot.updates.MultiIdentity
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommand
+import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllPrivateChats
 import org.bezsahara.kittybot.telegram.classes.chat.toChatId
 import org.bezsahara.kittybot.telegram.classes.core.update.CallbackQueryUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.asMessageUpdateOrNull
 import org.bezsahara.kittybot.telegram.classes.keyboard.CopyTextButton
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardButton
+import org.bezsahara.kittybot.telegram.utils.buildBotCommands
 import org.bezsahara.kittybot.telegram.utils.key.buildInlineKeyboardMarkup
 
 fun FelineBuilder<*>.buildBot() {
@@ -29,6 +31,12 @@ fun FelineBuilder<*>.buildBot() {
 
     // Register visible bot commands once before update handling starts.
     init {
+        // An example of using helper function to create bot commands
+        if (false) {
+            createCommandsSimpleExample()
+            return@init
+        }
+
         setMyCommands(
             listOf(
                 BotCommand("/start", "Show the sample overview"),
@@ -42,7 +50,8 @@ fun FelineBuilder<*>.buildBot() {
                 BotCommand("/error", "Trigger the error handler sample"),
                 BotCommand("/auth", "Conversation example 1"),
                 BotCommand("/callback", "Conversation example 2"),
-            )
+            ),
+            scope = BotCommandScopeAllPrivateChats
         ).consume()
     }
 
@@ -95,7 +104,7 @@ fun FelineBuilder<*>.buildBot() {
         }
 
         command("/echo", "Echo what you put after the command", addToBotCommands = true) {
-            bot.sendMessage(chatId, "You said: ${commandArgs ?: "Nothing"}")
+            bot.sendMessage(chatId, "You said: ${commandArgs ?: "Nothing"}").consume()
         }
 
         // A regular text handler.

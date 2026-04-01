@@ -1,15 +1,9 @@
 package org.bezsahara.kittybot.bot
 
 
-import io.netty.util.internal.PlatformDependent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import org.bezsahara.kittybot.bot.builder.ClientBuilder
-import org.bezsahara.kittybot.bot.builder.FelineBuilder
-import org.bezsahara.kittybot.bot.builder.RecoverLastId
-import org.bezsahara.kittybot.bot.builder.UpdateOrigin
-import org.bezsahara.kittybot.bot.builder.UpdaterMode
-import org.bezsahara.kittybot.bot.conv.ConversationRuntime
+import org.bezsahara.kittybot.bot.builder.*
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.dispatchers.TypeAwareMap
 import org.bezsahara.kittybot.bot.dispatchers.createTypeAwareKey
@@ -21,8 +15,6 @@ import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.UpdateReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.WebhookReceiver
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
 
 
 class KittyBotConfig<T : UpdateReceiver>(
@@ -93,8 +85,6 @@ class KittyBotConfig<T : UpdateReceiver>(
     @JvmField
     val kittyBot: KittyBot = updater.bot
 
-    internal var waitContinuation: Continuation<Int>? = null
-
     fun close() {
         updateReceiver?.close()
         apiClientBuilder.close()
@@ -106,6 +96,7 @@ class KittyBotConfig<T : UpdateReceiver>(
                 it.execute(kittyBot)
             }
         }
+        supervisorJob.invokeOnCompletion { close() }
     }
 
     companion object {
@@ -114,33 +105,28 @@ class KittyBotConfig<T : UpdateReceiver>(
     }
 }
 
-fun KittyBotConfig<PollingReceiver>.startPolling(wait: Boolean = true) {
+fun KittyBotConfig<PollingReceiver>.startPolling(wait: Boolean = true): Job {
     if (updateReceiver !is PollingReceiver) {
         hiss("To start polling, you need to set updateOrigin to UpdateOrigin.Polling")
     }
-    CoroutineScope(Dispatchers.IO + supervisorJob).launch {
+    val pollingJob = CoroutineScope(Dispatchers.IO + supervisorJob).launch {
         updateReceiver.receiveUpdates(updatesChannel)
     }
     updater.start()
     if (wait) {
         runBlocking {
-            suspendCancellableCoroutine {
-                waitContinuation = it
-            }
+            pollingJob.join()
         }
-        waitContinuation = null
     }
+    return pollingJob
 }
 
 fun KittyBotConfig<PollingReceiver>.stopPolling() {
     supervisorJob.cancel()
-    close()
-    waitContinuation?.resume(0)
 }
 
 fun KittyBotConfig<WebhookReceiver>.stop() {
     supervisorJob.cancel()
-    close()
 }
 
 fun KittyBotConfig<WebhookReceiver>.start() {

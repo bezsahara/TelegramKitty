@@ -35,10 +35,13 @@ fun msgCheckBuilder(c: MsgCheck) = ConvHandlerBuilder<OnMsgScope> {
     ConvOnMsg(convInfo, c, it)
 }
 
+fun fullMsgCheckBuilder(c: FullMsgCheck) = ConvHandlerBuilder<OnMsgScope> {
+    ConvOnMsg(convInfo, c, it)
+}
 
 class ConvOnMsg(
     val convInfo: ConvInfo,
-    private val msgCheck: MsgCheck,
+    private val msgCheck: FullMsgCheck,
     val block: suspend OnMsgScope.() -> Unit,
 ) : ConvHandler<OnMsgScope>() {
     override val allowedKinds: Set<UpdateKind<*>>? get() = null
@@ -58,7 +61,7 @@ class ConvOnMsg(
         }
 
         val message = (update as? MessageUpdate)?.message ?: return Decision.Next
-        if (!msgCheck.check(message)) return Decision.Next
+        if (!msgCheck.check(message, handlerContext)) return Decision.Next
 
         val peerId = ChatId(message.chat.id)
         val claim = runtime.tryStart(peerId) ?: return Decision.Next
@@ -84,7 +87,7 @@ class ConvOnMsg(
         job.invokeOnCompletion { runtime.finish(peerId, claim) }
         return Decision.Consumed
     }
-    
+
     companion object {
         var errorHandler: (Throwable) -> Unit = { it.printStackTrace() }
     }
@@ -94,8 +97,19 @@ class ConvOnMsg(
  * Predicate used by message-based conversation handlers to decide whether an incoming
  * message should start a new conversation.
  */
-fun interface MsgCheck {
+fun interface MsgCheck : FullMsgCheck {
+    override fun check(
+        message: Message,
+        handlerContext: HandlerContext,
+    ): Boolean {
+        return check(message)
+    }
+
     fun check(message: Message): Boolean
+}
+
+fun interface FullMsgCheck {
+    fun check(message: Message, handlerContext: HandlerContext): Boolean
 }
 
 class OnMsgScope(

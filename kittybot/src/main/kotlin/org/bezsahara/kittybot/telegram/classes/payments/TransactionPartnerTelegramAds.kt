@@ -1,7 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.payments
 
 import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartner
+import kotlinx.serialization.json.buildJsonObject
+import org.bezsahara.kittybot.bot.json.PureJsonSerializer
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.json.JsonPrimitive
+import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartnerTelegramAds
 import kotlinx.serialization.Serializable
 
 
@@ -12,9 +16,13 @@ import kotlinx.serialization.Serializable
  * 
  * @param type Type of the transaction partner, always "telegram_ads"
  */
-@Serializable
-open class TransactionPartnerTelegramAds : TransactionPartner {
+@Serializable(with = TransactionPartnerTelegramAdsJsonSerializer::class)
+object TransactionPartnerTelegramAds : TransactionPartner {
     override val type: String get() = "telegram_ads"
-    companion object Default : TransactionPartnerTelegramAds()
 }
+
+
+internal class TransactionPartnerTelegramAdsJsonSerializer : PureJsonSerializer<TransactionPartnerTelegramAds>("TransactionPartnerTelegramAds", TransactionPartnerTelegramAds, buildJsonObject { put("type", JsonPrimitive("telegram_ads")) })
+
+
 

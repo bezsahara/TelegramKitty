@@ -24,9 +24,13 @@ value class TResult<out T>(@PublishedApi internal val value: T) : TReturns {
         }
 
         fun consume() {
-            if (value is TelegramError)  {
+            if (value is TelegramError) {
                 throw TelegramErrorException(value)
             }
+        }
+
+        fun errorOrNull(): TelegramError? {
+            return if (value is TelegramError) value else null
         }
 
         companion object {
@@ -59,9 +63,13 @@ value class TResult<out T>(@PublishedApi internal val value: T) : TReturns {
     }
 
     fun consume() {
-        if (value is TelegramError)  {
+        if (value is TelegramError) {
             throw TelegramErrorException(value)
         }
+    }
+
+    fun errorOrNull(): TelegramError? {
+        return if (value is TelegramError) value else null
     }
 }
 
@@ -86,11 +94,8 @@ inline fun <reified Second> TResult.Either<*, Second>.onSecondSuccess(block: (Se
 }
 
 inline fun <T> TResult<T>.unwrap(): T {
-    if (value !is TelegramError) {
-        return value
-    } else {
-        throw TelegramErrorException(value)
-    }
+    consume()
+    return value
 }
 
 
@@ -98,7 +103,7 @@ inline fun <reified First> TResult.Either<First, *>.unwrapFirst(): First {
     if (value is First) {
         return value
     } else {
-        throw generateErrorMsgForEither(value, false)
+        generateErrorMsgForEither(value, false)
     }
 }
 
@@ -106,7 +111,7 @@ inline fun <reified Second> TResult.Either<*, Second>.unwrapSecond(): Second {
     if (value is Second) {
         return value
     } else {
-        throw generateErrorMsgForEither(value, true)
+        generateErrorMsgForEither(value, true)
     }
 }
 
@@ -144,7 +149,7 @@ inline fun <reified Second> TResult.Either<*, Second>.unwrapSecondOrNull(): Seco
 
 inline fun <T, R> TResult<T>.onResult(
     onError: (error: TelegramError) -> R,
-    onSuccess: (T) -> R
+    onSuccess: (T) -> R,
 ): R {
     return if (isSuccess) {
         onSuccess(value)
@@ -163,10 +168,9 @@ internal fun TResult<*>.throwError(): Nothing {
 }
 
 @PublishedApi
-internal fun generateErrorMsgForEither(obj: Any, side: Boolean): Throwable {
+internal fun generateErrorMsgForEither(obj: Any, side: Boolean): Nothing {
     if (obj is TelegramError) {
-        return TelegramErrorException(obj)
+        throw TelegramErrorException(obj)
     }
-    return if (side) IllegalStateException("Function returned left value but right was expected!")
-    else IllegalStateException("Function returned right value but left was expected!")
+    throw IllegalStateException(if (side) "Function returned left value but right was expected!" else "Function returned right value but left was expected!")
 }

@@ -1,12 +1,14 @@
 package org.bezsahara.kittybot.telegram.utils
 
 import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
+import kotlinx.serialization.SerializationStrategy
 import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGifts
 import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfo
 import org.bezsahara.kittybot.telegram.classes.bot.BotName
 import kotlinx.serialization.DeserializationStrategy
 import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 import org.bezsahara.kittybot.telegram.classes.chat.ForumTopic
+import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import org.bezsahara.kittybot.telegram.classes.media.story.Story
 import org.bezsahara.kittybot.telegram.classes.core.MessageId
 import org.bezsahara.kittybot.telegram.classes.inline.PreparedInlineMessage
@@ -67,7 +69,9 @@ object TSerials {
     @JvmField val sBotName: DeserializationStrategy<Ok<BotName>> = Ok.serializer(BotName.serializer())
     @JvmField val sMessage: DeserializationStrategy<Ok<Message>> = Ok.serializer(Message.serializer())
     @JvmField val sUserProfilePhotos: DeserializationStrategy<Ok<UserProfilePhotos>> = Ok.serializer(UserProfilePhotos.serializer())
+    @JvmField val aListString: SerializationStrategy<List<String>> = ListSerializer(String.serializer())
     @JvmField val sWebhookInfo: DeserializationStrategy<Ok<WebhookInfo>> = Ok.serializer(WebhookInfo.serializer())
+    @JvmField val aListMessageEntity: SerializationStrategy<List<MessageEntity>> = ListSerializer(MessageEntity.serializer())
     @JvmField val sChatMember: DeserializationStrategy<Ok<ChatMember>> = Ok.serializer(ChatMember.serializer())
     @JvmField val sStarTransactions: DeserializationStrategy<Ok<StarTransactions>> = Ok.serializer(StarTransactions.serializer())
     @JvmField val sMessageId: DeserializationStrategy<Ok<MessageId>> = Ok.serializer(MessageId.serializer())

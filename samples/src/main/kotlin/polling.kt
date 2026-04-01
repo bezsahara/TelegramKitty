@@ -1,16 +1,16 @@
 package org.bezsahara.samples
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import org.bezsahara.kittybot.bot.purrBlocking
-import org.bezsahara.kittybot.bot.startPolling
+import org.bezsahara.kittybot.bot.KittyBotConfig
 import org.bezsahara.kittybot.bot.builder.KittyBot
 import org.bezsahara.kittybot.bot.builder.UpdaterMode
-import org.bezsahara.kittybot.bot.dispatchers.Decision
-import org.bezsahara.kittybot.bot.dispatchers.addHandler
+import org.bezsahara.kittybot.bot.dispatchers.y.command
+import org.bezsahara.kittybot.bot.dispatchers.y.scopes.chatId
+import org.bezsahara.kittybot.bot.purrBlocking
+import org.bezsahara.kittybot.bot.startPolling
+import org.bezsahara.kittybot.bot.stopPolling
 import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
-import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
-import org.bezsahara.kittybot.telegram.client.ktor.KtorCustomClient
+
+var botRef: KittyBotConfig<PollingReceiver>? = null
 
 fun pollingBot(token: String) {
     val bot = KittyBot<PollingReceiver> {
@@ -22,6 +22,15 @@ fun pollingBot(token: String) {
 
         // You can replace the default Vert.x transport with useCustomClient(...) or apiClientBuilder = ...
         // useCustomClient(KtorCustomClient(HttpClient(CIO)))
+        // useCustomClient(JavaCustomClient.createDefault())
+
+        dispatchers {
+            command("/shutdown", "Shutdown the bot", addToBotCommands = true) {
+                bot.sendMessage(chatId, "Bot is shut down")
+                botRef!!.stopPolling()
+                botRef = null
+            }
+        }
 
         buildBot()
     }
@@ -31,6 +40,8 @@ fun pollingBot(token: String) {
     bot.purrBlocking {
         deleteWebhook()
     }
+
+    botRef = bot
 
     bot.startPolling()
 }

@@ -1,8 +1,12 @@
 package org.bezsahara.kittybot.telegram.classes.bot
 
+import kotlinx.serialization.json.buildJsonObject
+import org.bezsahara.kittybot.bot.json.PureJsonSerializer
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.json.JsonPrimitive
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllChatAdministrators
 
 
 /**
@@ -12,9 +16,13 @@ import kotlinx.serialization.Serializable
  * 
  * @param type Scope type, must be all_chat_administrators
  */
-@Serializable
-open class BotCommandScopeAllChatAdministrators : BotCommandScope {
+@Serializable(with = BotCommandScopeAllChatAdministratorsJsonSerializer::class)
+object BotCommandScopeAllChatAdministrators : BotCommandScope {
     override val type: String get() = "all_chat_administrators"
-    companion object Default : BotCommandScopeAllChatAdministrators()
 }
+
+
+internal class BotCommandScopeAllChatAdministratorsJsonSerializer : PureJsonSerializer<BotCommandScopeAllChatAdministrators>("BotCommandScopeAllChatAdministrators", BotCommandScopeAllChatAdministrators, buildJsonObject { put("type", JsonPrimitive("all_chat_administrators")) })
+
+
 

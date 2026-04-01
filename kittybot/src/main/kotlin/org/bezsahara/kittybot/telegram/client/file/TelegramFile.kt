@@ -34,6 +34,10 @@ interface TelegramFile {
 
         fun withId(id: String) = TelegramFileVertx.Id(id)
         fun withUrl(url: String) = TelegramFileVertx.Url(url)
+
+        // Can be used with local telergam bot server
+        // Such as file being uploaded by local path (via file: protocol syntax for example)
+        fun withStringValue(value: String) = TelegramFileVertx.StringValue(value)
     }
 
     fun toJsonString(): String

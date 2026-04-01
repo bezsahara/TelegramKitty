@@ -1,8 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.keyboard
 
-import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButton
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
+import org.bezsahara.kittybot.bot.json.PureJsonSerializer
 
 
 /**
@@ -12,9 +13,13 @@ import kotlinx.serialization.Serializable
  * 
  * @param type Type of the button, must be commands
  */
-@Serializable
-open class MenuButtonCommands : MenuButton {
+@Serializable(with = MenuButtonCommandsJsonSerializer::class)
+object MenuButtonCommands : MenuButton {
     override val type: String get() = "commands"
-    companion object Default : MenuButtonCommands()
 }
+
+
+internal class MenuButtonCommandsJsonSerializer : PureJsonSerializer<MenuButtonCommands>("MenuButtonCommands", MenuButtonCommands, buildJsonObject { put("type", JsonPrimitive("commands")) })
+
+
 
