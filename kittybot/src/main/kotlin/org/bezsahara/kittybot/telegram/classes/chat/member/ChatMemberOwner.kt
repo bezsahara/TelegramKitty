@@ -22,6 +22,6 @@ data class ChatMemberOwner(
     @SerialName("is_anonymous") val isAnonymous: Boolean,
     @SerialName("custom_title") val customTitle: String? = null
 ) : ChatMember {
-    override val status: String get() = "creator"
+    override val status: String = "creator"
 }
 

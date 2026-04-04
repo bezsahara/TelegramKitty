@@ -27,6 +27,6 @@ data class BackgroundTypePattern(
     @SerialName("is_inverted") val isInverted: Boolean? = null,
     @SerialName("is_moving") val isMoving: Boolean? = null
 ) : BackgroundType {
-    override val type: String get() = "pattern"
+    override val type: String = "pattern"
 }
 

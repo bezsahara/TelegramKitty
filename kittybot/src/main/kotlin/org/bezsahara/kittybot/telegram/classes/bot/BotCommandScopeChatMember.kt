@@ -20,6 +20,6 @@ data class BotCommandScopeChatMember(
     @SerialName("chat_id") val chatId: ChatId,
     @SerialName("user_id") val userId: Long
 ) : BotCommandScope {
-    override val type: String get() = "chat_member"
+    override val type: String = "chat_member"
 }
 

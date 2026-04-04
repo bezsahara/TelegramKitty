@@ -20,6 +20,6 @@ data class ChatMemberMember(
     val user: User,
     @SerialName("until_date") val untilDate: Long? = null
 ) : ChatMember {
-    override val status: String get() = "member"
+    override val status: String = "member"
 }
 

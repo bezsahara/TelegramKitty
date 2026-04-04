@@ -35,6 +35,6 @@ data class InlineQueryResultArticle(
     @SerialName("thumbnail_width") val thumbnailWidth: Long? = null,
     @SerialName("thumbnail_height") val thumbnailHeight: Long? = null
 ) : InlineQueryResult {
-    override val type: String get() = "article"
+    override val type: String = "article"
 }
 

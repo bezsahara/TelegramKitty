@@ -20,6 +20,6 @@ data class MenuButtonWebApp(
     val text: String,
     @SerialName("web_app") val webApp: WebAppInfo
 ) : MenuButton {
-    override val type: String get() = "web_app"
+    override val type: String = "web_app"
 }
 

@@ -21,6 +21,6 @@ data class PassportElementErrorUnspecified(
     @SerialName("element_hash") val elementHash: String,
     val message: String
 ) : PassportElementError {
-    override val source: String get() = "unspecified"
+    override val source: String = "unspecified"
 }
 

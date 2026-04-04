@@ -18,6 +18,6 @@ import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 data class BotCommandScopeChat(
     @SerialName("chat_id") val chatId: ChatId
 ) : BotCommandScope {
-    override val type: String get() = "chat"
+    override val type: String = "chat"
 }
 

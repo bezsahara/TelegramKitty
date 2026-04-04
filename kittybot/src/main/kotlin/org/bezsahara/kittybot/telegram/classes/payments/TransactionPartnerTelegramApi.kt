@@ -17,6 +17,6 @@ import kotlinx.serialization.Serializable
 data class TransactionPartnerTelegramApi(
     @SerialName("request_count") val requestCount: Long
 ) : TransactionPartner {
-    override val type: String get() = "telegram_api"
+    override val type: String = "telegram_api"
 }
 

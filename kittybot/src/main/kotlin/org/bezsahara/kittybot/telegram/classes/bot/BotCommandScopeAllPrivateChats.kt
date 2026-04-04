@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable(with = BotCommandScopeAllPrivateChatsJsonSerializer::class)
 object BotCommandScopeAllPrivateChats : BotCommandScope {
-    override val type: String get() = "all_private_chats"
+    override val type: String = "all_private_chats"
 }
 
 

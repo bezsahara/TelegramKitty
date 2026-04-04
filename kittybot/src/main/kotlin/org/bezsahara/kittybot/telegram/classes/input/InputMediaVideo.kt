@@ -63,6 +63,6 @@ data class InputMediaVideo(
         thumbnail?.asVertx()?.execute(builder, null)
         cover?.asVertx()?.execute(builder, null)
     }
-    override val type: String get() = "video"
+    override val type: String = "video"
 }
 

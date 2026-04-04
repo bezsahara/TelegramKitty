@@ -24,6 +24,6 @@ data class ChatBoostSourceGiveaway(
     @SerialName("prize_star_count") val prizeStarCount: Long? = null,
     @SerialName("is_unclaimed") val isUnclaimed: Boolean? = null
 ) : ChatBoostSource {
-    override val source: String get() = "giveaway"
+    override val source: String = "giveaway"
 }
 

@@ -17,6 +17,6 @@ import kotlinx.serialization.Serializable
 data class StoryAreaTypeUniqueGift(
     val name: String
 ) : StoryAreaType {
-    override val type: String get() = "unique_gift"
+    override val type: String = "unique_gift"
 }
 

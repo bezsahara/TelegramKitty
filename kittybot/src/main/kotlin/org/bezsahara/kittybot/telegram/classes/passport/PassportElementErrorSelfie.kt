@@ -21,6 +21,6 @@ data class PassportElementErrorSelfie(
     @SerialName("file_hash") val fileHash: String,
     val message: String
 ) : PassportElementError {
-    override val source: String get() = "selfie"
+    override val source: String = "selfie"
 }
 

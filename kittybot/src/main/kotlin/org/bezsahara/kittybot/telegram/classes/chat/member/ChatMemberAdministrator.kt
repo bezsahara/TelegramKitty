@@ -54,6 +54,6 @@ data class ChatMemberAdministrator(
     @SerialName("can_manage_direct_messages") val canManageDirectMessages: Boolean? = null,
     @SerialName("custom_title") val customTitle: String? = null
 ) : ChatMember {
-    override val status: String get() = "administrator"
+    override val status: String = "administrator"
 }
 

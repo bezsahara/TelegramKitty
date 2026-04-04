@@ -19,6 +19,6 @@ import org.bezsahara.kittybot.telegram.classes.media.PaidMedia
 data class PaidMediaPhoto(
     val photo: List<PhotoSize>
 ) : PaidMedia {
-    override val type: String get() = "photo"
+    override val type: String = "photo"
 }
 

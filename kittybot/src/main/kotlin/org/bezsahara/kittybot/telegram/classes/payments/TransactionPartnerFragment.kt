@@ -18,6 +18,6 @@ import kotlinx.serialization.Serializable
 data class TransactionPartnerFragment(
     @SerialName("withdrawal_state") val withdrawalState: RevenueWithdrawalState? = null
 ) : TransactionPartner {
-    override val type: String get() = "fragment"
+    override val type: String = "fragment"
 }
 

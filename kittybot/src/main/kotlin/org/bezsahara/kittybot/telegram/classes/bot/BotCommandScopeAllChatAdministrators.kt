@@ -18,7 +18,7 @@ import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllChatAdminis
  */
 @Serializable(with = BotCommandScopeAllChatAdministratorsJsonSerializer::class)
 object BotCommandScopeAllChatAdministrators : BotCommandScope {
-    override val type: String get() = "all_chat_administrators"
+    override val type: String = "all_chat_administrators"
 }
 
 

@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable(with = TransactionPartnerTelegramAdsJsonSerializer::class)
 object TransactionPartnerTelegramAds : TransactionPartner {
-    override val type: String get() = "telegram_ads"
+    override val type: String = "telegram_ads"
 }
 
 

@@ -22,6 +22,6 @@ data class StoryAreaTypeSuggestedReaction(
     @SerialName("is_dark") val isDark: Boolean? = null,
     @SerialName("is_flipped") val isFlipped: Boolean? = null
 ) : StoryAreaType {
-    override val type: String get() = "suggested_reaction"
+    override val type: String = "suggested_reaction"
 }
 

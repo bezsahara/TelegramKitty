@@ -32,7 +32,9 @@ private class CatchRegistration<T>(
             catcherHandler.catchOrNull(update, handlerContext)
         } catch (t: Throwable) {
             deferred.completeExceptionally(t)
-            throw t
+            // TODO review
+//            throw t
+            return CatchAttempt.AlreadySettled
         } ?: return CatchAttempt.NoMatch
 
         return if (deferred.complete(caught)) {

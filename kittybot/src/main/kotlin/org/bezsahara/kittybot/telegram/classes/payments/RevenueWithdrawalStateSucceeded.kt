@@ -19,6 +19,6 @@ data class RevenueWithdrawalStateSucceeded(
     val date: Long,
     val url: String
 ) : RevenueWithdrawalState {
-    override val type: String get() = "succeeded"
+    override val type: String = "succeeded"
 }
 

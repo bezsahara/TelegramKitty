@@ -18,6 +18,6 @@ import kotlinx.serialization.Serializable
 data class ChatMemberLeft(
     val user: User
 ) : ChatMember {
-    override val status: String get() = "left"
+    override val status: String = "left"
 }
 

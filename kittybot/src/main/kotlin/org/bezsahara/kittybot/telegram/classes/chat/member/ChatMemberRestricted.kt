@@ -50,6 +50,6 @@ data class ChatMemberRestricted(
     @SerialName("can_manage_topics") val canManageTopics: Boolean,
     @SerialName("until_date") val untilDate: Long
 ) : ChatMember {
-    override val status: String get() = "restricted"
+    override val status: String = "restricted"
 }
 

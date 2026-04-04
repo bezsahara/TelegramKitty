@@ -3,6 +3,7 @@
 package org.bezsahara.kittybot.telegram.classes.core.update
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.element
@@ -317,7 +318,7 @@ internal object UpdateSerializer : KSerializer<Update> {
                     return RemovedChatBoostUpdate(updateId, removedChatBoost)
                 }
 
-                else -> error("Unexpected index: $elIndex")
+                else -> throw SerializationException("Unexpected index: $elIndex")
             }
         }
 
@@ -327,7 +328,7 @@ internal object UpdateSerializer : KSerializer<Update> {
     }
 
     override fun serialize(encoder: Encoder, value: Update) {
-        error("Serialization is not supported")
+        throw SerializationException("Serialization is not supported")
     }
 
     // Following is an attempt to recover in case telegram introduces a new update type
@@ -336,7 +337,7 @@ internal object UpdateSerializer : KSerializer<Update> {
         objectStartPos: Int,
     ): UnknownUpdate {
         return tryReconstructUnknownUpdate(parsedUpdateId, objectStartPos)
-            ?: error(
+            ?: throw SerializationException(
                 "Update serializer could not reconstruct UnknownUpdate. For json: ${
                     (this as? JsonDecoder)?.let {
                         if (objectStartPos < 0) return@let null

@@ -1,6 +1,7 @@
 package org.bezsahara.kittybot.telegram.utils
 
 import org.bezsahara.kittybot.bot.KittyBot
+import org.bezsahara.kittybot.bot.json.jsonInstance
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommand
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllChatAdministrators
@@ -101,6 +102,17 @@ class BotCommandsBuilder {
         addBotCommand(this)
     }
 
+    fun addCommands(lan: String?, scope: BotCommandScope?, cmds: List<BotCommand>) {
+        ensureLangIsNull(); ensureScopeIsNull()
+        key = SetCommandsKey(scope, lan)
+        try {
+            val l = map.getOrPut(key) { mutableListOf() }
+            cmds.forEach { l.add(it) }
+        } finally {
+            key = SetCommandsKey(null, null)
+        }
+    }
+
     /**
      * Creates and adds a [BotCommand] to the current scope and language group.
      *
@@ -111,7 +123,7 @@ class BotCommandsBuilder {
     fun command(command: String, description: String) {
         addBotCommand(BotCommand(command, description))
     }
-    
+
     /**
      * Runs [block] with a dedicated two-letter ISO 639-1 language code.
      *

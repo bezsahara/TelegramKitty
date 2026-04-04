@@ -18,6 +18,6 @@ import kotlinx.serialization.Serializable
 data class ChatBoostSourcePremium(
     val user: User
 ) : ChatBoostSource {
-    override val source: String get() = "premium"
+    override val source: String = "premium"
 }
 

@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable(with = RevenueWithdrawalStateFailedJsonSerializer::class)
 object RevenueWithdrawalStateFailed : RevenueWithdrawalState {
-    override val type: String get() = "failed"
+    override val type: String = "failed"
 }
 
 

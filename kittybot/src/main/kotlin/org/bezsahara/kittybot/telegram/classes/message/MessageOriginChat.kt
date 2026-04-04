@@ -22,6 +22,6 @@ data class MessageOriginChat(
     @SerialName("sender_chat") val senderChat: Chat,
     @SerialName("author_signature") val authorSignature: String? = null
 ) : MessageOrigin {
-    override val type: String get() = "chat"
+    override val type: String = "chat"
 }
 

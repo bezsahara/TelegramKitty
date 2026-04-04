@@ -38,6 +38,6 @@ data class InlineQueryResultCachedGif(
     @SerialName("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
     @SerialName("input_message_content") val inputMessageContent: InputMessageContent? = null
 ) : InlineQueryResult {
-    override val type: String get() = "gif"
+    override val type: String = "gif"
 }
 

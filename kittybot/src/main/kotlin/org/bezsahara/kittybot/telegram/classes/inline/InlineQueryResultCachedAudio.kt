@@ -34,6 +34,6 @@ data class InlineQueryResultCachedAudio(
     @SerialName("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
     @SerialName("input_message_content") val inputMessageContent: InputMessageContent? = null
 ) : InlineQueryResult {
-    override val type: String get() = "audio"
+    override val type: String = "audio"
 }
 

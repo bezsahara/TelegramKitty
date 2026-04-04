@@ -17,6 +17,6 @@ import kotlinx.serialization.Serializable
 data class InputStoryContentPhoto(
     val photo: String
 ) : InputStoryContent {
-    override val type: String get() = "photo"
+    override val type: String = "photo"
 }
 

@@ -20,6 +20,6 @@ data class TransactionPartnerAffiliateProgram(
     @SerialName("commission_per_mille") val commissionPerMille: Long,
     @SerialName("sponsor_user") val sponsorUser: User? = null
 ) : TransactionPartner {
-    override val type: String get() = "affiliate_program"
+    override val type: String = "affiliate_program"
 }
 

@@ -51,6 +51,6 @@ data class InputMediaAudio(
         media.asVertx().execute(builder, null)
         thumbnail?.asVertx()?.execute(builder, null)
     }
-    override val type: String get() = "audio"
+    override val type: String = "audio"
 }
 

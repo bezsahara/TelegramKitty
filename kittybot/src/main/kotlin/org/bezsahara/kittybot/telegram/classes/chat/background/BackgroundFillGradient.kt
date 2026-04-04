@@ -21,6 +21,6 @@ data class BackgroundFillGradient(
     @SerialName("bottom_color") val bottomColor: Long,
     @SerialName("rotation_angle") val rotationAngle: Long
 ) : BackgroundFill {
-    override val type: String get() = "gradient"
+    override val type: String = "gradient"
 }
 

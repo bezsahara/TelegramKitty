@@ -17,6 +17,6 @@ import kotlinx.serialization.Serializable
 data class InputProfilePhotoStatic(
     val photo: String
 ) : InputProfilePhoto {
-    override val type: String get() = "static"
+    override val type: String = "static"
 }
 

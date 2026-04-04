@@ -18,6 +18,6 @@ import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFill
 data class BackgroundFillFreeformGradient(
     val colors: List<Long>
 ) : BackgroundFill {
-    override val type: String get() = "freeform_gradient"
+    override val type: String = "freeform_gradient"
 }
 

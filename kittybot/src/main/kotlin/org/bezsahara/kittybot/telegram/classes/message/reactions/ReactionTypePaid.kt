@@ -18,7 +18,7 @@ import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionTypePai
  */
 @Serializable(with = ReactionTypePaidJsonSerializer::class)
 object ReactionTypePaid : ReactionType {
-    override val type: String get() = "paid"
+    override val type: String = "paid"
 }
 
 

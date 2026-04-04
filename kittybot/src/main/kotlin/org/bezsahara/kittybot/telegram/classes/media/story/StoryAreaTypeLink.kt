@@ -17,6 +17,6 @@ import kotlinx.serialization.Serializable
 data class StoryAreaTypeLink(
     val url: String
 ) : StoryAreaType {
-    override val type: String get() = "link"
+    override val type: String = "link"
 }
 

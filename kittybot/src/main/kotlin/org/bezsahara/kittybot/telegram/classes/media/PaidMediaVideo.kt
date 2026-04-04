@@ -18,6 +18,6 @@ import org.bezsahara.kittybot.telegram.classes.media.PaidMedia
 data class PaidMediaVideo(
     val video: Video
 ) : PaidMedia {
-    override val type: String get() = "video"
+    override val type: String = "video"
 }
 

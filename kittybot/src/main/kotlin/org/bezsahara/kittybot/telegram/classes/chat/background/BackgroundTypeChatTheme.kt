@@ -17,6 +17,6 @@ import kotlinx.serialization.Serializable
 data class BackgroundTypeChatTheme(
     @SerialName("theme_name") val themeName: String
 ) : BackgroundType {
-    override val type: String get() = "chat_theme"
+    override val type: String = "chat_theme"
 }
 

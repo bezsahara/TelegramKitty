@@ -18,7 +18,7 @@ import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalStatePe
  */
 @Serializable(with = RevenueWithdrawalStatePendingJsonSerializer::class)
 object RevenueWithdrawalStatePending : RevenueWithdrawalState {
-    override val type: String get() = "pending"
+    override val type: String = "pending"
 }
 
 

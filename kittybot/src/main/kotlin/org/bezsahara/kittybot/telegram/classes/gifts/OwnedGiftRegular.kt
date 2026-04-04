@@ -43,6 +43,6 @@ data class OwnedGiftRegular(
     @SerialName("convert_star_count") val convertStarCount: Long? = null,
     @SerialName("prepaid_upgrade_star_count") val prepaidUpgradeStarCount: Long? = null
 ) : OwnedGift {
-    override val type: String get() = "regular"
+    override val type: String = "regular"
 }
 

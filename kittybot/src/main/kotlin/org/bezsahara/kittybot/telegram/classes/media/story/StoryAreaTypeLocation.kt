@@ -22,6 +22,6 @@ data class StoryAreaTypeLocation(
     val longitude: Double,
     val address: LocationAddress? = null
 ) : StoryAreaType {
-    override val type: String get() = "location"
+    override val type: String = "location"
 }
 

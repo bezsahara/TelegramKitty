@@ -20,6 +20,6 @@ data class BackgroundTypeFill(
     val fill: BackgroundFill,
     @SerialName("dark_theme_dimming") val darkThemeDimming: Long
 ) : BackgroundType {
-    override val type: String get() = "fill"
+    override val type: String = "fill"
 }
 

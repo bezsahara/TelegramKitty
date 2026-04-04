@@ -38,6 +38,6 @@ data class TransactionPartnerUser(
     val gift: Gift? = null,
     @SerialName("premium_subscription_duration") val premiumSubscriptionDuration: Long? = null
 ) : TransactionPartner {
-    override val type: String get() = "user"
+    override val type: String = "user"
 }
 

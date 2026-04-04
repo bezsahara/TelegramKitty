@@ -24,6 +24,6 @@ data class BackgroundTypeWallpaper(
     @SerialName("is_blurred") val isBlurred: Boolean? = null,
     @SerialName("is_moving") val isMoving: Boolean? = null
 ) : BackgroundType {
-    override val type: String get() = "wallpaper"
+    override val type: String = "wallpaper"
 }
 

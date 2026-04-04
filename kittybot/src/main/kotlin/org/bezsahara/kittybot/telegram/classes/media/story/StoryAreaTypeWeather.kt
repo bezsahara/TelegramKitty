@@ -21,6 +21,6 @@ data class StoryAreaTypeWeather(
     val emoji: String,
     @SerialName("background_color") val backgroundColor: Long
 ) : StoryAreaType {
-    override val type: String get() = "weather"
+    override val type: String = "weather"
 }
 

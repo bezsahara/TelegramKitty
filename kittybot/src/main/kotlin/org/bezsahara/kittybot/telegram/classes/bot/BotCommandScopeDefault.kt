@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable(with = BotCommandScopeDefaultJsonSerializer::class)
 object BotCommandScopeDefault : BotCommandScope {
-    override val type: String get() = "default"
+    override val type: String = "default"
 }
 
 

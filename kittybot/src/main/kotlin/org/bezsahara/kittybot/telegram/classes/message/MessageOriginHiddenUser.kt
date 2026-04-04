@@ -19,6 +19,6 @@ data class MessageOriginHiddenUser(
     val date: Long,
     @SerialName("sender_user_name") val senderUserName: String
 ) : MessageOrigin {
-    override val type: String get() = "hidden_user"
+    override val type: String = "hidden_user"
 }
 

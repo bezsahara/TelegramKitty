@@ -17,6 +17,6 @@ import kotlinx.serialization.Serializable
 data class ReactionTypeEmoji(
     val emoji: String
 ) : ReactionType {
-    override val type: String get() = "emoji"
+    override val type: String = "emoji"
 }
 

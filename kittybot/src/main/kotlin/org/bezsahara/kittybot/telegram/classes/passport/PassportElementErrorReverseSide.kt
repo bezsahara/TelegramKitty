@@ -21,6 +21,6 @@ data class PassportElementErrorReverseSide(
     @SerialName("file_hash") val fileHash: String,
     val message: String
 ) : PassportElementError {
-    override val source: String get() = "reverse_side"
+    override val source: String = "reverse_side"
 }
 

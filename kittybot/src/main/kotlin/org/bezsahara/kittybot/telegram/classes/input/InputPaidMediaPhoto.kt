@@ -17,6 +17,6 @@ import kotlinx.serialization.Serializable
 data class InputPaidMediaPhoto(
     val media: String
 ) : InputPaidMedia {
-    override val type: String get() = "photo"
+    override val type: String = "photo"
 }
 

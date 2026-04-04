@@ -31,6 +31,6 @@ data class InputPaidMediaVideo(
     val duration: Long? = null,
     @SerialName("supports_streaming") val supportsStreaming: Boolean? = null
 ) : InputPaidMedia {
-    override val type: String get() = "video"
+    override val type: String = "video"
 }
 

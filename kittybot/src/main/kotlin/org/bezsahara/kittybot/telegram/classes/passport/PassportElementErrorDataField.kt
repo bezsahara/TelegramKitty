@@ -23,6 +23,6 @@ data class PassportElementErrorDataField(
     @SerialName("data_hash") val dataHash: String,
     val message: String
 ) : PassportElementError {
-    override val source: String get() = "data"
+    override val source: String = "data"
 }
 

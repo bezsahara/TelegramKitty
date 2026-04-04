@@ -21,6 +21,6 @@ data class TransactionPartnerChat(
     val chat: Chat,
     val gift: Gift? = null
 ) : TransactionPartner {
-    override val type: String get() = "chat"
+    override val type: String = "chat"
 }
 

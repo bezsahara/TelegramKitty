@@ -24,6 +24,6 @@ data class MessageOriginChannel(
     @SerialName("message_id") val messageId: Long,
     @SerialName("author_signature") val authorSignature: String? = null
 ) : MessageOrigin {
-    override val type: String get() = "channel"
+    override val type: String = "channel"
 }
 

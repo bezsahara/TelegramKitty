@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable(with = TransactionPartnerOtherJsonSerializer::class)
 object TransactionPartnerOther : TransactionPartner {
-    override val type: String get() = "other"
+    override val type: String = "other"
 }
 
 

@@ -20,6 +20,6 @@ data class MessageOriginUser(
     val date: Long,
     @SerialName("sender_user") val senderUser: User
 ) : MessageOrigin {
-    override val type: String get() = "user"
+    override val type: String = "user"
 }
 

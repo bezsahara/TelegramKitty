@@ -54,6 +54,6 @@ data class InputMediaAnimation(
         media.asVertx().execute(builder, null)
         thumbnail?.asVertx()?.execute(builder, null)
     }
-    override val type: String get() = "animation"
+    override val type: String = "animation"
 }
 

@@ -23,6 +23,6 @@ data class InputStoryContentVideo(
     @SerialName("cover_frame_timestamp") val coverFrameTimestamp: Double? = null,
     @SerialName("is_animation") val isAnimation: Boolean? = null
 ) : InputStoryContent {
-    override val type: String get() = "video"
+    override val type: String = "video"
 }
 

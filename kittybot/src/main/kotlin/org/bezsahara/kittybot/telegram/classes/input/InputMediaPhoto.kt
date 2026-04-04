@@ -45,6 +45,6 @@ data class InputMediaPhoto(
     ) {
         media.asVertx().execute(builder, null)
     }
-    override val type: String get() = "photo"
+    override val type: String = "photo"
 }
 

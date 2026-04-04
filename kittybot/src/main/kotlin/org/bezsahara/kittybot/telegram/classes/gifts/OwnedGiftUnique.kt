@@ -33,6 +33,6 @@ data class OwnedGiftUnique(
     @SerialName("transfer_star_count") val transferStarCount: Long? = null,
     @SerialName("next_transfer_date") val nextTransferDate: Long? = null
 ) : OwnedGift {
-    override val type: String get() = "unique"
+    override val type: String = "unique"
 }
 

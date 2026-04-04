@@ -19,6 +19,6 @@ data class InputProfilePhotoAnimated(
     val animation: String,
     @SerialName("main_frame_timestamp") val mainFrameTimestamp: Double? = null
 ) : InputProfilePhoto {
-    override val type: String get() = "animated"
+    override val type: String = "animated"
 }
 

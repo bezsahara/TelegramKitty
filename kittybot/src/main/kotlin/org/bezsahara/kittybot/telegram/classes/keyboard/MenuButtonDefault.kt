@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable(with = MenuButtonDefaultJsonSerializer::class)
 object MenuButtonDefault : MenuButton {
-    override val type: String get() = "default"
+    override val type: String = "default"
 }
 
 

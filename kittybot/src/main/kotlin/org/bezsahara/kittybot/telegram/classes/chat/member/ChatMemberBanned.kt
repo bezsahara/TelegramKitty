@@ -20,6 +20,6 @@ data class ChatMemberBanned(
     val user: User,
     @SerialName("until_date") val untilDate: Long
 ) : ChatMember {
-    override val status: String get() = "kicked"
+    override val status: String = "kicked"
 }
 

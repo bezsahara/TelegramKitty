@@ -1,9 +1,12 @@
 package org.bezsahara.kittybot.telegram.classes.bot
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.buildJsonObject
 import org.bezsahara.kittybot.bot.json.PureJsonSerializer
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.json.JsonPrimitive
+import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
+import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllGroupChats
+import kotlinx.serialization.Serializable
 
 
 /**
@@ -15,7 +18,7 @@ import org.bezsahara.kittybot.bot.json.PureJsonSerializer
  */
 @Serializable(with = BotCommandScopeAllGroupChatsJsonSerializer::class)
 object BotCommandScopeAllGroupChats : BotCommandScope {
-    override val type: String get() = "all_group_chats"
+    override val type: String = "all_group_chats"
 }
 
 

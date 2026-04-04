@@ -17,6 +17,6 @@ import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFill
 data class BackgroundFillSolid(
     val color: Long
 ) : BackgroundFill {
-    override val type: String get() = "solid"
+    override val type: String = "solid"
 }
 
