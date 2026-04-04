@@ -16,6 +16,8 @@ import org.bezsahara.kittybot.bot.sendHttpCat
 import org.bezsahara.kittybot.bot.updates.MultiIdentity
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommand
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllPrivateChats
+import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeChat
+import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeDefault
 import org.bezsahara.kittybot.telegram.classes.chat.toChatId
 import org.bezsahara.kittybot.telegram.classes.core.update.CallbackQueryUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
@@ -32,6 +34,7 @@ fun FelineBuilder<*>.buildBot() {
     // Register visible bot commands once before update handling starts.
     init {
         // An example of using helper function to create bot commands
+        deleteMyCommands(BotCommandScopeDefault)
         if (false) {
             createCommandsSimpleExample()
             return@init
@@ -51,7 +54,7 @@ fun FelineBuilder<*>.buildBot() {
                 BotCommand("/auth", "Conversation example 1"),
                 BotCommand("/callback", "Conversation example 2"),
             ),
-            scope = BotCommandScopeAllPrivateChats
+            scope = BotCommandScopeDefault
         ).consume()
     }
 
@@ -88,6 +91,12 @@ fun FelineBuilder<*>.buildBot() {
                 /error - error handler demo
                 """.trimIndent()
             )
+        }
+
+        command("/update_cmd") {
+            bot.deleteMyCommands(BotCommandScopeChat(chatId))
+            bot.createCommandsSimpleExample(chatId)
+            bot.sendMessage(chatId, "Updated")
         }
 
         conversations()
@@ -175,6 +184,7 @@ fun FelineBuilder<*>.buildBot() {
         }
 
         // More advanced dispatcher helpers live in their own sample files.
+        dynamicHandlersExample()
         routingExample()
         filesExample()
         flowExample()

@@ -2,6 +2,10 @@ package org.bezsahara.kittybot.bot.dispatchers
 
 import org.bezsahara.kittybot.bot.IdentityScope
 import org.bezsahara.kittybot.bot.KittyBot
+import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.AfterNextTo
+import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.Consumed
+import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.Next
+import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.NextTo
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
@@ -20,11 +24,16 @@ import java.util.concurrent.atomic.AtomicInteger
  * val lastMessageId = FelineDispatcher.identityScope.attrKeyOf<Long>("lastMessageId")
  * ```
  */
-open class AttrKey<T> internal constructor(val name: String?, val clazz: Class<T>?, id: Int, val scope: IdentityScope) {
+open class AttrKey<T> private constructor(
+    val name: String?,
+    val clazz: Class<T>?,
+    @JvmField val id: Int,
+    @JvmField val scope: IdentityScope,
+) {
     constructor(name: String?, clazz: Class<T>?, identityScope: IdentityScope) :
             this(name, clazz, identityScope.newAttrKeyId(), identityScope)
-    @JvmField
-    val id = id
+
+    constructor(identityScope: IdentityScope) : this(null, null, identityScope)
 
     override fun toString(): String {
         return "AttrKey<${clazz?.name ?: ""}>[id = $id](${name ?: ""})"
@@ -106,8 +115,13 @@ fun interface Handler {
  */
 class Decision
 internal constructor(@JvmField val result: Int, @JvmField val offset: Int) {
-    fun isNext(): Boolean { return result == NEXT }
-    fun isConsumed(): Boolean { return result == CONSUMED }
+    fun isNext(): Boolean {
+        return result == NEXT
+    }
+
+    fun isConsumed(): Boolean {
+        return result == CONSUMED
+    }
 
     @Suppress("FunctionName")
     companion object {

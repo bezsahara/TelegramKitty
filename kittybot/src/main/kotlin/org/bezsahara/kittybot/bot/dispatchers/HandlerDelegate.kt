@@ -12,6 +12,9 @@ class HandlerDelegate(
     override val allowedKinds: Set<UpdateKind<*>>?,
     originalHandler: Handler
 ) : Handler {
+    init {
+        require(originalHandler !is RejectDelegate) { "Handler is RejectDelegate. HandlerDelegate cannot accept it" }
+    }
     val originalHandler: Handler = if (originalHandler is HandlerDelegate) originalHandler.originalHandler else originalHandler
 
     override suspend fun handleUpdate(
@@ -45,3 +48,5 @@ fun HandlerStore.addHandler(allowedTypes: Set<UpdateKind<*>>? = null, identity: 
     addHandler(HandlerDelegate(identity, allowedTypes, handler))
 }
 
+
+interface RejectDelegate

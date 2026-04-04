@@ -1,11 +1,12 @@
 package org.bezsahara.kittybot.bot.updates
 
 import org.bezsahara.kittybot.bot.KittyBot
+import org.bezsahara.kittybot.bot.action.dyn.DynIdentityFinder
 import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.CONSUMED
 import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.NEXT
-import org.bezsahara.kittybot.bot.errors.HandlerAwareError
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
+import org.bezsahara.kittybot.bot.errors.KittyError
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.core.update.telegramUpdateKinds
@@ -21,12 +22,19 @@ abstract class Furball(
 
     private val attrKeyMaxSize: Int
 //    private val handlerContextBuilder: HandlerContextBuilder
+    private val identityScope = botDispatchers.identityScope
 
     init {
-        val identityScope = botDispatchers.identityScope
         val size = identityScope.highest()
-        require(size < furballConfig.attrsLimit) { "You have a lot of Attribute Keys. Too much in fact. Are you sure u use them correctly? To remove this error set Furball.attrsLimit = [your number]" }
+        require(size < furballConfig.attrsLimit) { "You have a lot of Attribute Keys. Too much in fact. Are you sure u use them correctly? To remove this error set FurballConfig.attrsLimit = [your number]" }
         attrKeyMaxSize = size
+
+        if (!furballConfig.ignoreIdentityDuplicated) {
+            botDispatchers.handlerList.checkIfIdentityDuplicated()?.let { (a, b) ->
+                throw KittyError("You have duplicated identities in handler list! A<${a.real().javaClass.name}>: $a, B<${a.real().javaClass.name}>: $b." +
+                        "\n to disable this set FurballConfig.ignoreIdentityDuplicated = true")
+            }
+        }
     }
 
     internal data class AHandlerStore2(val h: Handler, val arrayPos: Int)
@@ -87,6 +95,8 @@ abstract class Furball(
 
     private val hopSafetyLimit = hlSize * furballConfig.hopSafetyTimes
 
+    private val dynamic = DynIdentityFinder.fromList(botDispatchers.handlerList)
+
     private val handlerList = botDispatchers.handlerList.let { hl ->
         Array(hl.size) {
             val h = hl[it]
@@ -102,7 +112,7 @@ abstract class Furball(
         val jumpTable = handlerByKindMap[update.ordinal] ?: return
         var pos = jumpTable[0]
         val jumpTableSize = jumpTable.size
-        val handlerContext = HandlerContextArray(attrKeyMaxSize)
+        val handlerContext = HandlerContextArray(attrKeyMaxSize, identityScope)
         var hopSafety = 0
         while (true) {
             val handler = handlerList[pos]
@@ -131,6 +141,8 @@ abstract class Furball(
                     hopSafety += 1
                     pos = handlerListIdentity.get(res.result)
                     if (pos == -1) {
+                        pos = maybeDynHI(res.result, res.offset, handlerContext)
+                        if (pos != -1) continue
                         throw HandlerException("Did not find a handler `${res.result}`!")
                     }
                     if (res.offset != 0) {
@@ -152,4 +164,9 @@ abstract class Furball(
 
     abstract fun start()
 
+
+    private fun maybeDynHI(hi: Int, offset: Int, context: HandlerContext): Int {
+        val r = dynamic.jumpIfDynIdentity(HandlerIdentity(hi), offset, context)
+        return if (r == HandlerIdentity.emptyID) -1 else handlerListIdentity.get(r.value)
+    }
 }

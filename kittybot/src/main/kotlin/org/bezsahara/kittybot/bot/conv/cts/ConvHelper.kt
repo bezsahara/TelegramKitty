@@ -1,6 +1,7 @@
 package org.bezsahara.kittybot.bot.conv.cts
 
 import kotlinx.coroutines.Deferred
+import org.bezsahara.kittybot.bot.action.other.withStartOf
 import org.bezsahara.kittybot.bot.conv.scope.OnMsgScope
 import org.bezsahara.kittybot.telegram.classes.chat.toChatId
 import org.bezsahara.kittybot.telegram.classes.games.Game
@@ -38,6 +39,10 @@ private fun OnMsgScope.originUserId(): Long {
  */
 suspend fun OnMsgScope.receiveMessage(check: ((Message) -> Boolean)? = null): Deferred<Message> {
     return receive(MessageCatcher(check, originChatId()))
+}
+
+suspend fun OnMsgScope.receiveCommand(command: String): Deferred<Message> {
+    return receive(MessageCatcher({ it.text?.withStartOf(command) == true }, originChatId()))
 }
 
 /**
