@@ -51,7 +51,7 @@ sealed class RoutingStrategy<T>(val original: HandlerStore) {
     }
 
     inline fun default(block: HandlerStore.() -> Unit) {
-        require(default == null) { "You already defined common before!" }
+        require(default == null) { "You already defined default before!" }
         val r = RoutingPart(original)
         r.block()
         if (r.isEmpty()) return
