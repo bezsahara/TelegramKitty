@@ -5,7 +5,8 @@ import io.vertx.core.http.RequestOptions
 
 
 internal class TPath(
-    val basePath: String
+    val basePath: String,
+    val token: String
 ) {
     @JvmField val deleteMessages = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/deleteMessages").setMethod(HttpMethod.POST)

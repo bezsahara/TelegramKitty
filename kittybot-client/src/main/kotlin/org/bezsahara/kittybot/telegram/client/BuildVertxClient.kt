@@ -11,7 +11,7 @@ class BuildVertxClient : ClientBuilder {
         token: String,
         json: Json,
     ): KittyBot {
-        return TApiClient(v, json, TPath("https://api.telegram.org/bot$token"))
+        return TApiClient(v, json, TPath("https://api.telegram.org/bot$token", token))
     }
 
     override fun close() {
