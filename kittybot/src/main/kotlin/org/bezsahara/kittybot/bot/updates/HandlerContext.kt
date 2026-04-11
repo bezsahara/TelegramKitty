@@ -1,21 +1,33 @@
 package org.bezsahara.kittybot.bot.updates
 
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ChannelResult
 import org.bezsahara.kittybot.bot.IdentityScope
 import org.bezsahara.kittybot.bot.dispatchers.AttrKey
 import org.bezsahara.kittybot.bot.errors.KittyError
+import org.bezsahara.kittybot.telegram.classes.core.update.SyntheticUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.Update
 
 
-sealed class HandlerContext {
+sealed class HandlerContext(internal val channel: Channel<Update>) {
     abstract operator fun <T> get(a: AttrKey<T>): T?
 
     abstract operator fun <T> set(attrKey: AttrKey<T>, value: T)
+
+    suspend fun emitUpdate(u: SyntheticUpdate) {
+        channel.send(u)
+    }
+
+    fun tryEmitUpdate(u: SyntheticUpdate): ChannelResult<Unit> {
+        return channel.trySend(u)
+    }
 
     protected fun throwWrongScope(used: AttrKey<*>) {
         throw KittyError("AttrKey of $used was created with different identity scope!")
     }
 }
 
-class HandlerContextMap(size: Int, private val identityScope: IdentityScope) : HandlerContext() {
+class HandlerContextMap(size: Int, private val identityScope: IdentityScope, channel: Channel<Update>) : HandlerContext(channel) {
     private val map = HashMap<Int, Any>(size, 1f)
     private val size = size
 
@@ -40,7 +52,7 @@ class HandlerContextMap(size: Int, private val identityScope: IdentityScope) : H
     }
 }
 
-class HandlerContextArray(size: Int, private val identityScope: IdentityScope) : HandlerContext() {
+class HandlerContextArray(size: Int, private val identityScope: IdentityScope, channel: Channel<Update>) : HandlerContext(channel) {
     private val map = arrayOfNulls<Any>(size)
     private val size = size
 
@@ -66,17 +78,17 @@ class HandlerContextArray(size: Int, private val identityScope: IdentityScope) :
 }
 
 sealed class HandlerContextBuilder {
-    abstract fun create(size: Int, identityScope: IdentityScope): HandlerContext
+    abstract fun create(size: Int, identityScope: IdentityScope, channel: Channel<Update>): HandlerContext
 
     class ByMap : HandlerContextBuilder() {
-        override fun create(size: Int, identityScope: IdentityScope): HandlerContext {
-            return HandlerContextMap(size, identityScope)
+        override fun create(size: Int, identityScope: IdentityScope, channel: Channel<Update>): HandlerContext {
+            return HandlerContextMap(size, identityScope, channel)
         }
     }
 
     class ByArray : HandlerContextBuilder() {
-        override fun create(size: Int, identityScope: IdentityScope): HandlerContext {
-            return HandlerContextArray(size, identityScope)
+        override fun create(size: Int, identityScope: IdentityScope, channel: Channel<Update>): HandlerContext {
+            return HandlerContextArray(size, identityScope, channel)
         }
     }
 }

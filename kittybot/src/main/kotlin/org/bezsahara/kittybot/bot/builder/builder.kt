@@ -5,6 +5,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.KittyBotConfig
+import org.bezsahara.kittybot.bot.KittyBotConfig.Companion.BOT_SUPERVISOR_JOB
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
 import org.bezsahara.kittybot.bot.errors.hiss
@@ -81,9 +82,9 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
 ) {
     val botContext = TypeAwareMap()
 
+    val supervisorJob = SupervisorJob(parentJob)
     init {
         // TODO need to change job init
-        val supervisorJob = SupervisorJob(parentJob)
         val r = botContext.getOrPut(KittyBotConfig.BOT_SUPERVISOR_JOB) { supervisorJob }
         require(r == supervisorJob) {
             "KittyBot internal error. KittyBotConfig.BOT_SUPERVISOR_JOB was defined before needed definition"
@@ -320,4 +321,8 @@ fun FelineBuilder<WebhookReceiver>.webhook(
             url, certificate, ipAddress, maxConnections, allowedUpdates, dropPendingUpdates, secretToken
         )
     }
+}
+
+fun TypeAwareMap.superVisorJob(): Job {
+    return getOrPut(BOT_SUPERVISOR_JOB) { SupervisorJob() }
 }

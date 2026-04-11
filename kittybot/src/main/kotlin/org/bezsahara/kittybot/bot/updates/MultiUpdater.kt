@@ -2,13 +2,8 @@ package org.bezsahara.kittybot.bot.updates
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.sync.withPermit
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
@@ -24,7 +19,9 @@ fun interface MultiIdentity {
             (it as? MessageUpdate)?.message?.chat?.id
         }
 
-        val OfUserChatIdentity = MultiIdentity { it.chatIdOrNull() }
+        val OfAnyUserChatIdentity = MultiIdentity { it.chatIdOrNull() }
+
+        val OfAnyUserIdentity = MultiIdentity { it.userIdOrNull() }
     }
 }
 
@@ -33,7 +30,7 @@ fun interface MultiIdentity {
 internal class MultiUpdater(
     bot: KittyBot,
     botDispatchers: FelineDispatcher,
-    private val channel: ReceiveChannel<Update>,
+    private val channel: Channel<Update>,
     private val scope: CoroutineScope,
     private val identity: MultiIdentity,
     parallelism: Int,
@@ -43,7 +40,8 @@ internal class MultiUpdater(
     bot,
     botDispatchers,
     errorHandler,
-    furballConfig
+    furballConfig,
+    channel
 ) {
     private val semaphore = Semaphore(parallelism)
     private val buckets = ConcurrentHashMap<Any, Mutex>()

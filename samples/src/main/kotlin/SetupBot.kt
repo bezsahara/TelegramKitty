@@ -15,7 +15,6 @@ import org.bezsahara.kittybot.bot.dispatchers.y.text
 import org.bezsahara.kittybot.bot.sendHttpCat
 import org.bezsahara.kittybot.bot.updates.MultiIdentity
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommand
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllPrivateChats
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeChat
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeDefault
 import org.bezsahara.kittybot.telegram.classes.chat.toChatId
@@ -24,7 +23,6 @@ import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.asMessageUpdateOrNull
 import org.bezsahara.kittybot.telegram.classes.keyboard.CopyTextButton
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardButton
-import org.bezsahara.kittybot.telegram.utils.buildBotCommands
 import org.bezsahara.kittybot.telegram.utils.key.buildInlineKeyboardMarkup
 
 fun FelineBuilder<*>.buildBot() {
@@ -61,7 +59,7 @@ fun FelineBuilder<*>.buildBot() {
     // Restrict updates to what this sample actually handles.
     allowUpdatesOf(CallbackQueryUpdate, MessageUpdate)
 
-    updaterMode = UpdaterMode.MultiThread(MultiIdentity.OfUserChatIdentity, 8)
+    updaterMode = UpdaterMode.MultiThread(MultiIdentity.OfAnyUserChatIdentity, 8)
 
     // Centralized error handling for all sample handlers.
     setErrorHandler { throwable, bot, update, _, _ ->
@@ -99,6 +97,7 @@ fun FelineBuilder<*>.buildBot() {
             bot.sendMessage(chatId, "Updated")
         }
 
+        mediaGroupExample()
         conversations()
 
         val attrKey = attrKeyOf<String>("TestAttribute")

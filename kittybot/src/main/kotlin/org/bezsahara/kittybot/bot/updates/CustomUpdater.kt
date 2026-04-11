@@ -25,7 +25,8 @@ internal class CustomUpdater(
     bot,
     felineDispatcher,
     errorHandler,
-    furballConfig
+    furballConfig,
+    channel
 ) {
     override fun start() {
         customUpdater.configure(channel, ::applyHandlers, supervisorJob)

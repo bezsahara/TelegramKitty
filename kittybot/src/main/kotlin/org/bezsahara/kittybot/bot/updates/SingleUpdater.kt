@@ -19,7 +19,8 @@ internal class SingleUpdater(
     bot,
     botDispatchers,
     errorHandler,
-    furballConfig
+    furballConfig,
+    channel
 ) {
 
     private suspend fun getUpdates() = coroutineScope {

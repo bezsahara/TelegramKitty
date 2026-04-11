@@ -21,15 +21,6 @@ import org.bezsahara.kittybot.telegram.utils.key.buildInlineKeyboardMarkup
 fun FelineDispatcher.conversations() {
 
     buildConversation {
-        onStartCommand {
-            bot.sendMessage(chatId, "Hi! What's your name?")
-            val name = receiveText().await()
-            bot.sendMessage(chatId, "Send a picture, $name")
-            val picture = receivePhotos().await()
-        }
-    }
-
-    buildConversation {
         onText({ it.text == "/auth" }) {
             bot.sendMessage(chatId, "Hi, auth began. Send your pic")
 

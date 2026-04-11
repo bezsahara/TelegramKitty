@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.bot.updates
 
+import kotlinx.coroutines.channels.Channel
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.action.dyn.DynIdentityFinder
 import org.bezsahara.kittybot.bot.dispatchers.*
@@ -17,7 +18,8 @@ abstract class Furball(
     val bot: KittyBot,
     botDispatchers: FelineDispatcher,
     private val errorHandler: HandlerErrorHandler,
-    private val furballConfig: FurballConfig
+    private val furballConfig: FurballConfig,
+    private val channel: Channel<Update>,
 ) {
 
     private val attrKeyMaxSize: Int
@@ -112,7 +114,7 @@ abstract class Furball(
         val jumpTable = handlerByKindMap[update.ordinal] ?: return
         var pos = jumpTable[0]
         val jumpTableSize = jumpTable.size
-        val handlerContext = HandlerContextArray(attrKeyMaxSize, identityScope)
+        val handlerContext = HandlerContextArray(attrKeyMaxSize, identityScope, channel)
         var hopSafety = 0
         while (true) {
             val handler = handlerList[pos]

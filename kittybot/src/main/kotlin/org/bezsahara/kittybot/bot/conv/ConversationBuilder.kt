@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.bezsahara.kittybot.bot.KittyBotConfig.Companion.BOT_SUPERVISOR_JOB
+import org.bezsahara.kittybot.bot.builder.superVisorJob
 import org.bezsahara.kittybot.bot.conv.scope.StartCommand
 import org.bezsahara.kittybot.bot.dispatchers.TransparentHandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.addHandler
@@ -23,7 +24,7 @@ class ConversationBuilder(
     internal val convInfo: ConvInfo
     init {
         val felineBuilder = original.felineDispatcher.felineBuilder
-        val sj = felineBuilder.botContext.getOrPut(BOT_SUPERVISOR_JOB) { SupervisorJob() }
+        val sj = felineBuilder.botContext.superVisorJob()
         runtime = felineBuilder.botContext.getOrPut(ConversationRuntime.BOT_CONTEXT_KEY) {
             ConversationRuntime(CoroutineScope(Dispatchers.IO + sj))
         }
