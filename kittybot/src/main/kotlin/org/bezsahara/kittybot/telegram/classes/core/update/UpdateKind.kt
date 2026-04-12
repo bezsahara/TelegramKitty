@@ -23,6 +23,6 @@ sealed class UpdateKind<T>(
     }
 
     companion object {
-        private val sanityCheck = arrayOfNulls<Class<*>>(25)
+        private val sanityCheck = arrayOfNulls<Class<*>>(30)
     }
 }

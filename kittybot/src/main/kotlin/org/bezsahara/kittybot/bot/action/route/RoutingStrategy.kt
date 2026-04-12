@@ -27,12 +27,12 @@ sealed class RoutingStrategy<T>(val original: HandlerStore) {
         val exitHandlerIdentityD = if (default == null) {
             null
         } else {
-            Decision.NextTo(default!!.handlers.first().identity!!)
+            Decision.NextTo(default!!.handlers.first().identity!!, 0, true)
         }
         val actualExit = if (default == null) {
-            Decision.AfterNextTo(exitHandler.identity!!)
+            Decision.AfterNextTo(exitHandler.identity!!, true)
         } else {
-            Decision.AfterNextTo(default!!.handlers.replaceLast { it.ensureHasIdentity() }.identity!!)
+            Decision.AfterNextTo(default!!.handlers.replaceLast { it.ensureHasIdentity() }.identity!!, true)
         }
 
         return exitHandlerIdentityD to actualExit

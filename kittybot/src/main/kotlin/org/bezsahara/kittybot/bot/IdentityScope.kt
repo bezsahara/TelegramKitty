@@ -1,17 +1,34 @@
 package org.bezsahara.kittybot.bot
 
 import org.bezsahara.kittybot.bot.dispatchers.AttrKey
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class IdentityScope {
-    private val attrKeyIdGen = AtomicInteger(0)
+    private var attrKeyIdGen = 0
+    private var closed = false
 
-    fun highest(): Int {
-        return attrKeyIdGen.get()
+    @Synchronized
+    fun close(): IdentityScope {
+        closed = true
+        return this
     }
 
+    @Synchronized
+    fun highest(): Int {
+        return attrKeyIdGen
+    }
+
+    @Synchronized
     internal fun newAttrKeyId(): Int {
-        return attrKeyIdGen.getAndAdd(1)
+        checkClosed()
+        return attrKeyIdGen++
+    }
+
+    private fun checkClosed() {
+        if (closed) {
+            error("The IdentityScope is already closed.")
+        }
     }
 
     inline fun <reified T> attrKeyOf(name: String? = null): AttrKey<T> {

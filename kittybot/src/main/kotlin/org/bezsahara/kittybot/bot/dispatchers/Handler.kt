@@ -81,6 +81,9 @@ abstract class SimpleHandler(vararg updateKinds: UpdateKind<*>) : Handler {
  * A handler receives an [Update] and returns a [Decision] that controls what the dispatcher
  * should do next.
  *
+ * - [Decision.Next] tells dispatcher to test next handler
+ * - [Decision.Consumed] tells dispatcher to end this update handling
+ *
  * Rules:
  *
  * - [identity] must be backed by a stable field, not a custom getter. Returning
@@ -110,11 +113,13 @@ fun interface Handler {
  * Use [Consumed] to stop processing, [Next] to continue with the next matching handler, or
  * [NextTo]/[AfterNextTo] to jump to a handler by [HandlerIdentity].
  *
- * This is kept as an int-backed class instead of a sealed hierarchy to keep the hot dispatch
- * path cheap.
+ * @param result -1 or -2 are reserved for next or consumed. Anything else is just HandlerIdentity
+ * @param offset relative offset if it is a jump decision
+ * @param adjust flag for [org.bezsahara.kittybot.bot.updates.Furball] to adjust what handler will get the update based on update kinds it can receive.
+ * Although it is done automatically for next and consumed, jump decisions are exempt from it, this flag changes it.
  */
 class Decision
-internal constructor(@JvmField val result: Int, @JvmField val offset: Int) {
+internal constructor(@JvmField val result: Int, @JvmField val offset: Int, @JvmField val adjust: Boolean) {
     fun isNext(): Boolean {
         return result == NEXT
     }
@@ -125,40 +130,42 @@ internal constructor(@JvmField val result: Int, @JvmField val offset: Int) {
 
     @Suppress("FunctionName")
     companion object {
-        private val cachedMappings = Array(101) { Decision(it, 0) }
-        private val cachedMappingsOffset1 = Array(101) { Decision(it, 1) }
+        private val cachedMappings = Array(101) { Decision(it, 0, false) }
 
         // Return to jump to a handler with specified HandlerIdentity
         fun NextTo(handlerIdentity: HandlerIdentity): Decision {
             return if (handlerIdentity.value > 100) Decision(
                 handlerIdentity.value,
-                0
+                0,
+                false
             ) else cachedMappings[handlerIdentity.value]
         }
 
         // Return to jump after the handler with specified HandlerIdentity
-        fun AfterNextTo(handlerIdentity: HandlerIdentity): Decision {
-            return if (handlerIdentity.value > 100) Decision(
+        fun AfterNextTo(handlerIdentity: HandlerIdentity, adjust: Boolean = false): Decision {
+            return Decision(
                 handlerIdentity.value,
-                1
-            ) else cachedMappingsOffset1[handlerIdentity.value]
+                1,
+                adjust
+            )
         }
 
         // Return to jump to a Handler with offset with specified HandlerIdentity
-        fun NextTo(handlerIdentity: HandlerIdentity, offset: Int): Decision {
-            return if (handlerIdentity.value > 100 || offset != 1) Decision(
+        fun NextTo(handlerIdentity: HandlerIdentity, offset: Int, adjust: Boolean = false): Decision {
+            return Decision(
                 handlerIdentity.value,
-                offset
-            ) else cachedMappingsOffset1[handlerIdentity.value]
+                offset,
+                adjust
+            )
         }
 
         // Return to consume the update and stop its propagation to other handlers if any
         @JvmField
-        val Consumed = Decision(CONSUMED, 0)
+        val Consumed = Decision(CONSUMED, 0, false)
 
         // Return to suggest to test the next handler if any
         @JvmField
-        val Next = Decision(NEXT, 0)
+        val Next = Decision(NEXT, 0, false)
 
         const val CONSUMED = -2
         const val NEXT = -1

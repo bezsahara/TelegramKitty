@@ -27,7 +27,7 @@ abstract class Furball(
     private val identityScope = botDispatchers.identityScope
 
     init {
-        val size = identityScope.highest()
+        val size = identityScope.close().highest()
         require(size < furballConfig.attrsLimit) { "You have a lot of Attribute Keys. Too much in fact. Are you sure u use them correctly? To remove this error set FurballConfig.attrsLimit = [your number]" }
         attrKeyMaxSize = size
 
@@ -153,7 +153,10 @@ abstract class Furball(
                             throw HandlerException("pos is less than 0 after applying offset of ${res.offset}!")
                         }
                         if (jumpTableSize <= pos) break
-                        continue
+                    }
+                    if (res.adjust) {
+                        pos += jumpTable[pos]
+                        if (jumpTableSize <= pos) break
                     }
                 }
             }
