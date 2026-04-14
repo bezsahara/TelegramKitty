@@ -182,6 +182,9 @@ text("/httpcat") {
 
 See [samples](samples/src/main/kotlin) for polling, webhook, and handler examples.
 
+You can also check out [KittyChat](https://github.com/bezsahara/KittyChat) project.
+It uses this library for a simple AI telegram bot for conversations.
+
 # License
 Copyright 2026 Hlib Korol
 
