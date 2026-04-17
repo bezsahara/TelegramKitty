@@ -97,6 +97,7 @@ fun FelineBuilder<*>.buildBot() {
             bot.sendMessage(chatId, "Updated")
         }
 
+        commandGroupExample()
         mediaGroupExample()
         conversations()
 
@@ -130,7 +131,7 @@ fun FelineBuilder<*>.buildBot() {
                 url("Open Google", "https://google.com")
                 addRow(3) {
                     callback("Ping callback", "sample:pop")
-                    addButton(InlineKeyboardButton.CopyText("CopyThis!", CopyTextButton("copied text")))
+                    addButton(InlineKeyboardButton("CopyThis!", copyText = CopyTextButton("copied text")))
                     copyText("Copy via DSL", "Copied from TelegramKitty")
                 }
             })

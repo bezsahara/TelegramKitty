@@ -24,10 +24,10 @@ class DynIdentityFinder(
         rebuildIndex()
     }
 
-    fun jumpIfDynIdentity(handlerIdentity: HandlerIdentity, offset: Int, context: HandlerContext): HandlerIdentity {
+    fun jumpIfDynIdentity(handlerIdentity: HandlerIdentity, offset: Int, adjust: Boolean, context: HandlerContext): HandlerIdentity {
         val ownerIndex = registryByIdentity[handlerIdentity.value]
         if (ownerIndex == -1) return HandlerIdentity.emptyID
-        return dynHandlers[ownerIndex].jumpIfDynIdentity(handlerIdentity, offset, context)
+        return dynHandlers[ownerIndex].jumpIfDynIdentity(handlerIdentity, offset, adjust, context)
     }
 
     internal fun rebuildIndex() {

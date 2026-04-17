@@ -171,7 +171,7 @@ open class FlowSupport(
     fidAttribute: AttrKey<FlowIdentityData>,
     nameToId: Map<String, Int>,
 ) {
-    protected val flowManager = FlowManager(id, flowIdentityStorage, fidAttribute, nameToId)
+    val flowManager = FlowManager(id, flowIdentityStorage, fidAttribute, nameToId)
 
     fun HandlerContext.nextSection(args: Any? = null) {
         flowManager.nextSection(this, args)

@@ -10,6 +10,7 @@ import io.vertx.kotlin.coroutines.coAwait
 import kotlinx.coroutines.withContext
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 import org.bezsahara.kittybot.telegram.classes.message.Message
+import org.bezsahara.kittybot.telegram.client.TApiClient
 import org.bezsahara.kittybot.telegram.client.file.TelegramFileVertx
 import org.bezsahara.kittybot.telegram.utils.TResult
 import java.net.URLEncoder
@@ -24,7 +25,7 @@ var theCatApiToken: String? = null
  * The author of KittyBot is not responsible for how you use this code or the content generated.
  */
 suspend fun KittyBot.sendTheCatApi(chatId: ChatId): TResult<Message> {
-    val apiClient = vertxClient()
+    val apiClient = vertxClientForCats()
 
     val byteArray = apiClient.client.request(RequestOptions()
         .setMethod(HttpMethod.GET)
@@ -57,7 +58,7 @@ suspend fun KittyBot.sendTheCatApi(chatId: ChatId): TResult<Message> {
  * The author of KittyBot is not responsible for how you use this code or the content generated.
  */
 suspend fun KittyBot.sendCatPicture(chatId: ChatId, says: String? = null): TResult<Message> {
-    val apiClient = vertxClient()
+    val apiClient = vertxClientForCats()
     return withContext(apiClient.dispatcher) {
         val urlStr = if (says != null)
             "https://cataas.com/cat/says/${
@@ -89,7 +90,7 @@ suspend fun KittyBot.sendHttpCat(
     chatId: ChatId,
     httpCode: Int
 ): TResult<Message> {
-    val apiClient = vertxClient()
+    val apiClient = vertxClientForCats()
     return withContext(apiClient.dispatcher) {
         val bytes = apiClient.client.request(RequestOptions().setMethod(HttpMethod.GET).setAbsoluteURI("https://http.cat/$httpCode"))
             .compose(vertxFunctionSend)
@@ -116,4 +117,8 @@ suspend fun KittyBot.sendTextCat(chatId: ChatId): TResult<Message> {
 ＼二つ
     """
     return sendMessage(chatId, toSend)
+}
+
+fun KittyBot.vertxClientForCats(): TApiClient {
+    return vertxClient("You need to use Vert.x client for sending cat pics.")
 }

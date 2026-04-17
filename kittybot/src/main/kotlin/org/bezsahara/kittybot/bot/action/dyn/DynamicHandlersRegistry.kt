@@ -83,11 +83,16 @@ class DynamicHandlersRegistry(original: FelineDispatcher) : TransparentHandlerSt
         finderToNotify?.rebuildIndex()
     }
 
-    internal fun jumpIfDynIdentity(handlerIdentity: HandlerIdentity, offset: Int, context: HandlerContext): HandlerIdentity {
+    internal fun jumpIfDynIdentity(
+        handlerIdentity: HandlerIdentity,
+        offset: Int,
+        adjust: Boolean,
+        context: HandlerContext
+    ): HandlerIdentity {
         val currentState = state
         val target = currentState.hiMap[handlerIdentity.value]
         if (target == -1) return HandlerIdentity.emptyID
-        context[dynRouterInfo] = DynRouterInfo(handlerIdentity, offset, currentState.handlers, currentState.hiMap)
+        context[dynRouterInfo] = DynRouterInfo(handlerIdentity, offset, adjust, currentState.handlers, currentState.hiMap)
         return identity
     }
 
@@ -115,29 +120,36 @@ class DynamicHandlersRegistry(original: FelineDispatcher) : TransparentHandlerSt
         bot: KittyBot,
         handlerContext: HandlerContext,
     ): Decision {
-        val ri = handlerContext[dynRouterInfo]
+        val dynRouter = handlerContext[dynRouterInfo]
         val currentState = state
-        val handlers = ri?.handlers ?: currentState.handlers
-        val hiMap = ri?.hiMap ?: currentState.hiMap
+        val handlers = dynRouter?.handlers ?: currentState.handlers
+        val hiMap = dynRouter?.hiMap ?: currentState.hiMap
 
-        var i = if (ri != null) {
-            var r = hiMap[ri.jumpTo.value]
-            if (r == -1) throw KittyError("HandlerIdentity of ${ri.jumpTo} could not be found in DynamicHandlersRegistry")
-            r += ri.initialOffset
+        var adjust = true
+
+        var i = if (dynRouter != null) {
+            var r = hiMap[dynRouter.jumpTo.value]
+            if (r == -1) throw KittyError("HandlerIdentity of ${dynRouter.jumpTo} could not be found in DynamicHandlersRegistry")
+            r += dynRouter.initialOffset
             if (r < 0) {
-                throw HandlerException("pos is less than 0 after offset of ${ri.initialOffset}!")
+                throw HandlerException("pos is less than 0 after offset of ${dynRouter.initialOffset}!")
             }
             if (r >= handlers.size) {
                 return Decision.Next
             }
+            adjust = dynRouter.adjust
             r
         } else 0
 
         while (i < handlers.size) {
             val handlerInfo = handlers[i]
-            if (!handlerInfo.accepts(update.ordinal)) {
-                i++
-                continue
+            if (adjust) {
+                if (!handlerInfo.accepts(update.ordinal)) {
+                    i++
+                    continue
+                }
+            } else {
+                adjust = true
             }
             val res = try {
                 handlerInfo.handler.handleUpdate(update, bot, handlerContext)
@@ -160,6 +172,7 @@ class DynamicHandlersRegistry(original: FelineDispatcher) : TransparentHandlerSt
                     if (here >= handlers.size) {
                         return Decision.Next
                     }
+                    adjust = res.adjust
                     i = here
                 }
             }

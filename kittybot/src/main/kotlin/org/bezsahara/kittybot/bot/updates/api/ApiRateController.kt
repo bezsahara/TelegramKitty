@@ -9,6 +9,7 @@ import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 import org.bezsahara.kittybot.telegram.utils.TReturns
+import org.bezsahara.kittybot.telegram.utils.errorOrNull
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.function.Consumer
@@ -20,13 +21,14 @@ import kotlin.math.roundToInt
 // Make sure to create just one instance! for one bot
 class ApiRateController(
     private val evictDeltaMillis: Long = 1000 * 60 * 10, // remove chats that are not active for 10 mins
-    @Volatile private var mapThreshold: Int = 10_000 // start cleaning at 10 000
+    @Volatile private var mapThreshold: Int = 10_000, // start cleaning at 10 000
 ) {
     data class ChatCheck private constructor(
         @Volatile var lastTime: Long,
-        val mutex: Mutex
+        val mutex: Mutex,
     ) {
-        constructor(lastTime: Long): this(lastTime, Mutex())
+        constructor(lastTime: Long) : this(lastTime, Mutex())
+
         fun copy(lastTime: Long) = ChatCheck(lastTime, mutex)
     }
 
@@ -60,7 +62,7 @@ class ApiRateController(
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
-    suspend fun <T: TReturns> submit(chatId: ChatId, action: suspend () -> T): T {
+    suspend fun <T : TReturns> submit(chatId: ChatId, action: suspend () -> T): T {
         cleanMapMaybe()
 
         val chatControl = map.computeIfAbsent(chatId) { ChatCheck(System.currentTimeMillis()) }
@@ -83,10 +85,30 @@ class ApiRateController(
 
 private val instances = ConcurrentHashMap<FelineDispatcher, ApiRateController>()
 
-val HandlerStore.apiRateController: ApiRateController get() {
-    return instances.computeIfAbsent(felineDispatcher, Function { ApiRateController() })
-}
+val HandlerStore.apiRateController: ApiRateController
+    get() {
+        return instances.computeIfAbsent(felineDispatcher, Function { ApiRateController() })
+    }
 
-suspend inline fun <T: TReturns> HandlerStore.controlApiRate(chatId: ChatId, noinline block: () -> T): T {
+suspend inline fun <T : TReturns> HandlerStore.controlApiRate(chatId: ChatId, noinline block: () -> T): T {
     return apiRateController.submit(chatId, block)
 }
+
+// Can be used if u expected to get something like ResponseParameters(migrateToChatId=null, retryAfter=9)
+// It will catch it and automatically retry
+suspend inline fun <T : TReturns> sendOrRetry(cancelLimitSeconds: Int = 60, block: suspend () -> T): T {
+    while (true) {
+        val r = block.invoke()
+        r.errorOrNull()?.also { error ->
+            val retryAfter = error.parameters?.retryAfter
+            if (retryAfter != null && retryAfter <= cancelLimitSeconds) {
+                delay(retryAfter * 1000)
+                continue
+            } else {
+                return r
+            }
+        }
+        return r
+    }
+}
+

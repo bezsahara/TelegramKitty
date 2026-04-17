@@ -6,6 +6,7 @@ import org.bezsahara.kittybot.bot.updates.IntIntHashMap
 class DynRouterInfo(
     val jumpTo: HandlerIdentity,
     val initialOffset: Int,
+    val adjust: Boolean,
     internal val handlers: Array<HandlerInfo>,
     internal val hiMap: IntIntHashMap,
 )

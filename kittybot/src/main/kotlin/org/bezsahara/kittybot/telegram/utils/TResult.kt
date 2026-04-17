@@ -5,12 +5,14 @@ package org.bezsahara.kittybot.telegram.utils
 import org.bezsahara.kittybot.telegram.client.TelegramError
 import org.bezsahara.kittybot.telegram.client.TelegramErrorException
 
-sealed interface TReturns
+sealed interface TReturns {
+    val value: Any?
+}
 
 @JvmInline
-value class TResult<out T>(@PublishedApi internal val value: T) : TReturns {
+value class TResult<out T>(override val value: T) : TReturns {
     @JvmInline
-    value class Either<out First, out Second>(val value: Any) : TReturns {
+    value class Either<out First, out Second>(override val value: Any) : TReturns {
         val isError: Boolean
             get() = value is TelegramError
 
@@ -165,6 +167,14 @@ fun <T> TelegramError.asTResult(): TResult<T> {
 internal fun TResult<*>.throwError(): Nothing {
     val a = (value as? TelegramError) ?: error("value is not a TelegramError")
     throw TelegramErrorException(a)
+}
+
+fun TReturns.errorOrNull(): TelegramError? {
+    val v = value
+    if (v is TelegramError) {
+        return v
+    }
+    return null
 }
 
 @PublishedApi

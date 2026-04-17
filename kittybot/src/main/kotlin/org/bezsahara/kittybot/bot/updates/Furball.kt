@@ -27,6 +27,7 @@ abstract class Furball(
     private val identityScope = botDispatchers.identityScope
 
     init {
+        telegramUpdateKinds
         val size = identityScope.close().highest()
         require(size < furballConfig.attrsLimit) { "You have a lot of Attribute Keys. Too much in fact. Are you sure u use them correctly? To remove this error set FurballConfig.attrsLimit = [your number]" }
         attrKeyMaxSize = size
@@ -143,7 +144,7 @@ abstract class Furball(
                     hopSafety += 1
                     pos = handlerListIdentity.get(res.result)
                     if (pos == -1) {
-                        pos = maybeDynHI(res.result, res.offset, handlerContext)
+                        pos = maybeDynHI(res.result, res.offset, res.adjust, handlerContext)
                         if (pos != -1) continue
                         throw HandlerException("Did not find a handler `${res.result}`!")
                     }
@@ -170,8 +171,8 @@ abstract class Furball(
     abstract fun start()
 
 
-    private fun maybeDynHI(hi: Int, offset: Int, context: HandlerContext): Int {
-        val r = dynamic.jumpIfDynIdentity(HandlerIdentity(hi), offset, context)
+    private fun maybeDynHI(hi: Int, offset: Int, adjust: Boolean, context: HandlerContext): Int {
+        val r = dynamic.jumpIfDynIdentity(HandlerIdentity(hi), offset, adjust, context)
         return if (r == HandlerIdentity.emptyID) -1 else handlerListIdentity.get(r.value)
     }
 }
