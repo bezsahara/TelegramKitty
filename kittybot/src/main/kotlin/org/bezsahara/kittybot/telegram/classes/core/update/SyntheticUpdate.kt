@@ -6,9 +6,9 @@ import org.bezsahara.kittybot.telegram.classes.message.Message
 
 abstract class SyntheticUpdate() : Update() {
     final override val ordinal: Int
-        get() = 24
+        get() = 25
 
-    companion object : UpdateKind<SyntheticUpdate>(24, SyntheticUpdate::class.java, "SyntheticUpdate")
+    companion object : UpdateKind<SyntheticUpdate>(25, SyntheticUpdate::class.java, "SyntheticUpdate")
 }
 
 // An Update kind for Grouped Media messages

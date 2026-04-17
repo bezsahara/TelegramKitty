@@ -19,6 +19,7 @@ import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberMember
 import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberOwner
 import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberRestricted
 import org.bezsahara.kittybot.telegram.classes.chat.toChatId
+import org.bezsahara.kittybot.telegram.classes.core.ManagedBotUpdated
 import org.bezsahara.kittybot.telegram.classes.inline.CallbackQuery
 import org.bezsahara.kittybot.telegram.classes.inline.ChosenInlineResult
 import org.bezsahara.kittybot.telegram.classes.inline.InlineQuery
@@ -55,6 +56,7 @@ val telegramUpdateKinds: Set<UpdateKind<*>> = setOf(
     ChatJoinRequestUpdate,
     ChatBoostUpdate,
     RemovedChatBoostUpdate,
+    ManagedBotUpdate,
     UnknownUpdate,
     SyntheticUpdate
 )
@@ -517,6 +519,22 @@ data class RemovedChatBoostUpdate(
     )
 }
 
+
+
+data class ManagedBotUpdate(
+    override val updateId: Long,
+    override val managedBot: ManagedBotUpdated
+) : Update() {
+    override val ordinal: Int get() = 23
+
+    override fun chatIdOrNull(): ChatId = managedBot.bot.id.toChatId()
+    override fun userIdOrNull(): ChatId = managedBot.bot.id.toChatId()
+
+    companion object : UpdateKind<ManagedBotUpdate>(
+        23, ManagedBotUpdate::class.java,
+        "managed_bot"
+    )
+}
 
 private fun Message.userIdOrNull(): ChatId? = from?.id?.toChatId()
 

@@ -17,7 +17,7 @@ data class UnknownUpdate(
     val jsonObject: JsonObject
 ) : Update() {
     override val ordinal: Int
-        get() = 23
+        get() = 24
     override fun chatIdOrNull(): ChatId? = null
     override fun userIdOrNull(): ChatId? = null
 
@@ -26,7 +26,7 @@ data class UnknownUpdate(
     }
 
     companion object : UpdateKind<UnknownUpdate>(
-        23, UnknownUpdate::class.java, "UnknownUpdate"
+        24, UnknownUpdate::class.java, "UnknownUpdate"
     )
 }
 

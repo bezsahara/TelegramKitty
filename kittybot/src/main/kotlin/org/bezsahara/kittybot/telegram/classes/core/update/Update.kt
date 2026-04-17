@@ -10,6 +10,7 @@ import org.bezsahara.kittybot.telegram.classes.chat.ChatJoinRequest
 import org.bezsahara.kittybot.telegram.classes.chat.ChatMemberUpdated
 import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostRemoved
 import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostUpdated
+import org.bezsahara.kittybot.telegram.classes.core.ManagedBotUpdated
 import org.bezsahara.kittybot.telegram.classes.inline.CallbackQuery
 import org.bezsahara.kittybot.telegram.classes.inline.ChosenInlineResult
 import org.bezsahara.kittybot.telegram.classes.inline.InlineQuery
@@ -55,6 +56,7 @@ import org.bezsahara.kittybot.telegram.classes.payments.ShippingQuery
  * @param chatJoinRequest Optional. A request to join the chat has been sent. The bot must have the can_invite_users administrator right in the chat to receive these updates.
  * @param chatBoost Optional. A chat boost was added or changed. The bot must be an administrator in the chat to receive these updates.
  * @param removedChatBoost Optional. A boost was removed from a chat. The bot must be an administrator in the chat to receive these updates.
+ * @param managed_bot Optional. A new bot was created to be managed by the bot, or token or owner of a managed bot was changed
  *
  * @see MessageUpdate
  * @see EditedMessageUpdate
@@ -128,6 +130,9 @@ sealed class Update {
 
     @SerialName("removed_chat_boost")
     open val removedChatBoost: ChatBoostRemoved? get() = null
+
+    @SerialName("managed_bot")
+    open val managedBot: ManagedBotUpdated? get() = null
 
     @SerialName("update_id")
     internal abstract val updateId: Long
