@@ -19,6 +19,7 @@ import org.bezsahara.kittybot.telegram.classes.chat.ChatJoinRequest
 import org.bezsahara.kittybot.telegram.classes.chat.ChatMemberUpdated
 import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostRemoved
 import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostUpdated
+import org.bezsahara.kittybot.telegram.classes.core.ManagedBotUpdated
 import org.bezsahara.kittybot.telegram.classes.inline.CallbackQuery
 import org.bezsahara.kittybot.telegram.classes.inline.ChosenInlineResult
 import org.bezsahara.kittybot.telegram.classes.inline.InlineQuery
@@ -57,6 +58,7 @@ internal object UpdateSerializer : KSerializer<Update> {
         element<ChatJoinRequest?>("chat_join_request", isOptional = true) // 21
         element<ChatBoostUpdated?>("chat_boost", isOptional = true) // 22
         element<ChatBoostRemoved?>("removed_chat_boost", isOptional = true) // 23
+        element<ManagedBotUpdated?>("managed_bot", isOptional = true) // 24
     }
 
     override fun deserialize(decoder: Decoder): Update {
@@ -316,6 +318,17 @@ internal object UpdateSerializer : KSerializer<Update> {
                     }
                     structure.endStructure(descriptor)
                     return RemovedChatBoostUpdate(updateId, removedChatBoost)
+                }
+
+                24 -> {
+                    val managedBot =
+                        structure.decodeSerializableElement(descriptor, 24, ManagedBotUpdated.serializer())
+                    if (updateId == Long.MIN_VALUE) {
+                        value = UpdateLambda { ManagedBotUpdate(it, managedBot) }
+                        continue
+                    }
+                    structure.endStructure(descriptor)
+                    return ManagedBotUpdate(updateId, managedBot)
                 }
 
                 else -> throw SerializationException("Unexpected index: $elIndex")
