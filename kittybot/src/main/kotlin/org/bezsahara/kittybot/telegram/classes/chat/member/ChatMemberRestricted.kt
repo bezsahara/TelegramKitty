@@ -12,6 +12,7 @@ import kotlinx.serialization.Serializable
  * [link](https://core.telegram.org/bots/api#chatmemberrestricted): https://core.telegram.org/bots/api#chatmemberrestricted
  * 
  * @param status The member's status in the chat, always "restricted"
+ * @param tag Optional. Tag of the member
  * @param user Information about the user
  * @param isMember True, if the user is a member of the chat at the moment of the request
  * @param canSendMessages True, if the user is allowed to send text messages, contacts, giveaways, giveaway winners, invoices, locations and venues
@@ -24,6 +25,7 @@ import kotlinx.serialization.Serializable
  * @param canSendPolls True, if the user is allowed to send polls and checklists
  * @param canSendOtherMessages True, if the user is allowed to send animations, games, stickers and use inline bots
  * @param canAddWebPagePreviews True, if the user is allowed to add web page previews to their messages
+ * @param canEditTag True, if the user is allowed to edit their own tag
  * @param canChangeInfo True, if the user is allowed to change the chat title, photo and other settings
  * @param canInviteUsers True, if the user is allowed to invite new users to the chat
  * @param canPinMessages True, if the user is allowed to pin messages
@@ -44,11 +46,13 @@ data class ChatMemberRestricted(
     @SerialName("can_send_polls") val canSendPolls: Boolean,
     @SerialName("can_send_other_messages") val canSendOtherMessages: Boolean,
     @SerialName("can_add_web_page_previews") val canAddWebPagePreviews: Boolean,
+    @SerialName("can_edit_tag") val canEditTag: Boolean,
     @SerialName("can_change_info") val canChangeInfo: Boolean,
     @SerialName("can_invite_users") val canInviteUsers: Boolean,
     @SerialName("can_pin_messages") val canPinMessages: Boolean,
     @SerialName("can_manage_topics") val canManageTopics: Boolean,
-    @SerialName("until_date") val untilDate: Long
+    @SerialName("until_date") val untilDate: Long,
+    val tag: String? = null
 ) : ChatMember {
     override val status: String = "restricted"
 }

@@ -22,6 +22,9 @@ import kotlinx.serialization.Serializable
  * @param supportsInlineQueries Optional. True, if the bot supports inline queries. Returned only in getMe.
  * @param canConnectToBusiness Optional. True, if the bot can be connected to a Telegram Business account to receive its messages. Returned only in getMe.
  * @param hasMainWebApp Optional. True, if the bot has a main Web App. Returned only in getMe.
+ * @param hasTopicsEnabled Optional. True, if the bot has forum topic mode enabled in private chats. Returned only in getMe.
+ * @param allowsUsersToCreateTopics Optional. True, if the bot allows users to create and delete topics in private chats. Returned only in getMe.
+ * @param canManageBots Optional. True, if other bots can be created to be controlled by the bot. Returned only in getMe.
  */
 @Serializable
 data class User(
@@ -37,6 +40,9 @@ data class User(
     @SerialName("can_read_all_group_messages") val canReadAllGroupMessages: Boolean? = null,
     @SerialName("supports_inline_queries") val supportsInlineQueries: Boolean? = null,
     @SerialName("can_connect_to_business") val canConnectToBusiness: Boolean? = null,
-    @SerialName("has_main_web_app") val hasMainWebApp: Boolean? = null
+    @SerialName("has_main_web_app") val hasMainWebApp: Boolean? = null,
+    @SerialName("has_topics_enabled") val hasTopicsEnabled: Boolean? = null,
+    @SerialName("allows_users_to_create_topics") val allowsUsersToCreateTopics: Boolean? = null,
+    @SerialName("can_manage_bots") val canManageBots: Boolean? = null
 )
 

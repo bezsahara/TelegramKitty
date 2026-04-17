@@ -19,6 +19,7 @@ import kotlinx.serialization.Serializable
  * @param canSendPolls Optional. True, if the user is allowed to send polls and checklists
  * @param canSendOtherMessages Optional. True, if the user is allowed to send animations, games, stickers and use inline bots
  * @param canAddWebPagePreviews Optional. True, if the user is allowed to add web page previews to their messages
+ * @param canEditTag Optional. True, if the user is allowed to edit their own tag
  * @param canChangeInfo Optional. True, if the user is allowed to change the chat title, photo and other settings. Ignored in public supergroups
  * @param canInviteUsers Optional. True, if the user is allowed to invite new users to the chat
  * @param canPinMessages Optional. True, if the user is allowed to pin messages. Ignored in public supergroups
@@ -36,6 +37,7 @@ data class ChatPermissions(
     @SerialName("can_send_polls") val canSendPolls: Boolean? = null,
     @SerialName("can_send_other_messages") val canSendOtherMessages: Boolean? = null,
     @SerialName("can_add_web_page_previews") val canAddWebPagePreviews: Boolean? = null,
+    @SerialName("can_edit_tag") val canEditTag: Boolean? = null,
     @SerialName("can_change_info") val canChangeInfo: Boolean? = null,
     @SerialName("can_invite_users") val canInviteUsers: Boolean? = null,
     @SerialName("can_pin_messages") val canPinMessages: Boolean? = null,

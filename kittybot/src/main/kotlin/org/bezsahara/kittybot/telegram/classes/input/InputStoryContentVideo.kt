@@ -1,7 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.input
 
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 import org.bezsahara.kittybot.telegram.classes.input.InputStoryContent
+import org.bezsahara.kittybot.telegram.client.file.CustomMPB
+import kotlin.Unit
+import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import kotlinx.serialization.Serializable
 
 
@@ -18,11 +22,21 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class InputStoryContentVideo(
-    val video: String,
+    val video: TelegramFile,
     val duration: Double? = null,
     @SerialName("cover_frame_timestamp") val coverFrameTimestamp: Double? = null,
     @SerialName("is_animation") val isAnimation: Boolean? = null
 ) : InputStoryContent {
+    override suspend fun executeAll(
+        builder: CustomMPB
+    ) {
+        video.asVertx().executeCustom(builder, null)
+    }
+    override suspend fun executeAll(
+        builder: MultiPartBuilder
+    ) {
+        video.asVertx().execute(builder, null)
+    }
     override val type: String = "video"
 }
 

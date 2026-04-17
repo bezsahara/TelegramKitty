@@ -1,7 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.input
 
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 import org.bezsahara.kittybot.telegram.classes.input.InputPaidMedia
+import org.bezsahara.kittybot.telegram.client.file.CustomMPB
+import kotlin.Unit
+import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import kotlinx.serialization.Serializable
 
 
@@ -22,15 +26,29 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class InputPaidMediaVideo(
-    val media: String,
-    val thumbnail: String? = null,
-    val cover: String? = null,
+    val media: TelegramFile,
+    val thumbnail: TelegramFile? = null,
+    val cover: TelegramFile? = null,
     @SerialName("start_timestamp") val startTimestamp: Long? = null,
     val width: Long? = null,
     val height: Long? = null,
     val duration: Long? = null,
     @SerialName("supports_streaming") val supportsStreaming: Boolean? = null
 ) : InputPaidMedia {
+    override suspend fun executeAll(
+        builder: CustomMPB
+    ) {
+        media.asVertx().executeCustom(builder, null)
+        thumbnail?.asVertx()?.executeCustom(builder, null)
+        cover?.asVertx()?.executeCustom(builder, null)
+    }
+    override suspend fun executeAll(
+        builder: MultiPartBuilder
+    ) {
+        media.asVertx().execute(builder, null)
+        thumbnail?.asVertx()?.execute(builder, null)
+        cover?.asVertx()?.execute(builder, null)
+    }
     override val type: String = "video"
 }
 

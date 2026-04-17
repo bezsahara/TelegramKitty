@@ -3,9 +3,12 @@ package org.bezsahara.kittybot.telegram.classes.chat
 import org.bezsahara.kittybot.telegram.classes.business.BusinessOpeningHours
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.message.Message
+import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGiftColors
 import org.bezsahara.kittybot.telegram.classes.business.BusinessIntro
 import org.bezsahara.kittybot.telegram.classes.chat.ChatPhoto
+import org.bezsahara.kittybot.telegram.classes.user.UserRating
 import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfoType
+import org.bezsahara.kittybot.telegram.classes.media.Audio
 import org.bezsahara.kittybot.telegram.classes.chat.ChatPermissions
 import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
 import org.bezsahara.kittybot.telegram.classes.business.BusinessLocation
@@ -69,6 +72,10 @@ import org.bezsahara.kittybot.telegram.classes.chat.Chat
  * @param customEmojiStickerSetName Optional. For supergroups, the name of the group's custom emoji sticker set. Custom emoji from this set can be used by all users and bots in the group.
  * @param linkedChatId Optional. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
  * @param location Optional. For supergroups, the location to which the supergroup is connected
+ * @param rating Optional. For private chats, the rating of the user if any
+ * @param firstProfileAudio Optional. For private chats, the first audio added to the profile of the user
+ * @param uniqueGiftColors Optional. The color scheme based on a unique gift that must be used for the chat's name, message replies and link previews
+ * @param paidMessageStarCount Optional. The number of Telegram Stars a general user have to pay to send a message to the chat
  */
 @Serializable
 data class ChatFullInfo(
@@ -118,6 +125,10 @@ data class ChatFullInfo(
     @SerialName("can_set_sticker_set") val canSetStickerSet: Boolean? = null,
     @SerialName("custom_emoji_sticker_set_name") val customEmojiStickerSetName: String? = null,
     @SerialName("linked_chat_id") val linkedChatId: Long? = null,
-    val location: ChatLocation? = null
+    val location: ChatLocation? = null,
+    val rating: UserRating? = null,
+    @SerialName("first_profile_audio") val firstProfileAudio: Audio? = null,
+    @SerialName("unique_gift_colors") val uniqueGiftColors: UniqueGiftColors? = null,
+    @SerialName("paid_message_star_count") val paidMessageStarCount: Long? = null
 )
 

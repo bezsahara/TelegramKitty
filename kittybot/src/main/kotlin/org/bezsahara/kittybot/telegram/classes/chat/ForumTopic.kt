@@ -13,12 +13,14 @@ import kotlinx.serialization.Serializable
  * @param name Name of the topic
  * @param iconColor Color of the topic icon in RGB format
  * @param iconCustomEmojiId Optional. Unique identifier of the custom emoji shown as the topic icon
+ * @param isNameImplicit Optional. True, if the name of the topic wasn't specified explicitly by its creator and likely needs to be changed by the bot
  */
 @Serializable
 data class ForumTopic(
     @SerialName("message_thread_id") val messageThreadId: Long,
     val name: String,
     @SerialName("icon_color") val iconColor: Long,
-    @SerialName("icon_custom_emoji_id") val iconCustomEmojiId: String? = null
+    @SerialName("icon_custom_emoji_id") val iconCustomEmojiId: String? = null,
+    @SerialName("is_name_implicit") val isNameImplicit: Boolean? = null
 )
 

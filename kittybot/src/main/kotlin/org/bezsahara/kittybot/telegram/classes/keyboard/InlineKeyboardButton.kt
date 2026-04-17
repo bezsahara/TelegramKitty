@@ -1,17 +1,22 @@
 package org.bezsahara.kittybot.telegram.classes.keyboard
 
+import org.bezsahara.kittybot.telegram.classes.keyboard.LoginUrl
+import org.bezsahara.kittybot.telegram.classes.keyboard.SwitchInlineQueryChosenChat
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.classes.games.CallbackGame
 import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
+import org.bezsahara.kittybot.telegram.classes.keyboard.CopyTextButton
+import org.bezsahara.kittybot.telegram.classes.games.CallbackGame
+import kotlinx.serialization.Serializable
 
 
 /**
- * This object represents one button of an inline keyboard. Exactly one of the optional fields must be used to specify type of the button.
+ * This object represents one button of an inline keyboard. Exactly one of the fields other than text, icon_custom_emoji_id, and style must be used to specify the type of the button.
  * 
  * [link](https://core.telegram.org/bots/api#inlinekeyboardbutton): https://core.telegram.org/bots/api#inlinekeyboardbutton
  * 
  * @param text Label text on the button
+ * @param iconCustomEmojiId Optional. Unique identifier of the custom emoji shown before the text of the button. Can only be used by bots that purchased additional usernames on Fragment or in the messages directly sent by the bot to private, group and supergroup chats if the owner of the bot has a Telegram Premium subscription.
+ * @param style Optional. Style of the button. Must be one of "danger" (red), "success" (green) or "primary" (blue). If omitted, then an app-specific style is used.
  * @param url Optional. HTTP or tg:// URL to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their identifier without using a username, if this is allowed by their privacy settings.
  * @param callbackData Optional. Data to be sent in a callback query to the bot when the button is pressed, 1-64 bytes
  * @param webApp Optional. Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery. Available only in private chats between a user and the bot. Not supported for messages sent on behalf of a Telegram Business account.
@@ -23,80 +28,20 @@ import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
  * @param callbackGame Optional. Description of the game that will be launched when the user presses the button. NOTE: This type of button must always be the first button in the first row.
  * @param pay Optional. Specify True, to send a Pay button. Substrings "⭐" and "XTR" in the buttons's text will be replaced with a Telegram Star icon. NOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.
  */
-@Serializable(with = IKBSerializer::class)
-sealed class InlineKeyboardButton {
-    abstract val text: String
+@Serializable
+data class InlineKeyboardButton(
+    val text: String,
+    @SerialName("icon_custom_emoji_id") val iconCustomEmojiId: String? = null,
+    val style: String? = null,
+    val url: String? = null,
+    @SerialName("callback_data") val callbackData: String? = null,
+    @SerialName("web_app") val webApp: WebAppInfo? = null,
+    @SerialName("login_url") val loginUrl: LoginUrl? = null,
+    @SerialName("switch_inline_query") val switchInlineQuery: String? = null,
+    @SerialName("switch_inline_query_current_chat") val switchInlineQueryCurrentChat: String? = null,
+    @SerialName("switch_inline_query_chosen_chat") val switchInlineQueryChosenChat: SwitchInlineQueryChosenChat? = null,
+    @SerialName("copy_text") val copyText: CopyTextButton? = null,
+    @SerialName("callback_game") val callbackGame: CallbackGame? = null,
+    val pay: Boolean? = null
+)
 
-    open val url: String? get() = null
-    @SerialName("callback_data") open val callbackData: String? get() = null
-    @SerialName("web_app") open val webApp: WebAppInfo? get() = null
-    @SerialName("login_url") open val loginUrl: LoginUrl? get() = null
-    @SerialName("switch_inline_query") open val switchInlineQuery: String? get() = null
-    @SerialName("switch_inline_query_current_chat") open val switchInlineQueryCurrentChat: String? get() = null
-    @SerialName("switch_inline_query_chosen_chat") open val switchInlineQueryChosenChat: SwitchInlineQueryChosenChat? get() = null
-    @SerialName("copy_text") open val copyText: CopyTextButton? get() = null
-    @SerialName("callback_game") open val callbackGame: CallbackGame? get() = null
-    open val pay: Boolean? get() = null
-
-    // ---- Concrete variants (exactly one optional field each) ----
-    @Serializable
-    data class Url(
-        override val text: String,
-        override val url: String
-    ) : InlineKeyboardButton()
-
-    @Serializable
-    data class Callback(
-        override val text: String,
-        @SerialName("callback_data") override val callbackData: String
-    ) : InlineKeyboardButton()
-
-    @Serializable
-    data class WebApp(
-        override val text: String,
-        @SerialName("web_app") override val webApp: WebAppInfo
-    ) : InlineKeyboardButton()
-
-    @Serializable
-    data class ILoginUrl(
-        override val text: String,
-        @SerialName("login_url") override val loginUrl: LoginUrl
-    ) : InlineKeyboardButton()
-
-    @Serializable
-    data class SwitchInline(
-        override val text: String,
-        @SerialName("switch_inline_query") override val switchInlineQuery: String
-    ) : InlineKeyboardButton()
-
-    @Serializable
-    data class SwitchCurrent(
-        override val text: String,
-        @SerialName("switch_inline_query_current_chat") override val switchInlineQueryCurrentChat: String
-    ) : InlineKeyboardButton()
-
-    @Serializable
-    data class SwitchChosen(
-        override val text: String,
-        @SerialName("switch_inline_query_chosen_chat") override val switchInlineQueryChosenChat: SwitchInlineQueryChosenChat
-    ) : InlineKeyboardButton()
-
-    @Serializable
-    data class CopyText(
-        override val text: String,
-        @SerialName("copy_text") override val copyText: CopyTextButton
-    ) : InlineKeyboardButton()
-
-    @Serializable
-    data class ICallbackGame(
-        override val text: String,
-        @SerialName("callback_game") override val callbackGame: CallbackGame
-    ) : InlineKeyboardButton()
-
-    @Serializable
-    data class Pay(
-        override val text: String
-    ) : InlineKeyboardButton() {
-        override val pay: Boolean get() = true
-    }
-}

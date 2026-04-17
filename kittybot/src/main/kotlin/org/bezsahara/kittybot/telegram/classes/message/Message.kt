@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.message.TextQuote
 import org.bezsahara.kittybot.telegram.classes.media.PaidMediaInfo
 import org.bezsahara.kittybot.telegram.classes.media.Animation
+import org.bezsahara.kittybot.telegram.classes.chat.ChatOwnerChanged
 import org.bezsahara.kittybot.telegram.classes.message.service.ChecklistTasksDone
 import org.bezsahara.kittybot.telegram.classes.message.service.MessageAutoDeleteTimerChanged
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
@@ -26,6 +27,7 @@ import org.bezsahara.kittybot.telegram.classes.message.service.ChatBoostAdded
 import org.bezsahara.kittybot.telegram.classes.message.service.SuggestedPostPaid
 import org.bezsahara.kittybot.telegram.classes.media.geo.Location
 import org.bezsahara.kittybot.telegram.classes.keyboard.ChatShared
+import org.bezsahara.kittybot.telegram.classes.core.ManagedBotCreated
 import org.bezsahara.kittybot.telegram.classes.message.LinkPreviewOptions
 import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGiftInfo
 import org.bezsahara.kittybot.telegram.classes.message.MessageOrigin
@@ -37,6 +39,7 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatSchedule
 import org.bezsahara.kittybot.telegram.classes.media.Video
 import org.bezsahara.kittybot.telegram.classes.media.Dice
 import org.bezsahara.kittybot.telegram.classes.message.service.ForumTopicCreated
+import org.bezsahara.kittybot.telegram.classes.message.polls.PollOptionAdded
 import org.bezsahara.kittybot.telegram.classes.message.checklists.Checklist
 import org.bezsahara.kittybot.telegram.classes.message.service.PaidMessagePriceChanged
 import org.bezsahara.kittybot.telegram.classes.message.service.ForumTopicClosed
@@ -47,8 +50,10 @@ import org.bezsahara.kittybot.telegram.classes.media.VideoNote
 import org.bezsahara.kittybot.telegram.classes.payments.Invoice
 import org.bezsahara.kittybot.telegram.classes.payments.SuccessfulPayment
 import kotlin.collections.List
+import org.bezsahara.kittybot.telegram.classes.message.polls.PollOptionDeleted
 import org.bezsahara.kittybot.telegram.classes.chat.DirectMessagesTopic
 import org.bezsahara.kittybot.telegram.classes.message.MaybeInaccessibleMessage
+import org.bezsahara.kittybot.telegram.classes.chat.ChatOwnerLeft
 import org.bezsahara.kittybot.telegram.classes.message.service.SuggestedPostApproved
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
 import org.bezsahara.kittybot.telegram.classes.message.service.WriteAccessAllowed
@@ -77,29 +82,31 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticip
  * [link](https://core.telegram.org/bots/api#message): https://core.telegram.org/bots/api#message
  * 
  * @param messageId Unique message identifier inside this chat. In specific instances (e.g., message containing a video sent to a big chat), the server might automatically schedule a message instead of sending it immediately. In such cases, this field will be 0 and the relevant message will be unusable until it is actually sent
- * @param messageThreadId Optional. Unique identifier of a message thread to which the message belongs; for supergroups only
+ * @param messageThreadId Optional. Unique identifier of a message thread or forum topic to which the message belongs; for supergroups and private chats only
  * @param directMessagesTopic Optional. Information about the direct messages chat topic that contains the message
  * @param from Optional. Sender of the message; may be empty for messages sent to channels. For backward compatibility, if the message was sent on behalf of a chat, the field contains a fake sender user in non-channel chats
  * @param senderChat Optional. Sender of the message when sent on behalf of a chat. For example, the supergroup itself for messages sent by its anonymous administrators or a linked channel for messages automatically forwarded to the channel's discussion group. For backward compatibility, if the message was sent on behalf of a chat, the field from contains a fake sender user in non-channel chats.
  * @param senderBoostCount Optional. If the sender of the message boosted the chat, the number of boosts added by the user
  * @param senderBusinessBot Optional. The bot that actually sent the message on behalf of the business account. Available only for outgoing messages sent on behalf of the connected business account.
+ * @param senderTag Optional. Tag or custom title of the sender of the message; for supergroups only
  * @param date Date the message was sent in Unix time. It is always a positive number, representing a valid date.
  * @param businessConnectionId Optional. Unique identifier of the business connection from which the message was received. If non-empty, the message belongs to a chat of the corresponding business account that is independent from any potential bot chat which might share the same identifier.
  * @param chat Chat the message belongs to
  * @param forwardOrigin Optional. Information about the original message for forwarded messages
- * @param isTopicMessage Optional. True, if the message is sent to a forum topic
+ * @param isTopicMessage Optional. True, if the message is sent to a topic in a forum supergroup or a private chat with the bot
  * @param isAutomaticForward Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
  * @param replyToMessage Optional. For replies in the same chat and message thread, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
  * @param externalReply Optional. Information about the message that is being replied to, which may come from another chat or forum topic
  * @param quote Optional. For replies that quote part of the original message, the quoted part of the message
  * @param replyToStory Optional. For replies to a story, the original story
  * @param replyToChecklistTaskId Optional. Identifier of the specific checklist task that is being replied to
+ * @param replyToPollOptionId Optional. Persistent identifier of the specific poll option that is being replied to
  * @param viaBot Optional. Bot through which the message was sent
  * @param editDate Optional. Date the message was last edited in Unix time
  * @param hasProtectedContent Optional. True, if the message can't be forwarded
  * @param isFromOffline Optional. True, if the message was sent by an implicit action, for example, as an away or a greeting business message, or as a scheduled message
  * @param isPaidPost Optional. True, if the message is a paid post. Note that such posts must not be deleted for 24 hours to receive the payment and can't be edited.
- * @param mediaGroupId Optional. The unique identifier of a media message group this message belongs to
+ * @param mediaGroupId Optional. The unique identifier inside this chat of a media message group this message belongs to
  * @param authorSignature Optional. Signature of the post author for messages in channels, or the custom title of an anonymous group administrator
  * @param paidStarCount Optional. The number of Telegram Stars that were paid by the sender of the message to send it
  * @param text Optional. For text messages, the actual UTF-8 text of the message
@@ -130,6 +137,8 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticip
  * @param location Optional. Message is a shared location, information about the location
  * @param newChatMembers Optional. New members that were added to the group or supergroup and information about them (the bot itself may be one of these members)
  * @param leftChatMember Optional. A member was removed from the group, information about them (this member may be the bot itself)
+ * @param chatOwnerLeft Optional. Service message: chat owner has left
+ * @param chatOwnerChanged Optional. Service message: chat owner has changed
  * @param newChatTitle Optional. A chat title was changed to this value
  * @param newChatPhoto Optional. A chat photo was change to this value
  * @param deleteChatPhoto Optional. Service message: the chat photo was deleted
@@ -147,6 +156,7 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticip
  * @param chatShared Optional. Service message: a chat was shared with the bot
  * @param gift Optional. Service message: a regular gift was sent or received
  * @param uniqueGift Optional. Service message: a unique gift was sent or received
+ * @param giftUpgradeSent Optional. Service message: upgrade of a gift was purchased after the gift was sent
  * @param connectedWebsite Optional. The domain name of the website on which the user has logged in. More about Telegram Login: https://core.telegram.org/widgets/login
  * @param writeAccessAllowed Optional. Service message: the user allowed the bot to write messages after adding it to the attachment or side menu, launching a Web App from a link, or accepting an explicit request from a Web App sent by the method requestWriteAccess
  * @param passportData Optional. Telegram Passport data
@@ -166,7 +176,10 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticip
  * @param giveaway Optional. The message is a scheduled giveaway message
  * @param giveawayWinners Optional. A giveaway with public winners was completed
  * @param giveawayCompleted Optional. Service message: a giveaway without public winners was completed
+ * @param managedBotCreated Optional. Service message: user created a bot that will be managed by the current bot
  * @param paidMessagePriceChanged Optional. Service message: the price for paid messages has changed in the chat
+ * @param pollOptionAdded Optional. Service message: answer option was added to a poll
+ * @param pollOptionDeleted Optional. Service message: answer option was deleted from a poll
  * @param suggestedPostApproved Optional. Service message: a suggested post was approved
  * @param suggestedPostApprovalFailed Optional. Service message: approval of a suggested post has failed
  * @param suggestedPostDeclined Optional. Service message: a suggested post was declined
@@ -190,6 +203,7 @@ data class Message(
     @SerialName("sender_chat") val senderChat: Chat? = null,
     @SerialName("sender_boost_count") val senderBoostCount: Long? = null,
     @SerialName("sender_business_bot") val senderBusinessBot: User? = null,
+    @SerialName("sender_tag") val senderTag: String? = null,
     @SerialName("business_connection_id") val businessConnectionId: String? = null,
     @SerialName("forward_origin") val forwardOrigin: MessageOrigin? = null,
     @SerialName("is_topic_message") val isTopicMessage: Boolean? = null,
@@ -199,6 +213,7 @@ data class Message(
     val quote: TextQuote? = null,
     @SerialName("reply_to_story") val replyToStory: Story? = null,
     @SerialName("reply_to_checklist_task_id") val replyToChecklistTaskId: Long? = null,
+    @SerialName("reply_to_poll_option_id") val replyToPollOptionId: String? = null,
     @SerialName("via_bot") val viaBot: User? = null,
     @SerialName("edit_date") val editDate: Long? = null,
     @SerialName("has_protected_content") val hasProtectedContent: Boolean? = null,
@@ -235,6 +250,8 @@ data class Message(
     val location: Location? = null,
     @SerialName("new_chat_members") val newChatMembers: List<User>? = null,
     @SerialName("left_chat_member") val leftChatMember: User? = null,
+    @SerialName("chat_owner_left") val chatOwnerLeft: ChatOwnerLeft? = null,
+    @SerialName("chat_owner_changed") val chatOwnerChanged: ChatOwnerChanged? = null,
     @SerialName("new_chat_title") val newChatTitle: String? = null,
     @SerialName("new_chat_photo") val newChatPhoto: List<PhotoSize>? = null,
     @SerialName("delete_chat_photo") val deleteChatPhoto: Boolean? = null,
@@ -252,6 +269,7 @@ data class Message(
     @SerialName("chat_shared") val chatShared: ChatShared? = null,
     val gift: GiftInfo? = null,
     @SerialName("unique_gift") val uniqueGift: UniqueGiftInfo? = null,
+    @SerialName("gift_upgrade_sent") val giftUpgradeSent: GiftInfo? = null,
     @SerialName("connected_website") val connectedWebsite: String? = null,
     @SerialName("write_access_allowed") val writeAccessAllowed: WriteAccessAllowed? = null,
     @SerialName("passport_data") val passportData: PassportData? = null,
@@ -271,7 +289,10 @@ data class Message(
     val giveaway: Giveaway? = null,
     @SerialName("giveaway_winners") val giveawayWinners: GiveawayWinners? = null,
     @SerialName("giveaway_completed") val giveawayCompleted: GiveawayCompleted? = null,
+    @SerialName("managed_bot_created") val managedBotCreated: ManagedBotCreated? = null,
     @SerialName("paid_message_price_changed") val paidMessagePriceChanged: PaidMessagePriceChanged? = null,
+    @SerialName("poll_option_added") val pollOptionAdded: PollOptionAdded? = null,
+    @SerialName("poll_option_deleted") val pollOptionDeleted: PollOptionDeleted? = null,
     @SerialName("suggested_post_approved") val suggestedPostApproved: SuggestedPostApproved? = null,
     @SerialName("suggested_post_approval_failed") val suggestedPostApprovalFailed: SuggestedPostApprovalFailed? = null,
     @SerialName("suggested_post_declined") val suggestedPostDeclined: SuggestedPostDeclined? = null,

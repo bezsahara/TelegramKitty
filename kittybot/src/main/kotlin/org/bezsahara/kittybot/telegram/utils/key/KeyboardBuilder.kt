@@ -69,26 +69,26 @@ class KeyboardBuilder() {
         resetVertical(buttons)
     }
 
-    inline fun text(text: String) =
-        addButton(KeyboardButton.Text(text))
+    fun text(text: String, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(KeyboardButton(text, iconCustomEmojiId, style))
 
-    inline fun users(text: String, req: KeyboardButtonRequestUsers) =
-        addButton(KeyboardButton.RequestUsers(text, req))
+    fun users(text: String, req: KeyboardButtonRequestUsers, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(KeyboardButton(text, iconCustomEmojiId, style, requestUsers = req))
 
-    inline fun chat(text: String, req: KeyboardButtonRequestChat) =
-        addButton(KeyboardButton.RequestChat(text, req))
+    fun chat(text: String, req: KeyboardButtonRequestChat, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(KeyboardButton(text, iconCustomEmojiId, style, requestChat = req))
 
-    inline fun contact(text: String) =
-        addButton(KeyboardButton.RequestContact(text))
+    fun contact(text: String, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(KeyboardButton(text, iconCustomEmojiId, style, requestContact = true))
 
-    inline fun location(text: String) =
-        addButton(KeyboardButton.RequestLocation(text))
+    fun location(text: String, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(KeyboardButton(text, iconCustomEmojiId, style, requestLocation = true))
 
-    inline fun poll(text: String, type: KeyboardButtonPollType) =
-        addButton(KeyboardButton.RequestPoll(text, type))
+    fun poll(text: String, type: KeyboardButtonPollType, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(KeyboardButton(text, iconCustomEmojiId, style, requestPoll = type))
 
-    inline fun webApp(text: String, info: WebAppInfo) =
-        addButton(KeyboardButton.WebApp(text, info))
+    fun webApp(text: String, info: WebAppInfo, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(KeyboardButton(text, iconCustomEmojiId, style, webApp = info))
 
     // Optional sugar to match .row(...) overloads
     inline fun row(block: () -> Unit) =

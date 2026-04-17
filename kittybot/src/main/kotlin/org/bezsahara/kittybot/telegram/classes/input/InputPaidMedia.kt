@@ -1,20 +1,24 @@
 package org.bezsahara.kittybot.telegram.classes.input
 
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonContentPolymorphicSerializer
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.input.InputPaidMedia
-import kotlinx.serialization.json.JsonElement
-import org.bezsahara.kittybot.telegram.classes.input.InputPaidMediaVideo
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.json.JsonContentPolymorphicSerializer
-import org.bezsahara.kittybot.telegram.classes.input.InputPaidMediaPhoto
-import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.client.file.CustomMPB
+import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 
 
 @Serializable(with = InputPaidMediaSerializer::class)
 sealed interface InputPaidMedia {
     val type: String
+    suspend fun executeAll(
+        builder: MultiPartBuilder
+    ) 
+    suspend fun executeAll(
+        builder: CustomMPB
+    ) 
 }
 
 

@@ -13,12 +13,14 @@ import kotlinx.serialization.Serializable
  * @param limitedGifts True, if limited regular gifts are accepted
  * @param uniqueGifts True, if unique gifts or gifts that can be upgraded to unique for free are accepted
  * @param premiumSubscription True, if a Telegram Premium subscription is accepted
+ * @param giftsFromChannels True, if transfers of unique gifts from channels are accepted
  */
 @Serializable
 data class AcceptedGiftTypes(
     @SerialName("unlimited_gifts") val unlimitedGifts: Boolean,
     @SerialName("limited_gifts") val limitedGifts: Boolean,
     @SerialName("unique_gifts") val uniqueGifts: Boolean,
-    @SerialName("premium_subscription") val premiumSubscription: Boolean
+    @SerialName("premium_subscription") val premiumSubscription: Boolean,
+    @SerialName("gifts_from_channels") val giftsFromChannels: Boolean
 )
 

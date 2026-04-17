@@ -12,12 +12,14 @@ import kotlinx.serialization.Serializable
  * [link](https://core.telegram.org/bots/api#chatmembermember): https://core.telegram.org/bots/api#chatmembermember
  * 
  * @param status The member's status in the chat, always "member"
+ * @param tag Optional. Tag of the member
  * @param user Information about the user
  * @param untilDate Optional. Date when the user's subscription will expire; Unix time
  */
 @Serializable
 data class ChatMemberMember(
     val user: User,
+    val tag: String? = null,
     @SerialName("until_date") val untilDate: Long? = null
 ) : ChatMember {
     override val status: String = "member"

@@ -1,7 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.input
 
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 import org.bezsahara.kittybot.telegram.classes.input.InputStoryContent
+import org.bezsahara.kittybot.telegram.client.file.CustomMPB
+import kotlin.Unit
+import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import kotlinx.serialization.Serializable
 
 
@@ -15,8 +19,18 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class InputStoryContentPhoto(
-    val photo: String
+    val photo: TelegramFile
 ) : InputStoryContent {
+    override suspend fun executeAll(
+        builder: CustomMPB
+    ) {
+        photo.asVertx().executeCustom(builder, null)
+    }
+    override suspend fun executeAll(
+        builder: MultiPartBuilder
+    ) {
+        photo.asVertx().execute(builder, null)
+    }
     override val type: String = "photo"
 }
 

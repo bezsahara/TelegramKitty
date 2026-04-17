@@ -21,6 +21,7 @@ fun List<List<InlineKeyboardButton>>.toMarkup() = InlineKeyboardMarkup(this)
 @Suppress("NOTHING_TO_INLINE")
 class InlineKeyboardBuilder(size: Int) {
     constructor() : this(16)
+
     private val horizontal = ArrayList<List<InlineKeyboardButton>>(size)
     var vertical: ArrayList<InlineKeyboardButton>? = null
         private set
@@ -66,39 +67,54 @@ class InlineKeyboardBuilder(size: Int) {
         resetVertical(buttons)
     }
 
-    inline fun url(text: String, url: String) =
-        addButton(InlineKeyboardButton.Url(text, url))
+    inline fun url(text: String, url: String, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, url = url))
 
-    inline fun callback(text: String, data: String) =
-        addButton(InlineKeyboardButton.Callback(text, data))
+    inline fun callback(text: String, data: String, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, callbackData = data))
 
-    inline fun webApp(text: String, info: WebAppInfo) =
-        addButton(InlineKeyboardButton.WebApp(text, info))
+    inline fun webApp(text: String, info: WebAppInfo, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, webApp = info))
 
-    inline fun loginUrl(text: String, login: LoginUrl) =
-        addButton(InlineKeyboardButton.ILoginUrl(text, login))
+    inline fun loginUrl(text: String, login: LoginUrl, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, loginUrl = login))
 
-    inline fun switchInline(text: String, query: String) =
-        addButton(InlineKeyboardButton.SwitchInline(text, query))
+    inline fun switchInline(text: String, query: String, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, switchInlineQuery = query))
 
-    inline fun switchCurrent(text: String, query: String) =
-        addButton(InlineKeyboardButton.SwitchCurrent(text, query))
+    inline fun switchCurrent(text: String, query: String, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, switchInlineQueryCurrentChat = query))
 
-    inline fun switchChosen(text: String, cfg: SwitchInlineQueryChosenChat) =
-        addButton(InlineKeyboardButton.SwitchChosen(text, cfg))
+    inline fun switchChosen(
+        text: String,
+        cfg: SwitchInlineQueryChosenChat,
+        iconCustomEmojiId: String? = null,
+        style: String? = null,
+    ) =
+        addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, switchInlineQueryChosenChat = cfg))
 
-    inline fun copyText(text: String, payload: CopyTextButton) =
-        addButton(InlineKeyboardButton.CopyText(text, payload))
+    inline fun copyText(
+        text: String,
+        payload: CopyTextButton,
+        iconCustomEmojiId: String? = null,
+        style: String? = null,
+    ) =
+        addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, copyText = payload))
 
     // Overload for quick literal copy text
-    inline fun copyText(text: String, copiedText: String) =
-        addButton(InlineKeyboardButton.CopyText(text, CopyTextButton(copiedText)))
+    inline fun copyText(text: String, copiedText: String, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, copyText = CopyTextButton(copiedText)))
 
-    inline fun callbackGame(text: String, game: CallbackGame) =
-        addButton(InlineKeyboardButton.ICallbackGame(text, game))
+    inline fun callbackGame(
+        text: String,
+        game: CallbackGame,
+        iconCustomEmojiId: String? = null,
+        style: String? = null,
+    ) =
+        addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, callbackGame = game))
 
-    inline fun pay(text: String) =
-        addButton(InlineKeyboardButton.Pay(text))
+    inline fun pay(text: String, iconCustomEmojiId: String? = null, style: String? = null) =
+        addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, pay = true))
 
     // Optional sugar
     inline fun row(block: () -> Unit) =

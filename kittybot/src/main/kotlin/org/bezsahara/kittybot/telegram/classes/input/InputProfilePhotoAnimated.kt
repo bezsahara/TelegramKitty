@@ -1,7 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.input
 
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
+import org.bezsahara.kittybot.telegram.client.file.CustomMPB
 import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
+import kotlin.Unit
+import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import kotlinx.serialization.Serializable
 
 
@@ -16,9 +20,19 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class InputProfilePhotoAnimated(
-    val animation: String,
+    val animation: TelegramFile,
     @SerialName("main_frame_timestamp") val mainFrameTimestamp: Double? = null
 ) : InputProfilePhoto {
+    override suspend fun executeAll(
+        builder: CustomMPB
+    ) {
+        animation.asVertx().executeCustom(builder, null)
+    }
+    override suspend fun executeAll(
+        builder: MultiPartBuilder
+    ) {
+        animation.asVertx().execute(builder, null)
+    }
     override val type: String = "animated"
 }
 

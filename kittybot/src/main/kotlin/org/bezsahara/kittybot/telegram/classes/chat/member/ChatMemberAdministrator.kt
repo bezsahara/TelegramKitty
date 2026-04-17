@@ -30,6 +30,7 @@ import kotlinx.serialization.Serializable
  * @param canPinMessages Optional. True, if the user is allowed to pin messages; for groups and supergroups only
  * @param canManageTopics Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; for supergroups only
  * @param canManageDirectMessages Optional. True, if the administrator can manage direct messages of the channel and decline suggested posts; for channels only
+ * @param canManageTags Optional. True, if the administrator can edit the tags of regular members; for groups and supergroups only. If omitted defaults to the value of can_pin_messages.
  * @param customTitle Optional. Custom title for this user
  */
 @Serializable
@@ -52,6 +53,7 @@ data class ChatMemberAdministrator(
     @SerialName("can_pin_messages") val canPinMessages: Boolean? = null,
     @SerialName("can_manage_topics") val canManageTopics: Boolean? = null,
     @SerialName("can_manage_direct_messages") val canManageDirectMessages: Boolean? = null,
+    @SerialName("can_manage_tags") val canManageTags: Boolean? = null,
     @SerialName("custom_title") val customTitle: String? = null
 ) : ChatMember {
     override val status: String = "administrator"

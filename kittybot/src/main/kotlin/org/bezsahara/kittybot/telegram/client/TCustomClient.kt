@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.client
 
 import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
+import org.bezsahara.kittybot.telegram.classes.keyboard.PreparedKeyboardButton
 import org.bezsahara.kittybot.telegram.client.file.createBoundary
 import org.bezsahara.kittybot.telegram.classes.input.InputMedia
 import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfo
@@ -40,6 +41,7 @@ import kotlinx.serialization.builtins.serializer
 import org.bezsahara.kittybot.telegram.classes.chat.ChatPermissions
 import org.bezsahara.kittybot.telegram.utils.TSerials
 import org.bezsahara.kittybot.telegram.classes.chat.ChatInviteLink
+import org.bezsahara.kittybot.telegram.classes.user.UserProfileAudios
 import org.bezsahara.kittybot.telegram.classes.games.GameHighScore
 import org.bezsahara.kittybot.telegram.classes.payments.StarAmount
 import kotlinx.serialization.json.Json
@@ -60,6 +62,7 @@ import kotlin.collections.List
 import org.bezsahara.kittybot.telegram.classes.message.SuggestedPostParameters
 import org.bezsahara.kittybot.telegram.classes.input.InputStoryContent
 import org.bezsahara.kittybot.telegram.classes.inline.SentWebAppMessage
+import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButton
 import org.bezsahara.kittybot.telegram.client.TPathCustom
 import org.bezsahara.kittybot.telegram.classes.payments.StarTransactions
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
@@ -269,6 +272,26 @@ class TCustomClient internal constructor(
         }
     }
 
+    override suspend fun setMyProfilePhoto(
+        photo: InputProfilePhoto
+    ): TResult<Boolean> = withContext(dispatcher) {
+        val boundary44 = createBoundary()
+        val resultPre1 = client.run { createMPRequest(tPathC.setMyProfilePhoto, mpContentType(boundary44)) }
+        val mpb = CustomMPB(resultPre1, boundary44)
+        photo.executeAll(mpb)
+        mpb.writeJsonPart("photo", InputProfilePhoto.serializer(), photo, json)
+        mpb.finish()
+        val result1 = resultPre1.endAndSend()
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Boolean>(
+                json.decodeFromString(OkBoolOpt.serializer(), strResult).result
+            )
+        } else {
+            TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
     private val editMessageReplyMarkupBSP = BufferSizePredictor(68, 1073741824, 136, 272)
     override suspend fun editMessageReplyMarkup(
         businessConnectionId: String?,
@@ -405,7 +428,6 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val editStoryBSP = BufferSizePredictor(75, 1073741824, 150, 300)
     override suspend fun editStory(
         businessConnectionId: String,
         storyId: Long,
@@ -413,27 +435,21 @@ class TCustomClient internal constructor(
         caption: String?,
         parseMode: ParseMode?,
         captionEntities: List<MessageEntity>?,
-        areas: List<StoryArea>?,
-        requestOptions: RequestOptions?
+        areas: List<StoryArea>?
     ): TResult<Story> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(
-            tPathC.editStory,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: editStoryBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
-                    putNumberUnsafe(TBytesInfo.story_id, storyId)
-                    putJsonObject(TBytesInfo.content, InputStoryContent.serializer(), json, content)
-                    if (caption != null) putStringUnsafe(TBytesInfo.caption, caption)
-                    if (parseMode != null) putJsonObject(TBytesInfo.parse_mode, ParseMode.serializer(), json, parseMode)
-                    if (captionEntities != null) putListOfJsonObjects(TBytesInfo.caption_entities, MessageEntity.serializer(), json, captionEntities)
-                    if (areas != null) putListOfJsonObjects(TBytesInfo.areas, StoryArea.serializer(), json, areas)
-                    if (requestOptions == null) editStoryBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
-            },
-            false
-        )
+        val boundary44 = createBoundary()
+        val resultPre1 = client.run { createMPRequest(tPathC.editStory, mpContentType(boundary44)) }
+        val mpb = CustomMPB(resultPre1, boundary44)
+        mpb.writeNormalPart("business_connection_id", businessConnectionId)
+        mpb.writeNormalPart("story_id", storyId.toString())
+        content.executeAll(mpb)
+        mpb.writeJsonPart("content", InputStoryContent.serializer(), content, json)
+        if (caption != null) mpb.writeNormalPart("caption", caption)
+        if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+        if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
+        if (areas != null) mpb.writeJsonPart("areas", TSerials.aListStoryArea, areas, json)
+        mpb.finish()
+        val result1 = resultPre1.endAndSend()
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Story>(
@@ -465,7 +481,7 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val copyMessageBSP = BufferSizePredictor(256, 1073741824, 512, 1024)
+    private val copyMessageBSP = BufferSizePredictor(273, 1073741824, 546, 1092)
     override suspend fun copyMessage(
         chatId: ChatId,
         fromChatId: ChatId,
@@ -480,6 +496,7 @@ class TCustomClient internal constructor(
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
+        messageEffectId: String?,
         suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
         replyMarkup: ReplyMarkup?,
@@ -503,6 +520,7 @@ class TCustomClient internal constructor(
                     if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
+                    if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
                     if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), json, suggestedPostParameters)
                     if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
                     if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), json, replyMarkup)
@@ -591,6 +609,18 @@ class TCustomClient internal constructor(
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
+    override suspend fun removeMyProfilePhoto(): TResult<Boolean> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(tPathC.removeMyProfilePhoto, "{}".toByteArray(Charsets.UTF_8), false)
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Boolean>(
+                json.decodeFromString(OkBoolOpt.serializer(), strResult).result
+            )
+        } else {
+            TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
         }
     }
 
@@ -815,6 +845,33 @@ class TCustomClient internal constructor(
         }
     }
 
+    private val getManagedBotTokenBSP = BufferSizePredictor(7, 1073741824, 14, 28)
+    override suspend fun getManagedBotToken(
+        userId: Long,
+        requestOptions: RequestOptions?
+    ): TResult<String> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.getManagedBotToken,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: getManagedBotTokenBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putNumberUnsafe(TBytesInfo.user_id, userId)
+                    if (requestOptions == null) getManagedBotTokenBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<String>(
+                json.decodeFromString(TSerials.sString, strResult).result
+            )
+        } else {
+            TResultFailure<String>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
     override suspend fun getChatMemberCount(
         chatId: ChatId
     ): TResult<Long> = withContext(dispatcher) {
@@ -979,6 +1036,37 @@ class TCustomClient internal constructor(
         }
     }
 
+    private val getUserProfileAudiosBSP = BufferSizePredictor(18, 1073741824, 36, 72)
+    override suspend fun getUserProfileAudios(
+        userId: Long,
+        offset: Long?,
+        limit: Long?,
+        requestOptions: RequestOptions?
+    ): TResult<UserProfileAudios> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.getUserProfileAudios,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: getUserProfileAudiosBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putNumberUnsafe(TBytesInfo.user_id, userId)
+                    if (offset != null) putNumberUnsafe(TBytesInfo.offset, offset)
+                    if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
+                    if (requestOptions == null) getUserProfileAudiosBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<UserProfileAudios>(
+                json.decodeFromString(TSerials.sUserProfileAudios, strResult).result
+            )
+        } else {
+            TResultFailure<UserProfileAudios>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
     private val editMessageChecklistBSP = BufferSizePredictor(60, 1073741824, 120, 240)
     override suspend fun editMessageChecklist(
         businessConnectionId: String,
@@ -1092,7 +1180,7 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val sendPollBSP = BufferSizePredictor(336, 1073741824, 672, 1344)
+    private val sendPollBSP = BufferSizePredictor(465, 1073741824, 930, 1860)
     override suspend fun sendPoll(
         chatId: ChatId,
         question: String,
@@ -1104,13 +1192,20 @@ class TCustomClient internal constructor(
         isAnonymous: Boolean?,
         type: String?,
         allowsMultipleAnswers: Boolean?,
-        correctOptionId: Long?,
+        allowsRevoting: Boolean?,
+        shuffleOptions: Boolean?,
+        allowAddingOptions: Boolean?,
+        hideResultsUntilCloses: Boolean?,
+        correctOptionIds: List<Long>?,
         explanation: String?,
         explanationParseMode: String?,
         explanationEntities: List<MessageEntity>?,
         openPeriod: Long?,
         closeDate: Long?,
         isClosed: Boolean?,
+        description: String?,
+        descriptionParseMode: String?,
+        descriptionEntities: List<MessageEntity>?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
@@ -1134,13 +1229,20 @@ class TCustomClient internal constructor(
                     if (isAnonymous != null) putBoolUnsafe(TBytesInfo.is_anonymous, isAnonymous)
                     if (type != null) putStringUnsafe(TBytesInfo.type, type)
                     if (allowsMultipleAnswers != null) putBoolUnsafe(TBytesInfo.allows_multiple_answers, allowsMultipleAnswers)
-                    if (correctOptionId != null) putNumberUnsafe(TBytesInfo.correct_option_id, correctOptionId)
+                    if (allowsRevoting != null) putBoolUnsafe(TBytesInfo.allows_revoting, allowsRevoting)
+                    if (shuffleOptions != null) putBoolUnsafe(TBytesInfo.shuffle_options, shuffleOptions)
+                    if (allowAddingOptions != null) putBoolUnsafe(TBytesInfo.allow_adding_options, allowAddingOptions)
+                    if (hideResultsUntilCloses != null) putBoolUnsafe(TBytesInfo.hide_results_until_closes, hideResultsUntilCloses)
+                    if (correctOptionIds != null) putListOfLongUnsafe(TBytesInfo.correct_option_ids, correctOptionIds)
                     if (explanation != null) putStringUnsafe(TBytesInfo.explanation, explanation)
                     if (explanationParseMode != null) putStringUnsafe(TBytesInfo.explanation_parse_mode, explanationParseMode)
                     if (explanationEntities != null) putListOfJsonObjects(TBytesInfo.explanation_entities, MessageEntity.serializer(), json, explanationEntities)
                     if (openPeriod != null) putNumberUnsafe(TBytesInfo.open_period, openPeriod)
                     if (closeDate != null) putNumberUnsafe(TBytesInfo.close_date, closeDate)
                     if (isClosed != null) putBoolUnsafe(TBytesInfo.is_closed, isClosed)
+                    if (description != null) putStringUnsafe(TBytesInfo.description, description)
+                    if (descriptionParseMode != null) putStringUnsafe(TBytesInfo.description_parse_mode, descriptionParseMode)
+                    if (descriptionEntities != null) putListOfJsonObjects(TBytesInfo.description_entities, MessageEntity.serializer(), json, descriptionEntities)
                     if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
@@ -1724,6 +1826,35 @@ class TCustomClient internal constructor(
             )
         } else {
             TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
+    private val savePreparedKeyboardButtonBSP = BufferSizePredictor(13, 1073741824, 26, 52)
+    override suspend fun savePreparedKeyboardButton(
+        userId: Long,
+        button: KeyboardButton,
+        requestOptions: RequestOptions?
+    ): TResult<PreparedKeyboardButton> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.savePreparedKeyboardButton,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: savePreparedKeyboardButtonBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putNumberUnsafe(TBytesInfo.user_id, userId)
+                    putJsonObject(TBytesInfo.button, KeyboardButton.serializer(), json, button)
+                    if (requestOptions == null) savePreparedKeyboardButtonBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<PreparedKeyboardButton>(
+                json.decodeFromString(TSerials.sPreparedKeyboardButton, strResult).result
+            )
+        } else {
+            TResultFailure<PreparedKeyboardButton>(json.decodeFromString(TelegramError.serializer(), strResult))
         }
     }
 
@@ -2530,26 +2661,20 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val setBusinessAccountProfilePhotoBSP = BufferSizePredictor(36, 1073741824, 72, 144)
     override suspend fun setBusinessAccountProfilePhoto(
         businessConnectionId: String,
         photo: InputProfilePhoto,
         isPublic: Boolean?
     ): TResult<Boolean> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(
-            tPathC.setBusinessAccountProfilePhoto,
-            run {
-                val bbSize0 = setBusinessAccountProfilePhotoBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
-                    putJsonObject(TBytesInfo.photo, InputProfilePhoto.serializer(), json, photo)
-                    if (isPublic != null) putBoolUnsafe(TBytesInfo.is_public, isPublic)
-                    setBusinessAccountProfilePhotoBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
-            },
-            false
-        )
+        val boundary44 = createBoundary()
+        val resultPre1 = client.run { createMPRequest(tPathC.setBusinessAccountProfilePhoto, mpContentType(boundary44)) }
+        val mpb = CustomMPB(resultPre1, boundary44)
+        mpb.writeNormalPart("business_connection_id", businessConnectionId)
+        photo.executeAll(mpb)
+        mpb.writeJsonPart("photo", InputProfilePhoto.serializer(), photo, json)
+        if (isPublic != null) mpb.writeNormalPart("is_public", isPublic.toString())
+        mpb.finish()
+        val result1 = resultPre1.endAndSend()
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Boolean>(
@@ -2560,14 +2685,16 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val getBusinessAccountGiftsBSP = BufferSizePredictor(120, 1073741824, 240, 480)
+    private val getBusinessAccountGiftsBSP = BufferSizePredictor(184, 1073741824, 368, 736)
     override suspend fun getBusinessAccountGifts(
         businessConnectionId: String,
         excludeUnsaved: Boolean?,
         excludeSaved: Boolean?,
         excludeUnlimited: Boolean?,
-        excludeLimited: Boolean?,
+        excludeLimitedUpgradable: Boolean?,
+        excludeLimitedNonUpgradable: Boolean?,
         excludeUnique: Boolean?,
+        excludeFromBlockchain: Boolean?,
         sortByPrice: Boolean?,
         offset: String?,
         limit: Long?
@@ -2581,8 +2708,10 @@ class TCustomClient internal constructor(
                     if (excludeUnsaved != null) putBoolUnsafe(TBytesInfo.exclude_unsaved, excludeUnsaved)
                     if (excludeSaved != null) putBoolUnsafe(TBytesInfo.exclude_saved, excludeSaved)
                     if (excludeUnlimited != null) putBoolUnsafe(TBytesInfo.exclude_unlimited, excludeUnlimited)
-                    if (excludeLimited != null) putBoolUnsafe(TBytesInfo.exclude_limited, excludeLimited)
+                    if (excludeLimitedUpgradable != null) putBoolUnsafe(TBytesInfo.exclude_limited_upgradable, excludeLimitedUpgradable)
+                    if (excludeLimitedNonUpgradable != null) putBoolUnsafe(TBytesInfo.exclude_limited_non_upgradable, excludeLimitedNonUpgradable)
                     if (excludeUnique != null) putBoolUnsafe(TBytesInfo.exclude_unique, excludeUnique)
+                    if (excludeFromBlockchain != null) putBoolUnsafe(TBytesInfo.exclude_from_blockchain, excludeFromBlockchain)
                     if (sortByPrice != null) putBoolUnsafe(TBytesInfo.sort_by_price, sortByPrice)
                     if (offset != null) putStringUnsafe(TBytesInfo.offset, offset)
                     if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
@@ -2602,7 +2731,7 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val forwardMessageBSP = BufferSizePredictor(151, 1073741824, 302, 604)
+    private val forwardMessageBSP = BufferSizePredictor(168, 1073741824, 336, 672)
     override suspend fun forwardMessage(
         chatId: ChatId,
         fromChatId: ChatId,
@@ -2612,6 +2741,7 @@ class TCustomClient internal constructor(
         videoStartTimestamp: Long?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
+        messageEffectId: String?,
         suggestedPostParameters: SuggestedPostParameters?
     ): TResult<Message> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
@@ -2627,6 +2757,7 @@ class TCustomClient internal constructor(
                     if (videoStartTimestamp != null) putNumberUnsafe(TBytesInfo.video_start_timestamp, videoStartTimestamp)
                     if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
+                    if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
                     if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), json, suggestedPostParameters)
                     forwardMessageBSP.record(size9, bbSize0)
                     toByteArray()
@@ -2826,6 +2957,37 @@ class TCustomClient internal constructor(
         }
     }
 
+    private val setChatMemberTagBSP = BufferSizePredictor(17, 1073741824, 34, 68)
+    override suspend fun setChatMemberTag(
+        chatId: ChatId,
+        userId: Long,
+        tag: String?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.setChatMemberTag,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: setChatMemberTagBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
+                    putNumberUnsafe(TBytesInfo.user_id, userId)
+                    if (tag != null) putStringUnsafe(TBytesInfo.tag, tag)
+                    if (requestOptions == null) setChatMemberTagBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Boolean>(
+                json.decodeFromString(OkBoolOpt.serializer(), strResult).result
+            )
+        } else {
+            TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
     private val setStickerMaskPositionBSP = BufferSizePredictor(20, 1073741824, 40, 80)
     override suspend fun setStickerMaskPosition(
         sticker: String,
@@ -2937,7 +3099,6 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val postStoryBSP = BufferSizePredictor(112, 1073741824, 224, 448)
     override suspend fun postStory(
         businessConnectionId: String,
         content: InputStoryContent,
@@ -2947,29 +3108,23 @@ class TCustomClient internal constructor(
         captionEntities: List<MessageEntity>?,
         areas: List<StoryArea>?,
         postToChatPage: Boolean?,
-        protectContent: Boolean?,
-        requestOptions: RequestOptions?
+        protectContent: Boolean?
     ): TResult<Story> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(
-            tPathC.postStory,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: postStoryBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
-                    putJsonObject(TBytesInfo.content, InputStoryContent.serializer(), json, content)
-                    putNumberUnsafe(TBytesInfo.active_period, activePeriod)
-                    if (caption != null) putStringUnsafe(TBytesInfo.caption, caption)
-                    if (parseMode != null) putJsonObject(TBytesInfo.parse_mode, ParseMode.serializer(), json, parseMode)
-                    if (captionEntities != null) putListOfJsonObjects(TBytesInfo.caption_entities, MessageEntity.serializer(), json, captionEntities)
-                    if (areas != null) putListOfJsonObjects(TBytesInfo.areas, StoryArea.serializer(), json, areas)
-                    if (postToChatPage != null) putBoolUnsafe(TBytesInfo.post_to_chat_page, postToChatPage)
-                    if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
-                    if (requestOptions == null) postStoryBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
-            },
-            false
-        )
+        val boundary44 = createBoundary()
+        val resultPre1 = client.run { createMPRequest(tPathC.postStory, mpContentType(boundary44)) }
+        val mpb = CustomMPB(resultPre1, boundary44)
+        mpb.writeNormalPart("business_connection_id", businessConnectionId)
+        content.executeAll(mpb)
+        mpb.writeJsonPart("content", InputStoryContent.serializer(), content, json)
+        mpb.writeNormalPart("active_period", activePeriod.toString())
+        if (caption != null) mpb.writeNormalPart("caption", caption)
+        if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+        if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
+        if (areas != null) mpb.writeJsonPart("areas", TSerials.aListStoryArea, areas, json)
+        if (postToChatPage != null) mpb.writeNormalPart("post_to_chat_page", postToChatPage.toString())
+        if (protectContent != null) mpb.writeNormalPart("protect_content", protectContent.toString())
+        mpb.finish()
+        val result1 = resultPre1.endAndSend()
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Story>(
@@ -3659,6 +3814,53 @@ class TCustomClient internal constructor(
         }
     }
 
+    private val getChatGiftsBSP = BufferSizePredictor(169, 1073741824, 338, 676)
+    override suspend fun getChatGifts(
+        chatId: ChatId,
+        excludeUnsaved: Boolean?,
+        excludeSaved: Boolean?,
+        excludeUnlimited: Boolean?,
+        excludeLimitedUpgradable: Boolean?,
+        excludeLimitedNonUpgradable: Boolean?,
+        excludeFromBlockchain: Boolean?,
+        excludeUnique: Boolean?,
+        sortByPrice: Boolean?,
+        offset: String?,
+        limit: Long?,
+        requestOptions: RequestOptions?
+    ): TResult<OwnedGifts> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.getChatGifts,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: getChatGiftsBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
+                    if (excludeUnsaved != null) putBoolUnsafe(TBytesInfo.exclude_unsaved, excludeUnsaved)
+                    if (excludeSaved != null) putBoolUnsafe(TBytesInfo.exclude_saved, excludeSaved)
+                    if (excludeUnlimited != null) putBoolUnsafe(TBytesInfo.exclude_unlimited, excludeUnlimited)
+                    if (excludeLimitedUpgradable != null) putBoolUnsafe(TBytesInfo.exclude_limited_upgradable, excludeLimitedUpgradable)
+                    if (excludeLimitedNonUpgradable != null) putBoolUnsafe(TBytesInfo.exclude_limited_non_upgradable, excludeLimitedNonUpgradable)
+                    if (excludeFromBlockchain != null) putBoolUnsafe(TBytesInfo.exclude_from_blockchain, excludeFromBlockchain)
+                    if (excludeUnique != null) putBoolUnsafe(TBytesInfo.exclude_unique, excludeUnique)
+                    if (sortByPrice != null) putBoolUnsafe(TBytesInfo.sort_by_price, sortByPrice)
+                    if (offset != null) putStringUnsafe(TBytesInfo.offset, offset)
+                    if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
+                    if (requestOptions == null) getChatGiftsBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<OwnedGifts>(
+                json.decodeFromString(TSerials.sOwnedGifts, strResult).result
+            )
+        } else {
+            TResultFailure<OwnedGifts>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
     override suspend fun getChat(
         chatId: ChatId
     ): TResult<ChatFullInfo> = withContext(dispatcher) {
@@ -3693,6 +3895,43 @@ class TCustomClient internal constructor(
                     if (scope != null) putJsonObject(TBytesInfo.scope, BotCommandScope.serializer(), json, scope)
                     if (languageCode != null) putStringUnsafe(TBytesInfo.language_code, languageCode)
                     deleteMyCommandsBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Boolean>(
+                json.decodeFromString(OkBoolOpt.serializer(), strResult).result
+            )
+        } else {
+            TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
+    private val sendMessageDraftBSP = BufferSizePredictor(54, 1073741824, 108, 216)
+    override suspend fun sendMessageDraft(
+        chatId: Long,
+        draftId: Long,
+        text: String,
+        messageThreadId: Long?,
+        parseMode: ParseMode?,
+        entities: List<MessageEntity>?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.sendMessageDraft,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: sendMessageDraftBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putNumberUnsafe(TBytesInfo.chat_id, chatId)
+                    putNumberUnsafe(TBytesInfo.draft_id, draftId)
+                    putStringUnsafe(TBytesInfo.text, text)
+                    if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
+                    if (parseMode != null) putJsonObject(TBytesInfo.parse_mode, ParseMode.serializer(), json, parseMode)
+                    if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), json, entities)
+                    if (requestOptions == null) sendMessageDraftBSP.record(size9, bbSize0)
                     toByteArray()
                 }
             },
@@ -3757,6 +3996,7 @@ class TCustomClient internal constructor(
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         for (mIdx in media.indices) { media[mIdx].executeAll(mpb) }
+        mpb.writeJsonPart("media", ListSerializer(InputMedia.serializer()), media.map { it as InputMedia }, json)
         if (businessConnectionId != null) mpb.writeNormalPart("business_connection_id", businessConnectionId)
         if (messageThreadId != null) mpb.writeNormalPart("message_thread_id", messageThreadId.toString())
         if (directMessagesTopicId != null) mpb.writeNormalPart("direct_messages_topic_id", directMessagesTopicId.toString())
@@ -3842,6 +4082,33 @@ class TCustomClient internal constructor(
         }
     }
 
+    private val replaceManagedBotTokenBSP = BufferSizePredictor(7, 1073741824, 14, 28)
+    override suspend fun replaceManagedBotToken(
+        userId: Long,
+        requestOptions: RequestOptions?
+    ): TResult<String> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.replaceManagedBotToken,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: replaceManagedBotTokenBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putNumberUnsafe(TBytesInfo.user_id, userId)
+                    if (requestOptions == null) replaceManagedBotTokenBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<String>(
+                json.decodeFromString(TSerials.sString, strResult).result
+            )
+        } else {
+            TResultFailure<String>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
     override suspend fun promoteChatMember(
         chatId: ChatId,
         userId: Long,
@@ -3860,7 +4127,8 @@ class TCustomClient internal constructor(
         canEditMessages: Boolean?,
         canPinMessages: Boolean?,
         canManageTopics: Boolean?,
-        canManageDirectMessages: Boolean?
+        canManageDirectMessages: Boolean?,
+        canManageTags: Boolean?
     ): TResult<Boolean> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.promoteChatMember,
@@ -3883,6 +4151,7 @@ class TCustomClient internal constructor(
                 if (canPinMessages != null) putBoolUnsafe(TBytesInfo.can_pin_messages, canPinMessages)
                 if (canManageTopics != null) putBoolUnsafe(TBytesInfo.can_manage_topics, canManageTopics)
                 if (canManageDirectMessages != null) putBoolUnsafe(TBytesInfo.can_manage_direct_messages, canManageDirectMessages)
+                if (canManageTags != null) putBoolUnsafe(TBytesInfo.can_manage_tags, canManageTags)
                 toByteArray()
             },
             false
@@ -3990,7 +4259,6 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val sendPaidMediaBSP = BufferSizePredictor(257, 1073741824, 514, 1028)
     override suspend fun sendPaidMedia(
         chatId: ChatId,
         starCount: Long,
@@ -4008,37 +4276,31 @@ class TCustomClient internal constructor(
         allowPaidBroadcast: Boolean?,
         suggestedPostParameters: SuggestedPostParameters?,
         replyParameters: ReplyParameters?,
-        replyMarkup: ReplyMarkup?,
-        requestOptions: RequestOptions?
+        replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(
-            tPathC.sendPaidMedia,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: sendPaidMediaBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
-                    putNumberUnsafe(TBytesInfo.star_count, starCount)
-                    putListOfJsonObjects(TBytesInfo.media, InputPaidMedia.serializer(), json, media)
-                    if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
-                    if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
-                    if (directMessagesTopicId != null) putNumberUnsafe(TBytesInfo.direct_messages_topic_id, directMessagesTopicId)
-                    if (payload != null) putStringUnsafe(TBytesInfo.payload, payload)
-                    if (caption != null) putStringUnsafe(TBytesInfo.caption, caption)
-                    if (parseMode != null) putJsonObject(TBytesInfo.parse_mode, ParseMode.serializer(), json, parseMode)
-                    if (captionEntities != null) putListOfJsonObjects(TBytesInfo.caption_entities, MessageEntity.serializer(), json, captionEntities)
-                    if (showCaptionAboveMedia != null) putBoolUnsafe(TBytesInfo.show_caption_above_media, showCaptionAboveMedia)
-                    if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
-                    if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
-                    if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
-                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), json, suggestedPostParameters)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), json, replyMarkup)
-                    if (requestOptions == null) sendPaidMediaBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
-            },
-            false
-        )
+        val boundary44 = createBoundary()
+        val resultPre1 = client.run { createMPRequest(tPathC.sendPaidMedia, mpContentType(boundary44)) }
+        val mpb = CustomMPB(resultPre1, boundary44)
+        mpb.writeNormalPart("chat_id", chatId.value)
+        mpb.writeNormalPart("star_count", starCount.toString())
+        for (mIdx in media.indices) { media[mIdx].executeAll(mpb) }
+        mpb.writeJsonPart("media", TSerials.aListInputPaidMedia, media, json)
+        if (businessConnectionId != null) mpb.writeNormalPart("business_connection_id", businessConnectionId)
+        if (messageThreadId != null) mpb.writeNormalPart("message_thread_id", messageThreadId.toString())
+        if (directMessagesTopicId != null) mpb.writeNormalPart("direct_messages_topic_id", directMessagesTopicId.toString())
+        if (payload != null) mpb.writeNormalPart("payload", payload)
+        if (caption != null) mpb.writeNormalPart("caption", caption)
+        if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+        if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
+        if (showCaptionAboveMedia != null) mpb.writeNormalPart("show_caption_above_media", showCaptionAboveMedia.toString())
+        if (disableNotification != null) mpb.writeNormalPart("disable_notification", disableNotification.toString())
+        if (protectContent != null) mpb.writeNormalPart("protect_content", protectContent.toString())
+        if (allowPaidBroadcast != null) mpb.writeNormalPart("allow_paid_broadcast", allowPaidBroadcast.toString())
+        if (suggestedPostParameters != null) mpb.writeJsonPart("suggested_post_parameters", SuggestedPostParameters.serializer(), suggestedPostParameters, json)
+        if (replyParameters != null) mpb.writeJsonPart("reply_parameters", ReplyParameters.serializer(), replyParameters, json)
+        if (replyMarkup != null) mpb.writeJsonPart("reply_markup", ReplyMarkup.serializer(), replyMarkup, json)
+        mpb.finish()
+        val result1 = resultPre1.endAndSend()
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Message>(
@@ -4138,6 +4400,49 @@ class TCustomClient internal constructor(
             )
         } else {
             TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
+    private val getUserGiftsBSP = BufferSizePredictor(141, 1073741824, 282, 564)
+    override suspend fun getUserGifts(
+        userId: Long,
+        excludeUnlimited: Boolean?,
+        excludeLimitedUpgradable: Boolean?,
+        excludeLimitedNonUpgradable: Boolean?,
+        excludeFromBlockchain: Boolean?,
+        excludeUnique: Boolean?,
+        sortByPrice: Boolean?,
+        offset: String?,
+        limit: Long?,
+        requestOptions: RequestOptions?
+    ): TResult<OwnedGifts> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.getUserGifts,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: getUserGiftsBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putNumberUnsafe(TBytesInfo.user_id, userId)
+                    if (excludeUnlimited != null) putBoolUnsafe(TBytesInfo.exclude_unlimited, excludeUnlimited)
+                    if (excludeLimitedUpgradable != null) putBoolUnsafe(TBytesInfo.exclude_limited_upgradable, excludeLimitedUpgradable)
+                    if (excludeLimitedNonUpgradable != null) putBoolUnsafe(TBytesInfo.exclude_limited_non_upgradable, excludeLimitedNonUpgradable)
+                    if (excludeFromBlockchain != null) putBoolUnsafe(TBytesInfo.exclude_from_blockchain, excludeFromBlockchain)
+                    if (excludeUnique != null) putBoolUnsafe(TBytesInfo.exclude_unique, excludeUnique)
+                    if (sortByPrice != null) putBoolUnsafe(TBytesInfo.sort_by_price, sortByPrice)
+                    if (offset != null) putStringUnsafe(TBytesInfo.offset, offset)
+                    if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
+                    if (requestOptions == null) getUserGiftsBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<OwnedGifts>(
+                json.decodeFromString(TSerials.sOwnedGifts, strResult).result
+            )
+        } else {
+            TResultFailure<OwnedGifts>(json.decodeFromString(TelegramError.serializer(), strResult))
         }
     }
 
@@ -4654,6 +4959,43 @@ class TCustomClient internal constructor(
         }
     }
 
+    private val repostStoryBSP = BufferSizePredictor(92, 1073741824, 184, 368)
+    override suspend fun repostStory(
+        businessConnectionId: String,
+        fromChatId: Long,
+        fromStoryId: Long,
+        activePeriod: Long,
+        postToChatPage: Boolean?,
+        protectContent: Boolean?,
+        requestOptions: RequestOptions?
+    ): TResult<Story> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.repostStory,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: repostStoryBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
+                    putNumberUnsafe(TBytesInfo.from_chat_id, fromChatId)
+                    putNumberUnsafe(TBytesInfo.from_story_id, fromStoryId)
+                    putNumberUnsafe(TBytesInfo.active_period, activePeriod)
+                    if (postToChatPage != null) putBoolUnsafe(TBytesInfo.post_to_chat_page, postToChatPage)
+                    if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
+                    if (requestOptions == null) repostStoryBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Story>(
+                json.decodeFromString(TSerials.sStory, strResult).result
+            )
+        } else {
+            TResultFailure<Story>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
     private val answerWebAppQueryBSP = BufferSizePredictor(22, 1073741824, 44, 88)
     override suspend fun answerWebAppQuery(
         webAppQueryId: String,
@@ -4756,6 +5098,7 @@ class TCustomClient internal constructor(
         val resultPre1 = client.run { createMPRequest(tPathC.editMessageMedia, mpContentType(boundary44)) }
         val mpb = CustomMPB(resultPre1, boundary44)
         media.executeAll(mpb)
+        mpb.writeJsonPart("media", InputMedia.serializer(), media, json)
         if (businessConnectionId != null) mpb.writeNormalPart("business_connection_id", businessConnectionId)
         if (chatId != null) mpb.writeNormalPart("chat_id", chatId.value)
         if (messageId != null) mpb.writeNormalPart("message_id", messageId.toString())
@@ -4800,29 +5143,22 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val replaceStickerInSetBSP = BufferSizePredictor(29, 1073741824, 58, 116)
     override suspend fun replaceStickerInSet(
         userId: Long,
         name: String,
         oldSticker: String,
-        sticker: InputSticker,
-        requestOptions: RequestOptions?
+        sticker: InputSticker
     ): TResult<Boolean> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(
-            tPathC.replaceStickerInSet,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: replaceStickerInSetBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putNumberUnsafe(TBytesInfo.user_id, userId)
-                    putStringUnsafe(TBytesInfo.name, name)
-                    putStringUnsafe(TBytesInfo.old_sticker, oldSticker)
-                    putJsonObject(TBytesInfo.sticker, InputSticker.serializer(), json, sticker)
-                    if (requestOptions == null) replaceStickerInSetBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
-            },
-            false
-        )
+        val boundary44 = createBoundary()
+        val resultPre1 = client.run { createMPRequest(tPathC.replaceStickerInSet, mpContentType(boundary44)) }
+        val mpb = CustomMPB(resultPre1, boundary44)
+        mpb.writeNormalPart("user_id", userId.toString())
+        mpb.writeNormalPart("name", name)
+        mpb.writeNormalPart("old_sticker", oldSticker)
+        sticker.executeAll(mpb)
+        mpb.writeJsonPart("sticker", InputSticker.serializer(), sticker, json)
+        mpb.finish()
+        val result1 = resultPre1.endAndSend()
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Boolean>(
@@ -4915,27 +5251,20 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val addStickerToSetBSP = BufferSizePredictor(18, 1073741824, 36, 72)
     override suspend fun addStickerToSet(
         userId: Long,
         name: String,
-        sticker: InputSticker,
-        requestOptions: RequestOptions?
+        sticker: InputSticker
     ): TResult<Boolean> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(
-            tPathC.addStickerToSet,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: addStickerToSetBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putNumberUnsafe(TBytesInfo.user_id, userId)
-                    putStringUnsafe(TBytesInfo.name, name)
-                    putJsonObject(TBytesInfo.sticker, InputSticker.serializer(), json, sticker)
-                    if (requestOptions == null) addStickerToSetBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
-            },
-            false
-        )
+        val boundary44 = createBoundary()
+        val resultPre1 = client.run { createMPRequest(tPathC.addStickerToSet, mpContentType(boundary44)) }
+        val mpb = CustomMPB(resultPre1, boundary44)
+        mpb.writeNormalPart("user_id", userId.toString())
+        mpb.writeNormalPart("name", name)
+        sticker.executeAll(mpb)
+        mpb.writeJsonPart("sticker", InputSticker.serializer(), sticker, json)
+        mpb.finish()
+        val result1 = resultPre1.endAndSend()
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Boolean>(
@@ -4946,33 +5275,26 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val createNewStickerSetBSP = BufferSizePredictor(52, 1073741824, 104, 208)
     override suspend fun createNewStickerSet(
         userId: Long,
         name: String,
         title: String,
         stickers: List<InputSticker>,
         stickerType: String?,
-        needsRepainting: Boolean?,
-        requestOptions: RequestOptions?
+        needsRepainting: Boolean?
     ): TResult<Boolean> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(
-            tPathC.createNewStickerSet,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: createNewStickerSetBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putNumberUnsafe(TBytesInfo.user_id, userId)
-                    putStringUnsafe(TBytesInfo.name, name)
-                    putStringUnsafe(TBytesInfo.title, title)
-                    putListOfJsonObjects(TBytesInfo.stickers, InputSticker.serializer(), json, stickers)
-                    if (stickerType != null) putStringUnsafe(TBytesInfo.sticker_type, stickerType)
-                    if (needsRepainting != null) putBoolUnsafe(TBytesInfo.needs_repainting, needsRepainting)
-                    if (requestOptions == null) createNewStickerSetBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
-            },
-            false
-        )
+        val boundary44 = createBoundary()
+        val resultPre1 = client.run { createMPRequest(tPathC.createNewStickerSet, mpContentType(boundary44)) }
+        val mpb = CustomMPB(resultPre1, boundary44)
+        mpb.writeNormalPart("user_id", userId.toString())
+        mpb.writeNormalPart("name", name)
+        mpb.writeNormalPart("title", title)
+        for (mIdx in stickers.indices) { stickers[mIdx].executeAll(mpb) }
+        mpb.writeJsonPart("stickers", TSerials.aListInputSticker, stickers, json)
+        if (stickerType != null) mpb.writeNormalPart("sticker_type", stickerType)
+        if (needsRepainting != null) mpb.writeNormalPart("needs_repainting", needsRepainting.toString())
+        mpb.finish()
+        val result1 = resultPre1.endAndSend()
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Boolean>(

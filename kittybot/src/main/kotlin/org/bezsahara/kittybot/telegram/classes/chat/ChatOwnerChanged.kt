@@ -1,0 +1,19 @@
+package org.bezsahara.kittybot.telegram.classes.chat
+
+import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.classes.user.User
+import kotlinx.serialization.Serializable
+
+
+/**
+ * Describes a service message about an ownership change in the chat.
+ * 
+ * [link](https://core.telegram.org/bots/api#chatownerchanged): https://core.telegram.org/bots/api#chatownerchanged
+ * 
+ * @param newOwner The new owner of the chat
+ */
+@Serializable
+data class ChatOwnerChanged(
+    @SerialName("new_owner") val newOwner: User
+)
+

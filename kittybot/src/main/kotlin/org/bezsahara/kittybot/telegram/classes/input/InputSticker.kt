@@ -2,6 +2,10 @@ package org.bezsahara.kittybot.telegram.classes.input
 
 import kotlinx.serialization.SerialName
 import kotlin.collections.List
+import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
+import org.bezsahara.kittybot.telegram.client.file.CustomMPB
+import kotlin.Unit
+import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.media.stickers.MaskPosition
 
@@ -19,10 +23,21 @@ import org.bezsahara.kittybot.telegram.classes.media.stickers.MaskPosition
  */
 @Serializable
 data class InputSticker(
-    val sticker: String,
+    val sticker: TelegramFile,
     val format: String,
     @SerialName("emoji_list") val emojiList: List<String>,
     @SerialName("mask_position") val maskPosition: MaskPosition? = null,
     val keywords: List<String>? = null
-)
+) {
+    suspend fun executeAll(
+        builder: CustomMPB
+    ) {
+        sticker.asVertx().executeCustom(builder, null)
+    }
+    suspend fun executeAll(
+        builder: MultiPartBuilder
+    ) {
+        sticker.asVertx().execute(builder, null)
+    }
+}
 

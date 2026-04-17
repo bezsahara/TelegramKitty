@@ -3,11 +3,14 @@ package org.bezsahara.kittybot.telegram.classes.input
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
+import org.bezsahara.kittybot.telegram.client.file.CustomMPB
+import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.json.JsonElement
 import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhotoStatic
 import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhotoAnimated
 import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
-import kotlinx.serialization.DeserializationStrategy
+import kotlin.Unit
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.Serializable
 
@@ -15,6 +18,12 @@ import kotlinx.serialization.Serializable
 @Serializable(with = InputProfilePhotoSerializer::class)
 sealed interface InputProfilePhoto {
     val type: String
+    suspend fun executeAll(
+        builder: MultiPartBuilder
+    ) 
+    suspend fun executeAll(
+        builder: CustomMPB
+    ) 
 }
 
 
