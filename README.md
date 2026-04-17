@@ -1,28 +1,32 @@
 ![logo](logo.png)
 
 # TelegramKitty
-TelegramKitty is a Kotlin Telegram Bot API wrapper with generated Telegram types and methods, a handler DSL, and optional http client.
-It is designed for low overhead, predictable concurrency, and fast JVM execution. 
-TelegramKitty keeps the programming model direct and easy to reason about, 
-with a small API surface and explicit update handling instead of heavy abstraction layers.
+TelegramKitty is a Kotlin-first Telegram Bot API wrapper for fast JVM bots.
+It gives you generated Telegram methods and models, a coroutine-friendly handler DSL,
+predictable update processing, and a pluggable HTTP layer.
+
+Current generated API target: **Telegram Bot API 9.6**.
+
 And yes, it can send [cat pictures](#cats).
 
-The project is split into two modules:
+Project layout:
 
-- `kittybot` - core bot logic, Telegram classes, builder DSL, and custom client SPI
-- `kittybot-client` - default Vert.x-based HTTP client
-- `samples` - examples
+- `kittybot` - generated Telegram API, core bot logic, dispatcher DSL, custom client SPI
+- `kittybot-client` - default Vert.x HTTP client, file helpers, and cat helpers
+- `samples` - runnable examples
 
 ## Features
 
-- Polling and webhook bots
-- Generated Telegram Bot API methods and types with official docs for classes and methods
-- Dispatcher DSL for handlers
-- Conversation API
-- Single-thread, multi-thread, and custom update processing
-- Filtering allowed update kinds
-- Helpers for skipping old updates with `ensureOnlyNewUpdates(...)`
-- Custom HTTP client support via `CustomClient` (`KtorCustomClient` included as a reference implementation)
+- Generated Telegram Bot API methods and serializable Telegram types with official docs in KDoc
+- Simple polling and webhook setup
+- Handler DSL for commands, text, callback queries, contacts, media groups, and raw update types
+- Conversation API for interactive multi-step flows
+- `flowHandler`, routing, command groups, dynamic handlers, filters, guards, and context attributes
+- Single-thread, ordered multi-thread, and custom update processing
+- Allowed-update filtering and stale-update skipping with `ensureOnlyNewUpdates(...)`
+- Inline keyboard, reply keyboard, bot command, and message entity builders
+- File upload/download helpers when using the default Vert.x client
+- Custom HTTP clients through `CustomClient`, with Ktor and Java `HttpClient` implementations available
 - Built-in cat helpers via `sendCatPicture(...)`, `sendTheCatApi(...)`, `sendHttpCat(...)`, and `sendTextCat()`
 
 ## Installation
@@ -44,7 +48,7 @@ dependencies {
 }
 ```
 
-## Polling Example
+## Quick Start
 
 ```kotlin
 val bot = KittyBot<PollingReceiver> {
@@ -52,8 +56,8 @@ val bot = KittyBot<PollingReceiver> {
     ensureOnlyNewUpdates()
 
     dispatchers {
-        text("/start") {
-            bot.sendMessage(chatId, "Hi, ${message.chat.firstName}")
+        command("/start") {
+            bot.sendMessage(chatId, "Hi from TelegramKitty")
         }
     }
 }
@@ -61,7 +65,7 @@ val bot = KittyBot<PollingReceiver> {
 bot.startPolling()
 ```
 
-## Conversation Example
+## Conversations
 
 ```kotlin
 val bot = KittyBot<PollingReceiver> {
@@ -84,7 +88,7 @@ val bot = KittyBot<PollingReceiver> {
 bot.startPolling()
 ```
 
-## Webhook Example
+## Webhooks
 
 ```kotlin
 val token = System.getenv("BOT_TOKEN")
@@ -106,15 +110,25 @@ val bot = KittyBot<WebhookReceiver> {
 
 bot.start()
 
-// Pass raw Telegram webhook payloads into the bot from your server:
+// Pass raw Telegram webhook payloads from your HTTP server:
 // bot.onUpdate(payload)
 ```
 
 ## Custom Clients
 
-If you do not want the default Vert.x transport, provide your own client with `useCustomClient(...)` or `setClientBuilder(...)`.
+Use `kittybot-client` for the default Vert.x transport. If you want another HTTP engine,
+use `useCustomClient(...)` or set a full `ClientBuilder` through `apiClientBuilder`.
 
-`kittybot` also includes `KtorCustomClient` as a ready-made `CustomClient` implementation. If you use it, add your own Ktor client dependencies and engine:
+Java's built-in `HttpClient` works without extra dependencies:
+
+```kotlin
+val bot = KittyBot<PollingReceiver> {
+    token = System.getenv("BOT_TOKEN")
+    useCustomClient(JavaCustomClient.createDefault())
+}
+```
+
+Ktor is also supported. Add your own Ktor client dependencies and engine:
 
 ```kotlin
 dependencies {
@@ -127,11 +141,7 @@ dependencies {
 ```kotlin
 val bot = KittyBot<PollingReceiver> {
     token = System.getenv("BOT_TOKEN")
-    useCustomClient(
-        KtorCustomClient(
-            HttpClient(CIO)
-        )
-    )
+    useCustomClient(KtorCustomClient(HttpClient(CIO)))
 
     dispatchers {
         text("/start") {
@@ -141,7 +151,7 @@ val bot = KittyBot<PollingReceiver> {
 }
 ```
 
-The custom client SPI receives absolute Telegram method URLs, so your implementation only needs to send requests and return raw responses.
+The `CustomClient` SPI receives absolute Telegram method URLs, so implementations only need to send requests and return raw responses.
 
 ## Update Processing
 
@@ -153,12 +163,22 @@ The default updater mode is `UpdaterMode.SingleThread`. You can also switch to:
 For example:
 
 ```kotlin
-updaterMode = UpdaterMode.MultiThread(MultiIdentity.OfChatIdentity, parallelism = 32)
+updaterMode = UpdaterMode.MultiThread(
+    MultiIdentity.OfAnyUserChatIdentity,
+    parallelism = 32
+)
 ```
+
+This lets different chats/users run in parallel while preserving order for the same identity.
 
 ## Just The API Client
 
 If you only need Telegram API calls without the handler system, use `createTelegramBot(...)`.
+
+```kotlin
+val bot = createTelegramBot(System.getenv("BOT_TOKEN"))
+val me = bot.getMe().unwrap()
+```
 
 ## Cats
 
@@ -180,7 +200,16 @@ text("/httpcat") {
 
 ## More Examples
 
-See [samples](samples/src/main/kotlin) for polling, webhook, and handler examples.
+See [samples](samples/src/main/kotlin) for runnable examples:
+
+- [polling.kt](samples/src/main/kotlin/polling.kt) and [webhook.kt](samples/src/main/kotlin/webhook.kt)
+- [ConversationBuilder.kt](samples/src/main/kotlin/ConversationBuilder.kt)
+- [FlowExample.kt](samples/src/main/kotlin/FlowExample.kt)
+- [RoutingExample.kt](samples/src/main/kotlin/RoutingExample.kt)
+- [DynamicHandlersExample.kt](samples/src/main/kotlin/DynamicHandlersExample.kt)
+- [CommandGroupExample.kt](samples/src/main/kotlin/CommandGroupExample.kt)
+- [FilesExample.kt](samples/src/main/kotlin/FilesExample.kt)
+- [MediaGroupExample.kt](samples/src/main/kotlin/MediaGroupExample.kt)
 
 You can also check out [KittyChat](https://github.com/bezsahara/KittyChat) project.
 It uses this library for a simple AI telegram bot for conversations.
