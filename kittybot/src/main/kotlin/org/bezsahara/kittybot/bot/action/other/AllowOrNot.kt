@@ -7,19 +7,20 @@ import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
+import org.bezsahara.kittybot.bot.dispatchers.TransparentHandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.ensureHasIdentity
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 
-inline fun HandlerStore.guardHandler(noinline check: (Update, HandlerContext) -> Boolean, builder: HandlerStore.() -> Unit) {
+inline fun HandlerStore.guardHandler(noinline check: (Update, HandlerContext) -> Boolean, builder: TransparentHandlerStore.() -> Unit) {
     GuardHandlerBuilder(check, this).also(builder).build()
 }
 
 class GuardHandlerBuilder(
     val check: (Update, HandlerContext) -> Boolean,
     val original: HandlerStore
-) : HandlerStore {
+) : TransparentHandlerStore {
     private val handlers = arrayListOf<Handler>()
 
     override val felineDispatcher: FelineDispatcher

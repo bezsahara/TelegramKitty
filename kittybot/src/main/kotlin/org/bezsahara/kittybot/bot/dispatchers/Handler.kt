@@ -171,9 +171,9 @@ internal constructor(@JvmField val result: Int, @JvmField val offset: Int, @JvmF
         const val NEXT = -1
     }
 
-    override fun equals(other: Any?): Boolean = other is Decision && other.result == result && other.offset == offset
+    override fun equals(other: Any?): Boolean = other is Decision && other.result == result && other.offset == offset && other.adjust == adjust
 
-    override fun hashCode(): Int = 31 * result + offset
+    override fun hashCode(): Int = (31 * result + offset) * 31 + adjust.hashCode()
 
     override fun toString(): String {
         return when (result) {
