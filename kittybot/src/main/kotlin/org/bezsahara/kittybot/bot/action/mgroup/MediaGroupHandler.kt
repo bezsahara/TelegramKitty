@@ -6,7 +6,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.builder.superVisorJob
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.dispatchers.Handler
@@ -58,7 +57,7 @@ class MediaGroupHandler(
         get() = setOf(MessageUpdate)
 
     private val scope = CoroutineScope(
-        SupervisorJob(felineDispatcher.felineBuilder.botContext.superVisorJob())
+        SupervisorJob(felineDispatcher.felineBuilder.supervisorJob)
     )
 
     private val map = ConcurrentHashMap<MediaKey, MediaRecord>()

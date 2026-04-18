@@ -78,7 +78,7 @@ class CommandGroupStore(
         val mh = paramsMap[res.method.args]
             ?: error("MethodHandle not found! for descriptor of ${res.method.toDescString()}")
 
-        return mh.invokeExact(res.arguments) as ExecBlock
+        return getExecutable(mh, res.arguments)
     }
 
     fun getExecutable(mh: MethodHandle, args: Array<Any?>): ExecBlock {
