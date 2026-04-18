@@ -3,6 +3,7 @@ package org.bezsahara.kittybot.telegram.client
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import java.net.URI
 import java.nio.charset.Charset
 
 /**
@@ -23,7 +24,7 @@ interface CustomClient {
      * after the body is fully finished and the response is available.
      */
     suspend fun CoroutineScope.createMPRequest(
-        urlAbs: String,
+        urlAbs: URI,
         contentType: String
     ): CustomRequest
 
@@ -33,7 +34,7 @@ interface CustomClient {
      * [isGetUpdates] is only a hint for clients that want a special timeout policy for long polling.
      */
     suspend fun sendJSONRequest(
-        urlAbs: String,
+        urlAbs: URI,
         json: ByteArray,
         isGetUpdates: Boolean
     ): CustomResponse

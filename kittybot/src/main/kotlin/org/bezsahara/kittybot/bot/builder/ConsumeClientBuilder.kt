@@ -6,10 +6,10 @@ import org.bezsahara.kittybot.telegram.client.TConsumeBot
 
 class ConsumeClientBuilder(val delegate: ClientBuilder) : ClientBuilder {
     override fun build(
-        token: String,
+        botApiServerConfig: BotApiServerConfig,
         json: Json,
     ): KittyBot {
-        return TConsumeBot(delegate.build(token, json))
+        return TConsumeBot(delegate.build(botApiServerConfig, json))
     }
 
     override fun close() {

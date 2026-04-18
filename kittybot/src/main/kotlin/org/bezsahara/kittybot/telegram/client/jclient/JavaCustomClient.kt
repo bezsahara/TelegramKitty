@@ -28,7 +28,7 @@ class JavaCustomClient(
     override val requestDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : CustomClient {
     override suspend fun CoroutineScope.createMPRequest(
-        urlAbs: String,
+        urlAbs: URI,
         contentType: String,
     ): CustomRequest {
         return JavaCustomRequest(
@@ -41,11 +41,11 @@ class JavaCustomClient(
     }
 
     override suspend fun sendJSONRequest(
-        urlAbs: String,
+        urlAbs: URI,
         json: ByteArray,
         isGetUpdates: Boolean,
     ): CustomResponse {
-        val requestBuilder = HttpRequest.newBuilder(URI.create(urlAbs))
+        val requestBuilder = HttpRequest.newBuilder(urlAbs)
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofByteArray(json))
 
@@ -83,7 +83,7 @@ private class JavaResponse(
 }
 
 private class JavaCustomRequest(
-    urlAbs: String,
+    urlAbs: URI,
     contentType: String,
     client: HttpClient,
     private val requestDispatcher: CoroutineDispatcher,
@@ -94,7 +94,7 @@ private class JavaCustomRequest(
     private val bodyClosed = AtomicBoolean(false)
     private val resourcesClosed = AtomicBoolean(false)
     private val responseFuture = client.sendAsync(
-        HttpRequest.newBuilder(URI.create(urlAbs))
+        HttpRequest.newBuilder(urlAbs)
             .header("Content-Type", contentType)
             .POST(HttpRequest.BodyPublishers.ofInputStream { requestInput })
             .build(),

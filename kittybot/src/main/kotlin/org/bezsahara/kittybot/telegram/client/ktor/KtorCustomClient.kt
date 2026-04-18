@@ -15,6 +15,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.ByteArrayContent
 import io.ktor.http.content.OutgoingContent
 import io.ktor.http.contentType
+import io.ktor.http.takeFrom
 import io.ktor.utils.io.ByteWriteChannel
 import io.ktor.utils.io.writeFully
 import kotlinx.coroutines.CoroutineScope
@@ -26,6 +27,7 @@ import kotlinx.coroutines.channels.trySendBlocking
 import org.bezsahara.kittybot.telegram.client.CustomClient
 import org.bezsahara.kittybot.telegram.client.CustomRequest
 import org.bezsahara.kittybot.telegram.client.CustomResponse
+import java.net.URI
 
 /**
  * Reference [CustomClient] implementation backed by Ktor.
@@ -35,13 +37,13 @@ class KtorCustomClient(
     private val ownsClient: Boolean = true,
 ) : CustomClient {
     override suspend fun CoroutineScope.createMPRequest(
-        urlAbs: String,
+        urlAbs: URI,
         contentType: String,
     ): CustomRequest {
         return KtorCustomRequest(
             HttpRequestBuilder().apply {
                 method = HttpMethod.Post
-                url(urlAbs)
+                url.takeFrom(urlAbs)
             },
             client,
             contentType,
@@ -50,11 +52,12 @@ class KtorCustomClient(
     }
 
     override suspend fun sendJSONRequest(
-        urlAbs: String,
+        urlAbs: URI,
         json: ByteArray,
         isGetUpdates: Boolean,
     ): CustomResponse {
-        val r = client.request(urlAbs) {
+        val r = client.request {
+            url.takeFrom(urlAbs)
             method = HttpMethod.Post
             if (isGetUpdates) {
                 timeout {

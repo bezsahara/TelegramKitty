@@ -25,6 +25,7 @@ import org.bezsahara.kittybot.telegram.client.TPathCustom
 import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import org.bezsahara.kittybot.telegram.utils.unwrapOrNull
 import java.io.File
+import java.net.URI
 import kotlin.properties.Delegates
 
 
@@ -93,6 +94,8 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
 
     // Bot token
     var token: String by Delegates.notNull()
+
+    var baseUri: URI = URI.create("https://api.telegram.org")
 
     // Updater mode can be either single or multithreaded or custom
     var updaterMode: UpdaterMode = UpdaterMode.SingleThread
@@ -219,8 +222,8 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
     fun useCustomClient(customClient: CustomClient) {
         checkClosed()
         apiClientBuilder = object : ClientBuilder {
-            override fun build(token: String, json: Json): KittyBot {
-                return TCustomClient(TPathCustom("https://api.telegram.org/bot$token"), customClient, json)
+            override fun build(botApiServerConfig: BotApiServerConfig, json: Json): KittyBot {
+                return TCustomClient(TPathCustom(botApiServerConfig.buildLink()), customClient, json)
             }
 
             override fun close() {
@@ -283,7 +286,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
             updateOrigin,
             pollingTimeoutP,
             preActions,
-            token,
+            BotApiServerConfig(token, baseUri),
             lastIdRecovery,
             errorHandler,
             deFactoBuilder,
@@ -321,8 +324,4 @@ fun FelineBuilder<WebhookReceiver>.webhook(
             url, certificate, ipAddress, maxConnections, allowedUpdates, dropPendingUpdates, secretToken
         )
     }
-}
-
-fun TypeAwareMap.superVisorJob(): Job {
-    return getOrPut(BOT_SUPERVISOR_JOB) { SupervisorJob() }
 }

@@ -23,7 +23,7 @@ class KittyBotConfig<T : UpdateReceiver>(
     val updateOrigin: UpdateOrigin,
     pollingTimeout: Long,
     preActions: List<FelineBuilder.PreAction>,
-    token: String,
+    botApiServerConfig: BotApiServerConfig,
     lastIdRecovery: RecoverLastId?,
     val errorHandler: HandlerErrorHandler,
     private val apiClientBuilder: ClientBuilder,
@@ -40,14 +40,14 @@ class KittyBotConfig<T : UpdateReceiver>(
     val updatesChannel =
         Channel<Update>(1024)
 
-    private val tApiClient = apiClientBuilder.build(token, json)//
+    private val tApiClient = apiClientBuilder.build(botApiServerConfig, json)//
 
     internal val updateReceiver = when (updateOrigin) {
         UpdateOrigin.Polling -> PollingReceiver(tApiClient, pollingTimeout, lastIdRecovery, allowedUpdates)
         UpdateOrigin.Webhook -> null
     }
 
-    internal val supervisorJob = botContext.getOrPut(BOT_SUPERVISOR_JOB) { SupervisorJob() }
+    val supervisorJob = felineDispatcher.felineBuilder.supervisorJob
     internal val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
 
     internal val updater: Furball = when (updaterMode) {
@@ -85,9 +85,14 @@ class KittyBotConfig<T : UpdateReceiver>(
     @JvmField
     val kittyBot: KittyBot = updater.bot
 
+    private var closed = false
+
+    @Synchronized
     fun close() {
+        if (closed) return
         updateReceiver?.close()
         apiClientBuilder.close()
+        closed = true
     }
 
     init {
