@@ -96,6 +96,15 @@ class CustomEmoji(val customEmojiId: String) : MessageEntityKind() {
         MessageEntity(EntityType.CUSTOM_EMOJI, offset, length, customEmojiId = customEmojiId)
 }
 
+class DateTime(val unixTime: Long, val dateTimeFormat: String? = null) : MessageEntityKind() {
+    override fun toWire(
+        offset: Long,
+        length: Long,
+    ): MessageEntity {
+        return MessageEntity(EntityType.DATE_TIME, offset, length, dateTimeFormat = dateTimeFormat, unixTime = unixTime)
+    }
+}
+
 sealed class MessageEntityKind {
 
     abstract fun toWire(offset: Long, length: Long): MessageEntity
@@ -103,17 +112,12 @@ sealed class MessageEntityKind {
     open operator fun plus(other: MessageEntityKind): MessageEntityKind {
         val arr = if (other is Combined) {
             val mek = other.mek
-            arrayOfNulls<MessageEntityKind>(mek.size + 1).also {
-                repeat(other.mek.size) { i ->
-                    it[i + 1] = other.mek[i]
-                }
-            }
-        } else arrayOfNulls<MessageEntityKind>(2).also {
-            it[0] = this
-            it[1] = other
+            Arrays.copyOf(mek, mek.size + 1, Array<MessageEntityKind>::class.java).also { it[mek.size] = this }
+        } else {
+            arrayOf(this, other)
         }
 
-        return Combined(arr as Array<MessageEntityKind>)
+        return Combined(arr)
     }
 
     class Combined(val mek: Array<MessageEntityKind>) : MessageEntityKind() {
@@ -124,12 +128,24 @@ sealed class MessageEntityKind {
 
         override fun plus(other: MessageEntityKind): MessageEntityKind {
             val arr = if (other is Combined) {
-                mek + other.mek
+                arrayOfNulls<MessageEntityKind>(mek.size + other.mek.size).also {
+                    System.arraycopy(mek, 0, it, 0, mek.size)
+                    System.arraycopy(other.mek, 0, it, mek.size, other.mek.size)
+                } as Array<MessageEntityKind>
             } else {
-                Arrays.copyOf(mek, mek.size + 1).also { it[mek.size] = other }
+                Arrays.copyOf(mek, mek.size + 1, Array<MessageEntityKind>::class.java).also { it[mek.size] = other }
             }
 
             return Combined(arr)
+        }
+    }
+
+    companion object {
+        fun of(vararg mek: MessageEntityKind): MessageEntityKind {
+            if (mek.size == 1) {
+                return mek[0]
+            }
+            return Combined(mek as Array<MessageEntityKind>)
         }
     }
 }

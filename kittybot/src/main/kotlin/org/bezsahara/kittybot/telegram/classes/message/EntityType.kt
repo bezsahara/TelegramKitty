@@ -57,5 +57,8 @@ enum class EntityType {
     TEXT_MENTION,
 
     @SerialName("custom_emoji")
-    CUSTOM_EMOJI
+    CUSTOM_EMOJI,
+
+    @SerialName("date_time")
+    DATE_TIME,
 }

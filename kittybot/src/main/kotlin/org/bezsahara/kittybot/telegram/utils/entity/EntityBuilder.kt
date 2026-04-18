@@ -51,17 +51,18 @@ class EntityBuilder(stringSize: Int, entitySize: Int) : Appendable {
         index += 1
     }
 
+    fun addChar(char: Char, type: MessageEntityKind) {
+        stringBuilder.append(char)
+        gatherStyles(1)
+        addStyle(type, 1)
+        index += 1
+    }
+
     private fun gatherStyles(utf16Length: Long) {
-        innerDeque?.let { d ->
-            d.forList { finalType ->
-                if (finalType is MessageEntityKind.Combined) {
-                    finalType.mek.forEach {
-                        entityList.add(it.toWire(index, utf16Length))
-                    }
-                } else {
-                    entityList.add(finalType.toWire(index, utf16Length))
-                }
-            }
+        val deque = innerDeque ?: return
+        for (i in 0 until deque.size) {
+            val finalType = deque[i]
+            addStyle(finalType, utf16Length)
         }
     }
 
@@ -69,7 +70,6 @@ class EntityBuilder(stringSize: Int, entitySize: Int) : Appendable {
         stringBuilder.append(string)
         val utf16Length = string.length.toLong()
         gatherStyles(utf16Length)
-        stringBuilder.length
         index += utf16Length
     }
 
@@ -80,6 +80,11 @@ class EntityBuilder(stringSize: Int, entitySize: Int) : Appendable {
         stringBuilder.append(string)
         val utf16Length = string.length.toLong()
         gatherStyles(utf16Length)
+        addStyle(type, utf16Length)
+        index += utf16Length
+    }
+
+    private fun addStyle(type: MessageEntityKind, utf16Length: Long) {
         if (type is MessageEntityKind.Combined) {
             type.mek.forEach {
                 entityList.add(it.toWire(index, utf16Length))
@@ -87,23 +92,31 @@ class EntityBuilder(stringSize: Int, entitySize: Int) : Appendable {
         } else {
             entityList.add(type.toWire(index, utf16Length))
         }
-        index += utf16Length
     }
 
     private var innerDeque: ArrayDeque<MessageEntityKind>? = null
-    val deque: ArrayDeque<MessageEntityKind> get() {
-        var toResp = innerDeque
-        if (toResp == null) {
-            toResp = ArrayDeque<MessageEntityKind>(8)
-            innerDeque = toResp
+
+    fun addScope(type: MessageEntityKind) {
+        var deque = innerDeque
+        if (deque == null) {
+            deque = ArrayDeque<MessageEntityKind>(8)
+            innerDeque = deque
         }
-        return toResp
+        deque.addLast(type)
+    }
+
+    fun removeLastScope() {
+        val d = innerDeque ?: error("No deque was initialized!")
+        d.removeLast()
     }
 
     inline fun styleOf(type: MessageEntityKind, block: () -> Unit) {
-        deque.addLast(type)
-        block()
-        deque.removeLast()
+        addScope(type)
+        try {
+            block()
+        } finally {
+            removeLastScope()
+        }
     }
 
 
@@ -116,9 +129,12 @@ class EntityBuilder(stringSize: Int, entitySize: Int) : Appendable {
      * ```
      */
     inline operator fun MessageEntityKind.invoke(block: () -> Unit) {
-        deque.addLast(this)
-        block()
-        deque.removeLast()
+        addScope(this)
+        try {
+            block()
+        } finally {
+            removeLastScope()
+        }
     }
 
     fun getResult() = EntityString(entityList, stringBuilder.toString())
@@ -171,6 +187,8 @@ suspend fun KittyBot.sendMessage(
 internal fun example0() {
     buildEntityString {
         addString("Hi!", Italic + Bold + TextLink("google.com"))
+        appendLine()
+        addString("Hi!", MessageEntityKind.of(Italic))
 
         styleOf(Bold) {
             Italic {
