@@ -17,6 +17,7 @@ import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.client.CustomClient
 import org.bezsahara.kittybot.telegram.client.CustomRequest
 import org.bezsahara.kittybot.telegram.client.CustomResponse
+import java.net.URI
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -139,14 +140,14 @@ class FurballTest {
 
     private object NoOpCustomClient : CustomClient {
         override suspend fun CoroutineScope.createMPRequest(
-            urlAbs: String,
+            urlAbs: URI,
             contentType: String,
         ): CustomRequest {
             error("No multipart requests are expected in Furball tests")
         }
 
         override suspend fun sendJSONRequest(
-            urlAbs: String,
+            urlAbs: URI,
             json: ByteArray,
             isGetUpdates: Boolean,
         ): CustomResponse {
