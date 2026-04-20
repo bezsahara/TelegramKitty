@@ -25,7 +25,7 @@ Project layout:
 - Single-thread, ordered multi-thread, and custom update processing
 - Allowed-update filtering and stale-update skipping with `ensureOnlyNewUpdates(...)`
 - Inline keyboard, reply keyboard, bot command, and message entity builders
-- File upload/download helpers when using the default Vert.x client
+- File download helpers when using the default Vert.x client
 - Custom HTTP clients through `CustomClient`, with Ktor and Java `HttpClient` implementations available
 - Built-in cat helpers via `sendCatPicture(...)`, `sendTheCatApi(...)`, `sendHttpCat(...)`, and `sendTextCat()`
 
