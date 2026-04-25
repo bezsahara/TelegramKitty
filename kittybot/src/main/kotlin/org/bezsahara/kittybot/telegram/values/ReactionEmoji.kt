@@ -19,223 +19,223 @@ class ReactionEmoji internal constructor(
 ) : EnumLike<ReactionEmoji.Known>() {
     companion object : ResolveEnumLikeBig<ReactionEmoji, Known>(Known::class.java) {
         @JvmField
-        val U_2764 = ReactionEmoji("❤", Known.U_2764).register()
+        val HEART = ReactionEmoji("❤", Known.HEART).register()
 
         @JvmField
-        val U_1F44D = ReactionEmoji("👍", Known.U_1F44D).register()
+        val THUMBS_UP = ReactionEmoji("👍", Known.THUMBS_UP).register()
 
         @JvmField
-        val U_1F44E = ReactionEmoji("👎", Known.U_1F44E).register()
+        val THUMBS_DOWN = ReactionEmoji("👎", Known.THUMBS_DOWN).register()
 
         @JvmField
-        val U_1F525 = ReactionEmoji("🔥", Known.U_1F525).register()
+        val FIRE = ReactionEmoji("🔥", Known.FIRE).register()
 
         @JvmField
-        val U_1F970 = ReactionEmoji("🥰", Known.U_1F970).register()
+        val SMILING_HEARTS = ReactionEmoji("🥰", Known.SMILING_HEARTS).register()
 
         @JvmField
-        val U_1F44F = ReactionEmoji("👏", Known.U_1F44F).register()
+        val CLAP = ReactionEmoji("👏", Known.CLAP).register()
 
         @JvmField
-        val U_1F601 = ReactionEmoji("😁", Known.U_1F601).register()
+        val GRIN = ReactionEmoji("😁", Known.GRIN).register()
 
         @JvmField
-        val U_1F914 = ReactionEmoji("🤔", Known.U_1F914).register()
+        val THINKING = ReactionEmoji("🤔", Known.THINKING).register()
 
         @JvmField
-        val U_1F92F = ReactionEmoji("🤯", Known.U_1F92F).register()
+        val MIND_BLOWN = ReactionEmoji("🤯", Known.MIND_BLOWN).register()
 
         @JvmField
-        val U_1F631 = ReactionEmoji("😱", Known.U_1F631).register()
+        val SCREAM = ReactionEmoji("😱", Known.SCREAM).register()
 
         @JvmField
-        val U_1F92C = ReactionEmoji("🤬", Known.U_1F92C).register()
+        val CURSING = ReactionEmoji("🤬", Known.CURSING).register()
 
         @JvmField
-        val U_1F622 = ReactionEmoji("😢", Known.U_1F622).register()
+        val CRY = ReactionEmoji("😢", Known.CRY).register()
 
         @JvmField
-        val U_1F389 = ReactionEmoji("🎉", Known.U_1F389).register()
+        val PARTY_POPPER = ReactionEmoji("🎉", Known.PARTY_POPPER).register()
 
         @JvmField
-        val U_1F929 = ReactionEmoji("🤩", Known.U_1F929).register()
+        val STAR_STRUCK = ReactionEmoji("🤩", Known.STAR_STRUCK).register()
 
         @JvmField
-        val U_1F92E = ReactionEmoji("🤮", Known.U_1F92E).register()
+        val VOMIT = ReactionEmoji("🤮", Known.VOMIT).register()
 
         @JvmField
-        val U_1F4A9 = ReactionEmoji("💩", Known.U_1F4A9).register()
+        val POO = ReactionEmoji("💩", Known.POO).register()
 
         @JvmField
-        val U_1F64F = ReactionEmoji("🙏", Known.U_1F64F).register()
+        val FOLDED_HANDS = ReactionEmoji("🙏", Known.FOLDED_HANDS).register()
 
         @JvmField
-        val U_1F44C = ReactionEmoji("👌", Known.U_1F44C).register()
+        val OK_HAND = ReactionEmoji("👌", Known.OK_HAND).register()
 
         @JvmField
-        val U_1F54A = ReactionEmoji("🕊", Known.U_1F54A).register()
+        val DOVE = ReactionEmoji("🕊", Known.DOVE).register()
 
         @JvmField
-        val U_1F921 = ReactionEmoji("🤡", Known.U_1F921).register()
+        val CLOWN = ReactionEmoji("🤡", Known.CLOWN).register()
 
         @JvmField
-        val U_1F971 = ReactionEmoji("🥱", Known.U_1F971).register()
+        val YAWN = ReactionEmoji("🥱", Known.YAWN).register()
 
         @JvmField
-        val U_1F974 = ReactionEmoji("🥴", Known.U_1F974).register()
+        val WOOZY = ReactionEmoji("🥴", Known.WOOZY).register()
 
         @JvmField
-        val U_1F60D = ReactionEmoji("😍", Known.U_1F60D).register()
+        val HEART_EYES = ReactionEmoji("😍", Known.HEART_EYES).register()
 
         @JvmField
-        val U_1F433 = ReactionEmoji("🐳", Known.U_1F433).register()
+        val WHALE = ReactionEmoji("🐳", Known.WHALE).register()
 
         @JvmField
-        val U_2764_200D_1F525 = ReactionEmoji("❤‍🔥", Known.U_2764_200D_1F525).register()
+        val HEART_ON_FIRE = ReactionEmoji("❤‍🔥", Known.HEART_ON_FIRE).register()
 
         @JvmField
-        val U_1F31A = ReactionEmoji("🌚", Known.U_1F31A).register()
+        val NEW_MOON_FACE = ReactionEmoji("🌚", Known.NEW_MOON_FACE).register()
 
         @JvmField
-        val U_1F32D = ReactionEmoji("🌭", Known.U_1F32D).register()
+        val HOT_DOG = ReactionEmoji("🌭", Known.HOT_DOG).register()
 
         @JvmField
-        val U_1F4AF = ReactionEmoji("💯", Known.U_1F4AF).register()
+        val HUNDRED = ReactionEmoji("💯", Known.HUNDRED).register()
 
         @JvmField
-        val U_1F923 = ReactionEmoji("🤣", Known.U_1F923).register()
+        val ROFL = ReactionEmoji("🤣", Known.ROFL).register()
 
         @JvmField
-        val U_26A1 = ReactionEmoji("⚡", Known.U_26A1).register()
+        val LIGHTNING = ReactionEmoji("⚡", Known.LIGHTNING).register()
 
         @JvmField
-        val U_1F34C = ReactionEmoji("🍌", Known.U_1F34C).register()
+        val BANANA = ReactionEmoji("🍌", Known.BANANA).register()
 
         @JvmField
-        val U_1F3C6 = ReactionEmoji("🏆", Known.U_1F3C6).register()
+        val TROPHY = ReactionEmoji("🏆", Known.TROPHY).register()
 
         @JvmField
-        val U_1F494 = ReactionEmoji("💔", Known.U_1F494).register()
+        val BROKEN_HEART = ReactionEmoji("💔", Known.BROKEN_HEART).register()
 
         @JvmField
-        val U_1F928 = ReactionEmoji("🤨", Known.U_1F928).register()
+        val RAISED_EYEBROW = ReactionEmoji("🤨", Known.RAISED_EYEBROW).register()
 
         @JvmField
-        val U_1F610 = ReactionEmoji("😐", Known.U_1F610).register()
+        val NEUTRAL_FACE = ReactionEmoji("😐", Known.NEUTRAL_FACE).register()
 
         @JvmField
-        val U_1F353 = ReactionEmoji("🍓", Known.U_1F353).register()
+        val STRAWBERRY = ReactionEmoji("🍓", Known.STRAWBERRY).register()
 
         @JvmField
-        val U_1F37E = ReactionEmoji("🍾", Known.U_1F37E).register()
+        val CHAMPAGNE = ReactionEmoji("🍾", Known.CHAMPAGNE).register()
 
         @JvmField
-        val U_1F48B = ReactionEmoji("💋", Known.U_1F48B).register()
+        val KISS_MARK = ReactionEmoji("💋", Known.KISS_MARK).register()
 
         @JvmField
-        val U_1F595 = ReactionEmoji("🖕", Known.U_1F595).register()
+        val MIDDLE_FINGER = ReactionEmoji("🖕", Known.MIDDLE_FINGER).register()
 
         @JvmField
-        val U_1F608 = ReactionEmoji("😈", Known.U_1F608).register()
+        val DEVIL = ReactionEmoji("😈", Known.DEVIL).register()
 
         @JvmField
-        val U_1F634 = ReactionEmoji("😴", Known.U_1F634).register()
+        val SLEEPING = ReactionEmoji("😴", Known.SLEEPING).register()
 
         @JvmField
-        val U_1F62D = ReactionEmoji("😭", Known.U_1F62D).register()
+        val SOB = ReactionEmoji("😭", Known.SOB).register()
 
         @JvmField
-        val U_1F913 = ReactionEmoji("🤓", Known.U_1F913).register()
+        val NERD = ReactionEmoji("🤓", Known.NERD).register()
 
         @JvmField
-        val U_1F47B = ReactionEmoji("👻", Known.U_1F47B).register()
+        val GHOST = ReactionEmoji("👻", Known.GHOST).register()
 
         @JvmField
-        val U_1F468_200D_1F4BB = ReactionEmoji("👨‍💻", Known.U_1F468_200D_1F4BB).register()
+        val MAN_TECH = ReactionEmoji("👨‍💻", Known.MAN_TECH).register()
 
         @JvmField
-        val U_1F440 = ReactionEmoji("👀", Known.U_1F440).register()
+        val EYES = ReactionEmoji("👀", Known.EYES).register()
 
         @JvmField
-        val U_1F383 = ReactionEmoji("🎃", Known.U_1F383).register()
+        val PUMPKIN = ReactionEmoji("🎃", Known.PUMPKIN).register()
 
         @JvmField
-        val U_1F648 = ReactionEmoji("🙈", Known.U_1F648).register()
+        val SEE_NO_EVIL = ReactionEmoji("🙈", Known.SEE_NO_EVIL).register()
 
         @JvmField
-        val U_1F607 = ReactionEmoji("😇", Known.U_1F607).register()
+        val HALO = ReactionEmoji("😇", Known.HALO).register()
 
         @JvmField
-        val U_1F628 = ReactionEmoji("😨", Known.U_1F628).register()
+        val FEAR = ReactionEmoji("😨", Known.FEAR).register()
 
         @JvmField
-        val U_1F91D = ReactionEmoji("🤝", Known.U_1F91D).register()
+        val HANDSHAKE = ReactionEmoji("🤝", Known.HANDSHAKE).register()
 
         @JvmField
-        val U_270D = ReactionEmoji("✍", Known.U_270D).register()
+        val WRITING_HAND = ReactionEmoji("✍", Known.WRITING_HAND).register()
 
         @JvmField
-        val U_1F917 = ReactionEmoji("🤗", Known.U_1F917).register()
+        val HUG = ReactionEmoji("🤗", Known.HUG).register()
 
         @JvmField
-        val U_1FAE1 = ReactionEmoji("🫡", Known.U_1FAE1).register()
+        val SALUTE = ReactionEmoji("🫡", Known.SALUTE).register()
 
         @JvmField
-        val U_1F385 = ReactionEmoji("🎅", Known.U_1F385).register()
+        val SANTA = ReactionEmoji("🎅", Known.SANTA).register()
 
         @JvmField
-        val U_1F384 = ReactionEmoji("🎄", Known.U_1F384).register()
+        val CHRISTMAS_TREE = ReactionEmoji("🎄", Known.CHRISTMAS_TREE).register()
 
         @JvmField
-        val U_2603 = ReactionEmoji("☃", Known.U_2603).register()
+        val SNOWMAN = ReactionEmoji("☃", Known.SNOWMAN).register()
 
         @JvmField
-        val U_1F485 = ReactionEmoji("💅", Known.U_1F485).register()
+        val NAIL_POLISH = ReactionEmoji("💅", Known.NAIL_POLISH).register()
 
         @JvmField
-        val U_1F92A = ReactionEmoji("🤪", Known.U_1F92A).register()
+        val ZANY = ReactionEmoji("🤪", Known.ZANY).register()
 
         @JvmField
-        val U_1F5FF = ReactionEmoji("🗿", Known.U_1F5FF).register()
+        val MOAI = ReactionEmoji("🗿", Known.MOAI).register()
 
         @JvmField
-        val U_1F192 = ReactionEmoji("🆒", Known.U_1F192).register()
+        val COOL = ReactionEmoji("🆒", Known.COOL).register()
 
         @JvmField
-        val U_1F498 = ReactionEmoji("💘", Known.U_1F498).register()
+        val HEART_WITH_ARROW = ReactionEmoji("💘", Known.HEART_WITH_ARROW).register()
 
         @JvmField
-        val U_1F649 = ReactionEmoji("🙉", Known.U_1F649).register()
+        val HEAR_NO_EVIL = ReactionEmoji("🙉", Known.HEAR_NO_EVIL).register()
 
         @JvmField
-        val U_1F984 = ReactionEmoji("🦄", Known.U_1F984).register()
+        val UNICORN = ReactionEmoji("🦄", Known.UNICORN).register()
 
         @JvmField
-        val U_1F618 = ReactionEmoji("😘", Known.U_1F618).register()
+        val KISS_FACE = ReactionEmoji("😘", Known.KISS_FACE).register()
 
         @JvmField
-        val U_1F48A = ReactionEmoji("💊", Known.U_1F48A).register()
+        val PILL = ReactionEmoji("💊", Known.PILL).register()
 
         @JvmField
-        val U_1F64A = ReactionEmoji("🙊", Known.U_1F64A).register()
+        val SPEAK_NO_EVIL = ReactionEmoji("🙊", Known.SPEAK_NO_EVIL).register()
 
         @JvmField
-        val U_1F60E = ReactionEmoji("😎", Known.U_1F60E).register()
+        val SUNGLASSES = ReactionEmoji("😎", Known.SUNGLASSES).register()
 
         @JvmField
-        val U_1F47E = ReactionEmoji("👾", Known.U_1F47E).register()
+        val ALIEN_MONSTER = ReactionEmoji("👾", Known.ALIEN_MONSTER).register()
 
         @JvmField
-        val U_1F937_200D_2642 = ReactionEmoji("🤷‍♂", Known.U_1F937_200D_2642).register()
+        val MAN_SHRUG = ReactionEmoji("🤷‍♂", Known.MAN_SHRUG).register()
 
         @JvmField
-        val U_1F937 = ReactionEmoji("🤷", Known.U_1F937).register()
+        val SHRUG = ReactionEmoji("🤷", Known.SHRUG).register()
 
         @JvmField
-        val U_1F937_200D_2640 = ReactionEmoji("🤷‍♀", Known.U_1F937_200D_2640).register()
+        val WOMAN_SHRUG = ReactionEmoji("🤷‍♀", Known.WOMAN_SHRUG).register()
 
         @JvmField
-        val U_1F621 = ReactionEmoji("😡", Known.U_1F621).register()
+        val ANGRY = ReactionEmoji("😡", Known.ANGRY).register()
 
         override fun create(value: String): ReactionEmoji {
             return ReactionEmoji(value, null)
@@ -247,79 +247,79 @@ class ReactionEmoji internal constructor(
     }
 
     enum class Known {
-        U_2764,
-        U_1F44D,
-        U_1F44E,
-        U_1F525,
-        U_1F970,
-        U_1F44F,
-        U_1F601,
-        U_1F914,
-        U_1F92F,
-        U_1F631,
-        U_1F92C,
-        U_1F622,
-        U_1F389,
-        U_1F929,
-        U_1F92E,
-        U_1F4A9,
-        U_1F64F,
-        U_1F44C,
-        U_1F54A,
-        U_1F921,
-        U_1F971,
-        U_1F974,
-        U_1F60D,
-        U_1F433,
-        U_2764_200D_1F525,
-        U_1F31A,
-        U_1F32D,
-        U_1F4AF,
-        U_1F923,
-        U_26A1,
-        U_1F34C,
-        U_1F3C6,
-        U_1F494,
-        U_1F928,
-        U_1F610,
-        U_1F353,
-        U_1F37E,
-        U_1F48B,
-        U_1F595,
-        U_1F608,
-        U_1F634,
-        U_1F62D,
-        U_1F913,
-        U_1F47B,
-        U_1F468_200D_1F4BB,
-        U_1F440,
-        U_1F383,
-        U_1F648,
-        U_1F607,
-        U_1F628,
-        U_1F91D,
-        U_270D,
-        U_1F917,
-        U_1FAE1,
-        U_1F385,
-        U_1F384,
-        U_2603,
-        U_1F485,
-        U_1F92A,
-        U_1F5FF,
-        U_1F192,
-        U_1F498,
-        U_1F649,
-        U_1F984,
-        U_1F618,
-        U_1F48A,
-        U_1F64A,
-        U_1F60E,
-        U_1F47E,
-        U_1F937_200D_2642,
-        U_1F937,
-        U_1F937_200D_2640,
-        U_1F621;
+        HEART,
+        THUMBS_UP,
+        THUMBS_DOWN,
+        FIRE,
+        SMILING_HEARTS,
+        CLAP,
+        GRIN,
+        THINKING,
+        MIND_BLOWN,
+        SCREAM,
+        CURSING,
+        CRY,
+        PARTY_POPPER,
+        STAR_STRUCK,
+        VOMIT,
+        POO,
+        FOLDED_HANDS,
+        OK_HAND,
+        DOVE,
+        CLOWN,
+        YAWN,
+        WOOZY,
+        HEART_EYES,
+        WHALE,
+        HEART_ON_FIRE,
+        NEW_MOON_FACE,
+        HOT_DOG,
+        HUNDRED,
+        ROFL,
+        LIGHTNING,
+        BANANA,
+        TROPHY,
+        BROKEN_HEART,
+        RAISED_EYEBROW,
+        NEUTRAL_FACE,
+        STRAWBERRY,
+        CHAMPAGNE,
+        KISS_MARK,
+        MIDDLE_FINGER,
+        DEVIL,
+        SLEEPING,
+        SOB,
+        NERD,
+        GHOST,
+        MAN_TECH,
+        EYES,
+        PUMPKIN,
+        SEE_NO_EVIL,
+        HALO,
+        FEAR,
+        HANDSHAKE,
+        WRITING_HAND,
+        HUG,
+        SALUTE,
+        SANTA,
+        CHRISTMAS_TREE,
+        SNOWMAN,
+        NAIL_POLISH,
+        ZANY,
+        MOAI,
+        COOL,
+        HEART_WITH_ARROW,
+        HEAR_NO_EVIL,
+        UNICORN,
+        KISS_FACE,
+        PILL,
+        SPEAK_NO_EVIL,
+        SUNGLASSES,
+        ALIEN_MONSTER,
+        MAN_SHRUG,
+        SHRUG,
+        WOMAN_SHRUG,
+        ANGRY;
 
         fun toReactionEmoji(): ReactionEmoji {
             return ReactionEmoji.mapGet(this)

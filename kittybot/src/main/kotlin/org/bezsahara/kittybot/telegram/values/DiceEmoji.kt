@@ -19,22 +19,22 @@ class DiceEmoji internal constructor(
 ) : EnumLike<DiceEmoji.Known>() {
     companion object : ResolveEnumLikeBig<DiceEmoji, Known>(Known::class.java) {
         @JvmField
-        val U_1F3B2 = DiceEmoji("🎲", Known.U_1F3B2).register()
+        val DICE = DiceEmoji("🎲", Known.DICE).register()
 
         @JvmField
-        val U_1F3AF = DiceEmoji("🎯", Known.U_1F3AF).register()
+        val DARTS = DiceEmoji("🎯", Known.DARTS).register()
 
         @JvmField
-        val U_1F3C0 = DiceEmoji("🏀", Known.U_1F3C0).register()
+        val BASKETBALL = DiceEmoji("🏀", Known.BASKETBALL).register()
 
         @JvmField
-        val U_26BD = DiceEmoji("⚽", Known.U_26BD).register()
+        val FOOTBALL = DiceEmoji("⚽", Known.FOOTBALL).register()
 
         @JvmField
-        val U_1F3B3 = DiceEmoji("🎳", Known.U_1F3B3).register()
+        val BOWLING = DiceEmoji("🎳", Known.BOWLING).register()
 
         @JvmField
-        val U_1F3B0 = DiceEmoji("🎰", Known.U_1F3B0).register()
+        val SLOT_MACHINE = DiceEmoji("🎰", Known.SLOT_MACHINE).register()
 
         override fun create(value: String): DiceEmoji {
             return DiceEmoji(value, null)
@@ -46,12 +46,12 @@ class DiceEmoji internal constructor(
     }
 
     enum class Known {
-        U_1F3B2,
-        U_1F3AF,
-        U_1F3C0,
-        U_26BD,
-        U_1F3B3,
-        U_1F3B0;
+        DICE,
+        DARTS,
+        BASKETBALL,
+        FOOTBALL,
+        BOWLING,
+        SLOT_MACHINE;
 
         fun toDiceEmoji(): DiceEmoji {
             return DiceEmoji.mapGet(this)
