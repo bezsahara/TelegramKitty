@@ -8,10 +8,14 @@ import org.bezsahara.kittybot.bot.dispatchers.addHandler
 import org.bezsahara.kittybot.bot.dispatchers.y.command
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.chatId
 import org.bezsahara.kittybot.bot.downloadFileAsByteArrayById
+import org.bezsahara.kittybot.telegram.classes.chat.toChatId
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
+import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionTypeEmoji
 import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import org.bezsahara.kittybot.telegram.utils.unwrap
 import org.bezsahara.kittybot.telegram.values.ParseMode
+import org.bezsahara.kittybot.telegram.values.ReactionEmoji
 import org.intellij.lang.annotations.Language
 
 fun FelineDispatcher.filesExample() {
@@ -43,12 +47,15 @@ fun FelineDispatcher.filesExample() {
 
             addHandler(setOf(MessageUpdate)) { update, bot, handlerContext ->
                 val msg = (update as MessageUpdate).message
+                val chatId = msg.chat.id.toChatId()
                 val photos = msg.photo
                 if (photos.isNullOrEmpty()) {
                     bot.sendMessage(update.chatIdOrNull(), "No photos available. To stop write /cancel")
                 } else {
+                    bot.setMessageReaction(chatId, msg.messageId, listOf(ReactionTypeEmoji(ReactionEmoji.CLAP)))
+                        .consume()
                     val a = photos.maxBy { it.height }
-                    bot.sendPhoto(update.chatIdOrNull(), TelegramFile.withId(a.fileId), caption = "Here is your photo. To stop write /cancel")
+                    bot.sendPhoto(chatId, TelegramFile.withId(a.fileId), caption = "Here is your photo. To stop write /cancel")
                 }
                 Decision.Consumed
             }
