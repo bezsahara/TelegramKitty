@@ -3,12 +3,14 @@ package org.bezsahara.kittybot.bot
 import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
 import org.bezsahara.kittybot.telegram.classes.keyboard.PreparedKeyboardButton
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
+import org.bezsahara.kittybot.telegram.values.StickerType
 import org.bezsahara.kittybot.telegram.classes.input.InputMedia
 import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfo
-import org.bezsahara.kittybot.telegram.utils.ParseMode
+import org.bezsahara.kittybot.telegram.values.ChatAction
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import org.bezsahara.kittybot.telegram.classes.input.InputSticker
 import org.bezsahara.kittybot.telegram.utils.TResult
+import org.bezsahara.kittybot.telegram.values.DiceEmoji
 import org.bezsahara.kittybot.telegram.classes.core.MessageId
 import org.bezsahara.kittybot.telegram.classes.inline.PreparedInlineMessage
 import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
@@ -29,6 +31,7 @@ import org.bezsahara.kittybot.telegram.classes.message.polls.InputPollOption
 import org.bezsahara.kittybot.telegram.classes.input.InputChecklist
 import org.bezsahara.kittybot.telegram.classes.core.File
 import org.bezsahara.kittybot.telegram.classes.bot.BotShortDescription
+import org.bezsahara.kittybot.telegram.values.ParseMode
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
 import org.bezsahara.kittybot.telegram.classes.passport.PassportElementError
 import org.bezsahara.kittybot.telegram.classes.message.LinkPreviewOptions
@@ -49,6 +52,7 @@ import org.bezsahara.kittybot.telegram.classes.gifts.Gifts
 import kotlin.collections.List
 import org.bezsahara.kittybot.telegram.classes.message.SuggestedPostParameters
 import org.bezsahara.kittybot.telegram.classes.input.InputStoryContent
+import org.bezsahara.kittybot.telegram.values.PollType
 import org.bezsahara.kittybot.telegram.classes.inline.SentWebAppMessage
 import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButton
 import org.bezsahara.kittybot.telegram.classes.payments.StarTransactions
@@ -58,8 +62,8 @@ import org.bezsahara.kittybot.telegram.classes.chat.ChatAdministratorRights
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.client.opt.RequestOptions
 import org.bezsahara.kittybot.telegram.classes.bot.BotDescription
-import org.bezsahara.kittybot.telegram.utils.ChatAction
 import org.bezsahara.kittybot.telegram.classes.media.stickers.StickerSet
+import org.bezsahara.kittybot.telegram.values.StickerFormat
 import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
 import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
 import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
@@ -362,7 +366,7 @@ abstract class KittyBot {
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
         directMessagesTopicId: Long? = null,
-        emoji: String? = null,
+        emoji: DiceEmoji? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
@@ -755,10 +759,10 @@ abstract class KittyBot {
         options: List<InputPollOption>,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
-        questionParseMode: String? = null,
+        questionParseMode: ParseMode? = null,
         questionEntities: List<MessageEntity>? = null,
         isAnonymous: Boolean? = null,
-        type: String? = null,
+        type: PollType? = null,
         allowsMultipleAnswers: Boolean? = null,
         allowsRevoting: Boolean? = null,
         shuffleOptions: Boolean? = null,
@@ -766,13 +770,13 @@ abstract class KittyBot {
         hideResultsUntilCloses: Boolean? = null,
         correctOptionIds: List<Long>? = null,
         explanation: String? = null,
-        explanationParseMode: String? = null,
+        explanationParseMode: ParseMode? = null,
         explanationEntities: List<MessageEntity>? = null,
         openPeriod: Long? = null,
         closeDate: Long? = null,
         isClosed: Boolean? = null,
         description: String? = null,
-        descriptionParseMode: String? = null,
+        descriptionParseMode: ParseMode? = null,
         descriptionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -1066,7 +1070,7 @@ abstract class KittyBot {
     abstract suspend fun uploadStickerFile(
         userId: Long,
         sticker: TelegramFile,
-        stickerFormat: String
+        stickerFormat: StickerFormat
     ): TResult<File> 
 
     /**
@@ -1139,7 +1143,7 @@ abstract class KittyBot {
     abstract suspend fun setStickerSetThumbnail(
         name: String,
         userId: Long,
-        format: String,
+        format: StickerFormat,
         thumbnail: TelegramFile? = null
     ): TResult<Boolean> 
 
@@ -1498,7 +1502,7 @@ abstract class KittyBot {
         monthCount: Long,
         starCount: Long,
         text: String? = null,
-        textParseMode: String? = null,
+        textParseMode: ParseMode? = null,
         textEntities: List<MessageEntity>? = null,
         requestOptions: RequestOptions? = null
     ): TResult<Boolean> 
@@ -1838,7 +1842,7 @@ abstract class KittyBot {
         chatId: ChatId? = null,
         payForUpgrade: Boolean? = null,
         text: String? = null,
-        textParseMode: String? = null,
+        textParseMode: ParseMode? = null,
         textEntities: List<MessageEntity>? = null,
         requestOptions: RequestOptions? = null
     ): TResult<Boolean> 
@@ -3250,7 +3254,7 @@ abstract class KittyBot {
         name: String,
         title: String,
         stickers: List<InputSticker>,
-        stickerType: String? = null,
+        stickerType: StickerType? = null,
         needsRepainting: Boolean? = null
     ): TResult<Boolean> 
 

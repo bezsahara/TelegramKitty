@@ -1,6 +1,7 @@
 package org.bezsahara.kittybot.telegram.classes.chat
 
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.ChatType
 import kotlinx.serialization.Serializable
 
 
@@ -21,7 +22,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Chat(
     val id: Long,
-    val type: String,
+    val type: ChatType,
     val title: String? = null,
     val username: String? = null,
     @SerialName("first_name") val firstName: String? = null,

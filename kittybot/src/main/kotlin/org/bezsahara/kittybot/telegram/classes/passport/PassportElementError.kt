@@ -11,6 +11,7 @@ import kotlinx.serialization.DeserializationStrategy
 import org.bezsahara.kittybot.telegram.classes.passport.PassportElementErrorTranslationFiles
 import org.bezsahara.kittybot.telegram.classes.passport.PassportElementErrorUnspecified
 import org.bezsahara.kittybot.telegram.classes.passport.PassportElementErrorSelfie
+import org.bezsahara.kittybot.telegram.values.PassportElementErrorSource
 import org.bezsahara.kittybot.telegram.classes.passport.PassportElementErrorFiles
 import org.bezsahara.kittybot.telegram.classes.passport.PassportElementErrorReverseSide
 import org.bezsahara.kittybot.telegram.classes.passport.PassportElementErrorFile
@@ -21,7 +22,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = PassportElementErrorSerializer::class)
 sealed interface PassportElementError {
-    val source: String
+    val source: PassportElementErrorSource
 }
 
 

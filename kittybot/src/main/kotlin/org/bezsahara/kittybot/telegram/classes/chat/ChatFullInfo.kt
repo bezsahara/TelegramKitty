@@ -2,12 +2,12 @@ package org.bezsahara.kittybot.telegram.classes.chat
 
 import org.bezsahara.kittybot.telegram.classes.business.BusinessOpeningHours
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.ChatType
 import org.bezsahara.kittybot.telegram.classes.message.Message
 import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGiftColors
 import org.bezsahara.kittybot.telegram.classes.business.BusinessIntro
 import org.bezsahara.kittybot.telegram.classes.chat.ChatPhoto
 import org.bezsahara.kittybot.telegram.classes.user.UserRating
-import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfoType
 import org.bezsahara.kittybot.telegram.classes.media.Audio
 import org.bezsahara.kittybot.telegram.classes.chat.ChatPermissions
 import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
@@ -80,7 +80,7 @@ import org.bezsahara.kittybot.telegram.classes.chat.Chat
 @Serializable
 data class ChatFullInfo(
     val id: Long,
-    val type: ChatFullInfoType,
+    val type: ChatType,
     @SerialName("accent_color_id") val accentColorId: Long,
     @SerialName("max_reaction_count") val maxReactionCount: Long,
     @SerialName("accepted_gift_types") val acceptedGiftTypes: AcceptedGiftTypes,

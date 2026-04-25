@@ -1,6 +1,7 @@
 package org.bezsahara.kittybot.telegram.classes.keyboard
 
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.PollType
 import kotlinx.serialization.Serializable
 
 
@@ -13,6 +14,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class KeyboardButtonPollType(
-    val type: String? = null
+    val type: PollType? = null
 )
 

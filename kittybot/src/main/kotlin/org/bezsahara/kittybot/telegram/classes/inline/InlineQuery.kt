@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.media.geo.Location
 import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.values.InlineQueryChatType
 
 
 /**
@@ -24,7 +25,7 @@ data class InlineQuery(
     val from: User,
     val query: String,
     val offset: String,
-    @SerialName("chat_type") val chatType: String? = null,
+    @SerialName("chat_type") val chatType: InlineQueryChatType? = null,
     val location: Location? = null
 )
 

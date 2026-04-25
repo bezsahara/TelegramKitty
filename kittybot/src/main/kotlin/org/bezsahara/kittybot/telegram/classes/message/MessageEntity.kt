@@ -1,7 +1,7 @@
 package org.bezsahara.kittybot.telegram.classes.message
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.message.EntityType
+import org.bezsahara.kittybot.telegram.values.MsgEntityType
 import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
 
@@ -23,7 +23,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class MessageEntity(
-    val type: EntityType,
+    val type: MsgEntityType,
     val offset: Long,
     val length: Long,
     val url: String? = null,

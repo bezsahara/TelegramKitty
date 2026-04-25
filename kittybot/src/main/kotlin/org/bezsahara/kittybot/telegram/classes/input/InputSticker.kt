@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.input
 
+import org.bezsahara.kittybot.telegram.values.StickerFormat
 import kotlinx.serialization.SerialName
 import kotlin.collections.List
 import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
@@ -24,7 +25,7 @@ import org.bezsahara.kittybot.telegram.classes.media.stickers.MaskPosition
 @Serializable
 data class InputSticker(
     val sticker: TelegramFile,
-    val format: String,
+    val format: StickerFormat,
     @SerialName("emoji_list") val emojiList: List<String>,
     @SerialName("mask_position") val maskPosition: MaskPosition? = null,
     val keywords: List<String>? = null

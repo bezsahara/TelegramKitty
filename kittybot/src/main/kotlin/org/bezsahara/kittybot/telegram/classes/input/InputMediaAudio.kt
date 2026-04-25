@@ -4,8 +4,9 @@ import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 import org.bezsahara.kittybot.telegram.client.file.CustomMPB
 import org.bezsahara.kittybot.telegram.classes.input.MediaGroupAccepted
+import org.bezsahara.kittybot.telegram.values.ParseMode
 import org.bezsahara.kittybot.telegram.classes.input.InputMedia
-import org.bezsahara.kittybot.telegram.utils.ParseMode
+import org.bezsahara.kittybot.telegram.values.InputMediaType
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import kotlin.collections.List
 import kotlin.Unit
@@ -51,6 +52,6 @@ data class InputMediaAudio(
         media.asVertx().execute(builder, null)
         thumbnail?.asVertx()?.execute(builder, null)
     }
-    override val type: String = "audio"
+    override val type: InputMediaType = InputMediaType.AUDIO
 }
 

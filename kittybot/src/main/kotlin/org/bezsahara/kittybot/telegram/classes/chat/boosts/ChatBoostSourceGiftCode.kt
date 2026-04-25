@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.chat.boosts
 
+import org.bezsahara.kittybot.telegram.values.ChatBoostSourceKind
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostSource
 import org.bezsahara.kittybot.telegram.classes.user.User
@@ -18,6 +19,6 @@ import kotlinx.serialization.Serializable
 data class ChatBoostSourceGiftCode(
     val user: User
 ) : ChatBoostSource {
-    override val source: String = "gift_code"
+    override val source: ChatBoostSourceKind = ChatBoostSourceKind.GIFT_CODE
 }
 

@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.media
 
+import org.bezsahara.kittybot.telegram.values.PaidMediaType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.media.PaidMedia
@@ -21,6 +22,6 @@ data class PaidMediaPreview(
     val height: Long? = null,
     val duration: Long? = null
 ) : PaidMedia {
-    override val type: String = "preview"
+    override val type: PaidMediaType = PaidMediaType.PREVIEW
 }
 

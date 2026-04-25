@@ -20,6 +20,7 @@ import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.client.CustomClient
 import org.bezsahara.kittybot.telegram.client.CustomRequest
 import org.bezsahara.kittybot.telegram.client.CustomResponse
+import org.bezsahara.kittybot.telegram.values.ChatType
 import java.util.Collections
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -403,7 +404,7 @@ class MultiUpdaterTest {
             message = Message(
                 messageId = messageId,
                 date = 0L,
-                chat = Chat(id = chatId, type = "private"),
+                chat = Chat(id = chatId, type = ChatType.PRIVATE),
                 from = User(id = chatId + 1, isBot = false, firstName = "Test"),
                 text = "hello",
             ),

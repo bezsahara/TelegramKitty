@@ -1,7 +1,9 @@
 package org.bezsahara.kittybot.telegram.client
 
 import org.bezsahara.kittybot.telegram.classes.keyboard.PreparedKeyboardButton
+import org.bezsahara.kittybot.telegram.values.StickerType
 import org.bezsahara.kittybot.telegram.classes.input.InputMedia
+import org.bezsahara.kittybot.telegram.values.ChatAction
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
 import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
@@ -12,6 +14,7 @@ import org.bezsahara.kittybot.telegram.classes.message.Message
 import org.bezsahara.kittybot.bot.json.JsonByteBuffer
 import org.bezsahara.kittybot.telegram.classes.input.InputChecklist
 import org.bezsahara.kittybot.telegram.classes.bot.BotShortDescription
+import org.bezsahara.kittybot.telegram.values.ParseMode
 import org.bezsahara.kittybot.telegram.classes.chat.ChatPermissions
 import org.bezsahara.kittybot.telegram.classes.user.UserProfileAudios
 import org.bezsahara.kittybot.telegram.classes.games.GameHighScore
@@ -26,6 +29,7 @@ import org.bezsahara.kittybot.telegram.classes.chat.ForumTopic
 import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 import org.bezsahara.kittybot.telegram.classes.media.story.Story
 import kotlin.collections.List
+import org.bezsahara.kittybot.telegram.values.PollType
 import org.bezsahara.kittybot.telegram.classes.inline.SentWebAppMessage
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
 import org.bezsahara.kittybot.telegram.classes.keyboard.ReplyMarkup
@@ -34,17 +38,17 @@ import kotlinx.serialization.builtins.ListSerializer
 import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 import kotlinx.serialization.json.JsonPrimitive
 import org.bezsahara.kittybot.telegram.classes.bot.BotDescription
-import org.bezsahara.kittybot.telegram.utils.ChatAction
 import org.bezsahara.kittybot.telegram.classes.media.stickers.StickerSet
+import org.bezsahara.kittybot.telegram.values.StickerFormat
 import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
 import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
 import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfo
-import org.bezsahara.kittybot.telegram.utils.ParseMode
 import org.bezsahara.kittybot.telegram.utils.TBytesInfo
 import org.bezsahara.kittybot.telegram.classes.input.InputSticker
 import org.bezsahara.kittybot.telegram.utils.TResult
 import org.bezsahara.kittybot.telegram.classes.core.MessageId
+import org.bezsahara.kittybot.telegram.values.DiceEmoji
 import org.bezsahara.kittybot.telegram.classes.inline.PreparedInlineMessage
 import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
 import io.vertx.core.http.HttpClientResponse
@@ -470,7 +474,7 @@ class TApiClient internal constructor(
             content.executeAll(mpb)
             mpb.writeJsonPart("content", InputStoryContent.serializer(), content, json)
             if (caption != null) mpb.writeNormalPart("caption", caption)
-            if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+            if (parseMode != null) mpb.writeNormalPart("parse_mode", parseMode.value)
             if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
             if (areas != null) mpb.writeJsonPart("areas", TSerials.aListStoryArea, areas, json)
             mpb.finish()
@@ -542,7 +546,7 @@ class TApiClient internal constructor(
                         if (directMessagesTopicId != null) putNumberUnsafe(TBytesInfo.direct_messages_topic_id, directMessagesTopicId)
                         if (videoStartTimestamp != null) putNumberUnsafe(TBytesInfo.video_start_timestamp, videoStartTimestamp)
                         if (caption != null) putStringUnsafe(TBytesInfo.caption, caption)
-                        if (parseMode != null) putJsonObject(TBytesInfo.parse_mode, ParseMode.serializer(), json, parseMode)
+                        if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
                         if (captionEntities != null) putListOfJsonObjects(TBytesInfo.caption_entities, MessageEntity.serializer(), json, captionEntities)
                         if (showCaptionAboveMedia != null) putBoolUnsafe(TBytesInfo.show_caption_above_media, showCaptionAboveMedia)
                         if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
@@ -599,7 +603,7 @@ class TApiClient internal constructor(
         businessConnectionId: String?,
         messageThreadId: Long?,
         directMessagesTopicId: Long?,
-        emoji: String?,
+        emoji: DiceEmoji?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
@@ -618,7 +622,7 @@ class TApiClient internal constructor(
                         if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                         if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
                         if (directMessagesTopicId != null) putNumberUnsafe(TBytesInfo.direct_messages_topic_id, directMessagesTopicId)
-                        if (emoji != null) putStringUnsafe(TBytesInfo.emoji, emoji)
+                        if (emoji != null) putStringUnsafe(TBytesInfo.emoji, emoji.value)
                         if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
                         if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                         if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
@@ -1021,7 +1025,7 @@ class TApiClient internal constructor(
             if (messageThreadId != null) mpb.writeNormalPart("message_thread_id", messageThreadId.toString())
             if (directMessagesTopicId != null) mpb.writeNormalPart("direct_messages_topic_id", directMessagesTopicId.toString())
             if (caption != null) mpb.writeNormalPart("caption", caption)
-            if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+            if (parseMode != null) mpb.writeNormalPart("parse_mode", parseMode.value)
             if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
             if (showCaptionAboveMedia != null) mpb.writeNormalPart("show_caption_above_media", showCaptionAboveMedia.toString())
             if (hasSpoiler != null) mpb.writeNormalPart("has_spoiler", hasSpoiler.toString())
@@ -1243,10 +1247,10 @@ class TApiClient internal constructor(
         options: List<InputPollOption>,
         businessConnectionId: String?,
         messageThreadId: Long?,
-        questionParseMode: String?,
+        questionParseMode: ParseMode?,
         questionEntities: List<MessageEntity>?,
         isAnonymous: Boolean?,
-        type: String?,
+        type: PollType?,
         allowsMultipleAnswers: Boolean?,
         allowsRevoting: Boolean?,
         shuffleOptions: Boolean?,
@@ -1254,13 +1258,13 @@ class TApiClient internal constructor(
         hideResultsUntilCloses: Boolean?,
         correctOptionIds: List<Long>?,
         explanation: String?,
-        explanationParseMode: String?,
+        explanationParseMode: ParseMode?,
         explanationEntities: List<MessageEntity>?,
         openPeriod: Long?,
         closeDate: Long?,
         isClosed: Boolean?,
         description: String?,
-        descriptionParseMode: String?,
+        descriptionParseMode: ParseMode?,
         descriptionEntities: List<MessageEntity>?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
@@ -1280,10 +1284,10 @@ class TApiClient internal constructor(
                         putListOfJsonObjects(TBytesInfo.options, InputPollOption.serializer(), json, options)
                         if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                         if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
-                        if (questionParseMode != null) putStringUnsafe(TBytesInfo.question_parse_mode, questionParseMode)
+                        if (questionParseMode != null) putStringUnsafe(TBytesInfo.question_parse_mode, questionParseMode.value)
                         if (questionEntities != null) putListOfJsonObjects(TBytesInfo.question_entities, MessageEntity.serializer(), json, questionEntities)
                         if (isAnonymous != null) putBoolUnsafe(TBytesInfo.is_anonymous, isAnonymous)
-                        if (type != null) putStringUnsafe(TBytesInfo.type, type)
+                        if (type != null) putStringUnsafe(TBytesInfo.type, type.value)
                         if (allowsMultipleAnswers != null) putBoolUnsafe(TBytesInfo.allows_multiple_answers, allowsMultipleAnswers)
                         if (allowsRevoting != null) putBoolUnsafe(TBytesInfo.allows_revoting, allowsRevoting)
                         if (shuffleOptions != null) putBoolUnsafe(TBytesInfo.shuffle_options, shuffleOptions)
@@ -1291,13 +1295,13 @@ class TApiClient internal constructor(
                         if (hideResultsUntilCloses != null) putBoolUnsafe(TBytesInfo.hide_results_until_closes, hideResultsUntilCloses)
                         if (correctOptionIds != null) putListOfLongUnsafe(TBytesInfo.correct_option_ids, correctOptionIds)
                         if (explanation != null) putStringUnsafe(TBytesInfo.explanation, explanation)
-                        if (explanationParseMode != null) putStringUnsafe(TBytesInfo.explanation_parse_mode, explanationParseMode)
+                        if (explanationParseMode != null) putStringUnsafe(TBytesInfo.explanation_parse_mode, explanationParseMode.value)
                         if (explanationEntities != null) putListOfJsonObjects(TBytesInfo.explanation_entities, MessageEntity.serializer(), json, explanationEntities)
                         if (openPeriod != null) putNumberUnsafe(TBytesInfo.open_period, openPeriod)
                         if (closeDate != null) putNumberUnsafe(TBytesInfo.close_date, closeDate)
                         if (isClosed != null) putBoolUnsafe(TBytesInfo.is_closed, isClosed)
                         if (description != null) putStringUnsafe(TBytesInfo.description, description)
-                        if (descriptionParseMode != null) putStringUnsafe(TBytesInfo.description_parse_mode, descriptionParseMode)
+                        if (descriptionParseMode != null) putStringUnsafe(TBytesInfo.description_parse_mode, descriptionParseMode.value)
                         if (descriptionEntities != null) putListOfJsonObjects(TBytesInfo.description_entities, MessageEntity.serializer(), json, descriptionEntities)
                         if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
                         if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
@@ -1672,7 +1676,7 @@ class TApiClient internal constructor(
             if (directMessagesTopicId != null) mpb.writeNormalPart("direct_messages_topic_id", directMessagesTopicId.toString())
             thumbnail?.asVertx()?.execute(mpb, "thumbnail")
             if (caption != null) mpb.writeNormalPart("caption", caption)
-            if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+            if (parseMode != null) mpb.writeNormalPart("parse_mode", parseMode.value)
             if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
             if (disableContentTypeDetection != null) mpb.writeNormalPart("disable_content_type_detection", disableContentTypeDetection.toString())
             if (disableNotification != null) mpb.writeNormalPart("disable_notification", disableNotification.toString())
@@ -1807,7 +1811,7 @@ class TApiClient internal constructor(
     override suspend fun uploadStickerFile(
         userId: Long,
         sticker: TelegramFile,
-        stickerFormat: String
+        stickerFormat: StickerFormat
     ): TResult<File> {
         val (statusCode0, strResult) = withContext(dispatcher) {
             val resultPre1 = client.request(ro00.uploadStickerFile).coAwait()
@@ -1815,7 +1819,7 @@ class TApiClient internal constructor(
             resultPre1.isChunked = true
             mpb.writeNormalPart("user_id", userId.toString())
             sticker.asVertx().execute(mpb, "sticker")
-            mpb.writeNormalPart("sticker_format", stickerFormat)
+            mpb.writeNormalPart("sticker_format", stickerFormat.value)
             mpb.finish()
             val result1 = resultPre1.response().coAwait()
             CodeAndResult(result1.statusCode(), result1.body().coAwait().toString(Charsets.UTF_8))
@@ -1943,7 +1947,7 @@ class TApiClient internal constructor(
     override suspend fun setStickerSetThumbnail(
         name: String,
         userId: Long,
-        format: String,
+        format: StickerFormat,
         thumbnail: TelegramFile?
     ): TResult<Boolean> {
         val (statusCode0, strResult) = withContext(dispatcher) {
@@ -1952,7 +1956,7 @@ class TApiClient internal constructor(
             resultPre1.isChunked = true
             mpb.writeNormalPart("name", name)
             mpb.writeNormalPart("user_id", userId.toString())
-            mpb.writeNormalPart("format", format)
+            mpb.writeNormalPart("format", format.value)
             thumbnail?.asVertx()?.execute(mpb, "thumbnail")
             mpb.finish()
             val result1 = resultPre1.response().coAwait()
@@ -2321,7 +2325,7 @@ class TApiClient internal constructor(
                         if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                         if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
                         if (directMessagesTopicId != null) putNumberUnsafe(TBytesInfo.direct_messages_topic_id, directMessagesTopicId)
-                        if (parseMode != null) putJsonObject(TBytesInfo.parse_mode, ParseMode.serializer(), json, parseMode)
+                        if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
                         if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), json, entities)
                         if (linkPreviewOptions != null) putJsonObject(TBytesInfo.link_preview_options, LinkPreviewOptions.serializer(), json, linkPreviewOptions)
                         if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
@@ -2360,7 +2364,7 @@ class TApiClient internal constructor(
                     val bbSize0 = sendChatActionBSP.decideCapacity()
                     JsonByteBuffer(bbSize0).run {
                         putStringUnsafe(TBytesInfo.chat_id, chatId.value)
-                        putJsonObject(TBytesInfo.action, ChatAction.serializer(), json, action)
+                        putStringUnsafe(TBytesInfo.action, action.value)
                         if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                         if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
                         sendChatActionBSP.record(size9, bbSize0)
@@ -2588,7 +2592,7 @@ class TApiClient internal constructor(
         monthCount: Long,
         starCount: Long,
         text: String?,
-        textParseMode: String?,
+        textParseMode: ParseMode?,
         textEntities: List<MessageEntity>?,
         requestOptions: RequestOptions?
     ): TResult<Boolean> {
@@ -2601,7 +2605,7 @@ class TApiClient internal constructor(
                         putNumberUnsafe(TBytesInfo.month_count, monthCount)
                         putNumberUnsafe(TBytesInfo.star_count, starCount)
                         if (text != null) putStringUnsafe(TBytesInfo.text, text)
-                        if (textParseMode != null) putStringUnsafe(TBytesInfo.text_parse_mode, textParseMode)
+                        if (textParseMode != null) putStringUnsafe(TBytesInfo.text_parse_mode, textParseMode.value)
                         if (textEntities != null) putListOfJsonObjects(TBytesInfo.text_entities, MessageEntity.serializer(), json, textEntities)
                         if (requestOptions == null) giftPremiumSubscriptionBSP.record(size9, bbSize0)
                         vReq.send(toBuffer())
@@ -3183,7 +3187,7 @@ class TApiClient internal constructor(
         chatId: ChatId?,
         payForUpgrade: Boolean?,
         text: String?,
-        textParseMode: String?,
+        textParseMode: ParseMode?,
         textEntities: List<MessageEntity>?,
         requestOptions: RequestOptions?
     ): TResult<Boolean> {
@@ -3197,7 +3201,7 @@ class TApiClient internal constructor(
                         if (chatId != null) putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                         if (payForUpgrade != null) putBoolUnsafe(TBytesInfo.pay_for_upgrade, payForUpgrade)
                         if (text != null) putStringUnsafe(TBytesInfo.text, text)
-                        if (textParseMode != null) putStringUnsafe(TBytesInfo.text_parse_mode, textParseMode)
+                        if (textParseMode != null) putStringUnsafe(TBytesInfo.text_parse_mode, textParseMode.value)
                         if (textEntities != null) putListOfJsonObjects(TBytesInfo.text_entities, MessageEntity.serializer(), json, textEntities)
                         if (requestOptions == null) sendGiftBSP.record(size9, bbSize0)
                         vReq.send(toBuffer())
@@ -3235,7 +3239,7 @@ class TApiClient internal constructor(
             mpb.writeJsonPart("content", InputStoryContent.serializer(), content, json)
             mpb.writeNormalPart("active_period", activePeriod.toString())
             if (caption != null) mpb.writeNormalPart("caption", caption)
-            if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+            if (parseMode != null) mpb.writeNormalPart("parse_mode", parseMode.value)
             if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
             if (areas != null) mpb.writeJsonPart("areas", TSerials.aListStoryArea, areas, json)
             if (postToChatPage != null) mpb.writeNormalPart("post_to_chat_page", postToChatPage.toString())
@@ -3565,7 +3569,7 @@ class TApiClient internal constructor(
             if (messageThreadId != null) mpb.writeNormalPart("message_thread_id", messageThreadId.toString())
             if (directMessagesTopicId != null) mpb.writeNormalPart("direct_messages_topic_id", directMessagesTopicId.toString())
             if (caption != null) mpb.writeNormalPart("caption", caption)
-            if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+            if (parseMode != null) mpb.writeNormalPart("parse_mode", parseMode.value)
             if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
             if (duration != null) mpb.writeNormalPart("duration", duration.toString())
             if (disableNotification != null) mpb.writeNormalPart("disable_notification", disableNotification.toString())
@@ -3683,7 +3687,7 @@ class TApiClient internal constructor(
                         if (chatId != null) putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                         if (messageId != null) putNumberUnsafe(TBytesInfo.message_id, messageId)
                         if (inlineMessageId != null) putStringUnsafe(TBytesInfo.inline_message_id, inlineMessageId)
-                        if (parseMode != null) putJsonObject(TBytesInfo.parse_mode, ParseMode.serializer(), json, parseMode)
+                        if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
                         if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), json, entities)
                         if (linkPreviewOptions != null) putJsonObject(TBytesInfo.link_preview_options, LinkPreviewOptions.serializer(), json, linkPreviewOptions)
                         if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)
@@ -4071,7 +4075,7 @@ class TApiClient internal constructor(
                         putNumberUnsafe(TBytesInfo.draft_id, draftId)
                         putStringUnsafe(TBytesInfo.text, text)
                         if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
-                        if (parseMode != null) putJsonObject(TBytesInfo.parse_mode, ParseMode.serializer(), json, parseMode)
+                        if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
                         if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), json, entities)
                         if (requestOptions == null) sendMessageDraftBSP.record(size9, bbSize0)
                         vReq.send(toBuffer())
@@ -4203,7 +4207,7 @@ class TApiClient internal constructor(
             cover?.asVertx()?.execute(mpb, "cover")
             if (startTimestamp != null) mpb.writeNormalPart("start_timestamp", startTimestamp.toString())
             if (caption != null) mpb.writeNormalPart("caption", caption)
-            if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+            if (parseMode != null) mpb.writeNormalPart("parse_mode", parseMode.value)
             if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
             if (showCaptionAboveMedia != null) mpb.writeNormalPart("show_caption_above_media", showCaptionAboveMedia.toString())
             if (hasSpoiler != null) mpb.writeNormalPart("has_spoiler", hasSpoiler.toString())
@@ -4441,7 +4445,7 @@ class TApiClient internal constructor(
             if (directMessagesTopicId != null) mpb.writeNormalPart("direct_messages_topic_id", directMessagesTopicId.toString())
             if (payload != null) mpb.writeNormalPart("payload", payload)
             if (caption != null) mpb.writeNormalPart("caption", caption)
-            if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+            if (parseMode != null) mpb.writeNormalPart("parse_mode", parseMode.value)
             if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
             if (showCaptionAboveMedia != null) mpb.writeNormalPart("show_caption_above_media", showCaptionAboveMedia.toString())
             if (disableNotification != null) mpb.writeNormalPart("disable_notification", disableNotification.toString())
@@ -4783,7 +4787,7 @@ class TApiClient internal constructor(
             if (height != null) mpb.writeNormalPart("height", height.toString())
             thumbnail?.asVertx()?.execute(mpb, "thumbnail")
             if (caption != null) mpb.writeNormalPart("caption", caption)
-            if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+            if (parseMode != null) mpb.writeNormalPart("parse_mode", parseMode.value)
             if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
             if (showCaptionAboveMedia != null) mpb.writeNormalPart("show_caption_above_media", showCaptionAboveMedia.toString())
             if (hasSpoiler != null) mpb.writeNormalPart("has_spoiler", hasSpoiler.toString())
@@ -5018,7 +5022,7 @@ class TApiClient internal constructor(
             if (messageThreadId != null) mpb.writeNormalPart("message_thread_id", messageThreadId.toString())
             if (directMessagesTopicId != null) mpb.writeNormalPart("direct_messages_topic_id", directMessagesTopicId.toString())
             if (caption != null) mpb.writeNormalPart("caption", caption)
-            if (parseMode != null) mpb.writeJsonPart("parse_mode", ParseMode.serializer(), parseMode, json)
+            if (parseMode != null) mpb.writeNormalPart("parse_mode", parseMode.value)
             if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
             if (duration != null) mpb.writeNormalPart("duration", duration.toString())
             if (performer != null) mpb.writeNormalPart("performer", performer)
@@ -5464,7 +5468,7 @@ class TApiClient internal constructor(
         name: String,
         title: String,
         stickers: List<InputSticker>,
-        stickerType: String?,
+        stickerType: StickerType?,
         needsRepainting: Boolean?
     ): TResult<Boolean> {
         val (statusCode0, strResult) = withContext(dispatcher) {
@@ -5476,7 +5480,7 @@ class TApiClient internal constructor(
             mpb.writeNormalPart("title", title)
             for (mIdx in stickers.indices) { stickers[mIdx].executeAll(mpb) }
             mpb.writeJsonPart("stickers", TSerials.aListInputSticker, stickers, json)
-            if (stickerType != null) mpb.writeNormalPart("sticker_type", stickerType)
+            if (stickerType != null) mpb.writeNormalPart("sticker_type", stickerType.value)
             if (needsRepainting != null) mpb.writeNormalPart("needs_repainting", needsRepainting.toString())
             mpb.finish()
             val result1 = resultPre1.response().coAwait()
@@ -5514,7 +5518,7 @@ class TApiClient internal constructor(
                         if (messageId != null) putNumberUnsafe(TBytesInfo.message_id, messageId)
                         if (inlineMessageId != null) putStringUnsafe(TBytesInfo.inline_message_id, inlineMessageId)
                         if (caption != null) putStringUnsafe(TBytesInfo.caption, caption)
-                        if (parseMode != null) putJsonObject(TBytesInfo.parse_mode, ParseMode.serializer(), json, parseMode)
+                        if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
                         if (captionEntities != null) putListOfJsonObjects(TBytesInfo.caption_entities, MessageEntity.serializer(), json, captionEntities)
                         if (showCaptionAboveMedia != null) putBoolUnsafe(TBytesInfo.show_caption_above_media, showCaptionAboveMedia)
                         if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)

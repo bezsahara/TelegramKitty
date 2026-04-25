@@ -17,6 +17,7 @@ import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultVideo
 import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultVenue
 import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultLocation
 import kotlinx.serialization.json.JsonElement
+import org.bezsahara.kittybot.telegram.values.InlineQueryResultType
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResult
@@ -25,7 +26,7 @@ import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultAudio
 
 @Serializable(with = InlineQueryResultSerializer::class)
 sealed interface InlineQueryResult {
-    val type: String
+    val type: InlineQueryResultType
 }
 
 

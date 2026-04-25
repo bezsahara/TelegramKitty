@@ -6,6 +6,7 @@ import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButtonPollType
 import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
 import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButtonRequestChat
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.values.KeyboardButtonStyle
 import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButtonRequestManagedBot
 
 
@@ -29,7 +30,7 @@ import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButtonRequestMan
 data class KeyboardButton(
     val text: String,
     @SerialName("icon_custom_emoji_id") val iconCustomEmojiId: String? = null,
-    val style: String? = null,
+    val style: KeyboardButtonStyle? = null,
     @SerialName("request_users") val requestUsers: KeyboardButtonRequestUsers? = null,
     @SerialName("request_chat") val requestChat: KeyboardButtonRequestChat? = null,
     @SerialName("request_managed_bot") val requestManagedBot: KeyboardButtonRequestManagedBot? = null,

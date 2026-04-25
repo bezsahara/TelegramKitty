@@ -11,15 +11,25 @@ import org.bezsahara.kittybot.bot.downloadFileAsByteArrayById
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
 import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import org.bezsahara.kittybot.telegram.utils.unwrap
+import org.bezsahara.kittybot.telegram.values.ParseMode
+import org.intellij.lang.annotations.Language
 
 fun FelineDispatcher.filesExample() {
     flowHandler(FlowIdentityFinder.OfMessageUpdateChatId) {
         section {
             command("/files", "Files example", addToBotCommands = true) {
                 handlerContext.nextSection()
-                bot.sendMessage(chatId, "Bot will now echo images you send it")
+                @Language("html")
+                val msg = "Bot will now echo <b>images</b> you send it"
+
+                bot.sendMessage(
+                    chatId,
+                    msg,
+                    parseMode = ParseMode.HTML
+                )
             }
         }
+
         section {
             command("/cancel") {
                 handlerContext.resetFlow()

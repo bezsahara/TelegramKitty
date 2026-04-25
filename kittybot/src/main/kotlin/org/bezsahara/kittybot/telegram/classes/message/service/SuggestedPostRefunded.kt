@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.message.service
 
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.message.Message
+import org.bezsahara.kittybot.telegram.values.SuggestedPostRefundReason
 import kotlinx.serialization.Serializable
 
 
@@ -15,7 +16,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class SuggestedPostRefunded(
-    val reason: String,
+    val reason: SuggestedPostRefundReason,
     @SerialName("suggested_post_message") val suggestedPostMessage: Message? = null
 )
 

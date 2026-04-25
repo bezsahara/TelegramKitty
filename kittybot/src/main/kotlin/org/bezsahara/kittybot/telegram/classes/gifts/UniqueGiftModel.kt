@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.gifts
 
+import org.bezsahara.kittybot.telegram.values.UniqueGiftModelRarity
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 import kotlinx.serialization.Serializable
@@ -20,6 +21,6 @@ data class UniqueGiftModel(
     val name: String,
     val sticker: Sticker,
     @SerialName("rarity_per_mille") val rarityPerMille: Long,
-    val rarity: String? = null
+    val rarity: UniqueGiftModelRarity? = null
 )
 

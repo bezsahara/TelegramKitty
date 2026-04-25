@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.chat.background
 
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundType
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.BackgroundTypeKind
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFill
 
@@ -20,6 +21,6 @@ data class BackgroundTypeFill(
     val fill: BackgroundFill,
     @SerialName("dark_theme_dimming") val darkThemeDimming: Long
 ) : BackgroundType {
-    override val type: String = "fill"
+    override val type: BackgroundTypeKind = BackgroundTypeKind.FILL
 }
 

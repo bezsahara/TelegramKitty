@@ -5,6 +5,7 @@ import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 import org.bezsahara.kittybot.telegram.client.file.CustomMPB
 import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
 import kotlin.Unit
+import org.bezsahara.kittybot.telegram.values.InputProfilePhotoType
 import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import kotlinx.serialization.Serializable
 
@@ -33,6 +34,6 @@ data class InputProfilePhotoAnimated(
     ) {
         animation.asVertx().execute(builder, null)
     }
-    override val type: String = "animated"
+    override val type: InputProfilePhotoType = InputProfilePhotoType.ANIMATED
 }
 

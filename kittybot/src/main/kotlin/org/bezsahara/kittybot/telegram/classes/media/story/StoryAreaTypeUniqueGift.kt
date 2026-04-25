@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.media.story
 
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryAreaType
+import org.bezsahara.kittybot.telegram.values.StoryAreaTypeKind
 import kotlinx.serialization.Serializable
 
 
@@ -17,6 +18,6 @@ import kotlinx.serialization.Serializable
 data class StoryAreaTypeUniqueGift(
     val name: String
 ) : StoryAreaType {
-    override val type: String = "unique_gift"
+    override val type: StoryAreaTypeKind = StoryAreaTypeKind.UNIQUE_GIFT
 }
 

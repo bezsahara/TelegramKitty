@@ -1,8 +1,10 @@
 package org.bezsahara.kittybot.telegram.classes.passport
 
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.PassportElementType
 import org.bezsahara.kittybot.telegram.classes.passport.PassportElementError
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.values.PassportElementErrorSource
 
 
 /**
@@ -18,11 +20,11 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class PassportElementErrorDataField(
-    val type: String,
+    val type: PassportElementType,
     @SerialName("field_name") val fieldName: String,
     @SerialName("data_hash") val dataHash: String,
     val message: String
 ) : PassportElementError {
-    override val source: String = "data"
+    override val source: PassportElementErrorSource = PassportElementErrorSource.DATA
 }
 

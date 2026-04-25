@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.gifts
 
+import org.bezsahara.kittybot.telegram.values.OwnedGiftType
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGift
 import org.bezsahara.kittybot.telegram.classes.user.User
@@ -33,6 +34,6 @@ data class OwnedGiftUnique(
     @SerialName("transfer_star_count") val transferStarCount: Long? = null,
     @SerialName("next_transfer_date") val nextTransferDate: Long? = null
 ) : OwnedGift {
-    override val type: String = "unique"
+    override val type: OwnedGiftType = OwnedGiftType.UNIQUE
 }
 

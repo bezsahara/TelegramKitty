@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.message.polls
 
 import kotlinx.serialization.SerialName
 import kotlin.collections.List
+import org.bezsahara.kittybot.telegram.values.ParseMode
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 
@@ -18,7 +19,7 @@ import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 @Serializable
 data class InputPollOption(
     val text: String,
-    @SerialName("text_parse_mode") val textParseMode: String? = null,
+    @SerialName("text_parse_mode") val textParseMode: ParseMode? = null,
     @SerialName("text_entities") val textEntities: List<MessageEntity>? = null
 )
 

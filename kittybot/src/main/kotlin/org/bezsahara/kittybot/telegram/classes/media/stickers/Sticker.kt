@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.media.stickers
 
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.core.File
+import org.bezsahara.kittybot.telegram.values.StickerType
 import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.media.stickers.MaskPosition
@@ -32,7 +33,7 @@ import org.bezsahara.kittybot.telegram.classes.media.stickers.MaskPosition
 data class Sticker(
     @SerialName("file_id") val fileId: String,
     @SerialName("file_unique_id") val fileUniqueId: String,
-    val type: String,
+    val type: StickerType,
     val width: Long,
     val height: Long,
     @SerialName("is_animated") val isAnimated: Boolean,

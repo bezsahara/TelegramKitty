@@ -2,7 +2,9 @@ package org.bezsahara.kittybot.telegram.classes.gifts
 
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGift
+import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.values.UniqueGiftOrigin
 
 
 /**
@@ -21,8 +23,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UniqueGiftInfo(
     val gift: UniqueGift,
-    val origin: String,
-    @SerialName("last_resale_currency") val lastResaleCurrency: String? = null,
+    val origin: UniqueGiftOrigin,
+    @SerialName("last_resale_currency") val lastResaleCurrency: CurrencyKind? = null,
     @SerialName("last_resale_amount") val lastResaleAmount: Long? = null,
     @SerialName("owned_gift_id") val ownedGiftId: String? = null,
     @SerialName("transfer_star_count") val transferStarCount: Long? = null,

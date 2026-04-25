@@ -1,6 +1,7 @@
 package org.bezsahara.kittybot.telegram.classes.chat.member
 
 import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
+import org.bezsahara.kittybot.telegram.values.ChatMemberStatus
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
@@ -20,6 +21,6 @@ data class ChatMemberBanned(
     val user: User,
     @SerialName("until_date") val untilDate: Long
 ) : ChatMember {
-    override val status: String = "kicked"
+    override val status: ChatMemberStatus = ChatMemberStatus.KICKED
 }
 

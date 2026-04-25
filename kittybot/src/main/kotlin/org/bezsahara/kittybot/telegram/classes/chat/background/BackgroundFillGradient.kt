@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.chat.background
 
+import org.bezsahara.kittybot.telegram.values.BackgroundFillType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFill
@@ -21,6 +22,6 @@ data class BackgroundFillGradient(
     @SerialName("bottom_color") val bottomColor: Long,
     @SerialName("rotation_angle") val rotationAngle: Long
 ) : BackgroundFill {
-    override val type: String = "gradient"
+    override val type: BackgroundFillType = BackgroundFillType.GRADIENT
 }
 

@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.chat.background
 
+import org.bezsahara.kittybot.telegram.values.BackgroundFillType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFill
@@ -17,6 +18,6 @@ import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFill
 data class BackgroundFillSolid(
     val color: Long
 ) : BackgroundFill {
-    override val type: String = "solid"
+    override val type: BackgroundFillType = BackgroundFillType.SOLID
 }
 

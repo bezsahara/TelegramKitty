@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.payments
 
 import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalState
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.RevenueWithdrawalStateType
 import kotlinx.serialization.Serializable
 
 
@@ -19,6 +20,6 @@ data class RevenueWithdrawalStateSucceeded(
     val date: Long,
     val url: String
 ) : RevenueWithdrawalState {
-    override val type: String = "succeeded"
+    override val type: RevenueWithdrawalStateType = RevenueWithdrawalStateType.SUCCEEDED
 }
 

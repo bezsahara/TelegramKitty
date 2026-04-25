@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.chat.background
 
 import kotlinx.serialization.json.jsonObject
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFillGradient
+import org.bezsahara.kittybot.telegram.values.BackgroundFillType
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFillFreeformGradient
@@ -15,7 +16,7 @@ import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFillSol
 
 @Serializable(with = BackgroundFillSerializer::class)
 sealed interface BackgroundFill {
-    val type: String
+    val type: BackgroundFillType
 }
 
 

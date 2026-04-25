@@ -5,6 +5,7 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 import org.bezsahara.kittybot.telegram.client.file.CustomMPB
+import org.bezsahara.kittybot.telegram.values.InputProfilePhotoType
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.json.JsonElement
 import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhotoStatic
@@ -17,7 +18,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = InputProfilePhotoSerializer::class)
 sealed interface InputProfilePhoto {
-    val type: String
+    val type: InputProfilePhotoType
     suspend fun executeAll(
         builder: MultiPartBuilder
     ) 

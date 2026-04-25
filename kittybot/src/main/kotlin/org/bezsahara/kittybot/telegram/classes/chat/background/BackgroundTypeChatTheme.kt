@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.chat.background
 
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundType
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.BackgroundTypeKind
 import kotlinx.serialization.Serializable
 
 
@@ -17,6 +18,6 @@ import kotlinx.serialization.Serializable
 data class BackgroundTypeChatTheme(
     @SerialName("theme_name") val themeName: String
 ) : BackgroundType {
-    override val type: String = "chat_theme"
+    override val type: BackgroundTypeKind = BackgroundTypeKind.CHAT_THEME
 }
 

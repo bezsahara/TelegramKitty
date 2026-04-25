@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.media.stickers
 
 import kotlinx.serialization.SerialName
 import kotlin.collections.List
+import org.bezsahara.kittybot.telegram.values.StickerType
 import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
 import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 import kotlinx.serialization.Serializable
@@ -22,7 +23,7 @@ import kotlinx.serialization.Serializable
 data class StickerSet(
     val name: String,
     val title: String,
-    @SerialName("sticker_type") val stickerType: String,
+    @SerialName("sticker_type") val stickerType: StickerType,
     val stickers: List<Sticker>,
     val thumbnail: PhotoSize? = null
 )

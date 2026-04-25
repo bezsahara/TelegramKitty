@@ -6,6 +6,7 @@ import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalStateFa
 import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalState
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.JsonPrimitive
+import org.bezsahara.kittybot.telegram.values.RevenueWithdrawalStateType
 import kotlinx.serialization.Serializable
 
 
@@ -18,7 +19,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable(with = RevenueWithdrawalStateFailedJsonSerializer::class)
 object RevenueWithdrawalStateFailed : RevenueWithdrawalState {
-    override val type: String = "failed"
+    override val type: RevenueWithdrawalStateType = RevenueWithdrawalStateType.FAILED
 }
 
 

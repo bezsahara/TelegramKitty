@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.media
 
+import org.bezsahara.kittybot.telegram.values.PaidMediaType
 import kotlinx.serialization.SerialName
 import kotlin.collections.List
 import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
@@ -19,6 +20,6 @@ import org.bezsahara.kittybot.telegram.classes.media.PaidMedia
 data class PaidMediaPhoto(
     val photo: List<PhotoSize>
 ) : PaidMedia {
-    override val type: String = "photo"
+    override val type: PaidMediaType = PaidMediaType.PHOTO
 }
 

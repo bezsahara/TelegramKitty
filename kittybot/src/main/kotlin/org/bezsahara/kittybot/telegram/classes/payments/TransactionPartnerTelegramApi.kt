@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.payments
 
 import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartner
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.TransactionPartnerType
 import kotlinx.serialization.Serializable
 
 
@@ -17,6 +18,6 @@ import kotlinx.serialization.Serializable
 data class TransactionPartnerTelegramApi(
     @SerialName("request_count") val requestCount: Long
 ) : TransactionPartner {
-    override val type: String = "telegram_api"
+    override val type: TransactionPartnerType = TransactionPartnerType.TELEGRAM_API
 }
 

@@ -10,6 +10,7 @@ import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartnerTelegr
 import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartnerUser
 import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartnerChat
 import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartner
+import org.bezsahara.kittybot.telegram.values.TransactionPartnerType
 import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartnerTelegramApi
 import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartnerOther
 import kotlinx.serialization.json.JsonElement
@@ -19,7 +20,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = TransactionPartnerSerializer::class)
 sealed interface TransactionPartner {
-    val type: String
+    val type: TransactionPartnerType
 }
 
 

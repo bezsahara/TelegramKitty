@@ -7,6 +7,7 @@ import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
 import org.bezsahara.kittybot.telegram.classes.keyboard.CopyTextButton
 import org.bezsahara.kittybot.telegram.classes.games.CallbackGame
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.values.KeyboardButtonStyle
 
 
 /**
@@ -32,7 +33,7 @@ import kotlinx.serialization.Serializable
 data class InlineKeyboardButton(
     val text: String,
     @SerialName("icon_custom_emoji_id") val iconCustomEmojiId: String? = null,
-    val style: String? = null,
+    val style: KeyboardButtonStyle? = null,
     val url: String? = null,
     @SerialName("callback_data") val callbackData: String? = null,
     @SerialName("web_app") val webApp: WebAppInfo? = null,

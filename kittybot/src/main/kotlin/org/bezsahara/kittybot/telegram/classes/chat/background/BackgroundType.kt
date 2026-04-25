@@ -5,6 +5,7 @@ import kotlinx.serialization.json.jsonObject
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundType
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.BackgroundTypeKind
 import kotlinx.serialization.DeserializationStrategy
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundTypeFill
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundTypeWallpaper
@@ -16,7 +17,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = BackgroundTypeSerializer::class)
 sealed interface BackgroundType {
-    val type: String
+    val type: BackgroundTypeKind
 }
 
 

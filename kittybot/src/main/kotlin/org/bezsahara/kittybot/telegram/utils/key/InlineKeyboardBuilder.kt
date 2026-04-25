@@ -3,6 +3,7 @@ package org.bezsahara.kittybot.telegram.utils.key
 import org.bezsahara.kittybot.telegram.classes.games.CallbackGame
 import org.bezsahara.kittybot.telegram.classes.keyboard.*
 import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
+import org.bezsahara.kittybot.telegram.values.KeyboardButtonStyle
 
 inline fun buildInlineKeyboardMarkup(size: Int = 16, block: InlineKeyboardBuilder.() -> Unit): InlineKeyboardMarkup {
     val b = InlineKeyboardBuilder(size)
@@ -67,29 +68,29 @@ class InlineKeyboardBuilder(size: Int) {
         resetVertical(buttons)
     }
 
-    inline fun url(text: String, url: String, iconCustomEmojiId: String? = null, style: String? = null) =
+    inline fun url(text: String, url: String, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, url = url))
 
-    inline fun callback(text: String, data: String, iconCustomEmojiId: String? = null, style: String? = null) =
+    inline fun callback(text: String, data: String, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, callbackData = data))
 
-    inline fun webApp(text: String, info: WebAppInfo, iconCustomEmojiId: String? = null, style: String? = null) =
+    inline fun webApp(text: String, info: WebAppInfo, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, webApp = info))
 
-    inline fun loginUrl(text: String, login: LoginUrl, iconCustomEmojiId: String? = null, style: String? = null) =
+    inline fun loginUrl(text: String, login: LoginUrl, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, loginUrl = login))
 
-    inline fun switchInline(text: String, query: String, iconCustomEmojiId: String? = null, style: String? = null) =
+    inline fun switchInline(text: String, query: String, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, switchInlineQuery = query))
 
-    inline fun switchCurrent(text: String, query: String, iconCustomEmojiId: String? = null, style: String? = null) =
+    inline fun switchCurrent(text: String, query: String, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, switchInlineQueryCurrentChat = query))
 
     inline fun switchChosen(
         text: String,
         cfg: SwitchInlineQueryChosenChat,
         iconCustomEmojiId: String? = null,
-        style: String? = null,
+        style: KeyboardButtonStyle? = null,
     ) =
         addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, switchInlineQueryChosenChat = cfg))
 
@@ -97,23 +98,23 @@ class InlineKeyboardBuilder(size: Int) {
         text: String,
         payload: CopyTextButton,
         iconCustomEmojiId: String? = null,
-        style: String? = null,
+        style: KeyboardButtonStyle? = null,
     ) =
         addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, copyText = payload))
 
     // Overload for quick literal copy text
-    inline fun copyText(text: String, copiedText: String, iconCustomEmojiId: String? = null, style: String? = null) =
+    inline fun copyText(text: String, copiedText: String, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, copyText = CopyTextButton(copiedText)))
 
     inline fun callbackGame(
         text: String,
         game: CallbackGame,
         iconCustomEmojiId: String? = null,
-        style: String? = null,
+        style: KeyboardButtonStyle? = null,
     ) =
         addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, callbackGame = game))
 
-    inline fun pay(text: String, iconCustomEmojiId: String? = null, style: String? = null) =
+    inline fun pay(text: String, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(InlineKeyboardButton(text, iconCustomEmojiId, style, pay = true))
 
     // Optional sugar

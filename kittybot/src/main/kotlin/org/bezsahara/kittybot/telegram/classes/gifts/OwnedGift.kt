@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.gifts
 
+import org.bezsahara.kittybot.telegram.values.OwnedGiftType
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.SerialName
@@ -14,7 +15,7 @@ import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGift
 
 @Serializable(with = OwnedGiftSerializer::class)
 sealed interface OwnedGift {
-    val type: String
+    val type: OwnedGiftType
 }
 
 

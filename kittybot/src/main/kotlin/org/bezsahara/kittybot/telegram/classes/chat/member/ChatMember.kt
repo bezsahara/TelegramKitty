@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.chat.member
 
+import org.bezsahara.kittybot.telegram.values.ChatMemberStatus
 import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberMember
 import kotlinx.serialization.json.jsonObject
 import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
@@ -18,7 +19,7 @@ import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberAdministrat
 
 @Serializable(with = ChatMemberSerializer::class)
 sealed interface ChatMember {
-    val status: String
+    val status: ChatMemberStatus
 }
 
 

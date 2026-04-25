@@ -7,6 +7,7 @@ import org.bezsahara.kittybot.telegram.client.file.CustomMPB
 import kotlin.Unit
 import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.values.InputStoryContentType
 
 
 /**
@@ -37,6 +38,6 @@ data class InputStoryContentVideo(
     ) {
         video.asVertx().execute(builder, null)
     }
-    override val type: String = "video"
+    override val type: InputStoryContentType = InputStoryContentType.VIDEO
 }
 

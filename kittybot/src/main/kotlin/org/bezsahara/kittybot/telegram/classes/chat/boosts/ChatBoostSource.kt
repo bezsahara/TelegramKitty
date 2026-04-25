@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.chat.boosts
 
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.bezsahara.kittybot.telegram.values.ChatBoostSourceKind
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostSourceGiveaway
 import kotlinx.serialization.json.JsonElement
@@ -15,7 +16,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = ChatBoostSourceSerializer::class)
 sealed interface ChatBoostSource {
-    val source: String
+    val source: ChatBoostSourceKind
 }
 
 

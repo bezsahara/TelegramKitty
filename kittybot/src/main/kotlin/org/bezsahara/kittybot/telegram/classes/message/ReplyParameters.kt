@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.classes.message
 
 import kotlinx.serialization.SerialName
 import kotlin.collections.List
+import org.bezsahara.kittybot.telegram.values.ParseMode
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
@@ -28,7 +29,7 @@ data class ReplyParameters(
     @SerialName("chat_id") val chatId: ChatId? = null,
     @SerialName("allow_sending_without_reply") val allowSendingWithoutReply: Boolean? = null,
     val quote: String? = null,
-    @SerialName("quote_parse_mode") val quoteParseMode: String? = null,
+    @SerialName("quote_parse_mode") val quoteParseMode: ParseMode? = null,
     @SerialName("quote_entities") val quoteEntities: List<MessageEntity>? = null,
     @SerialName("quote_position") val quotePosition: Long? = null,
     @SerialName("checklist_task_id") val checklistTaskId: Long? = null,

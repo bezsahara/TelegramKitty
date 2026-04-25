@@ -1,6 +1,7 @@
 package org.bezsahara.kittybot.telegram.classes.bot
 
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.BotCommandScopeType
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
@@ -20,6 +21,6 @@ data class BotCommandScopeChatMember(
     @SerialName("chat_id") val chatId: ChatId,
     @SerialName("user_id") val userId: Long
 ) : BotCommandScope {
-    override val type: String = "chat_member"
+    override val type: BotCommandScopeType = BotCommandScopeType.CHAT_MEMBER
 }
 

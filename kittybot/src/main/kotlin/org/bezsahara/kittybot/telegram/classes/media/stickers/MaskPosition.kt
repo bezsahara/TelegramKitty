@@ -1,6 +1,7 @@
 package org.bezsahara.kittybot.telegram.classes.media.stickers
 
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.MaskPositionPoint
 import kotlinx.serialization.Serializable
 
 
@@ -16,7 +17,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class MaskPosition(
-    val point: String,
+    val point: MaskPositionPoint,
     @SerialName("x_shift") val xShift: Double,
     @SerialName("y_shift") val yShift: Double,
     val scale: Double

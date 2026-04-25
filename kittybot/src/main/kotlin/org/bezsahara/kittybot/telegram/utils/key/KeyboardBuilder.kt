@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.utils.key
 
 import org.bezsahara.kittybot.telegram.classes.keyboard.*
 import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
+import org.bezsahara.kittybot.telegram.values.KeyboardButtonStyle
 
 fun buildReplyKeyboard(builder: KeyboardBuilder.() -> Unit): List<List<KeyboardButton>> {
     val b = KeyboardBuilder(); b.builder(); return b.build()
@@ -69,25 +70,25 @@ class KeyboardBuilder() {
         resetVertical(buttons)
     }
 
-    fun text(text: String, iconCustomEmojiId: String? = null, style: String? = null) =
+    fun text(text: String, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(KeyboardButton(text, iconCustomEmojiId, style))
 
-    fun users(text: String, req: KeyboardButtonRequestUsers, iconCustomEmojiId: String? = null, style: String? = null) =
+    fun users(text: String, req: KeyboardButtonRequestUsers, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(KeyboardButton(text, iconCustomEmojiId, style, requestUsers = req))
 
-    fun chat(text: String, req: KeyboardButtonRequestChat, iconCustomEmojiId: String? = null, style: String? = null) =
+    fun chat(text: String, req: KeyboardButtonRequestChat, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(KeyboardButton(text, iconCustomEmojiId, style, requestChat = req))
 
-    fun contact(text: String, iconCustomEmojiId: String? = null, style: String? = null) =
+    fun contact(text: String, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(KeyboardButton(text, iconCustomEmojiId, style, requestContact = true))
 
-    fun location(text: String, iconCustomEmojiId: String? = null, style: String? = null) =
+    fun location(text: String, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(KeyboardButton(text, iconCustomEmojiId, style, requestLocation = true))
 
-    fun poll(text: String, type: KeyboardButtonPollType, iconCustomEmojiId: String? = null, style: String? = null) =
+    fun poll(text: String, type: KeyboardButtonPollType, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(KeyboardButton(text, iconCustomEmojiId, style, requestPoll = type))
 
-    fun webApp(text: String, info: WebAppInfo, iconCustomEmojiId: String? = null, style: String? = null) =
+    fun webApp(text: String, info: WebAppInfo, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =
         addButton(KeyboardButton(text, iconCustomEmojiId, style, webApp = info))
 
     // Optional sugar to match .row(...) overloads

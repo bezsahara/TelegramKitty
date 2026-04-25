@@ -4,8 +4,10 @@ import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartner
 import org.bezsahara.kittybot.telegram.classes.gifts.Gift
 import kotlinx.serialization.SerialName
 import kotlin.collections.List
+import org.bezsahara.kittybot.telegram.values.TransactionPartnerType
 import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.values.TransactionType
 import org.bezsahara.kittybot.telegram.classes.payments.AffiliateInfo
 import org.bezsahara.kittybot.telegram.classes.media.PaidMedia
 
@@ -28,7 +30,7 @@ import org.bezsahara.kittybot.telegram.classes.media.PaidMedia
  */
 @Serializable
 data class TransactionPartnerUser(
-    @SerialName("transaction_type") val transactionType: String,
+    @SerialName("transaction_type") val transactionType: TransactionType,
     val user: User,
     val affiliate: AffiliateInfo? = null,
     @SerialName("invoice_payload") val invoicePayload: String? = null,
@@ -38,6 +40,6 @@ data class TransactionPartnerUser(
     val gift: Gift? = null,
     @SerialName("premium_subscription_duration") val premiumSubscriptionDuration: Long? = null
 ) : TransactionPartner {
-    override val type: String = "user"
+    override val type: TransactionPartnerType = TransactionPartnerType.USER
 }
 

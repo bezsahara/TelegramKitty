@@ -5,6 +5,7 @@ import org.bezsahara.kittybot.bot.json.PureJsonSerializer
 import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalState
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.JsonPrimitive
+import org.bezsahara.kittybot.telegram.values.RevenueWithdrawalStateType
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalStatePending
 
@@ -18,7 +19,7 @@ import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalStatePe
  */
 @Serializable(with = RevenueWithdrawalStatePendingJsonSerializer::class)
 object RevenueWithdrawalStatePending : RevenueWithdrawalState {
-    override val type: String = "pending"
+    override val type: RevenueWithdrawalStateType = RevenueWithdrawalStateType.PENDING
 }
 
 

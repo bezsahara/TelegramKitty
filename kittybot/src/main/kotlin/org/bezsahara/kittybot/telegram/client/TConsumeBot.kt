@@ -3,12 +3,14 @@ package org.bezsahara.kittybot.telegram.client
 import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
 import org.bezsahara.kittybot.telegram.classes.keyboard.PreparedKeyboardButton
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
+import org.bezsahara.kittybot.telegram.values.StickerType
 import org.bezsahara.kittybot.telegram.classes.input.InputMedia
 import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfo
-import org.bezsahara.kittybot.telegram.utils.ParseMode
+import org.bezsahara.kittybot.telegram.values.ChatAction
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import org.bezsahara.kittybot.telegram.classes.input.InputSticker
 import org.bezsahara.kittybot.telegram.utils.TResult
+import org.bezsahara.kittybot.telegram.values.DiceEmoji
 import org.bezsahara.kittybot.telegram.classes.core.MessageId
 import org.bezsahara.kittybot.telegram.classes.inline.PreparedInlineMessage
 import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
@@ -29,6 +31,7 @@ import org.bezsahara.kittybot.telegram.classes.message.polls.InputPollOption
 import org.bezsahara.kittybot.telegram.classes.input.InputChecklist
 import org.bezsahara.kittybot.telegram.classes.core.File
 import org.bezsahara.kittybot.telegram.classes.bot.BotShortDescription
+import org.bezsahara.kittybot.telegram.values.ParseMode
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
 import org.bezsahara.kittybot.telegram.classes.passport.PassportElementError
 import org.bezsahara.kittybot.telegram.classes.message.LinkPreviewOptions
@@ -49,6 +52,7 @@ import org.bezsahara.kittybot.telegram.classes.gifts.Gifts
 import kotlin.collections.List
 import org.bezsahara.kittybot.telegram.classes.message.SuggestedPostParameters
 import org.bezsahara.kittybot.telegram.classes.input.InputStoryContent
+import org.bezsahara.kittybot.telegram.values.PollType
 import org.bezsahara.kittybot.telegram.classes.inline.SentWebAppMessage
 import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButton
 import org.bezsahara.kittybot.telegram.classes.payments.StarTransactions
@@ -58,8 +62,8 @@ import org.bezsahara.kittybot.telegram.classes.chat.ChatAdministratorRights
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.client.opt.RequestOptions
 import org.bezsahara.kittybot.telegram.classes.bot.BotDescription
-import org.bezsahara.kittybot.telegram.utils.ChatAction
 import org.bezsahara.kittybot.telegram.classes.media.stickers.StickerSet
+import org.bezsahara.kittybot.telegram.values.StickerFormat
 import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
 import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
 import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
@@ -256,7 +260,7 @@ class TConsumeBot(
         businessConnectionId: String?,
         messageThreadId: Long?,
         directMessagesTopicId: Long?,
-        emoji: String?,
+        emoji: DiceEmoji?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
@@ -498,10 +502,10 @@ class TConsumeBot(
         options: List<InputPollOption>,
         businessConnectionId: String?,
         messageThreadId: Long?,
-        questionParseMode: String?,
+        questionParseMode: ParseMode?,
         questionEntities: List<MessageEntity>?,
         isAnonymous: Boolean?,
-        type: String?,
+        type: PollType?,
         allowsMultipleAnswers: Boolean?,
         allowsRevoting: Boolean?,
         shuffleOptions: Boolean?,
@@ -509,13 +513,13 @@ class TConsumeBot(
         hideResultsUntilCloses: Boolean?,
         correctOptionIds: List<Long>?,
         explanation: String?,
-        explanationParseMode: String?,
+        explanationParseMode: ParseMode?,
         explanationEntities: List<MessageEntity>?,
         openPeriod: Long?,
         closeDate: Long?,
         isClosed: Boolean?,
         description: String?,
-        descriptionParseMode: String?,
+        descriptionParseMode: ParseMode?,
         descriptionEntities: List<MessageEntity>?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
@@ -710,7 +714,7 @@ class TConsumeBot(
     override suspend fun uploadStickerFile(
         userId: Long,
         sticker: TelegramFile,
-        stickerFormat: String
+        stickerFormat: StickerFormat
     ): TResult<File> {
         val result = delegate.uploadStickerFile(userId, sticker, stickerFormat)
         result.consume()
@@ -759,7 +763,7 @@ class TConsumeBot(
     override suspend fun setStickerSetThumbnail(
         name: String,
         userId: Long,
-        format: String,
+        format: StickerFormat,
         thumbnail: TelegramFile?
     ): TResult<Boolean> {
         val result = delegate.setStickerSetThumbnail(name, userId, format, thumbnail)
@@ -989,7 +993,7 @@ class TConsumeBot(
         monthCount: Long,
         starCount: Long,
         text: String?,
-        textParseMode: String?,
+        textParseMode: ParseMode?,
         textEntities: List<MessageEntity>?,
         requestOptions: RequestOptions?
     ): TResult<Boolean> {
@@ -1207,7 +1211,7 @@ class TConsumeBot(
         chatId: ChatId?,
         payForUpgrade: Boolean?,
         text: String?,
-        textParseMode: String?,
+        textParseMode: ParseMode?,
         textEntities: List<MessageEntity>?,
         requestOptions: RequestOptions?
     ): TResult<Boolean> {
@@ -2083,7 +2087,7 @@ class TConsumeBot(
         name: String,
         title: String,
         stickers: List<InputSticker>,
-        stickerType: String?,
+        stickerType: StickerType?,
         needsRepainting: Boolean?
     ): TResult<Boolean> {
         val result = delegate.createNewStickerSet(userId, name, title, stickers, stickerType, needsRepainting)

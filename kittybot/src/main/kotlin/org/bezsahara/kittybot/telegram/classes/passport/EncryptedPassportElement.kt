@@ -1,6 +1,7 @@
 package org.bezsahara.kittybot.telegram.classes.passport
 
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.PassportElementType
 import org.bezsahara.kittybot.telegram.classes.passport.PassportFile
 import kotlin.collections.List
 import kotlinx.serialization.Serializable
@@ -24,7 +25,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class EncryptedPassportElement(
-    val type: String,
+    val type: PassportElementType,
     val hash: String,
     val data: String? = null,
     @SerialName("phone_number") val phoneNumber: String? = null,

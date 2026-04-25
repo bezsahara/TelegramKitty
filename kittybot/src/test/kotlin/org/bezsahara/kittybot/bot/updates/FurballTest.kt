@@ -17,6 +17,7 @@ import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.client.CustomClient
 import org.bezsahara.kittybot.telegram.client.CustomRequest
 import org.bezsahara.kittybot.telegram.client.CustomResponse
+import org.bezsahara.kittybot.telegram.values.ChatType
 import java.net.URI
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -163,7 +164,7 @@ class FurballTest {
             message = Message(
                 messageId = 10L,
                 date = 0L,
-                chat = Chat(id = 100L, type = "private"),
+                chat = Chat(id = 100L, type = ChatType.PRIVATE),
                 from = User(id = 200L, isBot = false, firstName = "Test"),
                 text = "hello",
             ),

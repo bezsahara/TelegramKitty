@@ -2,11 +2,13 @@ package org.bezsahara.kittybot.telegram.classes.inline
 
 import org.bezsahara.kittybot.telegram.classes.inline.InputMessageContent
 import kotlinx.serialization.SerialName
+import org.bezsahara.kittybot.telegram.values.ParseMode
+import org.bezsahara.kittybot.telegram.values.InlineQueryThumbnailMimeType
+import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.utils.ParseMode
+import org.bezsahara.kittybot.telegram.values.InlineQueryResultType
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
-import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResult
 
 
@@ -39,7 +41,7 @@ data class InlineQueryResultMpeg4Gif(
     @SerialName("mpeg4_width") val mpeg4Width: Long? = null,
     @SerialName("mpeg4_height") val mpeg4Height: Long? = null,
     @SerialName("mpeg4_duration") val mpeg4Duration: Long? = null,
-    @SerialName("thumbnail_mime_type") val thumbnailMimeType: String? = null,
+    @SerialName("thumbnail_mime_type") val thumbnailMimeType: InlineQueryThumbnailMimeType? = null,
     val title: String? = null,
     val caption: String? = null,
     @SerialName("parse_mode") val parseMode: ParseMode? = null,
@@ -48,6 +50,6 @@ data class InlineQueryResultMpeg4Gif(
     @SerialName("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
     @SerialName("input_message_content") val inputMessageContent: InputMessageContent? = null
 ) : InlineQueryResult {
-    override val type: String = "mpeg4_gif"
+    override val type: InlineQueryResultType = InlineQueryResultType.MPEG4_GIF
 }
 

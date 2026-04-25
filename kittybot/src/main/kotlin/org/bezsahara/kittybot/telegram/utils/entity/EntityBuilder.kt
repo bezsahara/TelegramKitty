@@ -9,8 +9,7 @@ import org.bezsahara.kittybot.telegram.classes.message.LinkPreviewOptions
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import org.bezsahara.kittybot.telegram.classes.message.ReplyParameters
 import org.bezsahara.kittybot.telegram.classes.message.SuggestedPostParameters
-import org.bezsahara.kittybot.telegram.utils.ParseMode
-import org.bezsahara.kittybot.telegram.utils.forList
+import org.bezsahara.kittybot.telegram.values.ParseMode
 
 class EntityBuilder(stringSize: Int, entitySize: Int) : Appendable {
     constructor() : this(32,32)

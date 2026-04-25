@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.media
 
+import org.bezsahara.kittybot.telegram.values.PaidMediaType
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.media.Video
 import kotlinx.serialization.Serializable
@@ -18,6 +19,6 @@ import org.bezsahara.kittybot.telegram.classes.media.PaidMedia
 data class PaidMediaVideo(
     val video: Video
 ) : PaidMedia {
-    override val type: String = "video"
+    override val type: PaidMediaType = PaidMediaType.VIDEO
 }
 

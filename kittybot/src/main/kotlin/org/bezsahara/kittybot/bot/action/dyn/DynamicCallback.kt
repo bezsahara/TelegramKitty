@@ -11,6 +11,7 @@ import org.bezsahara.kittybot.telegram.classes.core.update.CallbackQueryUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.utils.key.InlineKeyboardBuilder
+import org.bezsahara.kittybot.telegram.values.KeyboardButtonStyle
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -51,8 +52,8 @@ class DynamicCallbackQData(
     }
 
     inner class Scope(private val builder: InlineKeyboardBuilder) {
-        fun callback(text: String, style: String? = null, iconCustomEmojiId: String? = null, block: suspend CallScope.() -> Boolean) {
-            builder.callback(text, add(block), style, iconCustomEmojiId)
+        fun callback(text: String, style: KeyboardButtonStyle? = null, iconCustomEmojiId: String? = null, block: suspend CallScope.() -> Boolean) {
+            builder.callback(text, add(block), iconCustomEmojiId, style)
         }
     }
 }
