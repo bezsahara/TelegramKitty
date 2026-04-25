@@ -156,12 +156,16 @@ internal object DecoderHandles {
         lexerCurrentPositionSetterHandle.invoke(lexer, value)
     }
 
+    @JvmStatic
     @Suppress("INVISIBLE_REFERENCE")
     fun decoderCurrentPosition(decoder: Decoder): Int {
         if (!success) return Int.MIN_VALUE
 //        val lexer = decoderLexer(decoder) ?: return Int.MIN_VALUE
 //        return lexerCurrentPosition(lexer)
-        return (decoder as? kotlinx.serialization.json.internal.StreamingJsonDecoder)?.lexer?.currentPosition ?: Int.MIN_VALUE
+        if (decoder is kotlinx.serialization.json.internal.StreamingJsonDecoder) {
+            return decoder.lexer.currentPosition
+        }
+        return Int.MIN_VALUE
     }
 
     fun decoderCurrentPosition(decoder: Decoder, value: Int): Boolean {

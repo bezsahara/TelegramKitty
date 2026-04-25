@@ -10,18 +10,26 @@ import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 class HandlerDelegate(
     override val identity: HandlerIdentity?,
     override val allowedKinds: Set<UpdateKind<*>>?,
-    originalHandler: Handler
+    originalHandler: Handler,
 ) : Handler {
     init {
         require(originalHandler !is RejectDelegate) { "Handler is RejectDelegate. HandlerDelegate cannot accept it" }
     }
-    val originalHandler: Handler = if (originalHandler is HandlerDelegate) originalHandler.originalHandler else originalHandler
+
+    val originalHandler: Handler =
+        if (originalHandler is HandlerDelegate) originalHandler.originalHandler else originalHandler
 
     override suspend fun handleUpdate(
         update: Update,
         bot: KittyBot,
         handlerContext: HandlerContext,
-    ): Decision { error("This is HandlerDelegate. If you see this error, please report this!") }
+    ): Decision {
+        error("This is HandlerDelegate. If you see this error, please report this!")
+    }
+
+    override fun toString(): String {
+        return "HandlerDelegate[identity=$identity, allowedKinds=$allowedKinds](${originalHandler.toStr()})"
+    }
 }
 
 fun Handler.ensureHasIdentity(): Handler {
@@ -33,7 +41,10 @@ fun Handler.asDelegate(identity: HandlerIdentity?, allowedKinds: Set<UpdateKind<
     return HandlerDelegate(identity, allowedKinds, this)
 }
 
-fun Handler.copyAsDelegate(identity: HandlerIdentity? = this.identity, allowedKinds: Set<UpdateKind<*>>? = this.allowedKinds): HandlerDelegate {
+fun Handler.copyAsDelegate(
+    identity: HandlerIdentity? = this.identity,
+    allowedKinds: Set<UpdateKind<*>>? = this.allowedKinds,
+): HandlerDelegate {
     return HandlerDelegate(identity, allowedKinds, this)
 }
 
@@ -44,9 +55,17 @@ fun Handler.real(): Handler {
 // Useful if u want to create handler as lambda but also want to specify identity/allowedTypes
 // In kotlin 2.3.10, compiler sometimes emits wrong bytecode for this function in certain situations.
 // So an error might be expected.
-fun HandlerStore.addHandler(allowedTypes: Set<UpdateKind<*>>? = null, identity: HandlerIdentity? = null, handler: Handler) {
+fun HandlerStore.addHandler(
+    allowedTypes: Set<UpdateKind<*>>? = null,
+    identity: HandlerIdentity? = null,
+    handler: Handler,
+) {
     addHandler(HandlerDelegate(identity, allowedTypes, handler))
 }
 
 
 interface RejectDelegate
+
+
+fun Handler.toStr(): String =
+    if (this is HandlerDelegate) toString() else "Handler(identity=$identity, allowedKinds=$allowedKinds)"

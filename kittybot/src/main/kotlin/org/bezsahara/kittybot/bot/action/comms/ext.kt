@@ -95,7 +95,7 @@ internal class CommandGroupHandler(
             val comm = if (endIndex == -1) text.substring(1) else text.substring(1, endIndex)
             val paramsList = commandGroupStore.executableMap[comm] ?: return Decision.Next
 
-            val mdArgsDesc: List<BotParam>
+            val mdArgsDesc: List<BotType>
             val mdArgs: Array<Any?>
 
             if (endIndex == -1) {

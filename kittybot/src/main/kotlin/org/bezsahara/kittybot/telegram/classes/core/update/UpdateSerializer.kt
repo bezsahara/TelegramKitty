@@ -397,6 +397,7 @@ internal object UpdateSerializer : KSerializer<Update> {
         return element as? JsonObject
     }
 
+    @JvmStatic
     private fun Decoder.getPos(): Int {
         return DecoderHandles.decoderCurrentPosition(this)
     }

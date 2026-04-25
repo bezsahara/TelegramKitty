@@ -4,7 +4,7 @@ import org.bezsahara.kittybot.bot.IdentityScope
 import org.bezsahara.kittybot.bot.builder.FelineBuilder
 
 @KittyDsl
-class FelineDispatcher internal constructor(internal val felineBuilder: FelineBuilder<*>) : TransparentHandlerStore {
+class FelineDispatcher internal constructor(val felineBuilder: FelineBuilder<*>) : TransparentHandlerStore {
     @JvmField
     internal val handlerList = arrayListOf<Handler>()
     private val filterBuilder = Filters()

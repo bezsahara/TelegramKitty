@@ -13,7 +13,7 @@ class BotCallParserTest {
 
         assertEquals("echo", parsed.method.name)
         assertEquals(
-            listOf(BotParam(BotType.Long), BotParam(BotType.String)),
+            listOf(BotType.Long, BotType.String),
             parsed.method.args
         )
         assertContentEquals(arrayOf(42L, "hello world"), parsed.arguments)
@@ -25,7 +25,7 @@ class BotCallParserTest {
 
         assertEquals("sum", parsed.method.name)
         assertEquals(
-            listOf(BotParam(BotType.Long), BotParam(BotType.Double), BotParam(BotType.String)),
+            listOf((BotType.Long), (BotType.Double), (BotType.String)),
             parsed.method.args
         )
         assertContentEquals(arrayOf(1L, 2.5, "value"), parsed.arguments)
@@ -37,7 +37,7 @@ class BotCallParserTest {
 
         assertEquals("values", parsed.method.name)
         assertEquals(
-            listOf(BotParam(BotType.List(BotType.Double))),
+            listOf((BotType.List(BotType.Double))),
             parsed.method.args
         )
         assertContentEquals(arrayOf(listOf(1.0, 2.5, 3.0)), parsed.arguments)

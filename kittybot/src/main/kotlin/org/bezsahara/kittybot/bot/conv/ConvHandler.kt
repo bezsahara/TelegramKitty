@@ -3,6 +3,7 @@ package org.bezsahara.kittybot.bot.conv
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.job
@@ -40,5 +41,9 @@ abstract class ConvScope {
 
     suspend fun <T> receive(h: CatcherHandler<T>): Deferred<T> {
         return chc.register(h, currentCoroutineContext().job)
+    }
+
+    fun <T> receive(h: CatcherHandler<T>, job: Job? = null): Deferred<T> {
+        return chc.register(h, job)
     }
 }

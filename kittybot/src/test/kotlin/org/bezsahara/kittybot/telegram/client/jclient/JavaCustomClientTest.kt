@@ -6,6 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import java.net.InetSocketAddress
+import java.net.URI
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
@@ -21,7 +22,7 @@ class JavaCustomClientTest {
             val payload = """{"hello":"world"}""".toByteArray()
 
             val response = client.sendJSONRequest(
-                urlAbs = server.url("/json"),
+                urlAbs = URI(server.url("/json")),
                 json = payload,
                 isGetUpdates = false,
             )
@@ -51,7 +52,7 @@ class JavaCustomClientTest {
 
             val response = with(client) {
                 val request = createMPRequest(
-                    urlAbs = server.url("/multipart"),
+                    urlAbs = URI(server.url("/multipart")),
                     contentType = "multipart/form-data; boundary=kitty",
                 )
 

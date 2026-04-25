@@ -19,7 +19,7 @@ interface TelegramFile {
             byteArray: ByteArray,
             fileName: String? = null,
             contentType: String? = null,
-        ) = TelegramFileVertx.Bytes(byteArray, fileName, contentType)
+        ): TelegramFile = TelegramFileVertx.Bytes(byteArray, fileName, contentType)
 
         fun withInputStream(fileName: String? = null, contentType: String? = null, provider: () -> InputStream): TelegramFile {
             return object : InputStreamAdapter() {
@@ -37,6 +37,7 @@ interface TelegramFile {
 
         // Can be used with local telergam bot server
         // Such as file being uploaded by local path (via file: protocol syntax for example)
+        // Could be an incorrect impl, did not test it
         fun withStringValue(value: String) = TelegramFileVertx.StringValue(value)
     }
 

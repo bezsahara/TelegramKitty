@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.client.file
 
 import io.netty.buffer.Unpooled
-import io.vertx.core.buffer.Buffer
 import io.vertx.core.internal.buffer.BufferInternal
 import java.util.concurrent.atomic.AtomicLong
 
@@ -87,6 +86,7 @@ sealed class TelegramFileVertx : TelegramFile {
         final override fun toJsonString(): String = url
     }
 
+    // Could be an incorrect impl, did not test it
     class StringValue(val value: String) : TelegramFileVertx() {
         override suspend fun execute(
             builder: MultiPartBuilder,
@@ -102,6 +102,10 @@ sealed class TelegramFileVertx : TelegramFile {
         ) {
             if (name == null) return
             builder.writePart(value, "name=$name")
+        }
+
+        final override fun toJsonString(): String {
+            return value
         }
     }
 

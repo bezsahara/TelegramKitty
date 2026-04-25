@@ -6,7 +6,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.builder.superVisorJob
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.dispatchers.Handler
@@ -32,8 +31,8 @@ private const val EXPECTED_MEDIA_GROUP_SIZE = 10
  * This helper may only be used with updater modes that preserve sequential processing for a given
  * chat.
  */
-fun FelineDispatcher.setupMediaGroupHandler(periodLimitMillis: Long = 800) {
-    require(felineBuilder.updaterMode.isSequential()) {
+fun FelineDispatcher.setupMediaGroupHandler(periodLimitMillis: Long = 800, ignoreSequentialSafety: Boolean = false) {
+    require(felineBuilder.updaterMode.isSequential() || ignoreSequentialSafety) {
         "Updater mode must be sequential for a given chat!"
     }
     addHandlerFirst(MediaGroupTransformerSeq(this, periodLimitMillis))

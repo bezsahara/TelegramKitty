@@ -4,11 +4,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.errors.KittyError
 import org.bezsahara.kittybot.bot.builder.RecoverLastId
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.client.opt.RequestOptions
-import org.bezsahara.kittybot.telegram.utils.TResult
 import org.bezsahara.kittybot.telegram.utils.throwError
 
 /**
@@ -44,7 +42,7 @@ class PollingReceiver(
                     null,
                     timeout,
                     allowedUpdates,
-                    RequestOptions.SMALL
+                    ro
                 )
 
 
@@ -60,5 +58,9 @@ class PollingReceiver(
                 result.throwError()
             }
         }
+    }
+
+    companion object {
+        private val ro = RequestOptions(2200)
     }
 }

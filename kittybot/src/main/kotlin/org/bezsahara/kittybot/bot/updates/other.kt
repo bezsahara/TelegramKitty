@@ -2,12 +2,8 @@ package org.bezsahara.kittybot.bot.updates
 
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
-import java.sql.SQLXML
-import java.util.Arrays
-import kotlin.collections.set
+import java.util.*
 import kotlin.math.max
-import kotlin.random.Random
-import kotlin.time.measureTime
 
 
 // Checks if handler identity call returns different identifies on separate occasions.

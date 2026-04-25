@@ -87,6 +87,8 @@ abstract class CatcherHandlerCentral {
         val lastVisibleOrder = nextOrder.get() - 1
         if (lastVisibleOrder < 0) return Decision.Next
 
+        if (bucket.isEmpty()) return Decision.Next
+
         for (registration in bucket.headMap(lastVisibleOrder, true).values) {
             if (!registration.deferred.isActive) {
                 removeFromRegistry(registration)

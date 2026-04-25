@@ -49,7 +49,7 @@ class CommandGroupStore(
     /**
      * Command name to overload map, keyed by parsed parameter signatures.
      */
-    val executableMap: Map<String, Map<List<BotParam>, MethodHandle>>,
+    val executableMap: Map<String, Map<List<BotType>, MethodHandle>>,
     /**
      * Registered command descriptions keyed by command name without the leading `/`.
      */
@@ -107,19 +107,19 @@ class CommandGroupStore(
             )
         }
 
-        private fun build(commandGroup: CommandGroup): Pair<Map<String, String>, Map<String, Map<List<BotParam>, MethodHandle>>> {
+        private fun build(commandGroup: CommandGroup): Pair<Map<String, String>, Map<String, Map<List<BotType>, MethodHandle>>> {
             val lookup = MethodHandles.lookup()
             val clazz = commandGroup::class.java
 
             val commands = hashMapOf<String, String>()
-            val execMap = hashMapOf<String, HashMap<List<BotParam>, MethodHandle>>()
+            val execMap = hashMapOf<String, HashMap<List<BotType>, MethodHandle>>()
 
             clazz.declaredMethods.forEach { method ->
                 val annot = method.getAnnotation(BotCommand::class.java) ?: return@forEach
                 val methodName = method.name
                 require(method.returnType == ExecBlock::class.java) { "Method $methodName does not have return type of ExecBlock" }
                 val params = method.parameters.map { param ->
-                    BotParam(botTypeOf(param.parameterizedType))
+                    botTypeOf(param.parameterizedType)
                 }
                 commands[methodName] = annot.description
                 val nameMap = execMap.getOrPut(methodName) { hashMapOf() }
@@ -127,7 +127,7 @@ class CommandGroupStore(
                 nameMap[params] = bound.asSpreader(Array<Any?>::class.java, params.size)
             }
 
-            val finalExecMap = hashMapOf<String, Map<List<BotParam>, MethodHandle>>()
+            val finalExecMap = hashMapOf<String, Map<List<BotType>, MethodHandle>>()
 
             execMap.forEach { (key, map) ->
                 finalExecMap[key] = if (map.size == 1) {
@@ -160,8 +160,8 @@ class CommandGroupStore(
 
         private fun Class<*>.toBotType(): BotType {
             return when (this) {
-                Int::class.java, Int::class.javaObjectType, Long::class.java, Long::class.javaObjectType -> BotType.Long
-                Float::class.java, Float::class.javaObjectType, Double::class.java, Double::class.javaObjectType -> BotType.Double
+                Long::class.java, Long::class.javaObjectType -> BotType.Long
+                Double::class.java, Double::class.javaObjectType -> BotType.Double
                 String::class.java -> BotType.String
                 Void.TYPE -> BotType.Void
                 else -> error("Bot type of not supported class $this")
@@ -172,11 +172,7 @@ class CommandGroupStore(
 
 data class BotMethod(
     val name: String,
-    val args: List<BotParam>,
-)
-
-data class BotParam(
-    val type: BotType,
+    val args: List<BotType>,
 )
 
 sealed interface BotType {
@@ -188,11 +184,11 @@ sealed interface BotType {
 }
 
 fun BotMethod.toDescString(): String {
-    return "$name(${args.joinToString(", ") { it.type.toDescString() }})"
+    return "$name(${args.joinToString(", ") { it.toDescString() }})"
 }
 
-fun List<BotParam>.toDescString(): String {
-    return joinToString(", ", prefix = "(", postfix = ")") { it.type.toDescString() }
+fun List<BotType>.toDescString(): String {
+    return joinToString(", ", prefix = "(", postfix = ")") { it.toDescString() }
 }
 
 fun BotType.toDescString(): String {

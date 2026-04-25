@@ -8,6 +8,9 @@ abstract class SyntheticUpdate() : Update() {
     final override val ordinal: Int
         get() = 25
 
+    override val updateId: Long
+        get() = 0
+
     companion object : UpdateKind<SyntheticUpdate>(25, SyntheticUpdate::class.java, "SyntheticUpdate")
 }
 
@@ -15,9 +18,6 @@ abstract class SyntheticUpdate() : Update() {
 class GroupedMediaUpdate(
     val mediaMessagesGrouped: List<Message>
 ) : SyntheticUpdate() {
-    override val updateId: Long
-        get() = 0
-
     val firstMessage get() = mediaMessagesGrouped[0]
 
     override fun chatIdOrNull(): ChatId = firstMessage.chat.id.toChatId()
