@@ -49,7 +49,7 @@ fun Handler.copyAsDelegate(
 }
 
 fun Handler.real(): Handler {
-    return if (this is HandlerDelegate) originalHandler else this
+    return if (javaClass === HandlerDelegate::class.java) (this as HandlerDelegate).originalHandler else this
 }
 
 // Useful if u want to create handler as lambda but also want to specify identity/allowedTypes

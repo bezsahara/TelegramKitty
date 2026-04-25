@@ -96,6 +96,10 @@ class CommandGroupStore(
         }
     }
 
+    fun parse(line: String) = ParsedBotCall.parse(line)
+
+    fun parseArgs(name: String, args: String) = ParsedBotCall.parseArgsOnly(name, args)
+
     companion object {
         /**
          * Creates a new store by scanning [commandGroup] for [BotCommand]-annotated methods.
@@ -124,7 +128,7 @@ class CommandGroupStore(
                 commands[methodName] = annot.description
                 val nameMap = execMap.getOrPut(methodName) { hashMapOf() }
                 val bound = lookup.unreflect(method).bindTo(commandGroup)
-                nameMap[params] = bound.asSpreader(Array<Any?>::class.java, params.size)
+                nameMap[optimizeList(params)] = bound.asSpreader(Array<Any?>::class.java, params.size)
             }
 
             val finalExecMap = hashMapOf<String, Map<List<BotType>, MethodHandle>>()
@@ -199,4 +203,14 @@ fun BotType.toDescString(): String {
         BotType.Void -> "V"
         is BotType.List -> "[${type.toDescString()}"
     }
+}
+
+private fun <T> optimizeList(list: List<T>): List<T> {
+    if (list.isEmpty()) {
+        return emptyList()
+    }
+    if (list.size == 1) {
+        return listOf(list[0])
+    }
+    return list
 }

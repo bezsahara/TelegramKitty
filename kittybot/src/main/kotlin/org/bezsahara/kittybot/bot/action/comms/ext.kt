@@ -18,7 +18,6 @@ import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.core.update.asMessageUpdateOrNull
 import org.bezsahara.kittybot.telegram.classes.message.Message
-import java.lang.invoke.MethodHandle
 
 /**
  * Builds a [CommandGroupStore] for [commandGroup], registers a [CommandGroupHandler] in this
@@ -114,7 +113,7 @@ internal class CommandGroupHandler(
                 // only command was sent and it was not found without arguments
                 bot.sendMessage(message.chat.id.toChatId(), firstStepReply(message, handlerContext))
                     .consume()
-                flowManager.nextSection(handlerContext, comm)
+                flowManager.nextSection(handlerContext, args = comm)
                 return Decision.Consumed
             }
 
