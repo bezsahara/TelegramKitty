@@ -24,6 +24,7 @@ import org.bezsahara.kittybot.telegram.classes.core.update.asMessageUpdateOrNull
 import org.bezsahara.kittybot.telegram.classes.keyboard.CopyTextButton
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardButton
 import org.bezsahara.kittybot.telegram.utils.key.buildInlineKeyboardMarkup
+import org.bezsahara.kittybot.telegram.values.KeyboardButtonStyle
 
 fun FelineBuilder<*>.buildBot() {
     // Prevent Telegram from replaying stale updates after a restart.
@@ -130,7 +131,7 @@ fun FelineBuilder<*>.buildBot() {
             bot.sendMessage(chatId, "Inline keyboard example", replyMarkup = buildInlineKeyboardMarkup {
                 url("Open Google", "https://google.com")
                 addRow(3) {
-                    callback("Ping callback", "sample:pop")
+                    callback("Ping callback", "sample:pop", style = KeyboardButtonStyle.DANGER)
                     addButton(InlineKeyboardButton("CopyThis!", copyText = CopyTextButton("copied text")))
                     copyText("Copy via DSL", "Copied from TelegramKitty")
                 }
