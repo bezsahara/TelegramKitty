@@ -258,7 +258,7 @@ class TCustomClient internal constructor(
                 val bbSize0 = setChatPermissionsBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.chat_id, chatId.value)
-                    putJsonObject(TBytesInfo.permissions, ChatPermissions.serializer(), json, permissions)
+                    putJsonObject(TBytesInfo.permissions, ChatPermissions.serializer(), permissions)
                     if (useIndependentChatPermissions != null) putBoolUnsafe(TBytesInfo.use_independent_chat_permissions, useIndependentChatPermissions)
                     setChatPermissionsBSP.record(size9, bbSize0)
                     toByteArray()
@@ -314,7 +314,7 @@ class TCustomClient internal constructor(
                     if (chatId != null) putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                     if (messageId != null) putNumberUnsafe(TBytesInfo.message_id, messageId)
                     if (inlineMessageId != null) putStringUnsafe(TBytesInfo.inline_message_id, inlineMessageId)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) editMessageReplyMarkupBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -519,15 +519,15 @@ class TCustomClient internal constructor(
                     if (videoStartTimestamp != null) putNumberUnsafe(TBytesInfo.video_start_timestamp, videoStartTimestamp)
                     if (caption != null) putStringUnsafe(TBytesInfo.caption, caption)
                     if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
-                    if (captionEntities != null) putListOfJsonObjects(TBytesInfo.caption_entities, MessageEntity.serializer(), json, captionEntities)
+                    if (captionEntities != null) putListOfJsonObjects(TBytesInfo.caption_entities, MessageEntity.serializer(), captionEntities)
                     if (showCaptionAboveMedia != null) putBoolUnsafe(TBytesInfo.show_caption_above_media, showCaptionAboveMedia)
                     if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
                     if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), json, suggestedPostParameters)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), json, replyMarkup)
+                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), suggestedPostParameters)
+                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) copyMessageBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -597,9 +597,9 @@ class TCustomClient internal constructor(
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
                     if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), json, suggestedPostParameters)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), json, replyMarkup)
+                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), suggestedPostParameters)
+                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) sendDiceBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -708,9 +708,9 @@ class TCustomClient internal constructor(
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
                     if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), json, suggestedPostParameters)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), json, replyMarkup)
+                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), suggestedPostParameters)
+                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) sendLocationBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -1088,8 +1088,8 @@ class TCustomClient internal constructor(
                     putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                     putNumberUnsafe(TBytesInfo.chat_id, chatId)
                     putNumberUnsafe(TBytesInfo.message_id, messageId)
-                    putJsonObject(TBytesInfo.checklist, InputChecklist.serializer(), json, checklist)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)
+                    putJsonObject(TBytesInfo.checklist, InputChecklist.serializer(), checklist)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) editMessageChecklistBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -1118,7 +1118,7 @@ class TCustomClient internal constructor(
                 val bbSize0 = requestOptions?.bufferSize ?: setPassportDataErrorsBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putNumberUnsafe(TBytesInfo.user_id, userId)
-                    putListOfJsonObjects(TBytesInfo.errors, PassportElementError.serializer(), json, errors)
+                    putListOfJsonObjects(TBytesInfo.errors, PassportElementError.serializer(), errors)
                     if (requestOptions == null) setPassportDataErrorsBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -1146,7 +1146,7 @@ class TCustomClient internal constructor(
                 val bbSize0 = setChatMenuButtonBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     if (chatId != null) putNumberUnsafe(TBytesInfo.chat_id, chatId)
-                    if (menuButton != null) putJsonObject(TBytesInfo.menu_button, MenuButton.serializer(), json, menuButton)
+                    if (menuButton != null) putJsonObject(TBytesInfo.menu_button, MenuButton.serializer(), menuButton)
                     setChatMenuButtonBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -1225,11 +1225,11 @@ class TCustomClient internal constructor(
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                     putStringUnsafe(TBytesInfo.question, question)
-                    putListOfJsonObjects(TBytesInfo.options, InputPollOption.serializer(), json, options)
+                    putListOfJsonObjects(TBytesInfo.options, InputPollOption.serializer(), options)
                     if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                     if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
                     if (questionParseMode != null) putStringUnsafe(TBytesInfo.question_parse_mode, questionParseMode.value)
-                    if (questionEntities != null) putListOfJsonObjects(TBytesInfo.question_entities, MessageEntity.serializer(), json, questionEntities)
+                    if (questionEntities != null) putListOfJsonObjects(TBytesInfo.question_entities, MessageEntity.serializer(), questionEntities)
                     if (isAnonymous != null) putBoolUnsafe(TBytesInfo.is_anonymous, isAnonymous)
                     if (type != null) putStringUnsafe(TBytesInfo.type, type.value)
                     if (allowsMultipleAnswers != null) putBoolUnsafe(TBytesInfo.allows_multiple_answers, allowsMultipleAnswers)
@@ -1240,19 +1240,19 @@ class TCustomClient internal constructor(
                     if (correctOptionIds != null) putListOfLongUnsafe(TBytesInfo.correct_option_ids, correctOptionIds)
                     if (explanation != null) putStringUnsafe(TBytesInfo.explanation, explanation)
                     if (explanationParseMode != null) putStringUnsafe(TBytesInfo.explanation_parse_mode, explanationParseMode.value)
-                    if (explanationEntities != null) putListOfJsonObjects(TBytesInfo.explanation_entities, MessageEntity.serializer(), json, explanationEntities)
+                    if (explanationEntities != null) putListOfJsonObjects(TBytesInfo.explanation_entities, MessageEntity.serializer(), explanationEntities)
                     if (openPeriod != null) putNumberUnsafe(TBytesInfo.open_period, openPeriod)
                     if (closeDate != null) putNumberUnsafe(TBytesInfo.close_date, closeDate)
                     if (isClosed != null) putBoolUnsafe(TBytesInfo.is_closed, isClosed)
                     if (description != null) putStringUnsafe(TBytesInfo.description, description)
                     if (descriptionParseMode != null) putStringUnsafe(TBytesInfo.description_parse_mode, descriptionParseMode.value)
-                    if (descriptionEntities != null) putListOfJsonObjects(TBytesInfo.description_entities, MessageEntity.serializer(), json, descriptionEntities)
+                    if (descriptionEntities != null) putListOfJsonObjects(TBytesInfo.description_entities, MessageEntity.serializer(), descriptionEntities)
                     if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
                     if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), json, replyMarkup)
+                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) sendPollBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -1459,7 +1459,7 @@ class TCustomClient internal constructor(
                     if (chatId != null) putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                     if (messageId != null) putNumberUnsafe(TBytesInfo.message_id, messageId)
                     if (inlineMessageId != null) putStringUnsafe(TBytesInfo.inline_message_id, inlineMessageId)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) stopMessageLiveLocationBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -1845,7 +1845,7 @@ class TCustomClient internal constructor(
                 val bbSize0 = requestOptions?.bufferSize ?: savePreparedKeyboardButtonBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putNumberUnsafe(TBytesInfo.user_id, userId)
-                    putJsonObject(TBytesInfo.button, KeyboardButton.serializer(), json, button)
+                    putJsonObject(TBytesInfo.button, KeyboardButton.serializer(), button)
                     if (requestOptions == null) savePreparedKeyboardButtonBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -2095,11 +2095,11 @@ class TCustomClient internal constructor(
                 val bbSize0 = requestOptions?.bufferSize ?: answerInlineQueryBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.inline_query_id, inlineQueryId)
-                    putListOfJsonObjects(TBytesInfo.results, InlineQueryResult.serializer(), json, results)
+                    putListOfJsonObjects(TBytesInfo.results, InlineQueryResult.serializer(), results)
                     if (cacheTime != null) putNumberUnsafe(TBytesInfo.cache_time, cacheTime)
                     if (isPersonal != null) putBoolUnsafe(TBytesInfo.is_personal, isPersonal)
                     if (nextOffset != null) putStringUnsafe(TBytesInfo.next_offset, nextOffset)
-                    if (button != null) putJsonObject(TBytesInfo.button, InlineQueryResultsButton.serializer(), json, button)
+                    if (button != null) putJsonObject(TBytesInfo.button, InlineQueryResultsButton.serializer(), button)
                     if (requestOptions == null) answerInlineQueryBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -2232,15 +2232,15 @@ class TCustomClient internal constructor(
                     if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
                     if (directMessagesTopicId != null) putNumberUnsafe(TBytesInfo.direct_messages_topic_id, directMessagesTopicId)
                     if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
-                    if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), json, entities)
-                    if (linkPreviewOptions != null) putJsonObject(TBytesInfo.link_preview_options, LinkPreviewOptions.serializer(), json, linkPreviewOptions)
+                    if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), entities)
+                    if (linkPreviewOptions != null) putJsonObject(TBytesInfo.link_preview_options, LinkPreviewOptions.serializer(), linkPreviewOptions)
                     if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
                     if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), json, suggestedPostParameters)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), json, replyMarkup)
+                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), suggestedPostParameters)
+                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) sendMessageBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -2375,7 +2375,7 @@ class TCustomClient internal constructor(
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.shipping_query_id, shippingQueryId)
                     putBoolUnsafe(TBytesInfo.ok, ok)
-                    if (shippingOptions != null) putListOfJsonObjects(TBytesInfo.shipping_options, ShippingOption.serializer(), json, shippingOptions)
+                    if (shippingOptions != null) putListOfJsonObjects(TBytesInfo.shipping_options, ShippingOption.serializer(), shippingOptions)
                     if (errorMessage != null) putStringUnsafe(TBytesInfo.error_message, errorMessage)
                     if (requestOptions == null) answerShippingQueryBSP.record(size9, bbSize0)
                     toByteArray()
@@ -2437,7 +2437,7 @@ class TCustomClient internal constructor(
                 val bbSize0 = requestOptions?.bufferSize ?: savePreparedInlineMessageBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putNumberUnsafe(TBytesInfo.user_id, userId)
-                    putJsonObject(TBytesInfo.result, InlineQueryResult.serializer(), json, result)
+                    putJsonObject(TBytesInfo.result, InlineQueryResult.serializer(), result)
                     if (allowUserChats != null) putBoolUnsafe(TBytesInfo.allow_user_chats, allowUserChats)
                     if (allowBotChats != null) putBoolUnsafe(TBytesInfo.allow_bot_chats, allowBotChats)
                     if (allowGroupChats != null) putBoolUnsafe(TBytesInfo.allow_group_chats, allowGroupChats)
@@ -2506,7 +2506,7 @@ class TCustomClient internal constructor(
                     putNumberUnsafe(TBytesInfo.star_count, starCount)
                     if (text != null) putStringUnsafe(TBytesInfo.text, text)
                     if (textParseMode != null) putStringUnsafe(TBytesInfo.text_parse_mode, textParseMode.value)
-                    if (textEntities != null) putListOfJsonObjects(TBytesInfo.text_entities, MessageEntity.serializer(), json, textEntities)
+                    if (textEntities != null) putListOfJsonObjects(TBytesInfo.text_entities, MessageEntity.serializer(), textEntities)
                     if (requestOptions == null) giftPremiumSubscriptionBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -2591,9 +2591,9 @@ class TCustomClient internal constructor(
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
                     if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), json, suggestedPostParameters)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), json, replyMarkup)
+                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), suggestedPostParameters)
+                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) sendContactBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -2646,7 +2646,7 @@ class TCustomClient internal constructor(
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                     putNumberUnsafe(TBytesInfo.user_id, userId)
-                    putJsonObject(TBytesInfo.permissions, ChatPermissions.serializer(), json, permissions)
+                    putJsonObject(TBytesInfo.permissions, ChatPermissions.serializer(), permissions)
                     if (useIndependentChatPermissions != null) putBoolUnsafe(TBytesInfo.use_independent_chat_permissions, useIndependentChatPermissions)
                     if (untilDate != null) putNumberUnsafe(TBytesInfo.until_date, untilDate)
                     restrictChatMemberBSP.record(size9, bbSize0)
@@ -2762,7 +2762,7 @@ class TCustomClient internal constructor(
                     if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), json, suggestedPostParameters)
+                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), suggestedPostParameters)
                     forwardMessageBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -2834,7 +2834,7 @@ class TCustomClient internal constructor(
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                     putBoolUnsafe(TBytesInfo.show_gift_button, showGiftButton)
-                    putJsonObject(TBytesInfo.accepted_gift_types, AcceptedGiftTypes.serializer(), json, acceptedGiftTypes)
+                    putJsonObject(TBytesInfo.accepted_gift_types, AcceptedGiftTypes.serializer(), acceptedGiftTypes)
                     setBusinessAccountGiftSettingsBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -2912,7 +2912,7 @@ class TCustomClient internal constructor(
             run {
                 val bbSize0 = getMyCommandsBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
-                    if (scope != null) putJsonObject(TBytesInfo.scope, BotCommandScope.serializer(), json, scope)
+                    if (scope != null) putJsonObject(TBytesInfo.scope, BotCommandScope.serializer(), scope)
                     if (languageCode != null) putStringUnsafe(TBytesInfo.language_code, languageCode)
                     getMyCommandsBSP.record(size9, bbSize0)
                     toByteArray()
@@ -3003,7 +3003,7 @@ class TCustomClient internal constructor(
                 val bbSize0 = setStickerMaskPositionBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.sticker, sticker)
-                    if (maskPosition != null) putJsonObject(TBytesInfo.mask_position, MaskPosition.serializer(), json, maskPosition)
+                    if (maskPosition != null) putJsonObject(TBytesInfo.mask_position, MaskPosition.serializer(), maskPosition)
                     setStickerMaskPositionBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -3086,7 +3086,7 @@ class TCustomClient internal constructor(
                     if (payForUpgrade != null) putBoolUnsafe(TBytesInfo.pay_for_upgrade, payForUpgrade)
                     if (text != null) putStringUnsafe(TBytesInfo.text, text)
                     if (textParseMode != null) putStringUnsafe(TBytesInfo.text_parse_mode, textParseMode.value)
-                    if (textEntities != null) putListOfJsonObjects(TBytesInfo.text_entities, MessageEntity.serializer(), json, textEntities)
+                    if (textEntities != null) putListOfJsonObjects(TBytesInfo.text_entities, MessageEntity.serializer(), textEntities)
                     if (requestOptions == null) sendGiftBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -3316,7 +3316,7 @@ class TCustomClient internal constructor(
                     putStringUnsafe(TBytesInfo.description, description)
                     putStringUnsafe(TBytesInfo.payload, payload)
                     putStringUnsafe(TBytesInfo.currency, currency.value)
-                    putListOfJsonObjects(TBytesInfo.prices, LabeledPrice.serializer(), json, prices)
+                    putListOfJsonObjects(TBytesInfo.prices, LabeledPrice.serializer(), prices)
                     if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                     if (providerToken != null) putStringUnsafe(TBytesInfo.provider_token, providerToken)
                     if (subscriptionPeriod != null) putNumberUnsafe(TBytesInfo.subscription_period, subscriptionPeriod)
@@ -3511,8 +3511,8 @@ class TCustomClient internal constructor(
             run {
                 val bbSize0 = requestOptions?.bufferSize ?: setMyCommandsBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
-                    putListOfJsonObjects(TBytesInfo.commands, BotCommand.serializer(), json, commands)
-                    if (scope != null) putJsonObject(TBytesInfo.scope, BotCommandScope.serializer(), json, scope)
+                    putListOfJsonObjects(TBytesInfo.commands, BotCommand.serializer(), commands)
+                    if (scope != null) putJsonObject(TBytesInfo.scope, BotCommandScope.serializer(), scope)
                     if (languageCode != null) putStringUnsafe(TBytesInfo.language_code, languageCode)
                     if (requestOptions == null) setMyCommandsBSP.record(size9, bbSize0)
                     toByteArray()
@@ -3554,9 +3554,9 @@ class TCustomClient internal constructor(
                     if (messageId != null) putNumberUnsafe(TBytesInfo.message_id, messageId)
                     if (inlineMessageId != null) putStringUnsafe(TBytesInfo.inline_message_id, inlineMessageId)
                     if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
-                    if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), json, entities)
-                    if (linkPreviewOptions != null) putJsonObject(TBytesInfo.link_preview_options, LinkPreviewOptions.serializer(), json, linkPreviewOptions)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)
+                    if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), entities)
+                    if (linkPreviewOptions != null) putJsonObject(TBytesInfo.link_preview_options, LinkPreviewOptions.serializer(), linkPreviewOptions)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) editMessageTextBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -3622,7 +3622,7 @@ class TCustomClient internal constructor(
                     putStringUnsafe(TBytesInfo.description, description)
                     putStringUnsafe(TBytesInfo.payload, payload)
                     putStringUnsafe(TBytesInfo.currency, currency.value)
-                    putListOfJsonObjects(TBytesInfo.prices, LabeledPrice.serializer(), json, prices)
+                    putListOfJsonObjects(TBytesInfo.prices, LabeledPrice.serializer(), prices)
                     if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
                     if (directMessagesTopicId != null) putNumberUnsafe(TBytesInfo.direct_messages_topic_id, directMessagesTopicId)
                     if (providerToken != null) putStringUnsafe(TBytesInfo.provider_token, providerToken)
@@ -3645,9 +3645,9 @@ class TCustomClient internal constructor(
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
                     if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), json, suggestedPostParameters)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)
+                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), suggestedPostParameters)
+                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) sendInvoiceBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -3700,7 +3700,7 @@ class TCustomClient internal constructor(
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                     putNumberUnsafe(TBytesInfo.message_id, messageId)
-                    if (reaction != null) putListOfJsonObjects(TBytesInfo.reaction, ReactionType.serializer(), json, reaction)
+                    if (reaction != null) putListOfJsonObjects(TBytesInfo.reaction, ReactionType.serializer(), reaction)
                     if (isBig != null) putBoolUnsafe(TBytesInfo.is_big, isBig)
                     if (requestOptions == null) setMessageReactionBSP.record(size9, bbSize0)
                     toByteArray()
@@ -3800,7 +3800,7 @@ class TCustomClient internal constructor(
             run {
                 val bbSize0 = setMyDefaultAdministratorRightsBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
-                    if (rights != null) putJsonObject(TBytesInfo.rights, ChatAdministratorRights.serializer(), json, rights)
+                    if (rights != null) putJsonObject(TBytesInfo.rights, ChatAdministratorRights.serializer(), rights)
                     if (forChannels != null) putBoolUnsafe(TBytesInfo.for_channels, forChannels)
                     setMyDefaultAdministratorRightsBSP.record(size9, bbSize0)
                     toByteArray()
@@ -3896,7 +3896,7 @@ class TCustomClient internal constructor(
             run {
                 val bbSize0 = deleteMyCommandsBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
-                    if (scope != null) putJsonObject(TBytesInfo.scope, BotCommandScope.serializer(), json, scope)
+                    if (scope != null) putJsonObject(TBytesInfo.scope, BotCommandScope.serializer(), scope)
                     if (languageCode != null) putStringUnsafe(TBytesInfo.language_code, languageCode)
                     deleteMyCommandsBSP.record(size9, bbSize0)
                     toByteArray()
@@ -3934,7 +3934,7 @@ class TCustomClient internal constructor(
                     putStringUnsafe(TBytesInfo.text, text)
                     if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
                     if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
-                    if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), json, entities)
+                    if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), entities)
                     if (requestOptions == null) sendMessageDraftBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -4389,8 +4389,8 @@ class TCustomClient internal constructor(
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
                     if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)
+                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) sendGameBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -4517,9 +4517,9 @@ class TCustomClient internal constructor(
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
                     if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), json, suggestedPostParameters)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), json, replyMarkup)
+                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), suggestedPostParameters)
+                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) sendVenueBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -4552,7 +4552,7 @@ class TCustomClient internal constructor(
                     putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                     putNumberUnsafe(TBytesInfo.message_id, messageId)
                     if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) stopPollBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -4670,12 +4670,12 @@ class TCustomClient internal constructor(
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                     putNumberUnsafe(TBytesInfo.chat_id, chatId)
-                    putJsonObject(TBytesInfo.checklist, InputChecklist.serializer(), json, checklist)
+                    putJsonObject(TBytesInfo.checklist, InputChecklist.serializer(), checklist)
                     if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                     if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), json, replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)
+                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) sendChecklistBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -4806,7 +4806,7 @@ class TCustomClient internal constructor(
                     if (horizontalAccuracy != null) putNumberUnsafe(TBytesInfo.horizontal_accuracy, horizontalAccuracy)
                     if (heading != null) putNumberUnsafe(TBytesInfo.heading, heading)
                     if (proximityAlertRadius != null) putNumberUnsafe(TBytesInfo.proximity_alert_radius, proximityAlertRadius)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) editMessageLiveLocationBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -5012,7 +5012,7 @@ class TCustomClient internal constructor(
                 val bbSize0 = requestOptions?.bufferSize ?: answerWebAppQueryBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.web_app_query_id, webAppQueryId)
-                    putJsonObject(TBytesInfo.result, InlineQueryResult.serializer(), json, result)
+                    putJsonObject(TBytesInfo.result, InlineQueryResult.serializer(), result)
                     if (requestOptions == null) answerWebAppQueryBSP.record(size9, bbSize0)
                     toByteArray()
                 }
@@ -5333,9 +5333,9 @@ class TCustomClient internal constructor(
                     if (inlineMessageId != null) putStringUnsafe(TBytesInfo.inline_message_id, inlineMessageId)
                     if (caption != null) putStringUnsafe(TBytesInfo.caption, caption)
                     if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
-                    if (captionEntities != null) putListOfJsonObjects(TBytesInfo.caption_entities, MessageEntity.serializer(), json, captionEntities)
+                    if (captionEntities != null) putListOfJsonObjects(TBytesInfo.caption_entities, MessageEntity.serializer(), captionEntities)
                     if (showCaptionAboveMedia != null) putBoolUnsafe(TBytesInfo.show_caption_above_media, showCaptionAboveMedia)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), json, replyMarkup)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) editMessageCaptionBSP.record(size9, bbSize0)
                     toByteArray()
                 }
