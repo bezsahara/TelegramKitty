@@ -3,8 +3,12 @@ package org.bezsahara.kittybot.bot.json
 import io.vertx.core.buffer.Buffer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -47,11 +51,10 @@ class JsonByteBufferTest {
     @Test
     fun writesNestedJsonObjectsAfterGrowth() {
         val actual = render(initialCapacity = 1) {
-            putJsonObject(key("item"), TestPayload.serializer(), Json, TestPayload(1, "alpha"))
+            putJsonObject(key("item"), TestPayload.serializer(), TestPayload(1, "alpha"))
             putListOfJsonObjects(
                 key("items"),
                 TestPayload.serializer(),
-                Json,
                 listOf(TestPayload(2, "beta"), TestPayload(3, "gamma"))
             )
         }
@@ -126,14 +129,164 @@ class JsonByteBufferTest {
         assertEquals("{}", actual)
     }
 
+    @Serializable
+    class C3(
+        val some: String
+    )
+
+    @Serializable
+    class B2(
+        val pop: Int,
+        val c: C3
+    )
+
+    @Serializable
+    class A1(
+        val simple: String,
+        val b: B2
+    )
+
+    @Test
+    fun multiJsonObjects() {
+        val b= B2(3, C3("slash"))
+
+        val actual = JsonByteBuffer(1).run {
+            putStringUnsafe(key("simple"), "simple|\"\\\"\"\\\\\r")
+            putJsonObject(key("b"), B2.serializer(), b)
+            toByteArray().decodeToString()
+        }
+        val other = buildJsonObject {
+            put("simple", JsonPrimitive("simple|\"\\\"\"\\\\\r"))
+            put("b", Json.encodeToJsonElement(B2.serializer(), b))
+        }.toString()
+
+        assertEquals(actual, other)
+    }
+
     @Test
     fun toBufferReturnsEncodedJsonForWrittenData() {
         val actual = (JsonByteBuffer(1).apply {
             putStringUnsafe(key("kind"), "ping")
-            putListOfLongUnsafe(key("ids"), listOf(1L, 2L))
+            putListOfLongUnsafe(key("ids"), listOf(1L, 2L, Long.MIN_VALUE))
         }.toBuffer() as Buffer).toString(Charsets.UTF_8)
 
-        assertEquals("""{"kind":"ping","ids":[1,2]}""", actual)
+        assertEquals("""{"kind":"ping","ids":[1,2,${Long.MIN_VALUE}]}""", actual)
+    }
+
+    @Test
+    fun writesStringsFromManyLanguages() {
+        val values = multilingualSamples.map { "${it.first}: ${it.second}" }
+        val actual = render(initialCapacity = 1) {
+            putListOfStringUnsafe(key("values"), values)
+        }
+        val expected = buildJsonObject {
+            put("values", buildJsonArray {
+                values.forEach { add(JsonPrimitive(it)) }
+            })
+        }
+
+        assertEquals(expected, Json.parseToJsonElement(actual))
+    }
+
+    @Test
+    fun appendOverloadsHandleMultilingualSlicesAndNulls() {
+        val source = "__Привіт світе | こんにちは世界 | مرحبا بالعالم | 👩‍💻__"
+        val expectedValue = source.substring(2, source.length - 2)
+        val actual = JsonByteBuffer(1).apply {
+            putQuote()
+            for (char in "value") writeChar(char)
+            putQuote()
+            writeChar(':')
+            putQuote()
+            write(expectedValue)
+            putQuote()
+            putComma()
+
+            putQuote()
+            write("missing")
+            putQuote()
+            writeChar(':')
+            write("null")
+            putComma()
+        }.toByteArray().decodeToString()
+        val expected = buildJsonObject {
+            put("value", JsonPrimitive(expectedValue))
+            put("missing", JsonNull)
+        }
+
+        assertEquals(expected, Json.parseToJsonElement(actual))
+    }
+
+    @Test
+    fun writeCsqAndWriteArrEncodeMultilingualSlices() {
+//        val source = "##Zażółć gęślą jaźń | Γειά σου κόσμε | שלום עולם | नमस्ते दुनिया | 😀##"
+//        val expectedValue = source.substring(2, source.length - 2)
+//        val actual = JsonByteBuffer(1).apply {
+//            putQuote()
+//            write("csq")
+//            putQuote()
+//            append(':')
+//            putQuote()
+//            writeCsq(StringBuilder(source), 2, source.length - 2)
+//            putQuote()
+//            putComma()
+//
+//            putQuote()
+//            write("arr")
+//            putQuote()
+//            append(':')
+//            putQuote()
+//            writeArr(source.toCharArray(), 2, source.length - 2)
+//            putQuote()
+//            putComma()
+//        }.toByteArray().decodeToString()
+//        val expected = buildJsonObject {
+//            put("csq", JsonPrimitive(expectedValue))
+//            put("arr", JsonPrimitive(expectedValue))
+//        }
+//
+//        assertEquals(expected, Json.parseToJsonElement(actual))
+    }
+
+    @Test
+    fun randomMultilingualStringsRoundTripAgainstKotlinxJson() {
+        val random = Random(1_592_639_215)
+
+        repeat(200) { iteration ->
+            val value = randomMultilingualString(random)
+            val actual = render(initialCapacity = 1) {
+                putStringUnsafe(key("value"), value)
+            }
+            val expected = buildJsonObject {
+                put("value", JsonPrimitive(value))
+            }
+
+            assertEquals(
+                expected,
+                Json.parseToJsonElement(actual),
+                "single string iteration $iteration failed"
+            )
+        }
+
+        repeat(100) { iteration ->
+            val values = List(random.nextInt(0, 8)) {
+                randomMultilingualString(random)
+            }
+            val actual = render(initialCapacity = 1) {
+                putListOfStringUnsafe(key("values"), values)
+            }
+            val expected = buildJsonObject {
+                put("values", buildJsonArray {
+                    values.forEach { add(JsonPrimitive(it)) }
+                })
+            }
+
+            assertEquals(
+                expected,
+                Json.parseToJsonElement(actual),
+                "list iteration $iteration failed"
+            )
+        }
     }
 
     private fun render(
@@ -142,6 +295,12 @@ class JsonByteBufferTest {
     ): String = JsonByteBuffer(initialCapacity).apply(body).toByteArray().decodeToString()
 
     private fun key(value: String): ByteArray = value.encodeToByteArray()
+
+    private fun randomMultilingualString(random: Random): String = buildString {
+        repeat(random.nextInt(0, 40)) {
+            append(randomFragments[random.nextInt(randomFragments.size)])
+        }
+    }
 
     @Test
     fun normalEncoding() {
@@ -165,4 +324,65 @@ class JsonByteBufferTest {
         val id: Int,
         val title: String,
     )
+
+    private companion object {
+        private val multilingualSamples = listOf(
+            "English" to "Hello world",
+            "Ukrainian" to "Привіт світе",
+            "Polish" to "Zażółć gęślą jaźń",
+            "Greek" to "Γειά σου κόσμε",
+            "Arabic" to "مرحبا بالعالم",
+            "Hebrew" to "שלום עולם",
+            "Hindi" to "नमस्ते दुनिया",
+            "Thai" to "สวัสดีชาวโลก",
+            "Chinese" to "你好，世界",
+            "Japanese" to "こんにちは世界",
+            "Korean" to "안녕하세요 세계",
+            "Georgian" to "გამარჯობა მსოფლიო",
+            "Emoji" to "👩‍💻🌍🚀",
+        )
+
+        private val randomFragments = listOf(
+            "",
+            "A",
+            "z",
+            "0",
+            " ",
+            "\n",
+            "\r",
+            "\t",
+            "\b",
+            "\u000C",
+            "\"",
+            "\\",
+            "\u2028",
+            "\u2029",
+            "é",
+            "ß",
+            "ї",
+            "Ґ",
+            "Ł",
+            "Ж",
+            "я",
+            "Γ",
+            "δ",
+            "مرحبا",
+            "ع",
+            "שלום",
+            "न",
+            "स्",
+            "ते",
+            "ส",
+            "วั",
+            "你",
+            "界",
+            "に",
+            "ほん",
+            "한",
+            "글",
+            "😀",
+            "👩‍💻",
+            "🚀",
+        )
+    }
 }
