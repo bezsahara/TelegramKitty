@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.dokka") version "1.9.20"
     `maven-publish`
     signing
+//    id("me.champeau.jmh") version "0.7.3"
 }
 
 group = rootProject.group
