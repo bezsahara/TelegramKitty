@@ -1,6 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.message.reactions
 
-import org.bezsahara.kittybot.telegram.values.ReactionTypeKind
 import kotlinx.serialization.json.buildJsonObject
 import org.bezsahara.kittybot.bot.json.PureJsonSerializer
 import kotlinx.serialization.SerialName
@@ -19,7 +18,7 @@ import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionTypePai
  */
 @Serializable(with = ReactionTypePaidJsonSerializer::class)
 object ReactionTypePaid : ReactionType {
-    override val type: ReactionTypeKind = ReactionTypeKind.PAID
+    override val type: String = "paid"
 }
 
 

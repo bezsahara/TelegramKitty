@@ -5,7 +5,6 @@ import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 import org.bezsahara.kittybot.telegram.client.file.CustomMPB
 import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
 import kotlin.Unit
-import org.bezsahara.kittybot.telegram.values.InputProfilePhotoType
 import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import kotlinx.serialization.Serializable
 
@@ -32,6 +31,6 @@ data class InputProfilePhotoStatic(
     ) {
         photo.asVertx().execute(builder, null)
     }
-    override val type: InputProfilePhotoType = InputProfilePhotoType.STATIC
+    override val type: String = "static"
 }
 

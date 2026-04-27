@@ -2,7 +2,6 @@ package org.bezsahara.kittybot.telegram.classes.chat.background
 
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundType
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.BackgroundTypeKind
 import org.bezsahara.kittybot.telegram.classes.media.Document
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFill
@@ -28,6 +27,6 @@ data class BackgroundTypePattern(
     @SerialName("is_inverted") val isInverted: Boolean? = null,
     @SerialName("is_moving") val isMoving: Boolean? = null
 ) : BackgroundType {
-    override val type: BackgroundTypeKind = BackgroundTypeKind.PATTERN
+    override val type: String = "pattern"
 }
 

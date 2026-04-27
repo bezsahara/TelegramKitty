@@ -5,7 +5,6 @@ import kotlinx.serialization.SerialName
 import kotlin.collections.List
 import org.bezsahara.kittybot.telegram.values.ParseMode
 import org.bezsahara.kittybot.telegram.values.InlineQueryResultDocumentMimeType
-import org.bezsahara.kittybot.telegram.values.InlineQueryResultType
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
@@ -48,6 +47,6 @@ data class InlineQueryResultDocument(
     @SerialName("thumbnail_width") val thumbnailWidth: Long? = null,
     @SerialName("thumbnail_height") val thumbnailHeight: Long? = null
 ) : InlineQueryResult {
-    override val type: InlineQueryResultType = InlineQueryResultType.DOCUMENT
+    override val type: String = "document"
 }
 

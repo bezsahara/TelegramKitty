@@ -3,7 +3,6 @@ package org.bezsahara.kittybot.telegram.classes.bot
 import kotlinx.serialization.json.buildJsonObject
 import org.bezsahara.kittybot.bot.json.PureJsonSerializer
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.BotCommandScopeType
 import kotlinx.serialization.json.JsonPrimitive
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
 import kotlinx.serialization.Serializable
@@ -19,7 +18,7 @@ import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllChatAdminis
  */
 @Serializable(with = BotCommandScopeAllChatAdministratorsJsonSerializer::class)
 object BotCommandScopeAllChatAdministrators : BotCommandScope {
-    override val type: BotCommandScopeType = BotCommandScopeType.ALL_CHAT_ADMINISTRATORS
+    override val type: String = "all_chat_administrators"
 }
 
 

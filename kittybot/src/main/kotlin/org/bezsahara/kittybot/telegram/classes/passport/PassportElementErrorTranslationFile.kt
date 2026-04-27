@@ -4,7 +4,6 @@ import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.values.PassportElementType
 import org.bezsahara.kittybot.telegram.classes.passport.PassportElementError
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.values.PassportElementErrorSource
 
 
 /**
@@ -23,6 +22,6 @@ data class PassportElementErrorTranslationFile(
     @SerialName("file_hash") val fileHash: String,
     val message: String
 ) : PassportElementError {
-    override val source: PassportElementErrorSource = PassportElementErrorSource.TRANSLATION_FILE
+    override val source: String = "translation_file"
 }
 

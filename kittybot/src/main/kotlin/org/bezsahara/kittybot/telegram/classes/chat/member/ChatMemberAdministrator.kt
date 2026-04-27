@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.chat.member
 
 import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
-import org.bezsahara.kittybot.telegram.values.ChatMemberStatus
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
@@ -57,6 +56,6 @@ data class ChatMemberAdministrator(
     @SerialName("can_manage_tags") val canManageTags: Boolean? = null,
     @SerialName("custom_title") val customTitle: String? = null
 ) : ChatMember {
-    override val status: ChatMemberStatus = ChatMemberStatus.ADMINISTRATOR
+    override val status: String = "administrator"
 }
 

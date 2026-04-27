@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.input
 
 import kotlinx.serialization.json.jsonObject
-import org.bezsahara.kittybot.telegram.values.InputPaidMediaType
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
@@ -18,7 +17,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = InputPaidMediaSerializer::class)
 sealed interface InputPaidMedia {
-    val type: InputPaidMediaType
+    val type: String
     suspend fun executeAll(
         builder: MultiPartBuilder
     ) 

@@ -4,7 +4,6 @@ import org.bezsahara.kittybot.telegram.classes.inline.InputMessageContent
 import kotlinx.serialization.SerialName
 import kotlin.collections.List
 import org.bezsahara.kittybot.telegram.values.ParseMode
-import org.bezsahara.kittybot.telegram.values.InlineQueryResultType
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
@@ -51,6 +50,6 @@ data class InlineQueryResultVideo(
     @SerialName("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null,
     @SerialName("input_message_content") val inputMessageContent: InputMessageContent? = null
 ) : InlineQueryResult {
-    override val type: InlineQueryResultType = InlineQueryResultType.VIDEO
+    override val type: String = "video"
 }
 

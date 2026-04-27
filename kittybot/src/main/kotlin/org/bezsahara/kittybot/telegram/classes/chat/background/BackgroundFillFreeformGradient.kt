@@ -1,6 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.chat.background
 
-import org.bezsahara.kittybot.telegram.values.BackgroundFillType
 import kotlinx.serialization.SerialName
 import kotlin.collections.List
 import kotlinx.serialization.Serializable
@@ -19,6 +18,6 @@ import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundFill
 data class BackgroundFillFreeformGradient(
     val colors: List<Long>
 ) : BackgroundFill {
-    override val type: BackgroundFillType = BackgroundFillType.FREEFORM_GRADIENT
+    override val type: String = "freeform_gradient"
 }
 

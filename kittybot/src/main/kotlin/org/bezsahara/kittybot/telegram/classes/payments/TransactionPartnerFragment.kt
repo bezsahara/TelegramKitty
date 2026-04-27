@@ -3,7 +3,6 @@ package org.bezsahara.kittybot.telegram.classes.payments
 import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartner
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalState
-import org.bezsahara.kittybot.telegram.values.TransactionPartnerType
 import kotlinx.serialization.Serializable
 
 
@@ -19,6 +18,6 @@ import kotlinx.serialization.Serializable
 data class TransactionPartnerFragment(
     @SerialName("withdrawal_state") val withdrawalState: RevenueWithdrawalState? = null
 ) : TransactionPartner {
-    override val type: TransactionPartnerType = TransactionPartnerType.FRAGMENT
+    override val type: String = "fragment"
 }
 

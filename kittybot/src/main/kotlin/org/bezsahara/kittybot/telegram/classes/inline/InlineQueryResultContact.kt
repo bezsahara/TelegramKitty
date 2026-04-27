@@ -2,7 +2,6 @@ package org.bezsahara.kittybot.telegram.classes.inline
 
 import org.bezsahara.kittybot.telegram.classes.inline.InputMessageContent
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.InlineQueryResultType
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
 import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResult
@@ -38,6 +37,6 @@ data class InlineQueryResultContact(
     @SerialName("thumbnail_width") val thumbnailWidth: Long? = null,
     @SerialName("thumbnail_height") val thumbnailHeight: Long? = null
 ) : InlineQueryResult {
-    override val type: InlineQueryResultType = InlineQueryResultType.CONTACT
+    override val type: String = "contact"
 }
 

@@ -1,6 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.message.reactions
 
-import org.bezsahara.kittybot.telegram.values.ReactionTypeKind
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.values.ReactionEmoji
 import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
@@ -19,6 +18,6 @@ import kotlinx.serialization.Serializable
 data class ReactionTypeEmoji(
     val emoji: ReactionEmoji
 ) : ReactionType {
-    override val type: ReactionTypeKind = ReactionTypeKind.EMOJI
+    override val type: String = "emoji"
 }
 

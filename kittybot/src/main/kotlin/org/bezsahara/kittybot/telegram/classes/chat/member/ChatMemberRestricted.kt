@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.chat.member
 
 import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
-import org.bezsahara.kittybot.telegram.values.ChatMemberStatus
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
@@ -55,6 +54,6 @@ data class ChatMemberRestricted(
     @SerialName("until_date") val untilDate: Long,
     val tag: String? = null
 ) : ChatMember {
-    override val status: ChatMemberStatus = ChatMemberStatus.RESTRICTED
+    override val status: String = "restricted"
 }
 

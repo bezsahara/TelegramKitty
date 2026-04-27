@@ -2,7 +2,6 @@ package org.bezsahara.kittybot.telegram.classes.media.story
 
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryAreaType
-import org.bezsahara.kittybot.telegram.values.StoryAreaTypeKind
 import kotlinx.serialization.Serializable
 
 
@@ -22,6 +21,6 @@ data class StoryAreaTypeWeather(
     val emoji: String,
     @SerialName("background_color") val backgroundColor: Long
 ) : StoryAreaType {
-    override val type: StoryAreaTypeKind = StoryAreaTypeKind.WEATHER
+    override val type: String = "weather"
 }
 

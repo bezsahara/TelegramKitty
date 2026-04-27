@@ -7,7 +7,6 @@ import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 import org.bezsahara.kittybot.telegram.client.file.CustomMPB
 import org.bezsahara.kittybot.telegram.classes.input.InputMedia
 import kotlinx.serialization.DeserializationStrategy
-import org.bezsahara.kittybot.telegram.values.InputMediaType
 import org.bezsahara.kittybot.telegram.classes.input.InputMediaDocument
 import org.bezsahara.kittybot.telegram.classes.input.InputMediaPhoto
 import org.bezsahara.kittybot.telegram.classes.input.InputMediaVideo
@@ -21,7 +20,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = InputMediaSerializer::class)
 sealed interface InputMedia {
-    val type: InputMediaType
+    val type: String
     suspend fun executeAll(
         builder: MultiPartBuilder
     ) 

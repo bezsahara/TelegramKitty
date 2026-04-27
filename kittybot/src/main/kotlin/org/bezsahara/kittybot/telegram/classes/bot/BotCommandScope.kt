@@ -5,7 +5,6 @@ import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeChatAdministra
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeChatMember
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.BotCommandScopeType
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
 import kotlinx.serialization.DeserializationStrategy
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeChat
@@ -20,7 +19,7 @@ import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllChatAdminis
 
 @Serializable(with = BotCommandScopeSerializer::class)
 sealed interface BotCommandScope {
-    val type: BotCommandScopeType
+    val type: String
 }
 
 

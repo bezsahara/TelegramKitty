@@ -4,7 +4,6 @@ import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButton
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.values.MenuButtonType
 
 
 /**
@@ -21,6 +20,6 @@ data class MenuButtonWebApp(
     val text: String,
     @SerialName("web_app") val webApp: WebAppInfo
 ) : MenuButton {
-    override val type: MenuButtonType = MenuButtonType.WEB_APP
+    override val type: String = "web_app"
 }
 

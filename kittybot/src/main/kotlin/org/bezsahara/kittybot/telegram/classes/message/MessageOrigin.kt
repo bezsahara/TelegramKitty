@@ -6,7 +6,6 @@ import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.message.MessageOriginChat
 import kotlinx.serialization.DeserializationStrategy
 import org.bezsahara.kittybot.telegram.classes.message.MessageOriginHiddenUser
-import org.bezsahara.kittybot.telegram.values.MessageOriginType
 import org.bezsahara.kittybot.telegram.classes.message.MessageOrigin
 import org.bezsahara.kittybot.telegram.classes.message.MessageOriginUser
 import kotlinx.serialization.json.JsonElement
@@ -17,7 +16,7 @@ import org.bezsahara.kittybot.telegram.classes.message.MessageOriginChannel
 
 @Serializable(with = MessageOriginSerializer::class)
 sealed interface MessageOrigin {
-    val type: MessageOriginType
+    val type: String
 }
 
 

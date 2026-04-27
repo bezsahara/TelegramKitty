@@ -7,7 +7,6 @@ import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButtonDefault
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.values.MenuButtonType
 
 
 /**
@@ -19,7 +18,7 @@ import org.bezsahara.kittybot.telegram.values.MenuButtonType
  */
 @Serializable(with = MenuButtonDefaultJsonSerializer::class)
 object MenuButtonDefault : MenuButton {
-    override val type: MenuButtonType = MenuButtonType.DEFAULT
+    override val type: String = "default"
 }
 
 

@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.chat.member
 
 import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
-import org.bezsahara.kittybot.telegram.values.ChatMemberStatus
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
@@ -19,6 +18,6 @@ import kotlinx.serialization.Serializable
 data class ChatMemberLeft(
     val user: User
 ) : ChatMember {
-    override val status: ChatMemberStatus = ChatMemberStatus.LEFT
+    override val status: String = "left"
 }
 

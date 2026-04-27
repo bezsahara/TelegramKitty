@@ -2,7 +2,6 @@ package org.bezsahara.kittybot.telegram.classes.chat.background
 
 import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundType
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.BackgroundTypeKind
 import org.bezsahara.kittybot.telegram.classes.media.Document
 import kotlinx.serialization.Serializable
 
@@ -25,6 +24,6 @@ data class BackgroundTypeWallpaper(
     @SerialName("is_blurred") val isBlurred: Boolean? = null,
     @SerialName("is_moving") val isMoving: Boolean? = null
 ) : BackgroundType {
-    override val type: BackgroundTypeKind = BackgroundTypeKind.WALLPAPER
+    override val type: String = "wallpaper"
 }
 

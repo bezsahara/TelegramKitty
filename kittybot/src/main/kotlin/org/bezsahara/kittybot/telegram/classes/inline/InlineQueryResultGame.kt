@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.inline
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.InlineQueryResultType
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
 import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResult
@@ -23,6 +22,6 @@ data class InlineQueryResultGame(
     @SerialName("game_short_name") val gameShortName: String,
     @SerialName("reply_markup") val replyMarkup: InlineKeyboardMarkup? = null
 ) : InlineQueryResult {
-    override val type: InlineQueryResultType = InlineQueryResultType.GAME
+    override val type: String = "game"
 }
 

@@ -1,6 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.gifts
 
-import org.bezsahara.kittybot.telegram.values.OwnedGiftType
 import org.bezsahara.kittybot.telegram.classes.gifts.Gift
 import kotlinx.serialization.SerialName
 import kotlin.collections.List
@@ -48,6 +47,6 @@ data class OwnedGiftRegular(
     @SerialName("is_upgrade_separate") val isUpgradeSeparate: Boolean? = null,
     @SerialName("unique_gift_number") val uniqueGiftNumber: Long? = null
 ) : OwnedGift {
-    override val type: OwnedGiftType = OwnedGiftType.REGULAR
+    override val type: String = "regular"
 }
 

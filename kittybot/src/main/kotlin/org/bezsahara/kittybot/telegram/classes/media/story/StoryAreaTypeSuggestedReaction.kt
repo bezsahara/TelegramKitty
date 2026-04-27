@@ -2,7 +2,6 @@ package org.bezsahara.kittybot.telegram.classes.media.story
 
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryAreaType
-import org.bezsahara.kittybot.telegram.values.StoryAreaTypeKind
 import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
 import kotlinx.serialization.Serializable
 
@@ -23,6 +22,6 @@ data class StoryAreaTypeSuggestedReaction(
     @SerialName("is_dark") val isDark: Boolean? = null,
     @SerialName("is_flipped") val isFlipped: Boolean? = null
 ) : StoryAreaType {
-    override val type: StoryAreaTypeKind = StoryAreaTypeKind.SUGGESTED_REACTION
+    override val type: String = "suggested_reaction"
 }
 

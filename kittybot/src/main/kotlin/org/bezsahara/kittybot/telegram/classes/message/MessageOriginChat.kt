@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.message
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.MessageOriginType
 import org.bezsahara.kittybot.telegram.classes.message.MessageOrigin
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.Chat
@@ -23,6 +22,6 @@ data class MessageOriginChat(
     @SerialName("sender_chat") val senderChat: Chat,
     @SerialName("author_signature") val authorSignature: String? = null
 ) : MessageOrigin {
-    override val type: MessageOriginType = MessageOriginType.CHAT
+    override val type: String = "chat"
 }
 

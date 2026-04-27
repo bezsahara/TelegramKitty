@@ -11,12 +11,11 @@ import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButtonWebApp
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.values.MenuButtonType
 
 
 @Serializable(with = MenuButtonSerializer::class)
 sealed interface MenuButton {
-    val type: MenuButtonType
+    val type: String
 }
 
 

@@ -6,7 +6,6 @@ import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 import org.bezsahara.kittybot.telegram.client.file.CustomMPB
 import kotlinx.serialization.DeserializationStrategy
-import org.bezsahara.kittybot.telegram.values.InputStoryContentType
 import org.bezsahara.kittybot.telegram.classes.input.InputStoryContentPhoto
 import org.bezsahara.kittybot.telegram.classes.input.InputStoryContent
 import kotlinx.serialization.json.JsonElement
@@ -18,7 +17,7 @@ import org.bezsahara.kittybot.telegram.classes.input.InputStoryContentVideo
 
 @Serializable(with = InputStoryContentSerializer::class)
 sealed interface InputStoryContent {
-    val type: InputStoryContentType
+    val type: String
     suspend fun executeAll(
         builder: MultiPartBuilder
     ) 

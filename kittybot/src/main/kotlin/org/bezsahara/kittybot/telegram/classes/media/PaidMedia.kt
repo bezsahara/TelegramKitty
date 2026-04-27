@@ -3,7 +3,6 @@ package org.bezsahara.kittybot.telegram.classes.media
 import kotlinx.serialization.json.jsonObject
 import org.bezsahara.kittybot.telegram.classes.media.PaidMediaVideo
 import kotlinx.serialization.json.jsonPrimitive
-import org.bezsahara.kittybot.telegram.values.PaidMediaType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.DeserializationStrategy
@@ -16,7 +15,7 @@ import org.bezsahara.kittybot.telegram.classes.media.PaidMedia
 
 @Serializable(with = PaidMediaSerializer::class)
 sealed interface PaidMedia {
-    val type: PaidMediaType
+    val type: String
 }
 
 

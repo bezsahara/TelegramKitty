@@ -4,7 +4,6 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryAreaTypeWeather
-import org.bezsahara.kittybot.telegram.values.StoryAreaTypeKind
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryAreaTypeUniqueGift
 import kotlinx.serialization.DeserializationStrategy
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryAreaType
@@ -18,7 +17,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = StoryAreaTypeSerializer::class)
 sealed interface StoryAreaType {
-    val type: StoryAreaTypeKind
+    val type: String
 }
 
 

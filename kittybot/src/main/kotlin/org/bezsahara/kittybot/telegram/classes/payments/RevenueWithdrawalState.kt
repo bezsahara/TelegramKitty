@@ -6,7 +6,6 @@ import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalStateFa
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.SerialName
 import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalState
-import org.bezsahara.kittybot.telegram.values.RevenueWithdrawalStateType
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
@@ -16,7 +15,7 @@ import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalStatePe
 
 @Serializable(with = RevenueWithdrawalStateSerializer::class)
 sealed interface RevenueWithdrawalState {
-    val type: RevenueWithdrawalStateType
+    val type: String
 }
 
 

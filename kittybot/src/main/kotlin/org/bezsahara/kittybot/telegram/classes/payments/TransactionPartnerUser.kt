@@ -4,7 +4,6 @@ import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartner
 import org.bezsahara.kittybot.telegram.classes.gifts.Gift
 import kotlinx.serialization.SerialName
 import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.values.TransactionPartnerType
 import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.values.TransactionType
@@ -40,6 +39,6 @@ data class TransactionPartnerUser(
     val gift: Gift? = null,
     @SerialName("premium_subscription_duration") val premiumSubscriptionDuration: Long? = null
 ) : TransactionPartner {
-    override val type: TransactionPartnerType = TransactionPartnerType.USER
+    override val type: String = "user"
 }
 

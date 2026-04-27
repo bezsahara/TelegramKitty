@@ -2,7 +2,6 @@ package org.bezsahara.kittybot.telegram.classes.payments
 
 import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartner
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.TransactionPartnerType
 import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
 
@@ -21,6 +20,6 @@ data class TransactionPartnerAffiliateProgram(
     @SerialName("commission_per_mille") val commissionPerMille: Long,
     @SerialName("sponsor_user") val sponsorUser: User? = null
 ) : TransactionPartner {
-    override val type: TransactionPartnerType = TransactionPartnerType.AFFILIATE_PROGRAM
+    override val type: String = "affiliate_program"
 }
 

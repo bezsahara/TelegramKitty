@@ -3,7 +3,6 @@ package org.bezsahara.kittybot.telegram.classes.payments
 import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartner
 import org.bezsahara.kittybot.telegram.classes.gifts.Gift
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.TransactionPartnerType
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.Chat
 
@@ -22,6 +21,6 @@ data class TransactionPartnerChat(
     val chat: Chat,
     val gift: Gift? = null
 ) : TransactionPartner {
-    override val type: TransactionPartnerType = TransactionPartnerType.CHAT
+    override val type: String = "chat"
 }
 
