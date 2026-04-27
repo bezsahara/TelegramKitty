@@ -52,7 +52,7 @@ fun FelineDispatcher.filesExample() {
                 if (photos.isNullOrEmpty()) {
                     bot.sendMessage(update.chatIdOrNull(), "No photos available. To stop write /cancel")
                 } else {
-                    bot.setMessageReaction(chatId, msg.messageId, listOf(ReactionTypeEmoji(ReactionEmoji.CLAP)))
+                    bot.setMessageReaction(chatId, msg.messageId, listOf(ReactionTypeEmoji(ReactionEmoji.FIRE)))
                         .consume()
                     val a = photos.maxBy { it.height }
                     bot.sendPhoto(chatId, TelegramFile.withId(a.fileId), caption = "Here is your photo. To stop write /cancel")

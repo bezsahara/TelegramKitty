@@ -72,6 +72,9 @@ fun FelineBuilder<*>.buildBot() {
         Decision.Consumed
     }
 
+    // Handler are tested in order of definition.
+    // If one consumes the update, handlers after it are not tested!
+    // This behavior can be changed with testEach for example
     dispatchers {
         // A normal command handler.
         command("/start") {

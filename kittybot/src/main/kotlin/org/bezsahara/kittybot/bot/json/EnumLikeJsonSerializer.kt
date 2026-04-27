@@ -32,7 +32,7 @@ abstract class ResolveEnumLike<T : EnumLike<*>> {
 
 abstract class ResolveEnumLikeBig<T : EnumLike<E>, E: Enum<E>>(enumClass: Class<E>) : ResolveEnumLike<T>() {
     private val map = hashMapOf<String, T>()
-    private val enumMap = EnumMap<E, T>(enumClass)
+    private val enumMap = EnumArray<E, T>(enumClass)
 
     protected fun T.register(): T {
         map[value] = this
@@ -66,5 +66,35 @@ internal abstract class EnumLikeJsonSerializer<T : EnumLike<*>>(
 
     final override fun deserialize(decoder: Decoder): T {
         return resolution.resolve(decoder.decodeString())
+    }
+}
+
+
+internal class EnumArray<E: Enum<E>, V>(enumClazz: Class<E>) {
+    init {
+        require(enumClazz.isEnum) { "Enum type $enumClazz is not an enum class." }
+    }
+
+    private val length = enumClazz.enumConstants.size
+    private val array = arrayOfNulls<Any>(length)
+
+    operator fun get(enum: E): V? {
+        val index = enum.ordinal
+        if (index !in 0 until length) {
+            throw IndexOutOfBoundsException("Invalid index $index")
+        }
+        return array[index] as V?
+    }
+
+    operator fun set(enum: E, value: V?) {
+        val index = enum.ordinal
+        if (index !in 0 until length) {
+            throw IndexOutOfBoundsException("Invalid index $index")
+        }
+        array[index] = value
+    }
+
+    fun toList(): List<V?> {
+        return array.toList() as List<V?>
     }
 }
