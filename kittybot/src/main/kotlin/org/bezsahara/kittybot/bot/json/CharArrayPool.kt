@@ -12,5 +12,5 @@ object CharArrayPool {
         return map.get()
     }
 
-    internal const val MIN_ARRAY_SIZE = 300
+    internal const val MIN_ARRAY_SIZE = 4096
 }
