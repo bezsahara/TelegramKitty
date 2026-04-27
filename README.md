@@ -35,8 +35,8 @@ Use the default Vert.x client:
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:3.0.0")
-    implementation("org.bezsahara:kittybot-client:3.0.0")
+    implementation("org.bezsahara:kittybot:3.1.0")
+    implementation("org.bezsahara:kittybot-client:3.1.0")
 }
 ```
 
@@ -44,7 +44,7 @@ If you want to provide your own HTTP client, `kittybot-client` is not required:
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:3.0.0")
+    implementation("org.bezsahara:kittybot:3.1.0")
 }
 ```
 
@@ -132,7 +132,7 @@ Ktor is also supported. Add your own Ktor client dependencies and engine:
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:3.0.0")
+    implementation("org.bezsahara:kittybot:3.1.0")
     implementation("io.ktor:ktor-client-core:3.4.0")
     implementation("io.ktor:ktor-client-cio:3.4.0")
 }
