@@ -15,6 +15,8 @@ group = "org.bezsahara"
 
 val kittybotLocalPublishTask = ":kittybot:publishMavenJavaPublicationToLocalRepoRepository"
 val kittybotClientLocalPublishTask = ":kittybot-client:publishMavenJavaPublicationToLocalRepoRepository"
+val kittybotMavenLocalPublishTask = ":kittybot:publishToMavenLocal"
+val kittybotClientMavenLocalPublishTask = ":kittybot-client:publishToMavenLocal"
 
 fun registerGeneratedRepoArchiveTask(
     taskName: String,
@@ -69,6 +71,12 @@ tasks.register("publishGeneratedRepos") {
     dependsOn(kittybotLocalPublishTask, kittybotClientLocalPublishTask)
 }
 
+tasks.register("publishLibrariesToMavenLocal") {
+    group = "publishing"
+    description = "Publishes kittybot and kittybot-client to Maven Local on this machine."
+    dependsOn(kittybotMavenLocalPublishTask, kittybotClientMavenLocalPublishTask)
+}
+
 tasks.register("publishAndZipGeneratedRepos") {
     group = "publishing"
     description = "Publishes both libraries and refreshes generated/kitty.zip and generated-client/client.zip."
@@ -84,4 +92,3 @@ tasks.register("publishAndZipGeneratedRepos") {
 //                org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOT
 //            )
 //    }
-
