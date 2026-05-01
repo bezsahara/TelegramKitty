@@ -2,6 +2,7 @@ package org.bezsahara.samples
 
 import org.bezsahara.kittybot.bot.action.each.testEach
 import org.bezsahara.kittybot.bot.action.other.contextHook
+import org.bezsahara.kittybot.bot.action.other.contextValue
 import org.bezsahara.kittybot.bot.action.other.handleUnknownUpdate
 import org.bezsahara.kittybot.bot.builder.FelineBuilder
 import org.bezsahara.kittybot.bot.builder.UpdaterMode
@@ -101,15 +102,28 @@ fun FelineBuilder<*>.buildBot() {
             bot.sendMessage(chatId, "Updated")
         }
 
+        stateHandlerExample()
         commandGroupExample()
         mediaGroupExample()
         conversations()
 
+        // You can create attr key like this:
         val attrKey = attrKeyOf<String>("TestAttribute")
+        // Or easier way:
+        val contextValue = contextValue { mutableListOf<Int>() }
+        // Or without initial value
+        // val contextValue = contextValue<MutableList<Int>>()
 
+        val getContextValue = contextValue.getter()
+
+
+        // HandlerContext is not thread safe.
+        // BUT, it is guaranteed that at most one handler will access it
         // You can change context as well to later access it in handlers
         contextHook { update, handlerContext ->
             handlerContext[attrKey] = "Current update class is: ${update.javaClass.simpleName}"
+            handlerContext.getContextValue()
+                .add(12)
         }
 
         command("/id") {
