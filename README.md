@@ -88,6 +88,39 @@ val bot = KittyBot<PollingReceiver> {
 bot.startPolling()
 ```
 
+## State Handler
+
+Use `stateHandler(...)` when updates should be routed by your own per-chat or per-user state.
+
+```kotlin
+sealed interface ProfileState {
+    object WaitingName : ProfileState
+    class Active(val name: String) : ProfileState
+}
+
+val states = ConcurrentHashMap<Long, ProfileState>()
+
+dispatchers {
+    stateHandler({ update, _ ->
+        val message = update.message ?: return@stateHandler null
+        states[message.chat.id]
+    }) {
+        valueOf(ProfileState.WaitingName) {
+            text {
+                states[message.chat.id] = ProfileState.Active(message.text ?: "Unknown")
+                bot.sendMessage(chatId, "Saved")
+            }
+        }
+
+        instanceOf<ProfileState.Active> {
+            text("/profile") {
+                bot.sendMessage(chatId, "Hello ${handlerContext.state().name}")
+            }
+        }
+    }
+}
+```
+
 ## Webhooks
 
 ```kotlin
@@ -205,6 +238,7 @@ See [samples](samples/src/main/kotlin) for runnable examples:
 - [polling.kt](samples/src/main/kotlin/polling.kt) and [webhook.kt](samples/src/main/kotlin/webhook.kt)
 - [ConversationBuilder.kt](samples/src/main/kotlin/ConversationBuilder.kt)
 - [FlowExample.kt](samples/src/main/kotlin/FlowExample.kt)
+- [StateHandlerExample.kt](samples/src/main/kotlin/StateHandlerExample.kt)
 - [RoutingExample.kt](samples/src/main/kotlin/RoutingExample.kt)
 - [DynamicHandlersExample.kt](samples/src/main/kotlin/DynamicHandlersExample.kt)
 - [CommandGroupExample.kt](samples/src/main/kotlin/CommandGroupExample.kt)
