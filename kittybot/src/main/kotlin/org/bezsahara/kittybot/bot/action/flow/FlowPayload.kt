@@ -1,6 +1,6 @@
 package org.bezsahara.kittybot.bot.action.flow
 
-class FlowPayload(
+data class FlowPayload<T>(
     val id: Int,
-    val args: Any?
+    val args: T?
 )

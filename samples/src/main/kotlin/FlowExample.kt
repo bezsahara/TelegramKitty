@@ -15,23 +15,8 @@ fun FelineDispatcher.flowExample() {
 
     // A flow groups several handlers into ordered sections.
     // Here we use the chat id, so each chat progresses through the flow independently.
-    flowHandler({ update, _ -> update.message?.chat?.id?.toString() }) {
-        // Common - is a builder for a common handler that will run anywhere.
-        // It has access only to resetFlow. If you use resetFlow you also need to consume the update!
-        common(setOf(MessageUpdate)) {
-            handler@{ update, bot, handlerContext ->
-                if (update.message!!.text == "/reset") {
-                    handlerContext.resetFlow()
-                    bot.sendMessage(update.chatIdOrNull()!!, "Flow reset. Send /wizard to start again.")
-                    return@handler Decision.Consumed
-                }
-                Decision.Next
-            }
-        }
-
-        // OR if you do not want to use common, another option is just to create a function with common handlers
-        // and reuse it in all sections
-        fun FlowSectionStore.commons() {
+    flowHandler<String>({ update, _ -> update.message?.chat?.id?.toString() }) {
+        fun FlowSectionStore<*>.commons() {
             command("/reset_v2") {
                 handlerContext.resetFlow()
                 bot.sendMessage(chatId, "Flow reset. Send /wizard to start again.")

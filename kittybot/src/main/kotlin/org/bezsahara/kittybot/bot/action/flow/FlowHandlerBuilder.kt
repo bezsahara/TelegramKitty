@@ -5,40 +5,40 @@ import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
-inline fun TransparentHandlerStore.flowHandler(
+inline fun <T> TransparentHandlerStore.flowHandler(
     flowIdentityFinder: FlowIdentityFinder,
     updateKinds: Set<UpdateKind<*>>? = null,
-    flowIdentityStorage: FlowIdentityStorage = FlowIdentityStorageInMem(),
-    builder: FlowHandlerBuilder.() -> Unit
+    flowIdentityStorage: FlowIdentityStorage<T> = FlowIdentityStorageInMem(),
+    builder: FlowHandlerBuilder<T>.() -> Unit
 ) {
     val fhb = FlowHandlerBuilder(this, flowIdentityStorage, flowIdentityFinder, updateKinds)
     fhb.builder()
     fhb.build()
 }
 
-class FlowManager(
+class FlowManager<T>(
     private val id: Int,
-    private val flowIdentityStorage: FlowIdentityStorage,
-    private val fidAttribute: AttrKey<FlowIdentityData>,
+    private val flowIdentityStorage: FlowIdentityStorage<T>,
+    private val fidAttribute: AttrKey<FlowIdentityData<T>>,
     private val nameToId: Map<String, Int>,
 ) {
-    fun nextSection(handlerContext: HandlerContext, args: Any? = null) {
+    fun nextSection(handlerContext: HandlerContext, args: T? = null) {
         val identity = handlerContext[fidAttribute]?.identity ?: error("Could not find identity of the user!")
         flowIdentityStorage[identity] = FlowPayload(id + 1, args)
     }
 
-    fun nextSection(handlerContext: HandlerContext, name: String, args: Any? = null) {
+    fun nextSectionWithName(handlerContext: HandlerContext, name: String, args: T? = null) {
         val identity = handlerContext[fidAttribute]?.identity ?: error("Could not find identity of the user!")
         val targetId = nameToId[name] ?: error("Could not find flow section named `$name`!")
         flowIdentityStorage[identity] = FlowPayload(targetId, args)
     }
 
-    fun nextSection(handlerContext: HandlerContext, id: Int, args: Any? = null) {
+    fun nextSection(handlerContext: HandlerContext, id: Int, args: T? = null) {
         val identity = handlerContext[fidAttribute]?.identity ?: error("Could not find identity of the user!")
         flowIdentityStorage[identity] = FlowPayload(id, args)
     }
 
-    fun pauseSection(handlerContext: HandlerContext, args: Any? = null) {
+    fun pauseSection(handlerContext: HandlerContext, args: T? = null) {
         val identity = handlerContext[fidAttribute]?.identity ?: error("Could not find identity of the user!")
         flowIdentityStorage[identity] = FlowPayload(id, args)
     }
@@ -48,56 +48,36 @@ class FlowManager(
         flowIdentityStorage[identity] = FlowPayload(0, null)
     }
 
-    fun getFlowData(handlerContext: HandlerContext): FlowIdentityData {
+    fun getFlowData(handlerContext: HandlerContext): FlowIdentityData<T> {
         return handlerContext[fidAttribute] ?: error("Could not find identity of the user!")
     }
 }
 
-class FlowManagerCommon(
-    private val fidAttribute: AttrKey<FlowIdentityData>,
-    private val flowIdentityStorage: FlowIdentityStorage
-) {
-    fun HandlerContext.resetFlow() {
-        val identity = get(fidAttribute)?.identity ?: error("Could not find identity of the user!")
-        flowIdentityStorage[identity] = FlowPayload(0, null)
-    }
-}
-
-class FlowHandlerBuilder(
+class FlowHandlerBuilder<T>(
     private val original: HandlerStore,
-    val flowIdentityStorage: FlowIdentityStorage,
+    val flowIdentityStorage: FlowIdentityStorage<T>,
     private val flowIdentityFinder: FlowIdentityFinder,
     private val ofKinds: Set<UpdateKind<*>>?
 ) {
-    val fidAttribute = original.felineDispatcher.identityScope.attrKeyOf<FlowIdentityData>()
+    val fidAttribute = original.felineDispatcher.identityScope.attrKeyOf<FlowIdentityData<T>>()
 
     @PublishedApi
-    internal val sections = arrayListOf<FlowSectionStore>()
+    internal val sections = arrayListOf<FlowSectionStore<T>>()
 
     @PublishedApi
     internal val nameToId = HashMap<String, Int>()
 
-    private var commonLambda: ((RoutingStrategyInt) -> Unit)? = null
-
-    fun common(handler: FlowManagerCommon.() -> Handler) {
-        commonLambda = { it.common(handler.invoke(FlowManagerCommon(fidAttribute, flowIdentityStorage))) }
-    }
-
-    fun common(allowedKinds: Set<UpdateKind<*>>? = null, identity: HandlerIdentity? = null, handler: FlowManagerCommon.() -> Handler) {
-        commonLambda = { it.common(allowedKinds, identity, handler.invoke(FlowManagerCommon(fidAttribute, flowIdentityStorage))) }
-    }
-
-    inline fun section(block: FlowSectionStore.() -> Unit) {
+    inline fun section(block: FlowSectionStore<T>.() -> Unit) {
         addSection(null, block)
     }
 
-    inline fun section(name: String, block: FlowSectionStore.() -> Unit) {
+    inline fun section(name: String, block: FlowSectionStore<T>.() -> Unit) {
         addSection(name, block)
     }
 
     fun createSectionStore(name: String?) = FlowSectionStore(sections.size, name, flowIdentityStorage, fidAttribute, nameToId, original)
 
-    inline fun addSection(name: String?, block: FlowSectionStore.() -> Unit) {
+    inline fun addSection(name: String?, block: FlowSectionStore<T>.() -> Unit) {
         val fss = createSectionStore(name)
         fss.block()
         sections.add(fss)
@@ -126,8 +106,6 @@ class FlowHandlerBuilder(
             ofKinds
         )
 
-        commonLambda?.invoke(routingStrategy)
-
         sections.forEachIndexed { index, store ->
             routingStrategy.section(index) {
                 store.handlersStore.forEach { addHandler(it) }
@@ -140,14 +118,14 @@ class FlowHandlerBuilder(
     }
 }
 
-class FlowSectionStore(
+class FlowSectionStore<T>(
     id: Int,
     internal val name: String?,
-    flowIdentityStorage: FlowIdentityStorage,
-    fidAttribute: AttrKey<FlowIdentityData>,
+    flowIdentityStorage: FlowIdentityStorage<T>,
+    fidAttribute: AttrKey<FlowIdentityData<T>>,
     nameToId: Map<String, Int>,
     val original: HandlerStore,
-) : HandlerStore, FlowSupport(
+) : HandlerStore, FlowSupport<T>(
     id,
     flowIdentityStorage,
     fidAttribute,
@@ -165,28 +143,28 @@ class FlowSectionStore(
 }
 
 
-open class FlowSupport(
+open class FlowSupport<T>(
     id: Int,
-    flowIdentityStorage: FlowIdentityStorage,
-    fidAttribute: AttrKey<FlowIdentityData>,
+    flowIdentityStorage: FlowIdentityStorage<T>,
+    fidAttribute: AttrKey<FlowIdentityData<T>>,
     nameToId: Map<String, Int>,
 ) {
     val flowManager = FlowManager(id, flowIdentityStorage, fidAttribute, nameToId)
 
-    fun HandlerContext.nextSection(args: Any? = null) {
+    fun HandlerContext.nextSection(args: T? = null) {
         flowManager.nextSection(this, args)
     }
 
-    fun HandlerContext.nextSectionWithName(name: String, args: Any? = null) {
-        flowManager.nextSection(this, name, args)
+    fun HandlerContext.nextSectionWithName(name: String, args: T? = null) {
+        flowManager.nextSectionWithName(this, name, args)
     }
 
     // Sections are numbered from 0 to N. So first section has id of zero
-    fun HandlerContext.nextSectionWithId(id: Int, args: Any? = null) {
+    fun HandlerContext.nextSectionWithId(id: Int, args: T? = null) {
         flowManager.nextSection(this, id, args)
     }
 
-    fun HandlerContext.pauseSection(args: Any? = null) {
+    fun HandlerContext.pauseSection(args: T? = null) {
         flowManager.pauseSection(this, args)
     }
 
@@ -198,7 +176,7 @@ open class FlowSupport(
         return flowManager.getFlowData(this).args
     }
 
-    fun HandlerContext.getFlowIdentityData(): FlowIdentityData {
+    fun HandlerContext.getFlowIdentityData(): FlowIdentityData<T> {
         return flowManager.getFlowData(this)
     }
 }

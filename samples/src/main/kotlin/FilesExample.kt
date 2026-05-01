@@ -19,7 +19,7 @@ import org.bezsahara.kittybot.telegram.values.ReactionEmoji
 import org.intellij.lang.annotations.Language
 
 fun FelineDispatcher.filesExample() {
-    flowHandler(FlowIdentityFinder.OfMessageUpdateChatId) {
+    flowHandler<Unit>(FlowIdentityFinder.OfMessageUpdateChatId) {
         section {
             command("/files", "Files example", addToBotCommands = true) {
                 handlerContext.nextSection()

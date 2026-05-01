@@ -3,22 +3,22 @@ package org.bezsahara.kittybot.bot.action.flow
 import java.util.concurrent.ConcurrentHashMap
 
 
-interface FlowIdentityStorage {
-    operator fun set(identity: String, data: FlowPayload)
+interface FlowIdentityStorage<T> {
+    operator fun set(identity: String, data: FlowPayload<T>)
 
-    operator fun get(identity: String): FlowPayload?
+    operator fun get(identity: String): FlowPayload<T>?
 
     fun remove(identity: String)
 }
 
-class FlowIdentityStorageInMem : FlowIdentityStorage {
-    private val map = ConcurrentHashMap<String, FlowPayload>()
+class FlowIdentityStorageInMem<T> : FlowIdentityStorage<T> {
+    private val map = ConcurrentHashMap<String, FlowPayload<T>>()
 
-    override fun set(identity: String, data: FlowPayload) {
+    override fun set(identity: String, data: FlowPayload<T>) {
         map[identity] = data
     }
 
-    override fun get(identity: String): FlowPayload? = map[identity]
+    override fun get(identity: String): FlowPayload<T>? = map[identity]
 
     override fun remove(identity: String) {
         map.remove(identity)

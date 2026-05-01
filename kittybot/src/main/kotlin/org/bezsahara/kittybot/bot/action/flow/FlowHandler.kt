@@ -13,17 +13,17 @@ fun interface FlowIdentityFinder {
     }
 }
 
-class FlowIdentityData(
+class FlowIdentityData<T>(
     val identity: String,
-    val payload: FlowPayload,
+    val payload: FlowPayload<T>,
 ) {
-    val args: Any? get() = payload.args
+    val args: T? get() = payload.args
 }
 
-internal class FlowRoutingKeyGenerator(
+internal class FlowRoutingKeyGenerator<T>(
     private val flowIdentityFinder: FlowIdentityFinder,
-    private val flowIdentityStorage: FlowIdentityStorage,
-    private val fidAttribute: AttrKey<FlowIdentityData>,
+    private val flowIdentityStorage: FlowIdentityStorage<T>,
+    private val fidAttribute: AttrKey<FlowIdentityData<T>>,
     private val sectionCount: Int,
 ) : KeyGeneratorInt {
     override fun generate(update: Update, handlerContext: HandlerContext): Int {

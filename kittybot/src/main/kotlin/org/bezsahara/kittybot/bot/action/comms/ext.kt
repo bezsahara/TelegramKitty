@@ -42,7 +42,7 @@ fun HandlerStore.commandGroupHandler(commandGroup: CommandGroup): CommandGroupSt
  */
 fun TransparentHandlerStore.twoStepCommandGroupHandler(
     commandGroup: CommandGroup,
-    flowIdentityStorage: FlowIdentityStorage = FlowIdentityStorageInMem(),
+    flowIdentityStorage: FlowIdentityStorage<String> = FlowIdentityStorageInMem(),
     firstStepReply: (Message, HandlerContext) -> String = { _, _ -> "Send arguments!" },
 ) {
     val commandGroupStore = CommandGroupStore.create(commandGroup)
@@ -69,7 +69,7 @@ fun TransparentHandlerStore.twoStepCommandGroupHandler(
  */
 internal class CommandGroupHandler(
     private val commandGroupStore: CommandGroupStore,
-    private val flowManager: FlowManager?,
+    private val flowManager: FlowManager<String>?,
     private val firstStepReply: (Message, HandlerContext) -> String,
 ) : Handler {
     override val allowedKinds: Set<UpdateKind<*>>
@@ -135,7 +135,7 @@ internal class CommandGroupHandler(
     }
 
     internal class SecondStep(
-        val flowManager: FlowManager,
+        val flowManager: FlowManager<String>,
         private val commandGroupStore: CommandGroupStore,
     ) : Handler {
         override val allowedKinds: Set<UpdateKind<*>>
