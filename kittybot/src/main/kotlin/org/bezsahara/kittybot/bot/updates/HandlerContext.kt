@@ -8,11 +8,15 @@ import org.bezsahara.kittybot.bot.errors.KittyError
 import org.bezsahara.kittybot.telegram.classes.core.update.SyntheticUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 
-
+// HandlerContext is not thread safe. A new instance of it is created for each update
+// The whole list of handlers always runs on one thread per one update.
+// Which means that it is safe to access it in handlers.
 sealed class HandlerContext(internal val channel: Channel<Update>) {
     abstract operator fun <T> get(a: AttrKey<T>): T?
 
     abstract operator fun <T> set(attrKey: AttrKey<T>, value: T)
+
+    abstract fun <T> remove(attrKey: AttrKey<T>): T?
 
     suspend fun emitUpdate(u: SyntheticUpdate) {
         channel.send(u)
@@ -50,6 +54,16 @@ class HandlerContextMap(size: Int, private val identityScope: IdentityScope, cha
             error("You did not register AttrKey $attrKey, you can do it in FelineDispatcher")
         }
     }
+
+    override fun <T> remove(attrKey: AttrKey<T>): T? {
+        if (attrKey.scope !== identityScope) throwWrongScope(attrKey)
+        val id = attrKey.id
+        if (id < size) {
+            return map.remove(id) as T?
+        } else {
+            error("You did not register AttrKey $attrKey, you can do it in FelineDispatcher")
+        }
+    }
 }
 
 class HandlerContextArray(size: Int, private val identityScope: IdentityScope, channel: Channel<Update>) : HandlerContext(channel) {
@@ -71,6 +85,18 @@ class HandlerContextArray(size: Int, private val identityScope: IdentityScope, c
         val id = attrKey.id
         if (id < size) {
             map[id] = value
+        } else {
+            error("You did not register AttrKey $attrKey, you can do it in FelineDispatcher")
+        }
+    }
+
+    override fun <T> remove(attrKey: AttrKey<T>): T? {
+        if (attrKey.scope !== identityScope) throwWrongScope(attrKey)
+        val id = attrKey.id
+        if (id < size) {
+            val old = map[id]
+            map[id] = null
+            return old as T?
         } else {
             error("You did not register AttrKey $attrKey, you can do it in FelineDispatcher")
         }
