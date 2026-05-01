@@ -3,9 +3,10 @@ package org.bezsahara.kittybot.bot.action.route
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
+import org.bezsahara.kittybot.bot.dispatchers.TransparentHandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.ensureHasIdentity
 
-class RoutingPart(private val original: HandlerStore) : HandlerStore {
+class RoutingPart(internal val original: HandlerStore) : TransparentHandlerStore {
     internal val handlers = arrayListOf<Handler>()
 
     fun isEmpty() = handlers.isEmpty()

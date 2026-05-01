@@ -3,31 +3,26 @@ package org.bezsahara.kittybot.bot.action.route
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.action.other.EmptyHandler
 import org.bezsahara.kittybot.bot.action.other.createBoolUpdateKindArray
-import org.bezsahara.kittybot.bot.action.other.replaceLast
-import org.bezsahara.kittybot.bot.dispatchers.Decision
-import org.bezsahara.kittybot.bot.dispatchers.Handler
-import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
-import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.ensureHasIdentity
-import org.bezsahara.kittybot.bot.dispatchers.real
+import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
-import kotlin.collections.forEachIndexed
-
 
 
 class RoutingStrategyAny<T>(
     val keyGeneratorAny: KeyGeneratorAny<T>,
     original: HandlerStore,
-    val ofKinds: Set<UpdateKind<*>>?
 ) : RoutingStrategy<T>(original) {
+    @Deprecated("Use main constructor")
+    constructor(
+        keyGeneratorAny: KeyGeneratorAny<T>,
+        original: HandlerStore,
+        ofKinds: Set<UpdateKind<*>>?,
+    ) : this(keyGeneratorAny, original)
 
-    inline fun section(key: T, block: HandlerStore.() -> Unit) {
-        val r = RoutingPart(original)
+    inline fun section(key: T, block: TransparentHandlerStore.() -> Unit) {
+        val r = addOrGetSection(key, original)
         r.block()
-        if (r.isEmpty()) return
-        addSection(key to r)
     }
 
     fun build() {
@@ -35,10 +30,12 @@ class RoutingStrategyAny<T>(
 
         val map = HashMap<T, HandlerIdentity>(sections.size * 2)
         sections.forEach { (key, part) ->
-            val id = part.handlers[0].identity!!
-            val prev = map.put(key, id)
-            if (prev != null) {
-                error("Duplicate routing key detected: `$key`")
+            if (!part.isEmpty()) {
+                val id = part.handlers[0].identity!!
+                val prev = map.put(key, id)
+                if (prev != null) {
+                    error("Duplicate routing key detected: `$key`")
+                }
             }
         }
 
@@ -46,9 +43,22 @@ class RoutingStrategyAny<T>(
 
         original.addHandler(
             if (common != null) {
-                RoutingMainAnyWithCommon(keyGeneratorAny, map, exitDecisionWithDefault = exitHandlerIdentityD, exitDecision = actualExit, common!!, ofKinds)
+                RoutingMainAnyWithCommon(
+                    keyGeneratorAny,
+                    map,
+                    exitDecisionWithDefault = exitHandlerIdentityD,
+                    exitDecision = actualExit,
+                    common!!,
+                    computeRoutingUpdKinds()
+                )
             } else {
-                RoutingMainAny(keyGeneratorAny, map, exitDecisionWithDefault = exitHandlerIdentityD, exitDecision = actualExit, ofKinds)
+                RoutingMainAny(
+                    keyGeneratorAny,
+                    map,
+                    exitDecisionWithDefault = exitHandlerIdentityD,
+                    exitDecision = actualExit,
+                    computeRoutingUpdKinds()
+                )
             }
         )
 
@@ -64,13 +74,12 @@ class RoutingStrategyAny<T>(
 }
 
 
-
 class RoutingMainAny(
     private val keyGeneratorAny: KeyGeneratorAny<*>,
     private val map: HashMap<*, HandlerIdentity>,
     private val exitDecisionWithDefault: Decision?,
     private val exitDecision: Decision,
-    override val allowedKinds: Set<UpdateKind<*>>?
+    override val allowedKinds: Set<UpdateKind<*>>?,
 ) : Handler {
     override suspend fun handleUpdate(
         update: Update,
@@ -93,7 +102,7 @@ class RoutingMainAnyWithCommon(
     private val exitDecisionWithDefault: Decision?,
     private val exitDecision: Decision,
     commonHandler: Handler,
-    override val allowedKinds: Set<UpdateKind<*>>?
+    override val allowedKinds: Set<UpdateKind<*>>?,
 ) : Handler {
 
     private val ach = commonHandler.real()

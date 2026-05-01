@@ -4,10 +4,12 @@ import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.action.other.EmptyHandler
 import org.bezsahara.kittybot.bot.action.other.createBoolUpdateKindArray
 import org.bezsahara.kittybot.bot.action.other.replaceLast
+import org.bezsahara.kittybot.bot.action.route.RoutingStrategyAny
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
+import org.bezsahara.kittybot.bot.dispatchers.TransparentHandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.ensureHasIdentity
 import org.bezsahara.kittybot.bot.dispatchers.real
 import org.bezsahara.kittybot.bot.updates.HandlerContext
@@ -17,16 +19,19 @@ import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 
 class RoutingStrategyInt(
-    val keyGeneratorInt: KeyGeneratorInt,
+    var keyGeneratorInt: KeyGeneratorInt,
     original: HandlerStore,
-    val ofKinds: Set<UpdateKind<*>>?
 ) : RoutingStrategy<Int>(original) {
+    @Deprecated("Use main constructor")
+    constructor(
+        keyGeneratorAny: KeyGeneratorInt,
+        original: HandlerStore,
+        ofKinds: Set<UpdateKind<*>>?,
+    ) : this(keyGeneratorAny, original)
 
-    inline fun section(key: Int, block: HandlerStore.() -> Unit) {
-        val r = RoutingPart(original)
+    inline fun section(key: Int, block: TransparentHandlerStore.() -> Unit) {
+        val r = addOrGetSection(key, original)
         r.block()
-        if (r.isEmpty()) return
-        addSection(key to r)
     }
 
     fun build() {
@@ -36,6 +41,7 @@ class RoutingStrategyInt(
         sections.forEach { (key, part) ->
             map[key] = part.handlers[0].identity!!
         }
+
         if (map.size != sections.size) {
             error("Duplicate routing keys detected in RoutingStrategyInt")
         }
@@ -52,7 +58,7 @@ class RoutingStrategyInt(
                     exitDecisionWithDefault = exitHandlerIdentityD,
                     exitDecision = actualExit,
                     common!!,
-                    ofKinds
+                    computeRoutingUpdKinds()
                 )
             } else {
                 RoutingMainInt(
@@ -60,7 +66,7 @@ class RoutingStrategyInt(
                     lookup,
                     exitDecisionWithDefault = exitHandlerIdentityD,
                     exitDecision = actualExit,
-                    ofKinds
+                    computeRoutingUpdKinds()
                 )
             }
         )
@@ -147,25 +153,26 @@ class RoutingMainInt(
 
     private class ArrayLookup(
         private val min: Int,
-        private val arr: Array<HandlerIdentity>
+        private val arr: IntArray
     ) : Lookup() {
         override fun get(key: Int): HandlerIdentity {
             val idxL = key - min
-            if (idxL < 0L || idxL >= arr.size) return HandlerIdentity.emptyID
-            return arr[idxL]
+            if (idxL < 0 || idxL >= arr.size) return HandlerIdentity.emptyID
+            return HandlerIdentity(arr[idxL])
         }
 
         companion object {
             fun from(map: HashMap<Int, HandlerIdentity>, min: Int, max: Int): ArrayLookup {
                 val sizeL = (max.toLong() - min.toLong() + 1L)
                 if (sizeL <= 0L || sizeL > Int.MAX_VALUE.toLong()) {
-                    return ArrayLookup(min, emptyArray())
+                    return ArrayLookup(min, intArrayOf())
                 }
 
-                val arr = Array(sizeL.toInt()) { HandlerIdentity.emptyID }
+                val arr = IntArray(sizeL.toInt()) { HandlerIdentity.emptyID.value }
+//                val arr = Array(sizeL.toInt()) { HandlerIdentity.emptyID }
                 map.forEach { (k, id) ->
                     val idx = (k.toLong() - min.toLong()).toInt()
-                    arr[idx] = id
+                    arr[idx] = id.value
                 }
                 return ArrayLookup(min, arr)
             }
