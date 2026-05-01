@@ -194,8 +194,8 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticip
  */
 @Serializable
 data class Message(
-    @SerialName("message_id") val messageId: Long,
-    val date: Long,
+    @SerialName("message_id") override val messageId: Long,
+    override val date: Long,
     override val chat: Chat,
     @SerialName("message_thread_id") val messageThreadId: Long? = null,
     @SerialName("direct_messages_topic") val directMessagesTopic: DirectMessagesTopic? = null,
@@ -242,7 +242,7 @@ data class Message(
     @SerialName("show_caption_above_media") val showCaptionAboveMedia: Boolean? = null,
     @SerialName("has_media_spoiler") val hasMediaSpoiler: Boolean? = null,
     val checklist: Checklist? = null,
-    val contact: Contact? = null,
+    @JvmField val contact: Contact? = null,
     val dice: Dice? = null,
     val game: Game? = null,
     val poll: Poll? = null,
