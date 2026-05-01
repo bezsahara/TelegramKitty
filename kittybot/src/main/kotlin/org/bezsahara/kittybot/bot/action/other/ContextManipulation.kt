@@ -1,9 +1,8 @@
 package org.bezsahara.kittybot.bot.action.other
 
+import org.bezsahara.kittybot.bot.IdentityScope
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.dispatchers.Decision
-import org.bezsahara.kittybot.bot.dispatchers.Handler
-import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
+import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScope
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScopeImpl
 import org.bezsahara.kittybot.bot.updates.HandlerContext
@@ -70,4 +69,60 @@ fun HandlerStore.debugHook(
             return Decision.Next
         }
     })
+}
+
+
+open class ContextValue<V: Any>(
+    protected val attrKey: AttrKey<V>
+)  {
+    open fun get(context: HandlerContext): V? {
+        return context[attrKey] as V?
+    }
+
+    fun set(context: HandlerContext, value: V?) {
+        if (value == null) context.remove(attrKey)
+        else context[attrKey] = value
+    }
+
+    open fun getter(): HandlerContext.() -> V? = {
+        get(this)
+    }
+
+    fun setter(): HandlerContext.(V?) -> Unit = {
+        set(this, it)
+    }
+}
+
+class ContextValueInitial<V: Any>(
+    attrKey: AttrKey<V>,
+    private val valueBuilder: (HandlerContext) -> V
+) : ContextValue<V>(attrKey) {
+    override fun get(context: HandlerContext): V {
+        var present = context[attrKey]
+        if (present == null) {
+            present = valueBuilder(context)
+            context[attrKey] = present
+        }
+        return present as V
+    }
+
+    override fun getter(): HandlerContext.() -> V = {
+        get(this)
+    }
+}
+
+inline fun <reified V: Any> HandlerStore.contextValue(noinline initial: (HandlerContext) -> V): ContextValueInitial<V> {
+    return ContextValueInitial(attrKeyOf<V>("ContextValue"), initial)
+}
+
+inline fun <reified V: Any> HandlerStore.contextValue(): ContextValue<V> {
+    return ContextValue(attrKeyOf<V>("ContextValue"))
+}
+
+inline fun <reified V: Any> IdentityScope.contextValue(noinline initial: (HandlerContext) -> V): ContextValueInitial<V> {
+    return ContextValueInitial(attrKeyOf<V>("ContextValue"), initial)
+}
+
+inline fun <reified V: Any> IdentityScope.contextValue(): ContextValue<V> {
+    return ContextValue(attrKeyOf<V>("ContextValue"))
 }
