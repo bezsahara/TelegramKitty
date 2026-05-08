@@ -3,18 +3,18 @@ package org.bezsahara.kittybot.bot.builder
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
+import org.bezsahara.kittybot.bot.DelegatingKittyBot
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.KittyBotConfig
-import org.bezsahara.kittybot.bot.KittyBotConfig.Companion.BOT_SUPERVISOR_JOB
+import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
+import org.bezsahara.kittybot.bot.dispatchers.TypeAwareMap
+import org.bezsahara.kittybot.bot.dispatchers.prepare
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
 import org.bezsahara.kittybot.bot.errors.hiss
 import org.bezsahara.kittybot.bot.updates.CustomUpdaterSetup
-import org.bezsahara.kittybot.bot.updates.MultiIdentity
-import org.bezsahara.kittybot.bot.dispatchers.Decision
-import org.bezsahara.kittybot.bot.dispatchers.TypeAwareMap
-import org.bezsahara.kittybot.bot.dispatchers.prepare
 import org.bezsahara.kittybot.bot.updates.FurballConfig
+import org.bezsahara.kittybot.bot.updates.MultiIdentity
 import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.UpdateReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.WebhookReceiver
@@ -217,7 +217,8 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
             checkClosed()
             field = value
         }
-    private var useErrorConsumeCB: Boolean = false
+
+    private var cbModification: (ClientBuilder) -> ClientBuilder = { it }
 
     fun useCustomClient(customClient: CustomClient) {
         checkClosed()
@@ -234,7 +235,32 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
 
     // Changes KittyBot methods impl so they will always throw on error. Instead of you using .unwrap() all the time.
     fun throwErrorsOnFailure() {
-        useErrorConsumeCB = true
+        wrapTheClientBuilder { ConsumeClientBuilder(it) }
+    }
+
+    fun wrapTheClientBuilder(transform: (ClientBuilder) -> ClientBuilder) {
+        cbModification = transform
+    }
+
+    fun delegatingKittyBot(create: (KittyBot) -> DelegatingKittyBot) {
+        wrapTheBot(create)
+    }
+
+    fun wrapTheBot(transform: (oldBot: KittyBot) -> KittyBot) {
+        wrapTheClientBuilder {
+            object : ClientBuilder {
+                override fun build(
+                    botApiServerConfig: BotApiServerConfig,
+                    json: Json,
+                ): KittyBot {
+                    return transform(it.build(botApiServerConfig, json))
+                }
+
+                override fun close() {
+                    it.close()
+                }
+            }
+        }
     }
 
     private var allowedUpdates: HashSet<UpdateKind<*>>? = null
@@ -274,9 +300,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
                     "Or include kittybot-client for a default client.", e)
         }
 
-        if (useErrorConsumeCB) {
-            deFactoBuilder = ConsumeClientBuilder(deFactoBuilder)
-        }
+        deFactoBuilder = cbModification.invoke(deFactoBuilder)
 
         prepare()
         close()
