@@ -5,7 +5,7 @@ TelegramKitty is a Kotlin-first Telegram Bot API wrapper for fast JVM bots.
 It gives you generated Telegram methods and models, a coroutine-friendly handler DSL,
 predictable update processing, and a pluggable HTTP layer.
 
-Current generated API target: **Telegram Bot API 9.6**.
+Current generated API target: **Telegram Bot API 10**.
 
 And yes, it can send [cat pictures](#cats).
 
@@ -35,8 +35,8 @@ Use the default Vert.x client:
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:3.2.0")
-    implementation("org.bezsahara:kittybot-client:3.2.0")
+    implementation("org.bezsahara:kittybot:4.0.0")
+    implementation("org.bezsahara:kittybot-client:4.0.0")
 }
 ```
 
@@ -44,7 +44,7 @@ If you want to provide your own HTTP client, `kittybot-client` is not required:
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:3.2.0")
+    implementation("org.bezsahara:kittybot:4.0.0")
 }
 ```
 
@@ -165,7 +165,7 @@ Ktor is also supported. Add your own Ktor client dependencies and engine:
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:3.2.0")
+    implementation("org.bezsahara:kittybot:4.0.0")
     implementation("io.ktor:ktor-client-core:3.4.0")
     implementation("io.ktor:ktor-client-cio:3.4.0")
 }
