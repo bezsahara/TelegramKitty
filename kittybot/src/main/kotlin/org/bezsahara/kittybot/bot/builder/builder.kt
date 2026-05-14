@@ -112,6 +112,12 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
 
     // Timeout is in seconds
     internal var pollingTimeoutP: Long = 60
+        set(value) {
+            require(value >= 0) {
+                "Value cannot be negative"
+            }
+            field = value
+        }
     private var lastIdRecovery: RecoverLastId? = null
 
     val dispatchers = FelineDispatcher(this)
@@ -191,11 +197,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
         dispatchers.apply(builder)
     }
 
-    private val preActions = arrayListOf<PreAction>()
-
-    fun interface PreAction {
-        suspend fun execute(bot: KittyBot)
-    }
+    private val preActions = arrayListOf<suspend KittyBot.() -> Unit>()
 
     fun init(block: suspend KittyBot.() -> Unit) {
         checkClosed()
@@ -310,7 +312,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
             updateOrigin,
             pollingTimeoutP,
             preActions,
-            BotApiServerConfig(token, baseUri),
+            BotApiServerConfig(token, baseUri, pollingTimeoutP + 1),
             lastIdRecovery,
             errorHandler,
             deFactoBuilder,
