@@ -24,6 +24,7 @@ import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
 import org.bezsahara.kittybot.telegram.classes.media.Video
 import org.bezsahara.kittybot.telegram.classes.media.Dice
 import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
+import org.bezsahara.kittybot.telegram.classes.media.LivePhoto
 import org.bezsahara.kittybot.telegram.classes.chat.Chat
 import org.bezsahara.kittybot.telegram.classes.message.checklists.Checklist
 
@@ -40,6 +41,7 @@ import org.bezsahara.kittybot.telegram.classes.message.checklists.Checklist
  * @param animation Optional. Message is an animation, information about the animation
  * @param audio Optional. Message is an audio file, information about the file
  * @param document Optional. Message is a general file, information about the file
+ * @param livePhoto Optional. Message is a live photo, information about the live photo
  * @param paidMedia Optional. Message contains paid media; information about the paid media
  * @param photo Optional. Message is a photo, available sizes of the photo
  * @param sticker Optional. Message is a sticker, information about the sticker
@@ -68,6 +70,7 @@ data class ExternalReplyInfo(
     val animation: Animation? = null,
     val audio: Audio? = null,
     val document: Document? = null,
+    @SerialName("live_photo") val livePhoto: LivePhoto? = null,
     @SerialName("paid_media") val paidMedia: PaidMediaInfo? = null,
     val photo: List<PhotoSize>? = null,
     val sticker: Sticker? = null,

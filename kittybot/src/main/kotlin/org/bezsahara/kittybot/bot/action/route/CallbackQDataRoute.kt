@@ -16,13 +16,12 @@ fun <T> HandlerStore.callbackQueryRoute(asConcurrent: Boolean = false, selector:
     return CallbackQueryRoute.create(this, asConcurrent, selector)
 }
 
-class CallbackQueryRoute<T> internal constructor(
+class CallbackQueryRoute<T>(
     asConcurrent: Boolean,
     handlerStore: HandlerStore,
+    private val map: MutableMap<T, suspend CallQDataScope.() -> Unit>,
     selector: (CallbackQueryUpdate, HandlerContext) -> T?,
 ) {
-    private val map: MutableMap<T, suspend CallQDataScope.() -> Unit> =
-        if (asConcurrent) ConcurrentHashMap() else HashMap()
     private val defRef: TRef<(suspend CallQDataScope.() -> Unit)?> =
         if (asConcurrent) TRefVolatile(null) else TRefRegular(null)
 
@@ -44,7 +43,7 @@ class CallbackQueryRoute<T> internal constructor(
             asConcurrent: Boolean = false,
             selector: (CallbackQueryUpdate, HandlerContext) -> T?,
         ): CallbackQueryRoute<T> {
-            return CallbackQueryRoute(asConcurrent, handlerStore, selector)
+            return CallbackQueryRoute(asConcurrent, handlerStore, if (asConcurrent) ConcurrentHashMap() else HashMap(), selector)
         }
     }
 }
@@ -65,6 +64,10 @@ class CallQHandler<T>(
         val key = selector.invoke(update as CallbackQueryUpdate, handlerContext) ?: return Decision.Next
         val block = map[key]
         val scope = CallQDataScope(bot, handlerContext, update)
+        return apply(block, scope, key)
+    }
+
+    private suspend fun apply(block: (suspend CallQDataScope.() -> Unit)?,  scope: CallQDataScope, key: T): Decision {
         if (block == null) {
             defRef.value?.invoke(scope) ?: throw KittyError("CallbackQueryRoute received key of $key. But it was not defined")
         } else {

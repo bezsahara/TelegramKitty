@@ -16,14 +16,14 @@ sealed class RoutingStrategy<T>(val original: HandlerStore) {
     protected val sectionsMap = linkedMapOf<T, RoutingPart>()
 
     protected fun computeRoutingUpdKinds(): Set<UpdateKind<*>>? {
-        var set: MutableSet<UpdateKind<*>>? = mutableSetOf()
+        val set: MutableSet<UpdateKind<*>> = mutableSetOf()
 
         for (section in sections) {
             for (handler in section.second.handlers) {
                 val allowed = handler.allowedKinds
                 if (allowed == null) {
-                    set = null
-                } else set?.addAll(allowed)
+                    return null
+                } else set.addAll(allowed)
             }
         }
 
@@ -75,6 +75,15 @@ sealed class RoutingStrategy<T>(val original: HandlerStore) {
 
     fun common(allowedKinds: Set<UpdateKind<*>>? = null, identity: HandlerIdentity? = null, handler: Handler) {
         common(handler.asDelegate(identity, allowedKinds))
+    }
+
+    protected fun reduceAllowedKinds(list: List<Handler>): Set<UpdateKind<*>>? {
+        val set = hashSetOf<UpdateKind<*>>()
+        list.forEach {
+            val ac = it.allowedKinds ?: return null
+            set.addAll(ac)
+        }
+        return set
     }
 
     inline fun default(block: TransparentHandlerStore.() -> Unit) {

@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * 
  * [link](https://core.telegram.org/bots/api#chatownerleft): https://core.telegram.org/bots/api#chatownerleft
  * 
- * @param newOwner Optional. The user which will be the new owner of the chat if the previous owner does not return to the chat
+ * @param newOwner Optional. The user who will become the new owner of the chat if the previous owner does not return to the chat
  */
 @Serializable
 data class ChatOwnerLeft(

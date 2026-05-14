@@ -22,7 +22,7 @@ class KittyBotConfig<T : UpdateReceiver>(
     updaterMode: UpdaterMode,
     val updateOrigin: UpdateOrigin,
     pollingTimeout: Long,
-    preActions: List<FelineBuilder.PreAction>,
+    preActions: List<suspend KittyBot.() -> Unit>,
     botApiServerConfig: BotApiServerConfig,
     lastIdRecovery: RecoverLastId?,
     val errorHandler: HandlerErrorHandler,
@@ -96,9 +96,11 @@ class KittyBotConfig<T : UpdateReceiver>(
     }
 
     init {
-        runBlocking(Dispatchers.IO) {
-            preActions.forEach {
-                it.execute(kittyBot)
+        if (preActions.isNotEmpty()) {
+            runBlocking(Dispatchers.IO) {
+                preActions.forEach {
+                    it.invoke(kittyBot)
+                }
             }
         }
         supervisorJob.invokeOnCompletion { close() }
@@ -114,16 +116,16 @@ fun KittyBotConfig<PollingReceiver>.startPolling(wait: Boolean = true): Job {
     if (updateReceiver !is PollingReceiver) {
         hiss("To start polling, you need to set updateOrigin to UpdateOrigin.Polling")
     }
-    val pollingJob = CoroutineScope(Dispatchers.IO + supervisorJob).launch {
+    val pollingAsync = CoroutineScope(Dispatchers.IO + supervisorJob).async {
         updateReceiver.receiveUpdates(updatesChannel)
     }
     updater.start()
     if (wait) {
         runBlocking {
-            pollingJob.join()
+            pollingAsync.await()
         }
     }
-    return pollingJob
+    return pollingAsync
 }
 
 fun KittyBotConfig<PollingReceiver>.stopPolling() {

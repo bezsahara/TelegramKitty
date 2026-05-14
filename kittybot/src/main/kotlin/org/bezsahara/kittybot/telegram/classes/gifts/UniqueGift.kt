@@ -16,7 +16,7 @@ import org.bezsahara.kittybot.telegram.classes.chat.Chat
  * 
  * @param giftId Identifier of the regular gift from which the gift was upgraded
  * @param baseName Human-readable name of the regular gift from which this unique gift was upgraded
- * @param name Unique name of the gift. This name can be used in https://t.me/nft/... links and story areas
+ * @param name Unique name of the gift. This name can be used in https://t.me/nft/... links and story areas.
  * @param number Unique number of the upgraded gift among gifts upgraded from the same regular gift
  * @param model Model of the gift
  * @param symbol Symbol of the gift

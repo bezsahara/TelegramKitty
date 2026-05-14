@@ -14,15 +14,14 @@ repositories {
     mavenCentral()
 }
 
-val ktor_version: String = "3.4.0"
+val ktor_version: String = "3.4.1"
 
 dependencies {
     testImplementation(kotlin("test"))
     testImplementation("io.vertx:vertx-core:5.0.8")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     compileOnly("io.ktor:ktor-client-core:${ktor_version}")
-//    implementation("org.slf4j:slf4j-api:2.0.17")
-//    implementation("ch.qos.logback:logback-classic:1.5.19")
+
     compileOnly("io.vertx:vertx-web-client:5.0.8")
     compileOnly("io.vertx:vertx-lang-kotlin-coroutines:5.0.5")
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm

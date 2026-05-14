@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
  * 
  * @param status The member's status in the chat, always "kicked"
  * @param user Information about the user
- * @param untilDate Date when restrictions will be lifted for this user; Unix time. If 0, then the user is banned forever
+ * @param untilDate Date when restrictions will be lifted for this user; Unix time. If 0, then the user is banned forever.
  */
 @Serializable
 data class ChatMemberBanned(

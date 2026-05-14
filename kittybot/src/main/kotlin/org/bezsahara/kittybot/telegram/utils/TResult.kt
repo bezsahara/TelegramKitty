@@ -9,10 +9,9 @@ sealed interface TReturns {
     val value: Any?
 }
 
-@JvmInline
-value class TResult<out T>(override val value: T) : TReturns {
-    @JvmInline
-    value class Either<out First, out Second>(override val value: Any) : TReturns {
+// value class here will be worse due to how kotlin coroutines code gen works
+data class TResult<out T>(override val value: T) : TReturns {
+    data class Either<out First, out Second>(override val value: Any) : TReturns {
         val isError: Boolean
             get() = value is TelegramError
 
@@ -64,6 +63,14 @@ value class TResult<out T>(override val value: T) : TReturns {
         }
     }
 
+    inline fun onErrorTerminate(block: (TelegramError) -> Nothing): T {
+        if (value is TelegramError) {
+            block(value)
+        } else {
+            return value
+        }
+    }
+
     fun consume() {
         if (value is TelegramError) {
             throw TelegramErrorException(value)
@@ -100,6 +107,9 @@ inline fun <T> TResult<T>.unwrap(): T {
     return value
 }
 
+fun TResult<Boolean>.asBoolean(): Boolean {
+    return isSuccess
+}
 
 inline fun <reified First> TResult.Either<First, *>.unwrapFirst(): First {
     if (value is First) {
@@ -184,3 +194,5 @@ internal fun generateErrorMsgForEither(obj: Any, side: Boolean): Nothing {
     }
     throw IllegalStateException(if (side) "Function returned left value but right was expected!" else "Function returned right value but left was expected!")
 }
+
+val TResultTrue = TResult(true)

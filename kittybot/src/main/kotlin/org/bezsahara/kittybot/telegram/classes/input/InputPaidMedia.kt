@@ -13,6 +13,7 @@ import org.bezsahara.kittybot.telegram.classes.input.InputPaidMediaVideo
 import kotlin.Unit
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.input.InputPaidMediaLivePhoto
 
 
 @Serializable(with = InputPaidMediaSerializer::class)
@@ -32,6 +33,7 @@ private object InputPaidMediaSerializer : JsonContentPolymorphicSerializer<Input
         element: JsonElement
     ): DeserializationStrategy<InputPaidMedia> {
         return when (element.jsonObject["type"]!!.jsonPrimitive.content) {
+            "live_photo" -> InputPaidMediaLivePhoto.serializer()
             "photo" -> InputPaidMediaPhoto.serializer()
             "video" -> InputPaidMediaVideo.serializer()
             else -> error("Serializer wasn't found for object with key ${element.jsonObject["type"]!!.jsonPrimitive.content}")

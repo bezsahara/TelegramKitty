@@ -23,7 +23,8 @@ abstract class Furball(
 ) {
 
     private val attrKeyMaxSize: Int
-//    private val handlerContextBuilder: HandlerContextBuilder
+
+    //    private val handlerContextBuilder: HandlerContextBuilder
     private val identityScope = botDispatchers.identityScope
 
     init {
@@ -34,8 +35,10 @@ abstract class Furball(
 
         if (!furballConfig.ignoreIdentityDuplicated) {
             botDispatchers.handlerList.checkIfIdentityDuplicated()?.let { (a, b) ->
-                throw KittyError("You have duplicated identities in handler list! A<${a.real().javaClass.name}>: $a, B<${a.real().javaClass.name}>: $b." +
-                        "\n to disable this set FurballConfig.ignoreIdentityDuplicated = true")
+                throw KittyError(
+                    "You have duplicated identities in handler list! A<${a.real().javaClass.name}>: $a, B<${a.real().javaClass.name}>: $b." +
+                            "\n to disable this set FurballConfig.ignoreIdentityDuplicated = true"
+                )
             }
         }
     }
@@ -127,7 +130,8 @@ abstract class Furball(
             }
 
             if (hopSafety > hopSafetyLimit) {
-                furballConfig.onRecursionProblem?.invoke(hopSafety) ?: throw HandlerException("It seems there is a recursion problem!")
+                furballConfig.onRecursionProblem?.invoke(hopSafety)
+                    ?: throw HandlerException("It seems there is a recursion problem!")
             }
 
             when (res.result) {

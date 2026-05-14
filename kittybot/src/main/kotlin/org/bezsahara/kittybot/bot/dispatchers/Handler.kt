@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.bot.dispatchers
 
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.bezsahara.kittybot.bot.IdentityScope
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.AfterNextTo
@@ -105,6 +106,35 @@ fun interface Handler {
     val allowedKinds: Set<UpdateKind<*>>? get() = null
 
     suspend fun handleUpdate(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision
+}
+
+// Use when the checking phase should not suspend.
+// The checks run before tail-calling the suspending part, allowing Kotlin to
+// avoid creating a coroutine state machine for the checking function.
+//
+// Reason: Kotlin coroutine codegen is pretty terrible, it may allocate a Continuation frame at the
+// start of a suspend function once a state machine is needed, even on paths
+// that return before any suspension point.
+abstract class HandlerNonSuspend(override val allowedKinds: Set<UpdateKind<*>>?) : Handler {
+    constructor() : this(null)
+    constructor(vararg kinds: UpdateKind<*>) : this(kinds.toSet())
+
+    abstract fun check(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision
+
+    abstract suspend fun handle(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision
+
+    final override suspend fun handleUpdate(
+        update: Update,
+        bot: KittyBot,
+        handlerContext: HandlerContext,
+    ): Decision {
+        val res = check(update, bot, handlerContext)
+        return if (res === Decision.Consumed) {
+            handle(update, bot, handlerContext)
+        } else {
+            res
+        }
+    }
 }
 
 /**

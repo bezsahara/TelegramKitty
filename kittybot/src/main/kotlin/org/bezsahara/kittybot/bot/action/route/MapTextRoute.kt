@@ -42,7 +42,11 @@ class MapTextRouteHandler(
     ): Decision {
         val text = (update as MessageUpdate).message.text ?: return Decision.Next
         val func = map[text] ?: return Decision.Next
-        func(MessageScope(update, bot, handlerContext))
+        return apply(MessageScope(update, bot, handlerContext), func)
+    }
+
+    private suspend fun apply(scope: MessageScope, func: suspend MessageScope.() -> Unit): Decision {
+        func(scope)
         return Decision.Consumed
     }
 }

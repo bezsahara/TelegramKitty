@@ -15,8 +15,10 @@ import org.bezsahara.kittybot.telegram.classes.core.MessageId
 import org.bezsahara.kittybot.telegram.classes.inline.PreparedInlineMessage
 import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
 import org.bezsahara.kittybot.telegram.classes.input.InputPaidMedia
+import org.bezsahara.kittybot.telegram.classes.inline.SentGuestMessage
 import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
 import org.bezsahara.kittybot.telegram.classes.core.WebhookInfo
+import org.bezsahara.kittybot.telegram.classes.bot.BotAccessSettings
 import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
 import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
@@ -57,6 +59,7 @@ import org.bezsahara.kittybot.telegram.classes.inline.SentWebAppMessage
 import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButton
 import org.bezsahara.kittybot.telegram.classes.payments.StarTransactions
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
+import org.bezsahara.kittybot.telegram.classes.input.InputPollMedia
 import org.bezsahara.kittybot.telegram.classes.keyboard.ReplyMarkup
 import org.bezsahara.kittybot.telegram.classes.chat.ChatAdministratorRights
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
@@ -79,8 +82,8 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#deletemessages): https://core.telegram.org/bots/api#deletemessages
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param messageIds A JSON-serialized list of 1-100 identifiers of messages to delete. See deleteMessage for limitations on which messages can be deleted
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+     * @param messageIds A JSON-serialized list of 1-100 identifiers of messages to delete. See deleteMessage for limitations on which messages can be deleted.
      */
     abstract suspend fun deleteMessages(
         chatId: ChatId,
@@ -92,7 +95,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#setchatphoto): https://core.telegram.org/bots/api#setchatphoto
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param photo New chat photo, uploaded using multipart/form-data
      */
     abstract suspend fun setChatPhoto(
@@ -105,7 +108,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#unpinallgeneralforumtopicmessages): https://core.telegram.org/bots/api#unpinallgeneralforumtopicmessages
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun unpinAllGeneralForumTopicMessages(
         chatId: ChatId
@@ -116,7 +119,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#editchatsubscriptioninvitelink): https://core.telegram.org/bots/api#editchatsubscriptioninvitelink
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param inviteLink The invite link to edit
      * @param name Invite link name; 0-32 characters
      */
@@ -131,7 +134,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#deleteforumtopic): https://core.telegram.org/bots/api#deleteforumtopic
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param messageThreadId Unique identifier for the target message thread of the forum topic
      */
     abstract suspend fun deleteForumTopic(
@@ -159,7 +162,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#setchatpermissions): https://core.telegram.org/bots/api#setchatpermissions
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param permissions A JSON-serialized object for new default chat permissions
      * @param useIndependentChatPermissions Pass True if chat permissions are set independently. Otherwise, the can_send_other_messages and can_add_web_page_previews permissions will imply the can_send_messages, can_send_audios, can_send_documents, can_send_photos, can_send_videos, can_send_video_notes, and can_send_voice_notes permissions; the can_send_polls permission will imply the can_send_messages permission.
      */
@@ -186,10 +189,10 @@ abstract class KittyBot {
      * [link](https://core.telegram.org/bots/api#editmessagereplymarkup): https://core.telegram.org/bots/api#editmessagereplymarkup
      * 
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
-     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit
-     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
-     * @param replyMarkup A JSON-serialized object for an inline keyboard.
+     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+     * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit.
+     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
+     * @param replyMarkup A JSON-serialized object for an inline keyboard
      */
     abstract suspend fun editMessageReplyMarkup(
         businessConnectionId: String? = null,
@@ -205,7 +208,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#banchatmember): https://core.telegram.org/bots/api#banchatmember
      * 
-     * @param chatId Unique identifier for the target group or username of the target supergroup or channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target group or username of the target supergroup or channel in the format @username
      * @param userId Unique identifier of the target user
      * @param untilDate Date when the user will be unbanned; Unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever. Applied for supergroups and channels only.
      * @param revokeMessages Pass True to delete all messages from the chat for the user that is being removed. If False, the user will be able to see messages in the group that were sent before the user was removed. Always True for supergroups and channels.
@@ -233,7 +236,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#unhidegeneralforumtopic): https://core.telegram.org/bots/api#unhidegeneralforumtopic
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun unhideGeneralForumTopic(
         chatId: ChatId
@@ -244,7 +247,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#verifychat): https://core.telegram.org/bots/api#verifychat
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername). Channel direct messages chats can't be verified.
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. Channel direct messages chats can't be verified.
      * @param customDescription Custom description for the verification; 0-70 characters. Must be empty if the organization isn't allowed to provide a custom verification description.
      */
     abstract suspend fun verifyChat(
@@ -280,7 +283,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#deletechatphoto): https://core.telegram.org/bots/api#deletechatphoto
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      */
     abstract suspend fun deleteChatPhoto(
         chatId: ChatId
@@ -291,23 +294,23 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#copymessage): https://core.telegram.org/bots/api#copymessage
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param fromChatId Unique identifier for the chat where the original message was sent (or channel username in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+     * @param fromChatId Unique identifier for the chat where the original message was sent (or username of the target bot, supergroup or channel in the format @username)
      * @param messageId Message identifier in the chat specified in from_chat_id
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
      * @param videoStartTimestamp New start timestamp for the copied video in the message
-     * @param caption New caption for media, 0-1024 characters after entities parsing. If not specified, the original caption is kept
+     * @param caption New caption for media, 0-1024 characters after entities parsing. If not specified, the original caption is kept.
      * @param parseMode Mode for parsing entities in the new caption. See formatting options for more details.
      * @param captionEntities A JSON-serialized list of special entities that appear in the new caption, which can be specified instead of parse_mode
      * @param showCaptionAboveMedia Pass True, if the caption must be shown above the message media. Ignored if a new caption isn't specified.
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; only available when copying to private chats
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun copyMessage(
         chatId: ChatId,
@@ -335,7 +338,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#reopenforumtopic): https://core.telegram.org/bots/api#reopenforumtopic
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param messageThreadId Unique identifier for the target message thread of the forum topic
      */
     abstract suspend fun reopenForumTopic(
@@ -348,18 +351,18 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#senddice): https://core.telegram.org/bots/api#senddice
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
-     * @param emoji Emoji on which the dice throw animation is based. Currently, must be one of "🎲", "🎯", "🏀", "⚽", "🎳", or "🎰". Dice can have values 1-6 for "🎲", "🎯" and "🎳", values 1-5 for "🏀" and "⚽", and values 1-64 for "🎰". Defaults to "🎲"
+     * @param emoji Emoji on which the dice throw animation is based. Currently, must be one of "🎲", "🎯", "🏀", "⚽", "🎳", or "🎰". Dice can have values 1-6 for "🎲", "🎯" and "🎳", values 1-5 for "🏀" and "⚽", and values 1-64 for "🎰". Defaults to "🎲".
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendDice(
         chatId: ChatId,
@@ -411,23 +414,23 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendlocation): https://core.telegram.org/bots/api#sendlocation
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param latitude Latitude of the location
      * @param longitude Longitude of the location
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
      * @param horizontalAccuracy The radius of uncertainty for the location, measured in meters; 0-1500
-     * @param livePeriod Period in seconds during which the location will be updated (see Live Locations, should be between 60 and 86400, or 0x7FFFFFFF for live locations that can be edited indefinitely.
+     * @param livePeriod Period in seconds during which the location will be updated (see Live Locations, should be between 60 and 86400, or 0x7FFFFFFF for live locations that can be edited indefinitely
      * @param heading For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
      * @param proximityAlertRadius For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendLocation(
         chatId: ChatId,
@@ -455,7 +458,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#setchatadministratorcustomtitle): https://core.telegram.org/bots/api#setchatadministratorcustomtitle
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param userId Unique identifier of the target user
      * @param customTitle New custom title for the administrator; 0-16 characters, emoji are not allowed
      */
@@ -485,7 +488,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#setchattitle): https://core.telegram.org/bots/api#setchattitle
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param title New chat title, 1-128 characters
      */
     abstract suspend fun setChatTitle(
@@ -498,7 +501,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#setchatdescription): https://core.telegram.org/bots/api#setchatdescription
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param description New chat description, 0-255 characters
      */
     abstract suspend fun setChatDescription(
@@ -507,14 +510,16 @@ abstract class KittyBot {
     ): TResult<Boolean> 
 
     /**
-     * Use this method to get a list of administrators in a chat, which aren't bots. Returns an Array of ChatMember objects.
+     * Use this method to get a list of administrators in a chat. Returns an Array of ChatMember objects.
      * 
      * [link](https://core.telegram.org/bots/api#getchatadministrators): https://core.telegram.org/bots/api#getchatadministrators
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup or channel in the format @username
+     * @param returnBots Pass True to additionally receive all bots that are administrators of the chat. By default, bots other than the current bot are omitted.
      */
     abstract suspend fun getChatAdministrators(
-        chatId: ChatId
+        chatId: ChatId,
+        returnBots: Boolean? = null
     ): TResult<List<ChatMember>> 
 
     /**
@@ -534,7 +539,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#getchatmembercount): https://core.telegram.org/bots/api#getchatmembercount
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup or channel in the format @username
      */
     abstract suspend fun getChatMemberCount(
         chatId: ChatId
@@ -569,7 +574,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendphoto): https://core.telegram.org/bots/api#sendphoto
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param photo Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's width and height must not exceed 10000 in total. Width and height ratio must be at most 20. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -581,11 +586,11 @@ abstract class KittyBot {
      * @param hasSpoiler Pass True if the photo needs to be covered with a spoiler animation
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendPhoto(
         chatId: ChatId,
@@ -608,11 +613,29 @@ abstract class KittyBot {
     ): TResult<Message> 
 
     /**
+     * Use this method to remove a reaction from a message in a group or a supergroup chat. The bot must have the 'can_delete_messages' administrator right in the chat. Returns True on success.
+     * 
+     * [link](https://core.telegram.org/bots/api#deletemessagereaction): https://core.telegram.org/bots/api#deletemessagereaction
+     * 
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
+     * @param messageId Identifier of the target message
+     * @param userId Identifier of the user whose reaction will be removed, if the reaction was added by a user
+     * @param actorChatId Identifier of the chat whose reaction will be removed, if the reaction was added by a chat
+     */
+    abstract suspend fun deleteMessageReaction(
+        chatId: ChatId,
+        messageId: Long,
+        userId: Long? = null,
+        actorChatId: Long? = null,
+        requestOptions: RequestOptions? = null
+    ): TResult<Boolean> 
+
+    /**
      * Use this method to send static .WEBP, animated .TGS, or video .WEBM stickers. On success, the sent Message is returned.
      * 
      * [link](https://core.telegram.org/bots/api#sendsticker): https://core.telegram.org/bots/api#sendsticker
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param sticker Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP sticker from the Internet, or upload a new .WEBP, .TGS, or .WEBM sticker using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Video and animated stickers can't be sent via an HTTP URL.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -620,11 +643,11 @@ abstract class KittyBot {
      * @param emoji Emoji associated with the sticker; only for just uploaded stickers
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendSticker(
         chatId: ChatId,
@@ -664,14 +687,14 @@ abstract class KittyBot {
      * [link](https://core.telegram.org/bots/api#editmessagechecklist): https://core.telegram.org/bots/api#editmessagechecklist
      * 
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
-     * @param chatId Unique identifier for the target chat
+     * @param chatId Unique identifier for the target chat or username of the target bot in the format @username
      * @param messageId Unique identifier for the target message
      * @param checklist A JSON-serialized object for the new checklist
      * @param replyMarkup A JSON-serialized object for the new inline keyboard for the message
      */
     abstract suspend fun editMessageChecklist(
         businessConnectionId: String,
-        chatId: Long,
+        chatId: ChatId,
         messageId: Long,
         checklist: InputChecklist,
         replyMarkup: InlineKeyboardMarkup? = null,
@@ -698,8 +721,8 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#setchatmenubutton): https://core.telegram.org/bots/api#setchatmenubutton
      * 
-     * @param chatId Unique identifier for the target private chat. If not specified, default bot's menu button will be changed
-     * @param menuButton A JSON-serialized object for the bot's new menu button. Defaults to MenuButtonDefault
+     * @param chatId Unique identifier for the target private chat. If not specified, the bot's default menu button will be changed.
+     * @param menuButton A JSON-serialized object for the bot's new menu button. Defaults to MenuButtonDefault.
      */
     abstract suspend fun setChatMenuButton(
         chatId: Long? = null,
@@ -711,7 +734,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#hidegeneralforumtopic): https://core.telegram.org/bots/api#hidegeneralforumtopic
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun hideGeneralForumTopic(
         chatId: ChatId
@@ -722,13 +745,13 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendpoll): https://core.telegram.org/bots/api#sendpoll
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername). Polls can't be sent to channel direct messages chats.
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. Polls can't be sent to channel direct messages chats.
      * @param question Poll question, 1-300 characters
-     * @param options A JSON-serialized list of 2-12 answer options
+     * @param options A JSON-serialized list of 1-12 answer options
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
-     * @param questionParseMode Mode for parsing entities in the question. See formatting options for more details. Currently, only custom emoji entities are allowed
-     * @param questionEntities A JSON-serialized list of special entities that appear in the poll question. It can be specified instead of question_parse_mode
+     * @param questionParseMode Mode for parsing entities in the question. See formatting options for more details. Currently, only custom emoji entities are allowed.
+     * @param questionEntities A JSON-serialized list of special entities that appear in the poll question. It can be specified instead of question_parse_mode.
      * @param isAnonymous True, if the poll needs to be anonymous, defaults to True
      * @param type Poll type, "quiz" or "regular", defaults to "regular"
      * @param allowsMultipleAnswers Pass True, if the poll allows multiple answers, defaults to False
@@ -736,22 +759,26 @@ abstract class KittyBot {
      * @param shuffleOptions Pass True, if the poll options must be shown in random order
      * @param allowAddingOptions Pass True, if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes
      * @param hideResultsUntilCloses Pass True, if poll results must be shown only after the poll closes
+     * @param membersOnly Pass True, if voting is limited to users who have been members of the chat where the poll is being sent for more than 24 hours; for channel chats only
+     * @param countryCodes A JSON-serialized list of 0-12 two-letter ISO 3166-1 alpha-2 country codes indicating the countries from which users can vote in the poll; for channel chats only. Use "FT" as a country code to allow users with anonymous numbers to vote. If omitted or empty, then users from any country can participate in the poll.
      * @param correctOptionIds A JSON-serialized list of monotonically increasing 0-based identifiers of the correct answer options, required for polls in quiz mode
      * @param explanation Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters with at most 2 line feeds after entities parsing
      * @param explanationParseMode Mode for parsing entities in the explanation. See formatting options for more details.
-     * @param explanationEntities A JSON-serialized list of special entities that appear in the poll explanation. It can be specified instead of explanation_parse_mode
+     * @param explanationEntities A JSON-serialized list of special entities that appear in the poll explanation. It can be specified instead of explanation_parse_mode.
+     * @param explanationMedia Media added to the quiz explanation
      * @param openPeriod Amount of time in seconds the poll will be active after creation, 5-2628000. Can't be used together with close_date.
      * @param closeDate Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 2628000 seconds in the future. Can't be used together with open_period.
      * @param isClosed Pass True if the poll needs to be immediately closed. This can be useful for poll preview.
      * @param description Description of the poll to be sent, 0-1024 characters after entities parsing
      * @param descriptionParseMode Mode for parsing entities in the poll description. See formatting options for more details.
      * @param descriptionEntities A JSON-serialized list of special entities that appear in the poll description, which can be specified instead of description_parse_mode
+     * @param media Media added to the poll description
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendPoll(
         chatId: ChatId,
@@ -768,23 +795,26 @@ abstract class KittyBot {
         shuffleOptions: Boolean? = null,
         allowAddingOptions: Boolean? = null,
         hideResultsUntilCloses: Boolean? = null,
+        membersOnly: Boolean? = null,
+        countryCodes: List<String>? = null,
         correctOptionIds: List<Long>? = null,
         explanation: String? = null,
         explanationParseMode: ParseMode? = null,
         explanationEntities: List<MessageEntity>? = null,
+        explanationMedia: InputPollMedia? = null,
         openPeriod: Long? = null,
         closeDate: Long? = null,
         isClosed: Boolean? = null,
         description: String? = null,
         descriptionParseMode: ParseMode? = null,
         descriptionEntities: List<MessageEntity>? = null,
+        media: InputPollMedia? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
-        replyMarkup: ReplyMarkup? = null,
-        requestOptions: RequestOptions? = null
+        replyMarkup: ReplyMarkup? = null
     ): TResult<Message> 
 
     /**
@@ -792,7 +822,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#getchatmenubutton): https://core.telegram.org/bots/api#getchatmenubutton
      * 
-     * @param chatId Unique identifier for the target private chat. If not specified, default bot's menu button will be returned
+     * @param chatId Unique identifier for the target private chat. If not specified, the bot's default menu button will be returned.
      */
     abstract suspend fun getChatMenuButton(
         chatId: Long? = null
@@ -849,8 +879,8 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#copymessages): https://core.telegram.org/bots/api#copymessages
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param fromChatId Unique identifier for the chat where the original messages were sent (or channel username in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+     * @param fromChatId Unique identifier for the chat where the original messages were sent (or username of the target bot, supergroup or channel in the format @username)
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages in the chat from_chat_id to copy. The identifiers must be specified in a strictly increasing order.
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the messages will be sent; required if the messages are sent to a direct messages chat
@@ -874,7 +904,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#unpinchatmessage): https://core.telegram.org/bots/api#unpinchatmessage
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be unpinned
      * @param messageId Identifier of the message to unpin. Required if business_connection_id is specified. If not specified, the most recent pinned message (by sending date) will be unpinned.
      */
@@ -890,10 +920,10 @@ abstract class KittyBot {
      * [link](https://core.telegram.org/bots/api#stopmessagelivelocation): https://core.telegram.org/bots/api#stopmessagelivelocation
      * 
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
-     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param messageId Required if inline_message_id is not specified. Identifier of the message with live location to stop
-     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
-     * @param replyMarkup A JSON-serialized object for a new inline keyboard.
+     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+     * @param messageId Required if inline_message_id is not specified. Identifier of the message with live location to stop.
+     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
+     * @param replyMarkup A JSON-serialized object for a new inline keyboard
      */
     abstract suspend fun stopMessageLiveLocation(
         businessConnectionId: String? = null,
@@ -934,7 +964,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#getchatmember): https://core.telegram.org/bots/api#getchatmember
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup or channel in the format @username
      * @param userId Unique identifier of the target user
      */
     abstract suspend fun getChatMember(
@@ -962,7 +992,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#senddocument): https://core.telegram.org/bots/api#senddocument
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param document File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -974,11 +1004,11 @@ abstract class KittyBot {
      * @param disableContentTypeDetection Disables automatic server-side content type detection for files uploaded using multipart/form-data
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendDocument(
         chatId: ChatId,
@@ -1005,11 +1035,11 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#createchatinvitelink): https://core.telegram.org/bots/api#createchatinvitelink
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param name Invite link name; 0-32 characters
      * @param expireDate Point in time (Unix timestamp) when the link will expire
      * @param memberLimit The maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
-     * @param createsJoinRequest True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified
+     * @param createsJoinRequest True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified.
      */
     abstract suspend fun createChatInviteLink(
         chatId: ChatId,
@@ -1037,7 +1067,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#setchatstickerset): https://core.telegram.org/bots/api#setchatstickerset
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param stickerSetName Name of the sticker set to be set as the group sticker set
      */
     abstract suspend fun setChatStickerSet(
@@ -1078,12 +1108,12 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#editchatinvitelink): https://core.telegram.org/bots/api#editchatinvitelink
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param inviteLink The invite link to edit
      * @param name Invite link name; 0-32 characters
      * @param expireDate Point in time (Unix timestamp) when the link will expire
      * @param memberLimit The maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
-     * @param createsJoinRequest True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified
+     * @param createsJoinRequest True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified.
      */
     abstract suspend fun editChatInviteLink(
         chatId: ChatId,
@@ -1099,7 +1129,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#leavechat): https://core.telegram.org/bots/api#leavechat
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername). Channel direct messages chats aren't supported; leave the corresponding channel instead.
+     * @param chatId Unique identifier for the target chat or username of the target supergroup or channel in the format @username. Channel direct messages chats aren't supported; leave the corresponding channel instead.
      */
     abstract suspend fun leaveChat(
         chatId: ChatId
@@ -1110,11 +1140,23 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#closegeneralforumtopic): https://core.telegram.org/bots/api#closegeneralforumtopic
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun closeGeneralForumTopic(
         chatId: ChatId
     ): TResult<Boolean> 
+
+    /**
+     * Use this method to get the access settings of a managed bot. Returns a BotAccessSettings object on success.
+     * 
+     * [link](https://core.telegram.org/bots/api#getmanagedbotaccesssettings): https://core.telegram.org/bots/api#getmanagedbotaccesssettings
+     * 
+     * @param userId User identifier of the managed bot whose access settings will be returned
+     */
+    abstract suspend fun getManagedBotAccessSettings(
+        userId: Long,
+        requestOptions: RequestOptions? = null
+    ): TResult<BotAccessSettings> 
 
     /**
      * Stores a keyboard button that can be used by a user within a Mini App. Returns a PreparedKeyboardButton object.
@@ -1122,7 +1164,7 @@ abstract class KittyBot {
      * [link](https://core.telegram.org/bots/api#savepreparedkeyboardbutton): https://core.telegram.org/bots/api#savepreparedkeyboardbutton
      * 
      * @param userId Unique identifier of the target user that can use the button
-     * @param button A JSON-serialized object describing the button to be saved. The button must be of the type request_users, request_chat, or request_managed_bot
+     * @param button A JSON-serialized object describing the button to be saved. The button must be of the type request_users, request_chat, or request_managed_bot.
      */
     abstract suspend fun savePreparedKeyboardButton(
         userId: Long,
@@ -1185,12 +1227,71 @@ abstract class KittyBot {
      * [link](https://core.telegram.org/bots/api#setcustomemojistickersetthumbnail): https://core.telegram.org/bots/api#setcustomemojistickersetthumbnail
      * 
      * @param name Sticker set name
-     * @param customEmojiId Custom emoji identifier of a sticker from the sticker set; pass an empty string to drop the thumbnail and use the first sticker as the thumbnail.
+     * @param customEmojiId Custom emoji identifier of a sticker from the sticker set; pass an empty string to drop the thumbnail and use the first sticker as the thumbnail
      */
     abstract suspend fun setCustomEmojiStickerSetThumbnail(
         name: String,
         customEmojiId: String? = null
     ): TResult<Boolean> 
+
+    /**
+     * Use this method to send live photos. On success, the sent Message is returned.
+     * 
+     * [link](https://core.telegram.org/bots/api#sendlivephoto): https://core.telegram.org/bots/api#sendlivephoto
+     * 
+     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param livePhoto Live photo video to send. The video must be no longer than 10 seconds and must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending live photos by a URL is currently unsupported.
+     * @param photo The static photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending live photos by a URL is currently unsupported.
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
+     * @param caption Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
+     * @param parseMode Mode for parsing entities in the video caption. See formatting options for more details.
+     * @param captionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
+     * @param showCaptionAboveMedia Pass True, if the caption must be shown above the message media
+     * @param hasSpoiler Pass True if the video needs to be covered with a spoiler animation
+     * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
+     * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
+     * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
+     * @param replyParameters Description of the message to reply to
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
+     */
+    abstract suspend fun sendLivePhoto(
+        chatId: ChatId,
+        livePhoto: TelegramFile,
+        photo: TelegramFile,
+        businessConnectionId: String? = null,
+        messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        showCaptionAboveMedia: Boolean? = null,
+        hasSpoiler: Boolean? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
+        messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null
+    ): TResult<Message> 
+
+    /**
+     * Use this method to get the last messages from the personal chat (i.e., the chat currently added to their profile) of a given user. On success, an array of Message objects is returned.
+     * 
+     * [link](https://core.telegram.org/bots/api#getuserpersonalchatmessages): https://core.telegram.org/bots/api#getuserpersonalchatmessages
+     * 
+     * @param userId Unique identifier for the target user
+     * @param limit The maximum number of messages to return; 1-20
+     */
+    abstract suspend fun getUserPersonalChatMessages(
+        userId: Long,
+        limit: Long,
+        requestOptions: RequestOptions? = null
+    ): TResult<List<Message>> 
 
     /**
      * Use this method to close the bot instance before moving it from one local server to another. You need to delete the webhook before calling this method to ensure that the bot isn't launched again after server restart. The method will return error 429 in the first 10 minutes after the bot is launched. Returns True on success. Requires no parameters.
@@ -1205,7 +1306,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#pinchatmessage): https://core.telegram.org/bots/api#pinchatmessage
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param messageId Identifier of a message to pin
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be pinned
      * @param disableNotification Pass True if it is not necessary to send a notification to all chat members about the new pinned message. Notifications are always disabled in channels and private chats.
@@ -1274,7 +1375,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#revokechatinvitelink): https://core.telegram.org/bots/api#revokechatinvitelink
      * 
-     * @param chatId Unique identifier of the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier of the target chat or username of the target channel in the format @username
      * @param inviteLink The invite link to revoke
      */
     abstract suspend fun revokeChatInviteLink(
@@ -1315,7 +1416,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendmessage): https://core.telegram.org/bots/api#sendmessage
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param text Text of the message to be sent, 1-4096 characters after entities parsing
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -1325,11 +1426,11 @@ abstract class KittyBot {
      * @param linkPreviewOptions Link preview generation options for the message
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendMessage(
         chatId: ChatId,
@@ -1356,7 +1457,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendchataction): https://core.telegram.org/bots/api#sendchataction
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername). Channel chats and channel direct messages chats aren't supported.
+     * @param chatId Unique identifier for the target chat or username of the target bot or supergroup in the format @username. Channel chats and channel direct messages chats aren't supported.
      * @param action Type of action to broadcast. Choose one, depending on what the user is about to receive: typing for text messages, upload_photo for photos, record_video or upload_video for videos, record_voice or upload_voice for voice notes, upload_document for general files, choose_sticker for stickers, find_location for location data, record_video_note or upload_video_note for video notes.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the action will be sent
      * @param messageThreadId Unique identifier for the target message thread or topic of a forum; for supergroups and private chats of bots with forum topic mode enabled only
@@ -1373,7 +1474,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#createchatsubscriptioninvitelink): https://core.telegram.org/bots/api#createchatsubscriptioninvitelink
      * 
-     * @param chatId Unique identifier for the target channel chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target channel chat or username of the target channel in the format @username
      * @param subscriptionPeriod The number of seconds the subscription will be active for before the next payment. Currently, it must always be 2592000 (30 days).
      * @param subscriptionPrice The amount of Telegram Stars a user must pay initially and after each subsequent subscription period to be a member of the chat; 1-10000
      * @param name Invite link name; 0-32 characters
@@ -1400,7 +1501,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#deletemessage): https://core.telegram.org/bots/api#deletemessage
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param messageId Identifier of the message to delete
      */
     abstract suspend fun deleteMessage(
@@ -1486,6 +1587,22 @@ abstract class KittyBot {
     ): TResult<Boolean> 
 
     /**
+     * Use this method to change the access settings of a managed bot. Returns True on success.
+     * 
+     * [link](https://core.telegram.org/bots/api#setmanagedbotaccesssettings): https://core.telegram.org/bots/api#setmanagedbotaccesssettings
+     * 
+     * @param userId User identifier of the managed bot whose access settings will be changed
+     * @param isAccessRestricted Pass True, if only selected users can access the bot. The bot's owner can always access it.
+     * @param addedUserIds A JSON-serialized list of up to 10 identifiers of users who will have access to the bot in addition to its owner. Ignored if is_access_restricted is false.
+     */
+    abstract suspend fun setManagedBotAccessSettings(
+        userId: Long,
+        isAccessRestricted: Boolean,
+        addedUserIds: List<Long>? = null,
+        requestOptions: RequestOptions? = null
+    ): TResult<Boolean> 
+
+    /**
      * Gifts a Telegram Premium subscription to the given user. Returns True on success.
      * 
      * [link](https://core.telegram.org/bots/api#giftpremiumsubscription): https://core.telegram.org/bots/api#giftpremiumsubscription
@@ -1512,10 +1629,10 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#editforumtopic): https://core.telegram.org/bots/api#editforumtopic
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param messageThreadId Unique identifier for the target message thread of the forum topic
-     * @param name New topic name, 0-128 characters. If not specified or empty, the current name of the topic will be kept
-     * @param iconCustomEmojiId New unique identifier of the custom emoji shown as the topic icon. Use getForumTopicIconStickers to get all allowed custom emoji identifiers. Pass an empty string to remove the icon. If not specified, the current icon will be kept
+     * @param name New topic name, 0-128 characters. If not specified or empty, the current name of the topic will be kept.
+     * @param iconCustomEmojiId New unique identifier of the custom emoji shown as the topic icon. Use getForumTopicIconStickers to get all allowed custom emoji identifiers. Pass an empty string to remove the icon. If not specified, the current icon will be kept.
      */
     abstract suspend fun editForumTopic(
         chatId: ChatId,
@@ -1529,7 +1646,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendcontact): https://core.telegram.org/bots/api#sendcontact
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param phoneNumber Contact's phone number
      * @param firstName Contact's first name
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -1539,11 +1656,11 @@ abstract class KittyBot {
      * @param vcard Additional data about the contact in the form of a vCard, 0-2048 bytes
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendContact(
         chatId: ChatId,
@@ -1569,7 +1686,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#unpinallchatmessages): https://core.telegram.org/bots/api#unpinallchatmessages
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      */
     abstract suspend fun unpinAllChatMessages(
         chatId: ChatId
@@ -1580,11 +1697,11 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#restrictchatmember): https://core.telegram.org/bots/api#restrictchatmember
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param userId Unique identifier of the target user
      * @param permissions A JSON-serialized object for new user permissions
      * @param useIndependentChatPermissions Pass True if chat permissions are set independently. Otherwise, the can_send_other_messages and can_add_web_page_previews permissions will imply the can_send_messages, can_send_audios, can_send_documents, can_send_photos, can_send_videos, can_send_video_notes, and can_send_voice_notes permissions; the can_send_polls permission will imply the can_send_messages permission.
-     * @param untilDate Date when restrictions will be lifted for the user; Unix time. If user is restricted for more than 366 days or less than 30 seconds from the current time, they are considered to be restricted forever
+     * @param untilDate Date when restrictions will be lifted for the user; Unix time. If user is restricted for more than 366 days or less than 30 seconds from the current time, they are considered to be restricted forever.
      */
     abstract suspend fun restrictChatMember(
         chatId: ChatId,
@@ -1624,7 +1741,7 @@ abstract class KittyBot {
      * @param excludeFromBlockchain Pass True to exclude gifts that were assigned from the TON blockchain and can't be resold or transferred in Telegram
      * @param sortByPrice Pass True to sort results by gift price instead of send date. Sorting is applied before pagination.
      * @param offset Offset of the first entry to return as received from the previous request; use empty string to get the first chunk of results
-     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100
+     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100.
      */
     abstract suspend fun getBusinessAccountGifts(
         businessConnectionId: String,
@@ -1645,8 +1762,8 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#forwardmessage): https://core.telegram.org/bots/api#forwardmessage
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param fromChatId Unique identifier for the chat where the original message was sent (or channel username in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+     * @param fromChatId Unique identifier for the chat where the original message was sent (or username of the target bot, supergroup or channel in the format @username)
      * @param messageId Message identifier in the chat specified in from_chat_id
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message will be forwarded; required if the message is forwarded to a direct messages chat
@@ -1725,7 +1842,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#unbanchatsenderchat): https://core.telegram.org/bots/api#unbanchatsenderchat
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param senderChatId Unique identifier of the target sender chat
      */
     abstract suspend fun unbanChatSenderChat(
@@ -1752,7 +1869,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#setwebhook): https://core.telegram.org/bots/api#setwebhook
      * 
-     * @param url HTTPS URL to send updates to. Use an empty string to remove webhook integration
+     * @param url HTTPS URL to send updates to. Use an empty string to remove webhook integration.
      * @param certificate Upload your public key certificate so that the root certificate in use can be checked. See our self-signed guide for details.
      * @param ipAddress The fixed IP address which will be used to send webhook requests instead of the IP address resolved through DNS
      * @param maxConnections The maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery, 1-100. Defaults to 40. Use lower values to limit the load on your bot's server, and higher values to increase your bot's throughput.
@@ -1775,7 +1892,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#setchatmembertag): https://core.telegram.org/bots/api#setchatmembertag
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param userId Unique identifier of the target user
      * @param tag New tag for the member; 0-16 characters, emoji are not allowed
      */
@@ -1830,7 +1947,7 @@ abstract class KittyBot {
      * 
      * @param giftId Identifier of the gift; limited gifts can't be sent to channel chats
      * @param userId Required if chat_id is not specified. Unique identifier of the target user who will receive the gift.
-     * @param chatId Required if user_id is not specified. Unique identifier for the chat or username of the channel (in the format @channelusername) that will receive the gift.
+     * @param chatId Required if user_id is not specified. Unique identifier for the chat or username of the channel (in the format @username) that will receive the gift.
      * @param payForUpgrade Pass True to pay for the gift upgrade from the bot's balance, thereby making the upgrade free for the receiver
      * @param text Text that will be shown along with the gift; 0-128 characters
      * @param textParseMode Mode for parsing entities in the text. See formatting options for more details. Entities other than "bold", "italic", "underline", "strikethrough", "spoiler", "custom_emoji", and "date_time" are ignored.
@@ -1922,7 +2039,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#getuserchatboosts): https://core.telegram.org/bots/api#getuserchatboosts
      * 
-     * @param chatId Unique identifier for the chat or username of the channel (in the format @channelusername)
+     * @param chatId Unique identifier for the chat or username of the channel in the format @username
      * @param userId Unique identifier of the target user
      */
     abstract suspend fun getUserChatBoosts(
@@ -1936,9 +2053,9 @@ abstract class KittyBot {
      * [link](https://core.telegram.org/bots/api#getgamehighscores): https://core.telegram.org/bots/api#getgamehighscores
      * 
      * @param userId Target user id
-     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat
-     * @param messageId Required if inline_message_id is not specified. Identifier of the sent message
-     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
+     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat.
+     * @param messageId Required if inline_message_id is not specified. Identifier of the sent message.
+     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
      */
     abstract suspend fun getGameHighScores(
         userId: Long,
@@ -2006,7 +2123,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#reopengeneralforumtopic): https://core.telegram.org/bots/api#reopengeneralforumtopic
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun reopenGeneralForumTopic(
         chatId: ChatId
@@ -2017,7 +2134,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#deletechatstickerset): https://core.telegram.org/bots/api#deletechatstickerset
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun deleteChatStickerSet(
         chatId: ChatId
@@ -2028,7 +2145,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#editgeneralforumtopic): https://core.telegram.org/bots/api#editgeneralforumtopic
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param name New topic name, 1-128 characters
      */
     abstract suspend fun editGeneralForumTopic(
@@ -2041,7 +2158,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendvoice): https://core.telegram.org/bots/api#sendvoice
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param voice Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -2052,11 +2169,11 @@ abstract class KittyBot {
      * @param duration Duration of the voice message in seconds
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendVoice(
         chatId: ChatId,
@@ -2082,7 +2199,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#banchatsenderchat): https://core.telegram.org/bots/api#banchatsenderchat
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param senderChatId Unique identifier of the target sender chat
      */
     abstract suspend fun banChatSenderChat(
@@ -2099,13 +2216,27 @@ abstract class KittyBot {
     abstract suspend fun getWebhookInfo(): TResult<WebhookInfo> 
 
     /**
+     * Use this method to reply to a received guest message. On success, a SentGuestMessage object is returned.
+     * 
+     * [link](https://core.telegram.org/bots/api#answerguestquery): https://core.telegram.org/bots/api#answerguestquery
+     * 
+     * @param guestQueryId Unique identifier for the query to be answered
+     * @param result A JSON-serialized object describing the message to be sent
+     */
+    abstract suspend fun answerGuestQuery(
+        guestQueryId: String,
+        result: InlineQueryResult,
+        requestOptions: RequestOptions? = null
+    ): TResult<SentGuestMessage> 
+
+    /**
      * Use this method to change the list of the bot's commands. See this manual for more details about bot commands. Returns True on success.
      * 
      * [link](https://core.telegram.org/bots/api#setmycommands): https://core.telegram.org/bots/api#setmycommands
      * 
      * @param commands A JSON-serialized list of bot commands to be set as the list of the bot's commands. At most 100 commands can be specified.
      * @param scope A JSON-serialized object, describing scope of users for which the commands are relevant. Defaults to BotCommandScopeDefault.
-     * @param languageCode A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands
+     * @param languageCode A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands.
      */
     abstract suspend fun setMyCommands(
         commands: List<BotCommand>,
@@ -2121,13 +2252,13 @@ abstract class KittyBot {
      * 
      * @param text New text of the message, 1-4096 characters after entities parsing
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
-     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit
-     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
+     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+     * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit.
+     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
      * @param parseMode Mode for parsing entities in the message text. See formatting options for more details.
      * @param entities A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
      * @param linkPreviewOptions Link preview generation options for the message
-     * @param replyMarkup A JSON-serialized object for an inline keyboard.
+     * @param replyMarkup A JSON-serialized object for an inline keyboard
      */
     abstract suspend fun editMessageText(
         text: String,
@@ -2147,7 +2278,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendinvoice): https://core.telegram.org/bots/api#sendinvoice
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param title Product name, 1-32 characters
      * @param description Product description, 1-255 characters
      * @param payload Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use it for your internal processes.
@@ -2158,7 +2289,7 @@ abstract class KittyBot {
      * @param providerToken Payment provider token, obtained via @BotFather. Pass an empty string for payments in Telegram Stars.
      * @param maxTipAmount The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0. Not supported for payments in Telegram Stars.
      * @param suggestedTipAmounts A JSON-serialized array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
-     * @param startParameter Unique deep-linking parameter. If left empty, forwarded copies of the sent message will have a Pay button, allowing multiple users to pay directly from the forwarded message, using the same invoice. If non-empty, forwarded copies of the sent message will have a URL button with a deep link to the bot (instead of a Pay button), with the value used as the start parameter
+     * @param startParameter Unique deep-linking parameter. If left empty, forwarded copies of the sent message will have a Pay button, allowing multiple users to pay directly from the forwarded message, using the same invoice. If non-empty, forwarded copies of the sent message will have a URL button with a deep link to the bot (instead of a Pay button), with the value used as the start parameter.
      * @param providerData JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.
      * @param photoUrl URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for.
      * @param photoSize Photo size in bytes
@@ -2173,7 +2304,7 @@ abstract class KittyBot {
      * @param isFlexible Pass True if the final price depends on the shipping method. Ignored for payments in Telegram Stars.
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
@@ -2230,7 +2361,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#setmessagereaction): https://core.telegram.org/bots/api#setmessagereaction
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param messageId Identifier of the target message. If the message belongs to a media group, the reaction is set to the first non-deleted message in the group instead.
      * @param reaction A JSON-serialized list of reaction types to set on the message. Currently, as non-premium users, bots can set up to one reaction per message. A custom emoji reaction can be used if it is either already present on the message or explicitly allowed by chat administrators. Paid reactions can't be used by bots.
      * @param isBig Pass True to set the reaction with a big animation
@@ -2248,7 +2379,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#unbanchatmember): https://core.telegram.org/bots/api#unbanchatmember
      * 
-     * @param chatId Unique identifier for the target group or username of the target supergroup or channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target group or username of the target supergroup or channel in the format @username
      * @param userId Unique identifier of the target user
      * @param onlyIfBanned Do nothing if the user is not banned
      */
@@ -2263,8 +2394,8 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendvideonote): https://core.telegram.org/bots/api#sendvideonote
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param videoNote Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending video notes by a URL is currently unsupported
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+     * @param videoNote Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending video notes by a URL is currently unsupported.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
@@ -2273,11 +2404,11 @@ abstract class KittyBot {
      * @param thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendVideoNote(
         chatId: ChatId,
@@ -2311,11 +2442,27 @@ abstract class KittyBot {
     ): TResult<Boolean> 
 
     /**
+     * Use this method to remove up to 10000 recent reactions in a group or a supergroup chat added by a given user or chat. The bot must have the 'can_delete_messages' administrator right in the chat. Returns True on success.
+     * 
+     * [link](https://core.telegram.org/bots/api#deleteallmessagereactions): https://core.telegram.org/bots/api#deleteallmessagereactions
+     * 
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
+     * @param userId Identifier of the user whose reactions will be removed, if the reactions were added by a user
+     * @param actorChatId Identifier of the chat whose reactions will be removed, if the reactions were added by a chat
+     */
+    abstract suspend fun deleteAllMessageReactions(
+        chatId: ChatId,
+        userId: Long? = null,
+        actorChatId: Long? = null,
+        requestOptions: RequestOptions? = null
+    ): TResult<Boolean> 
+
+    /**
      * Returns the gifts owned by a chat. Returns OwnedGifts on success.
      * 
      * [link](https://core.telegram.org/bots/api#getchatgifts): https://core.telegram.org/bots/api#getchatgifts
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param excludeUnsaved Pass True to exclude gifts that aren't saved to the chat's profile page. Always True, unless the bot has the can_post_messages administrator right in the channel.
      * @param excludeSaved Pass True to exclude gifts that are saved to the chat's profile page. Always False, unless the bot has the can_post_messages administrator right in the channel.
      * @param excludeUnlimited Pass True to exclude gifts that can be purchased an unlimited number of times
@@ -2325,7 +2472,7 @@ abstract class KittyBot {
      * @param excludeUnique Pass True to exclude unique gifts
      * @param sortByPrice Pass True to sort results by gift price instead of send date. Sorting is applied before pagination.
      * @param offset Offset of the first entry to return as received from the previous request; use an empty string to get the first chunk of results
-     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100
+     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100.
      */
     abstract suspend fun getChatGifts(
         chatId: ChatId,
@@ -2347,7 +2494,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#getchat): https://core.telegram.org/bots/api#getchat
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup or channel in the format @username
      */
     abstract suspend fun getChat(
         chatId: ChatId
@@ -2359,7 +2506,7 @@ abstract class KittyBot {
      * [link](https://core.telegram.org/bots/api#deletemycommands): https://core.telegram.org/bots/api#deletemycommands
      * 
      * @param scope A JSON-serialized object, describing scope of users for which the commands are relevant. Defaults to BotCommandScopeDefault.
-     * @param languageCode A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands
+     * @param languageCode A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands.
      */
     abstract suspend fun deleteMyCommands(
         scope: BotCommandScope? = null,
@@ -2367,22 +2514,22 @@ abstract class KittyBot {
     ): TResult<Boolean> 
 
     /**
-     * Use this method to stream a partial message to a user while the message is being generated. Returns True on success.
+     * Use this method to stream a partial message to a user while the message is being generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized, you must call sendMessage with the complete message to persist it in the user's chat. Returns True on success.
      * 
      * [link](https://core.telegram.org/bots/api#sendmessagedraft): https://core.telegram.org/bots/api#sendmessagedraft
      * 
      * @param chatId Unique identifier for the target private chat
-     * @param draftId Unique identifier of the message draft; must be non-zero. Changes of drafts with the same identifier are animated
-     * @param text Text of the message to be sent, 1-4096 characters after entities parsing
+     * @param draftId Unique identifier of the message draft; must be non-zero. Changes of drafts with the same identifier are animated.
      * @param messageThreadId Unique identifier for the target message thread
+     * @param text Text of the message to be sent, 0-4096 characters after entities parsing. Pass an empty text to show a "Thinking..." placeholder.
      * @param parseMode Mode for parsing entities in the message text. See formatting options for more details.
      * @param entities A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
      */
     abstract suspend fun sendMessageDraft(
         chatId: Long,
         draftId: Long,
-        text: String,
         messageThreadId: Long? = null,
+        text: String? = null,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         requestOptions: RequestOptions? = null
@@ -2393,9 +2540,9 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#createforumtopic): https://core.telegram.org/bots/api#createforumtopic
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param name Topic name, 1-128 characters
-     * @param iconColor Color of the topic icon in RGB format. Currently, must be one of 7322096 (0x6FB9F0), 16766590 (0xFFD67E), 13338331 (0xCB86DB), 9367192 (0x8EEE98), 16749490 (0xFF93B2), or 16478047 (0xFB6F5F)
+     * @param iconColor Color of the topic icon in RGB format. Currently, must be one of 7322096 (0x6FB9F0), 16766590 (0xFFD67E), 13338331 (0xCB86DB), 9367192 (0x8EEE98), 16749490 (0xFF93B2), or 16478047 (0xFB6F5F).
      * @param iconCustomEmojiId Unique identifier of the custom emoji shown as the topic icon. Use getForumTopicIconStickers to get all allowed custom emoji identifiers.
      */
     abstract suspend fun createForumTopic(
@@ -2406,18 +2553,18 @@ abstract class KittyBot {
     ): TResult<ForumTopic> 
 
     /**
-     * Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Message objects that were sent is returned.
+     * Use this method to send a group of photos, live photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Message objects that were sent is returned.
      * 
      * [link](https://core.telegram.org/bots/api#sendmediagroup): https://core.telegram.org/bots/api#sendmediagroup
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param media A JSON-serialized array describing messages to be sent, must include 2-10 items
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the messages will be sent; required if the messages are sent to a direct messages chat
      * @param disableNotification Sends messages silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent messages from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param replyParameters Description of the message to reply to
      */
@@ -2439,7 +2586,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendvideo): https://core.telegram.org/bots/api#sendvideo
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param video Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -2458,11 +2605,11 @@ abstract class KittyBot {
      * @param supportsStreaming Pass True if the uploaded video is suitable for streaming
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendVideo(
         chatId: ChatId,
@@ -2508,13 +2655,13 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#promotechatmember): https://core.telegram.org/bots/api#promotechatmember
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param userId Unique identifier of the target user
      * @param isAnonymous Pass True if the administrator's presence in the chat is hidden
      * @param canManageChat Pass True if the administrator can access the chat event log, get boost list, see hidden supergroup and channel members, report spam messages, ignore slow mode, and send messages to the chat without paying Telegram Stars. Implied by any other administrator privilege.
      * @param canDeleteMessages Pass True if the administrator can delete messages of other users
      * @param canManageVideoChats Pass True if the administrator can manage video chats
-     * @param canRestrictMembers Pass True if the administrator can restrict, ban or unban chat members, or access supergroup statistics. For backward compatibility, defaults to True for promotions of channel administrators
+     * @param canRestrictMembers Pass True if the administrator can restrict, ban or unban chat members, or access supergroup statistics. For backward compatibility, defaults to True for promotions of channel administrators.
      * @param canPromoteMembers Pass True if the administrator can add new administrators with a subset of their own privileges or demote administrators that they have promoted, directly or indirectly (promoted by administrators that were appointed by him)
      * @param canChangeInfo Pass True if the administrator can change chat title, photo and other settings
      * @param canInviteUsers Pass True if the administrator can invite new users to the chat
@@ -2555,7 +2702,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#unpinallforumtopicmessages): https://core.telegram.org/bots/api#unpinallforumtopicmessages
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param messageThreadId Unique identifier for the target message thread of the forum topic
      */
     abstract suspend fun unpinAllForumTopicMessages(
@@ -2583,11 +2730,11 @@ abstract class KittyBot {
      * 
      * @param userId User identifier
      * @param score New score, must be non-negative
-     * @param force Pass True if the high score is allowed to decrease. This can be useful when fixing mistakes or banning cheaters
+     * @param force Pass True if the high score is allowed to decrease. This can be useful when fixing mistakes or banning cheaters.
      * @param disableEditMessage Pass True if the game message should not be automatically edited to include the current scoreboard
-     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat
-     * @param messageId Required if inline_message_id is not specified. Identifier of the sent message
-     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
+     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat.
+     * @param messageId Required if inline_message_id is not specified. Identifier of the sent message.
+     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
      */
     abstract suspend fun setGameScore(
         userId: Long,
@@ -2604,7 +2751,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendpaidmedia): https://core.telegram.org/bots/api#sendpaidmedia
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername). If the chat is a channel, all Telegram Star proceeds from this media will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. If the chat is a channel, all Telegram Star proceeds from this media will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.
      * @param starCount The number of Telegram Stars that must be paid to buy access to the media; 1-25000
      * @param media A JSON-serialized array describing the media to be sent; up to 10 items
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -2617,10 +2764,10 @@ abstract class KittyBot {
      * @param showCaptionAboveMedia Pass True, if the caption must be shown above the message media
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendPaidMedia(
         chatId: ChatId,
@@ -2647,7 +2794,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#removechatverification): https://core.telegram.org/bots/api#removechatverification
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot or channel in the format @username
      */
     abstract suspend fun removeChatVerification(
         chatId: ChatId
@@ -2669,19 +2816,19 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendgame): https://core.telegram.org/bots/api#sendgame
      * 
-     * @param chatId Unique identifier for the target chat. Games can't be sent to channel direct messages chats and channel chats.
+     * @param chatId Unique identifier for the target chat or username of the target bot in the format @username. Games can't be sent to channel direct messages chats and channel chats.
      * @param gameShortName Short name of the game, serves as the unique identifier for the game. Set up your games via @BotFather.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param replyParameters Description of the message to reply to
      * @param replyMarkup A JSON-serialized object for an inline keyboard. If empty, one 'Play game_title' button will be shown. If not empty, the first button must launch the game.
      */
     abstract suspend fun sendGame(
-        chatId: Long,
+        chatId: ChatId,
         gameShortName: String,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null,
@@ -2707,7 +2854,7 @@ abstract class KittyBot {
      * @param excludeUnique Pass True to exclude unique gifts
      * @param sortByPrice Pass True to sort results by gift price instead of send date. Sorting is applied before pagination.
      * @param offset Offset of the first entry to return as received from the previous request; use an empty string to get the first chunk of results
-     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100
+     * @param limit The maximum number of gifts to be returned; 1-100. Defaults to 100.
      */
     abstract suspend fun getUserGifts(
         userId: Long,
@@ -2727,7 +2874,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#declinechatjoinrequest): https://core.telegram.org/bots/api#declinechatjoinrequest
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param userId Unique identifier of the target user
      */
     abstract suspend fun declineChatJoinRequest(
@@ -2740,7 +2887,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendvenue): https://core.telegram.org/bots/api#sendvenue
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param latitude Latitude of the venue
      * @param longitude Longitude of the venue
      * @param title Name of the venue
@@ -2754,11 +2901,11 @@ abstract class KittyBot {
      * @param googlePlaceType Google Places type of the venue. (See supported types.)
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendVenue(
         chatId: ChatId,
@@ -2788,10 +2935,10 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#stoppoll): https://core.telegram.org/bots/api#stoppoll
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param messageId Identifier of the original message with the poll
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
-     * @param replyMarkup A JSON-serialized object for a new message inline keyboard.
+     * @param replyMarkup A JSON-serialized object for a new message inline keyboard
      */
     abstract suspend fun stopPoll(
         chatId: ChatId,
@@ -2806,7 +2953,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#approvechatjoinrequest): https://core.telegram.org/bots/api#approvechatjoinrequest
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param userId Unique identifier of the target user
      */
     abstract suspend fun approveChatJoinRequest(
@@ -2819,7 +2966,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendanimation): https://core.telegram.org/bots/api#sendanimation
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param animation Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -2835,11 +2982,11 @@ abstract class KittyBot {
      * @param hasSpoiler Pass True if the animation needs to be covered with a spoiler animation
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendAnimation(
         chatId: ChatId,
@@ -2871,7 +3018,7 @@ abstract class KittyBot {
      * [link](https://core.telegram.org/bots/api#sendchecklist): https://core.telegram.org/bots/api#sendchecklist
      * 
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
-     * @param chatId Unique identifier for the target chat
+     * @param chatId Unique identifier for the target chat or username of the target bot in the format @username
      * @param checklist A JSON-serialized object for the checklist to send
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
@@ -2881,7 +3028,7 @@ abstract class KittyBot {
      */
     abstract suspend fun sendChecklist(
         businessConnectionId: String,
-        chatId: Long,
+        chatId: ChatId,
         checklist: InputChecklist,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
@@ -2911,8 +3058,8 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#forwardmessages): https://core.telegram.org/bots/api#forwardmessages
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param fromChatId Unique identifier for the chat where the original messages were sent (or channel username in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+     * @param fromChatId Unique identifier for the chat where the original messages were sent (or username of the target bot, supergroup or channel in the format @username)
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages in the chat from_chat_id to forward. The identifiers must be specified in a strictly increasing order.
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
      * @param directMessagesTopicId Identifier of the direct messages topic to which the messages will be forwarded; required if the messages are forwarded to a direct messages chat
@@ -2948,14 +3095,14 @@ abstract class KittyBot {
      * @param latitude Latitude of new location
      * @param longitude Longitude of new location
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
-     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit
-     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
-     * @param livePeriod New period in seconds during which the location can be updated, starting from the message send date. If 0x7FFFFFFF is specified, then the location can be updated forever. Otherwise, the new value must not exceed the current live_period by more than a day, and the live location expiration date must remain within the next 90 days. If not specified, then live_period remains unchanged
+     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+     * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit.
+     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
+     * @param livePeriod New period in seconds during which the location can be updated, starting from the message send date. If 0x7FFFFFFF is specified, then the location can be updated forever. Otherwise, the new value must not exceed the current live_period by more than a day, and the live location expiration date must remain within the next 90 days. If not specified, then live_period remains unchanged.
      * @param horizontalAccuracy The radius of uncertainty for the location, measured in meters; 0-1500
      * @param heading Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
      * @param proximityAlertRadius The maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.
-     * @param replyMarkup A JSON-serialized object for a new inline keyboard.
+     * @param replyMarkup A JSON-serialized object for a new inline keyboard
      */
     abstract suspend fun editMessageLiveLocation(
         latitude: Double,
@@ -2978,7 +3125,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#sendaudio): https://core.telegram.org/bots/api#sendaudio
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param audio Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -2992,11 +3139,11 @@ abstract class KittyBot {
      * @param thumbnail Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
      * @param protectContent Protects the contents of the sent message from forwarding and saving
-     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
      * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
      * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
      * @param replyParameters Description of the message to reply to
-     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
      */
     abstract suspend fun sendAudio(
         chatId: ChatId,
@@ -3037,7 +3184,7 @@ abstract class KittyBot {
      * [link](https://core.telegram.org/bots/api#deletebusinessmessages): https://core.telegram.org/bots/api#deletebusinessmessages
      * 
      * @param businessConnectionId Unique identifier of the business connection on behalf of which to delete the messages
-     * @param messageIds A JSON-serialized list of 1-100 identifiers of messages to delete. All messages must be from the same chat. See deleteMessage for limitations on which messages can be deleted
+     * @param messageIds A JSON-serialized list of 1-100 identifiers of messages to delete. All messages must be from the same chat. See deleteMessage for limitations on which messages can be deleted.
      */
     abstract suspend fun deleteBusinessMessages(
         businessConnectionId: String,
@@ -3118,23 +3265,23 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#exportchatinvitelink): https://core.telegram.org/bots/api#exportchatinvitelink
      * 
-     * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      */
     abstract suspend fun exportChatInviteLink(
         chatId: ChatId
     ): TResult<String> 
 
     /**
-     * Use this method to edit animation, audio, document, photo, or video messages, or to add media to text messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
+     * Use this method to edit animation, audio, document, live photo, photo, or video messages, or to add media to text messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
      * 
      * [link](https://core.telegram.org/bots/api#editmessagemedia): https://core.telegram.org/bots/api#editmessagemedia
      * 
      * @param media A JSON-serialized object for a new media content of the message
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
-     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit
-     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
-     * @param replyMarkup A JSON-serialized object for a new inline keyboard.
+     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+     * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit.
+     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
+     * @param replyMarkup A JSON-serialized object for a new inline keyboard
      */
     abstract suspend fun editMessageMedia(
         media: InputMedia,
@@ -3150,7 +3297,7 @@ abstract class KittyBot {
      * 
      * [link](https://core.telegram.org/bots/api#closeforumtopic): https://core.telegram.org/bots/api#closeforumtopic
      * 
-     * @param chatId Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+     * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param messageThreadId Unique identifier for the target message thread of the forum topic
      */
     abstract suspend fun closeForumTopic(
@@ -3181,7 +3328,7 @@ abstract class KittyBot {
      * [link](https://core.telegram.org/bots/api#answercallbackquery): https://core.telegram.org/bots/api#answercallbackquery
      * 
      * @param callbackQueryId Unique identifier for the query to be answered
-     * @param text Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters
+     * @param text Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters.
      * @param showAlert If True, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to false.
      * @param url URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @BotFather, specify the URL that opens your game - note that this will only work if the query comes from a callback_game button. Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
      * @param cacheTime The maximum amount of time in seconds that the result of the callback query may be cached client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.
@@ -3214,7 +3361,7 @@ abstract class KittyBot {
      * 
      * @param chatId Unique identifier for the target direct messages chat
      * @param messageId Identifier of a suggested post message to approve
-     * @param sendDate Point in time (Unix timestamp) when the post is expected to be published; omit if the date has already been specified when the suggested post was created. If specified, then the date must be not more than 2678400 seconds (30 days) in the future
+     * @param sendDate Point in time (Unix timestamp) when the post is expected to be published; omit if the date has already been specified when the suggested post was created. If specified, then the date must be not more than 2678400 seconds (30 days) in the future.
      */
     abstract suspend fun approveSuggestedPost(
         chatId: Long,
@@ -3264,14 +3411,14 @@ abstract class KittyBot {
      * [link](https://core.telegram.org/bots/api#editmessagecaption): https://core.telegram.org/bots/api#editmessagecaption
      * 
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
-     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit
-     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message
+     * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
+     * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit.
+     * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
      * @param caption New caption of the message, 0-1024 characters after entities parsing
      * @param parseMode Mode for parsing entities in the message caption. See formatting options for more details.
      * @param captionEntities A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
      * @param showCaptionAboveMedia Pass True, if the caption must be shown above the message media. Supported only for animation, photo and video messages.
-     * @param replyMarkup A JSON-serialized object for an inline keyboard.
+     * @param replyMarkup A JSON-serialized object for an inline keyboard
      */
     abstract suspend fun editMessageCaption(
         businessConnectionId: String? = null,

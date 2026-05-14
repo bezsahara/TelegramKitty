@@ -18,6 +18,14 @@ data class TelegramError(
     val description: String,
     val parameters: ResponseParameters? = null
 ) {
+    fun messageIsTooLong(): Boolean {
+        return description == "Bad Request: message is too long"
+    }
+
+    fun botWasBlocked(): Boolean {
+        return description == "Forbidden: bot was blocked by the user"
+    }
+
     companion object {
         val none = TelegramError(ok = false, errorCode = -1, description = "")
     }

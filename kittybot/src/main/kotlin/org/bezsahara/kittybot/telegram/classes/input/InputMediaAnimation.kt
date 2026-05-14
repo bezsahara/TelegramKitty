@@ -5,10 +5,12 @@ import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 import org.bezsahara.kittybot.telegram.client.file.CustomMPB
 import org.bezsahara.kittybot.telegram.values.ParseMode
 import org.bezsahara.kittybot.telegram.classes.input.InputMedia
+import org.bezsahara.kittybot.telegram.classes.input.InputPollOptionMedia
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import kotlin.collections.List
 import kotlin.Unit
 import org.bezsahara.kittybot.telegram.client.file.TelegramFile
+import org.bezsahara.kittybot.telegram.classes.input.InputPollMedia
 import kotlinx.serialization.Serializable
 
 
@@ -41,7 +43,7 @@ data class InputMediaAnimation(
     val height: Long? = null,
     val duration: Long? = null,
     @SerialName("has_spoiler") val hasSpoiler: Boolean? = null
-) : InputMedia {
+) : InputPollMedia, InputPollOptionMedia, InputMedia {
     override suspend fun executeAll(
         builder: CustomMPB
     ) {

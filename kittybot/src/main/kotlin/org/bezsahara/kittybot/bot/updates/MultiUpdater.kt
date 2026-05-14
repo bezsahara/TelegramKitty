@@ -31,6 +31,8 @@ fun interface MultiIdentity {
         val OfAnyUserChatIdentity = MultiIdentity { it.chatIdOrNull() }
 
         val OfAnyUserIdentity = MultiIdentity { it.userIdOrNull() }
+
+        val OfNoneIdentity = MultiIdentity { null }
     }
 }
 

@@ -28,7 +28,7 @@ class HandlerDelegate(
     }
 
     override fun toString(): String {
-        return "HandlerDelegate[identity=$identity, allowedKinds=$allowedKinds](${originalHandler.toStr()})"
+        return "HandlerDelegate[id=${identity?.value},ak=$allowedKinds]$originalHandler(${originalHandler.identity?.value},${originalHandler.allowedKinds})"
     }
 }
 

@@ -1,8 +1,10 @@
 package org.bezsahara.kittybot.bot.action.mgroup
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.bezsahara.kittybot.bot.KittyBot
@@ -52,14 +54,31 @@ class MediaGroupTransformerSeq(
     override val allowedKinds: Set<UpdateKind<*>> = setOf(MessageUpdate)
 
     private val scope = CoroutineScope(
-        SupervisorJob(felineDispatcher.felineBuilder.supervisorJob)
+        SupervisorJob(felineDispatcher.felineBuilder.supervisorJob) + Dispatchers.IO
     )
 
     private val pendingByChat = ConcurrentHashMap<Long, PendingMediaGroup>()
 
+    private data class ReplayContent(
+        @JvmField val channel: Channel<Update>,
+        @JvmField val firstUpdate: Update,
+        @JvmField val secondUpdate: Update?
+    )
+
+    private val replayChannel = Channel<ReplayContent>(Channel.UNLIMITED)
+
     init {
         require(periodLimitMillis >= 0) { "periodLimitMillis must be greater than or equal to 0" }
+
+        scope.launch {
+            while (true) {
+                val (c, f, s) = replayChannel.receive()
+                c.send(f)
+                if (s != null) c.send(s)
+            }
+        }
     }
+
 
     override suspend fun handleUpdate(
         update: Update,
@@ -78,8 +97,9 @@ class MediaGroupTransformerSeq(
 
             val groupedUpdate = pendingMediaGroup.tryClose(0)
             if (groupedUpdate != null) {
-                handlerContext.channel.send(groupedUpdate)
-                handlerContext.channel.send(update)
+                replayChannel.trySend(
+                    ReplayContent(handlerContext.channel, groupedUpdate, update)
+                ).getOrThrow()
                 return Decision.Consumed
             }
 
@@ -108,7 +128,7 @@ class MediaGroupTransformerSeq(
 
                     val groupedUpdate = pendingMediaGroup.tryClose(0)
                     if (groupedUpdate != null) {
-                        handlerContext.channel.send(groupedUpdate)
+                        replayChannel.trySend(ReplayContent(handlerContext.channel, groupedUpdate, null)).getOrThrow()
                     }
                 }
             }

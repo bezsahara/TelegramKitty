@@ -11,6 +11,7 @@ import org.bezsahara.kittybot.telegram.classes.input.InputMediaDocument
 import org.bezsahara.kittybot.telegram.classes.input.InputMediaPhoto
 import org.bezsahara.kittybot.telegram.classes.input.InputMediaVideo
 import org.bezsahara.kittybot.telegram.classes.input.InputMediaAudio
+import org.bezsahara.kittybot.telegram.classes.input.InputMediaLivePhoto
 import kotlinx.serialization.json.JsonElement
 import org.bezsahara.kittybot.telegram.classes.input.InputMediaAnimation
 import kotlin.Unit
@@ -36,8 +37,9 @@ private object InputMediaSerializer : JsonContentPolymorphicSerializer<InputMedi
     ): DeserializationStrategy<InputMedia> {
         return when (element.jsonObject["type"]!!.jsonPrimitive.content) {
             "animation" -> InputMediaAnimation.serializer()
-            "document" -> InputMediaDocument.serializer()
             "audio" -> InputMediaAudio.serializer()
+            "document" -> InputMediaDocument.serializer()
+            "live_photo" -> InputMediaLivePhoto.serializer()
             "photo" -> InputMediaPhoto.serializer()
             "video" -> InputMediaVideo.serializer()
             else -> error("Serializer wasn't found for object with key ${element.jsonObject["type"]!!.jsonPrimitive.content}")

@@ -15,8 +15,10 @@ import org.bezsahara.kittybot.telegram.classes.core.MessageId
 import org.bezsahara.kittybot.telegram.classes.inline.PreparedInlineMessage
 import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
 import org.bezsahara.kittybot.telegram.classes.input.InputPaidMedia
+import org.bezsahara.kittybot.telegram.classes.inline.SentGuestMessage
 import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
 import org.bezsahara.kittybot.telegram.classes.core.WebhookInfo
+import org.bezsahara.kittybot.telegram.classes.bot.BotAccessSettings
 import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
 import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
@@ -57,6 +59,7 @@ import org.bezsahara.kittybot.telegram.classes.inline.SentWebAppMessage
 import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButton
 import org.bezsahara.kittybot.telegram.classes.payments.StarTransactions
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
+import org.bezsahara.kittybot.telegram.classes.input.InputPollMedia
 import org.bezsahara.kittybot.telegram.classes.keyboard.ReplyMarkup
 import org.bezsahara.kittybot.telegram.classes.chat.ChatAdministratorRights
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
@@ -73,7 +76,7 @@ import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import org.bezsahara.kittybot.telegram.utils.TResult.Either
 import org.bezsahara.kittybot.telegram.classes.media.stickers.MaskPosition
 
-// You can override any function here if you want different behavior
+
 open class DelegatingKittyBot(
     protected val delegate: KittyBot
 ) : KittyBot() {
@@ -308,9 +311,10 @@ open class DelegatingKittyBot(
     }
 
     override suspend fun getChatAdministrators(
-        chatId: ChatId
+        chatId: ChatId,
+        returnBots: Boolean?
     ): TResult<List<ChatMember>> {
-        return delegate.getChatAdministrators(chatId)
+        return delegate.getChatAdministrators(chatId, returnBots)
     }
 
     override suspend fun getManagedBotToken(
@@ -361,6 +365,16 @@ open class DelegatingKittyBot(
         return delegate.sendPhoto(chatId, photo, businessConnectionId, messageThreadId, directMessagesTopicId, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, allowPaidBroadcast, messageEffectId, suggestedPostParameters, replyParameters, replyMarkup)
     }
 
+    override suspend fun deleteMessageReaction(
+        chatId: ChatId,
+        messageId: Long,
+        userId: Long?,
+        actorChatId: Long?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> {
+        return delegate.deleteMessageReaction(chatId, messageId, userId, actorChatId, requestOptions)
+    }
+
     override suspend fun sendSticker(
         chatId: ChatId,
         sticker: TelegramFile,
@@ -390,7 +404,7 @@ open class DelegatingKittyBot(
 
     override suspend fun editMessageChecklist(
         businessConnectionId: String,
-        chatId: Long,
+        chatId: ChatId,
         messageId: Long,
         checklist: InputChecklist,
         replyMarkup: InlineKeyboardMarkup?,
@@ -435,25 +449,28 @@ open class DelegatingKittyBot(
         shuffleOptions: Boolean?,
         allowAddingOptions: Boolean?,
         hideResultsUntilCloses: Boolean?,
+        membersOnly: Boolean?,
+        countryCodes: List<String>?,
         correctOptionIds: List<Long>?,
         explanation: String?,
         explanationParseMode: ParseMode?,
         explanationEntities: List<MessageEntity>?,
+        explanationMedia: InputPollMedia?,
         openPeriod: Long?,
         closeDate: Long?,
         isClosed: Boolean?,
         description: String?,
         descriptionParseMode: ParseMode?,
         descriptionEntities: List<MessageEntity>?,
+        media: InputPollMedia?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
-        replyMarkup: ReplyMarkup?,
-        requestOptions: RequestOptions?
+        replyMarkup: ReplyMarkup?
     ): TResult<Message> {
-        return delegate.sendPoll(chatId, question, options, businessConnectionId, messageThreadId, questionParseMode, questionEntities, isAnonymous, type, allowsMultipleAnswers, allowsRevoting, shuffleOptions, allowAddingOptions, hideResultsUntilCloses, correctOptionIds, explanation, explanationParseMode, explanationEntities, openPeriod, closeDate, isClosed, description, descriptionParseMode, descriptionEntities, disableNotification, protectContent, allowPaidBroadcast, messageEffectId, replyParameters, replyMarkup, requestOptions)
+        return delegate.sendPoll(chatId, question, options, businessConnectionId, messageThreadId, questionParseMode, questionEntities, isAnonymous, type, allowsMultipleAnswers, allowsRevoting, shuffleOptions, allowAddingOptions, hideResultsUntilCloses, membersOnly, countryCodes, correctOptionIds, explanation, explanationParseMode, explanationEntities, explanationMedia, openPeriod, closeDate, isClosed, description, descriptionParseMode, descriptionEntities, media, disableNotification, protectContent, allowPaidBroadcast, messageEffectId, replyParameters, replyMarkup)
     }
 
     override suspend fun getChatMenuButton(
@@ -632,6 +649,13 @@ open class DelegatingKittyBot(
         return delegate.closeGeneralForumTopic(chatId)
     }
 
+    override suspend fun getManagedBotAccessSettings(
+        userId: Long,
+        requestOptions: RequestOptions?
+    ): TResult<BotAccessSettings> {
+        return delegate.getManagedBotAccessSettings(userId, requestOptions)
+    }
+
     override suspend fun savePreparedKeyboardButton(
         userId: Long,
         button: KeyboardButton,
@@ -671,6 +695,37 @@ open class DelegatingKittyBot(
         customEmojiId: String?
     ): TResult<Boolean> {
         return delegate.setCustomEmojiStickerSetThumbnail(name, customEmojiId)
+    }
+
+    override suspend fun sendLivePhoto(
+        chatId: ChatId,
+        livePhoto: TelegramFile,
+        photo: TelegramFile,
+        businessConnectionId: String?,
+        messageThreadId: Long?,
+        directMessagesTopicId: Long?,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        showCaptionAboveMedia: Boolean?,
+        hasSpoiler: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        allowPaidBroadcast: Boolean?,
+        messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: ReplyMarkup?
+    ): TResult<Message> {
+        return delegate.sendLivePhoto(chatId, livePhoto, photo, businessConnectionId, messageThreadId, directMessagesTopicId, caption, parseMode, captionEntities, showCaptionAboveMedia, hasSpoiler, disableNotification, protectContent, allowPaidBroadcast, messageEffectId, suggestedPostParameters, replyParameters, replyMarkup)
+    }
+
+    override suspend fun getUserPersonalChatMessages(
+        userId: Long,
+        limit: Long,
+        requestOptions: RequestOptions?
+    ): TResult<List<Message>> {
+        return delegate.getUserPersonalChatMessages(userId, limit, requestOptions)
     }
 
     override suspend fun close(): TResult<Boolean> {
@@ -822,6 +877,15 @@ open class DelegatingKittyBot(
         storyId: Long
     ): TResult<Boolean> {
         return delegate.deleteStory(businessConnectionId, storyId)
+    }
+
+    override suspend fun setManagedBotAccessSettings(
+        userId: Long,
+        isAccessRestricted: Boolean,
+        addedUserIds: List<Long>?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> {
+        return delegate.setManagedBotAccessSettings(userId, isAccessRestricted, addedUserIds, requestOptions)
     }
 
     override suspend fun giftPremiumSubscription(
@@ -1148,6 +1212,14 @@ open class DelegatingKittyBot(
         return delegate.getWebhookInfo()
     }
 
+    override suspend fun answerGuestQuery(
+        guestQueryId: String,
+        result: InlineQueryResult,
+        requestOptions: RequestOptions?
+    ): TResult<SentGuestMessage> {
+        return delegate.answerGuestQuery(guestQueryId, result, requestOptions)
+    }
+
     override suspend fun setMyCommands(
         commands: List<BotCommand>,
         scope: BotCommandScope?,
@@ -1260,6 +1332,15 @@ open class DelegatingKittyBot(
         return delegate.setMyDefaultAdministratorRights(rights, forChannels)
     }
 
+    override suspend fun deleteAllMessageReactions(
+        chatId: ChatId,
+        userId: Long?,
+        actorChatId: Long?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> {
+        return delegate.deleteAllMessageReactions(chatId, userId, actorChatId, requestOptions)
+    }
+
     override suspend fun getChatGifts(
         chatId: ChatId,
         excludeUnsaved: Boolean?,
@@ -1293,13 +1374,13 @@ open class DelegatingKittyBot(
     override suspend fun sendMessageDraft(
         chatId: Long,
         draftId: Long,
-        text: String,
         messageThreadId: Long?,
+        text: String?,
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
         requestOptions: RequestOptions?
     ): TResult<Boolean> {
-        return delegate.sendMessageDraft(chatId, draftId, text, messageThreadId, parseMode, entities, requestOptions)
+        return delegate.sendMessageDraft(chatId, draftId, messageThreadId, text, parseMode, entities, requestOptions)
     }
 
     override suspend fun createForumTopic(
@@ -1447,7 +1528,7 @@ open class DelegatingKittyBot(
     }
 
     override suspend fun sendGame(
-        chatId: Long,
+        chatId: ChatId,
         gameShortName: String,
         businessConnectionId: String?,
         messageThreadId: Long?,
@@ -1554,7 +1635,7 @@ open class DelegatingKittyBot(
 
     override suspend fun sendChecklist(
         businessConnectionId: String,
-        chatId: Long,
+        chatId: ChatId,
         checklist: InputChecklist,
         disableNotification: Boolean?,
         protectContent: Boolean?,

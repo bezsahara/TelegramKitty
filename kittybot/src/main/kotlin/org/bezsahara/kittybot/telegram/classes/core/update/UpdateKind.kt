@@ -13,4 +13,8 @@ sealed class UpdateKind<T>(
     @JvmField val ordinal: Int,
     @JvmField val clazz: Class<T>,
     @JvmField val name: String
-)
+) {
+    override fun toString(): String {
+        return "UpdateKind($name)"
+    }
+}

@@ -12,10 +12,12 @@ import org.bezsahara.kittybot.bot.errors.KittyError
 import org.bezsahara.kittybot.bot.errors.hiss
 import org.bezsahara.kittybot.telegram.classes.core.File
 import org.bezsahara.kittybot.telegram.client.TApiClient
+import org.bezsahara.kittybot.telegram.client.TConsumeBot
 import org.bezsahara.kittybot.telegram.client.TelegramError
 import org.bezsahara.kittybot.telegram.utils.TResult
 import org.bezsahara.kittybot.telegram.utils.TResultFailure
 import org.bezsahara.kittybot.telegram.utils.onResult
+import java.lang.invoke.MethodHandles
 import java.util.function.Function
 
 inline fun KittyBotConfig<*>.purr(block: KittyBot.() -> Unit) {
@@ -70,10 +72,22 @@ private fun createDownloadUrl(filePath: String, token: String): RequestOptions {
 }
 
 fun KittyBot.vertxClient(reason: String): TApiClient {
-    return (this as? TApiClient) ?: hiss(reason)
+    val jc = javaClass
+    return when {
+        jc === TApiClient::class.java -> this as TApiClient
+        jc === DelegatingKittyBot::class.java -> (DKBMh.mh.invokeExact((this as DelegatingKittyBot)) as KittyBot).vertxClient(reason)
+        jc === TConsumeBot::class.java -> (this as TConsumeBot).delegate.vertxClient(reason)
+        else -> hiss(reason)
+    }
 }
 
 fun KittyBot.vertxClient(): TApiClient {
-    return (this as? TApiClient)
-        ?: error("Only TApiClient supports file downloads! But your client is ${this::class.java.name}")
+    return vertxClient("Only TApiClient supports file downloads! But your client is ${this::class.java.name}")
+}
+
+
+private object DKBMh {
+    @JvmField val mh = MethodHandles
+        .privateLookupIn(DelegatingKittyBot::class.java, MethodHandles.lookup())
+        .findGetter(DelegatingKittyBot::class.java, "delegate", KittyBot::class.java)!!
 }

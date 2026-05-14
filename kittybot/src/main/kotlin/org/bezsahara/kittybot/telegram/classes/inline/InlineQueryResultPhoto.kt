@@ -17,7 +17,7 @@ import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResult
  * 
  * @param type Type of the result, must be photo
  * @param id Unique identifier for this result, 1-64 bytes
- * @param photoUrl A valid URL of the photo. Photo must be in JPEG format. Photo size must not exceed 5MB
+ * @param photoUrl A valid URL of the photo. Photo must be in JPEG format. Photo size must not exceed 5MB.
  * @param thumbnailUrl URL of the thumbnail for the photo
  * @param photoWidth Optional. Width of the photo
  * @param photoHeight Optional. Height of the photo

@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * 
  * [link](https://core.telegram.org/bots/api#venue): https://core.telegram.org/bots/api#venue
  * 
- * @param location Venue location. Can't be a live location
+ * @param location Venue location. Can't be a live location.
  * @param title Name of the venue
  * @param address Address of the venue
  * @param foursquareId Optional. Foursquare identifier of the venue

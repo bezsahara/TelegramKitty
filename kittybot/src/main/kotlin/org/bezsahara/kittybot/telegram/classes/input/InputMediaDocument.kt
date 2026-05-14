@@ -10,6 +10,7 @@ import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import kotlin.collections.List
 import kotlin.Unit
 import org.bezsahara.kittybot.telegram.client.file.TelegramFile
+import org.bezsahara.kittybot.telegram.classes.input.InputPollMedia
 import kotlinx.serialization.Serializable
 
 
@@ -34,7 +35,7 @@ data class InputMediaDocument(
     @SerialName("parse_mode") val parseMode: ParseMode? = null,
     @SerialName("caption_entities") val captionEntities: List<MessageEntity>? = null,
     @SerialName("disable_content_type_detection") val disableContentTypeDetection: Boolean? = null
-) : InputMedia, MediaGroupAccepted {
+) : InputPollMedia, InputMedia, MediaGroupAccepted {
     override suspend fun executeAll(
         builder: CustomMPB
     ) {

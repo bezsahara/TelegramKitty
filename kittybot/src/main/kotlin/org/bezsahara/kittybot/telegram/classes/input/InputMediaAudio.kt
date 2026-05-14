@@ -10,6 +10,7 @@ import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import kotlin.collections.List
 import kotlin.Unit
 import org.bezsahara.kittybot.telegram.client.file.TelegramFile
+import org.bezsahara.kittybot.telegram.classes.input.InputPollMedia
 import kotlinx.serialization.Serializable
 
 
@@ -38,7 +39,7 @@ data class InputMediaAudio(
     val duration: Long? = null,
     val performer: String? = null,
     val title: String? = null
-) : InputMedia, MediaGroupAccepted {
+) : InputPollMedia, InputMedia, MediaGroupAccepted {
     override suspend fun executeAll(
         builder: CustomMPB
     ) {

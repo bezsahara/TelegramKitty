@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * [link](https://core.telegram.org/bots/api#preparedinlinemessage): https://core.telegram.org/bots/api#preparedinlinemessage
  * 
  * @param id Unique identifier of the prepared message
- * @param expirationDate Expiration date of the prepared message, in Unix time. Expired prepared messages can no longer be used
+ * @param expirationDate Expiration date of the prepared message, in Unix time. Expired prepared messages can no longer be used.
  */
 @Serializable
 data class PreparedInlineMessage(

@@ -13,7 +13,7 @@ import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGift
  * 
  * @param totalCount The total number of gifts owned by the user or the chat
  * @param gifts The list of gifts
- * @param nextOffset Optional. Offset for the next request. If empty, then there are no more results
+ * @param nextOffset Optional. Offset for the next request. If empty, then there are no more results.
  */
 @Serializable
 data class OwnedGifts(

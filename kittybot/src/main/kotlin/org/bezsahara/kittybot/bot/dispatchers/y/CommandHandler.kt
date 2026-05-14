@@ -7,6 +7,7 @@ import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.botCommandsKey
+import org.bezsahara.kittybot.bot.dispatchers.y.CommandHandler.Companion.commandRegex
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.CommandScope
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommand
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
@@ -21,8 +22,8 @@ class CommandHandler(
     init {
         require(commandRegex.matches(command)) {
             """Command "$command" does not match the pattern.
-                |Commands must always start with the / symbol and contain up to 32 characters. 
-                |They can use Latin letters, numbers and underscores, 
+                |Commands must always start with the / symbol and contain up to 32 characters.
+                |They can use Latin letters, numbers and underscores,
                 |though simple lowercase text is recommended for a cleaner look.
                 |For further info check: https://core.telegram.org/bots/features#commands""".trimMargin()
         }
@@ -32,27 +33,32 @@ class CommandHandler(
 
     override val allowedKinds: Set<UpdateKind<*>> get() = setOf(MessageUpdate)
 
+    private suspend fun apply(scope: CommandScope): Decision {
+        scope.onSuccess()
+        return Decision.Consumed
+    }
+
     override suspend fun handleUpdate(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision {
         val text = (update as MessageUpdate).message.text ?: return Decision.Next
 
-        if (text.withStartOf(command)) {
-            CommandScope(
+        return if (text.withStartOf(command)) {
+            val parsedArgs = if (command.length == text.length) {
+                null
+            } else {
+                if (text[command.length] != ' ') return Decision.Next
+                text.substring(spaceIndex + 1, text.length)
+            }
+            apply(CommandScope(
                 bot,
-                update, // /12345 sdf
-                text.let {
-                    if (command.length == it.length) {
-                        null
-                    } else {
-                        if (text.getOrNull(spaceIndex) != ' ') return Decision.Next
-                        it.substring(spaceIndex + 1, it.length)
-                    }
-                },
+                update,
+                parsedArgs,
                 handlerContext
-            ).onSuccess()
-            return Decision.Consumed
-        }
+            ))
+        } else Decision.Next
+    }
 
-        return Decision.Next
+    override fun toString(): String {
+        return "CommandHandler($command)"
     }
 
     internal companion object {

@@ -8,7 +8,8 @@ import java.net.URI
 fun createTelegramBot(
     token: String,
     baseUri: URI = URI.create("https://api.telegram.org"),
+    timeoutSec: Long = 61,
     clientBuilder: ClientBuilder = tryFindDefaultClient()
 ): KittyBot {
-    return clientBuilder.build(BotApiServerConfig(token, baseUri), jsonInstance)
+    return clientBuilder.build(BotApiServerConfig(token, baseUri, timeoutSec), jsonInstance)
 }

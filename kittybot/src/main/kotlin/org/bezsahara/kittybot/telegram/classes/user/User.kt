@@ -19,8 +19,9 @@ import kotlinx.serialization.Serializable
  * @param addedToAttachmentMenu Optional. True, if this user added the bot to the attachment menu
  * @param canJoinGroups Optional. True, if the bot can be invited to groups. Returned only in getMe.
  * @param canReadAllGroupMessages Optional. True, if privacy mode is disabled for the bot. Returned only in getMe.
+ * @param supportsGuestQueries Optional. True, if the bot supports guest queries from chats it is not a member of. Returned only in getMe.
  * @param supportsInlineQueries Optional. True, if the bot supports inline queries. Returned only in getMe.
- * @param canConnectToBusiness Optional. True, if the bot can be connected to a Telegram Business account to receive its messages. Returned only in getMe.
+ * @param canConnectToBusiness Optional. True, if the bot can be connected to a user account to manage it. Returned only in getMe.
  * @param hasMainWebApp Optional. True, if the bot has a main Web App. Returned only in getMe.
  * @param hasTopicsEnabled Optional. True, if the bot has forum topic mode enabled in private chats. Returned only in getMe.
  * @param allowsUsersToCreateTopics Optional. True, if the bot allows users to create and delete topics in private chats. Returned only in getMe.
@@ -38,6 +39,7 @@ data class User(
     @SerialName("added_to_attachment_menu") val addedToAttachmentMenu: Boolean? = null,
     @SerialName("can_join_groups") val canJoinGroups: Boolean? = null,
     @SerialName("can_read_all_group_messages") val canReadAllGroupMessages: Boolean? = null,
+    @SerialName("supports_guest_queries") val supportsGuestQueries: Boolean? = null,
     @SerialName("supports_inline_queries") val supportsInlineQueries: Boolean? = null,
     @SerialName("can_connect_to_business") val canConnectToBusiness: Boolean? = null,
     @SerialName("has_main_web_app") val hasMainWebApp: Boolean? = null,

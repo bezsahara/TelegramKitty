@@ -16,17 +16,20 @@ abstract class TextHandler(
 ) : Handler {
     override val allowedKinds: Set<UpdateKind<*>> = setOf(MessageUpdate)
 
-    override suspend fun handleUpdate(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision {
+    final override suspend fun handleUpdate(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision {
         if (!isFine(update as MessageUpdate)) return Decision.Next
-        
-        MessageScope(
+        return apply(MessageScope(
             update,
             bot,
             handlerContext
-        ).onSuccess()
+        ))
+    }
+
+    private suspend fun apply(scope: MessageScope): Decision {
+        scope.onSuccess()
         return Decision.Consumed
     }
-    
+
     abstract fun isFine(update: MessageUpdate): Boolean
 }
 
@@ -56,14 +59,15 @@ fun HandlerStore.text(onSuccess: suspend MessageScope.() -> Unit) {
             bot: KittyBot,
             handlerContext: HandlerContext,
         ): Decision {
-            val k = MessageScope(update as MessageUpdate, bot, handlerContext)
+            if ((update as MessageUpdate).message.text == null) return Decision.Next
+            val k = MessageScope(update, bot, handlerContext)
             k.onSuccess()
             return Decision.Consumed
         }
     })
 }
 
-fun HandlerStore.text(check: (String) -> Boolean, onSuccess: suspend MessageScope.() -> Unit) {
+inline fun HandlerStore.text(crossinline check: (String) -> Boolean, noinline onSuccess: suspend MessageScope.() -> Unit) {
     addHandler(object : TextHandler(onSuccess) {
         override fun isFine(update: MessageUpdate): Boolean {
             return check(update.message.text ?: return false)

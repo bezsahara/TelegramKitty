@@ -1,7 +1,7 @@
 package org.bezsahara.kittybot.telegram.utils
 
-import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
 import kotlinx.serialization.SerializationStrategy
+import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
 import org.bezsahara.kittybot.telegram.classes.keyboard.PreparedKeyboardButton
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
 import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGifts
@@ -18,8 +18,10 @@ import org.bezsahara.kittybot.telegram.classes.inline.PreparedInlineMessage
 import org.bezsahara.kittybot.telegram.classes.gifts.Gifts
 import kotlin.collections.List
 import org.bezsahara.kittybot.telegram.classes.input.InputPaidMedia
+import org.bezsahara.kittybot.telegram.classes.inline.SentGuestMessage
 import org.bezsahara.kittybot.telegram.classes.inline.SentWebAppMessage
 import org.bezsahara.kittybot.telegram.classes.core.WebhookInfo
+import org.bezsahara.kittybot.telegram.classes.bot.BotAccessSettings
 import org.bezsahara.kittybot.telegram.classes.payments.StarTransactions
 import org.bezsahara.kittybot.telegram.client.Ok
 import org.bezsahara.kittybot.telegram.classes.user.User
@@ -29,6 +31,7 @@ import org.bezsahara.kittybot.telegram.classes.chat.ChatAdministratorRights
 import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButton
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import kotlinx.serialization.builtins.ListSerializer
+import org.bezsahara.kittybot.telegram.classes.message.polls.InputPollOption
 import org.bezsahara.kittybot.telegram.classes.message.Message
 import org.bezsahara.kittybot.telegram.classes.core.File
 import org.bezsahara.kittybot.telegram.classes.bot.BotShortDescription
@@ -51,10 +54,13 @@ object TSerials {
     @JvmField val sPreparedKeyboardButton: DeserializationStrategy<Ok<PreparedKeyboardButton>> = Ok.serializer(PreparedKeyboardButton.serializer())
     @JvmField val aListInputSticker: SerializationStrategy<List<InputSticker>> = ListSerializer(InputSticker.serializer())
     @JvmField val sChatAdministratorRights: DeserializationStrategy<Ok<ChatAdministratorRights>> = Ok.serializer(ChatAdministratorRights.serializer())
+    @JvmField val sSentGuestMessage: DeserializationStrategy<Ok<SentGuestMessage>> = Ok.serializer(SentGuestMessage.serializer())
     @JvmField val sSentWebAppMessage: DeserializationStrategy<Ok<SentWebAppMessage>> = Ok.serializer(SentWebAppMessage.serializer())
+    @JvmField val aListLong: SerializationStrategy<List<Long>> = ListSerializer(Long.serializer())
     @JvmField val sListUpdate: DeserializationStrategy<Ok<List<Update>>> = Ok.serializer(ListSerializer(Update.serializer()))
     @JvmField val sListGameHighScore: DeserializationStrategy<Ok<List<GameHighScore>>> = Ok.serializer(ListSerializer(GameHighScore.serializer()))
     @JvmField val sChatInviteLink: DeserializationStrategy<Ok<ChatInviteLink>> = Ok.serializer(ChatInviteLink.serializer())
+    @JvmField val sBotAccessSettings: DeserializationStrategy<Ok<BotAccessSettings>> = Ok.serializer(BotAccessSettings.serializer())
     @JvmField val sListMessage: DeserializationStrategy<Ok<List<Message>>> = Ok.serializer(ListSerializer(Message.serializer()))
     @JvmField val sListBotCommand: DeserializationStrategy<Ok<List<BotCommand>>> = Ok.serializer(ListSerializer(BotCommand.serializer()))
     @JvmField val sBotDescription: DeserializationStrategy<Ok<BotDescription>> = Ok.serializer(BotDescription.serializer())
@@ -76,8 +82,9 @@ object TSerials {
     @JvmField val sBotShortDescription: DeserializationStrategy<Ok<BotShortDescription>> = Ok.serializer(BotShortDescription.serializer())
     @JvmField val sBotName: DeserializationStrategy<Ok<BotName>> = Ok.serializer(BotName.serializer())
     @JvmField val sMessage: DeserializationStrategy<Ok<Message>> = Ok.serializer(Message.serializer())
-    @JvmField val sUserProfilePhotos: DeserializationStrategy<Ok<UserProfilePhotos>> = Ok.serializer(UserProfilePhotos.serializer())
+    @JvmField val aListInputPollOption: SerializationStrategy<List<InputPollOption>> = ListSerializer(InputPollOption.serializer())
     @JvmField val aListString: SerializationStrategy<List<String>> = ListSerializer(String.serializer())
+    @JvmField val sUserProfilePhotos: DeserializationStrategy<Ok<UserProfilePhotos>> = Ok.serializer(UserProfilePhotos.serializer())
     @JvmField val sWebhookInfo: DeserializationStrategy<Ok<WebhookInfo>> = Ok.serializer(WebhookInfo.serializer())
     @JvmField val aListStoryArea: SerializationStrategy<List<StoryArea>> = ListSerializer(StoryArea.serializer())
     @JvmField val aListInputPaidMedia: SerializationStrategy<List<InputPaidMedia>> = ListSerializer(InputPaidMedia.serializer())

@@ -7,8 +7,9 @@ import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentityDelegate
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
-class EmptyHandler(private val returns: Decision) : Handler {
+class EmptyHandler(private val returns: Decision, override val allowedKinds: Set<UpdateKind<*>>? = null) : Handler {
     constructor() : this(Decision.Next)
 
     override suspend fun handleUpdate(

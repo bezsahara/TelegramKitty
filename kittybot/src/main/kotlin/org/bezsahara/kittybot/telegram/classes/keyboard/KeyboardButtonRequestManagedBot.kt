@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * 
  * [link](https://core.telegram.org/bots/api#keyboardbuttonrequestmanagedbot): https://core.telegram.org/bots/api#keyboardbuttonrequestmanagedbot
  * 
- * @param requestId Signed 32-bit identifier of the request. Must be unique within the message
+ * @param requestId Signed 32-bit identifier of the request. Must be unique within the message.
  * @param suggestedName Optional. Suggested name for the bot
  * @param suggestedUsername Optional. Suggested username for the bot
  */

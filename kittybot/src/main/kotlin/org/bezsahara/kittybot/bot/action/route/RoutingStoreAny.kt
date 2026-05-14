@@ -65,7 +65,7 @@ class RoutingStrategyAny<T>(
         sections.forEachIndexed { index, (_, part) ->
             part.handlers.forEach { original.addHandler(it) }
             if (default != null || sections.lastIndex != index) {
-                original.addHandler(EmptyHandler(actualExit))
+                original.addHandler(EmptyHandler(actualExit, reduceAllowedKinds(part.handlers)))
             }
         }
 

@@ -71,6 +71,7 @@ import org.bezsahara.kittybot.telegram.classes.message.service.ChecklistTasksAdd
 import org.bezsahara.kittybot.telegram.classes.media.Document
 import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
 import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
+import org.bezsahara.kittybot.telegram.classes.media.LivePhoto
 import org.bezsahara.kittybot.telegram.classes.message.service.GiveawayCompleted
 import org.bezsahara.kittybot.telegram.classes.chat.Chat
 import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticipantsInvited
@@ -81,15 +82,16 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticip
  * 
  * [link](https://core.telegram.org/bots/api#message): https://core.telegram.org/bots/api#message
  * 
- * @param messageId Unique message identifier inside this chat. In specific instances (e.g., message containing a video sent to a big chat), the server might automatically schedule a message instead of sending it immediately. In such cases, this field will be 0 and the relevant message will be unusable until it is actually sent
+ * @param messageId Unique message identifier inside this chat. In specific instances (e.g., message containing a video sent to a big chat), the server might automatically schedule a message instead of sending it immediately. In such cases, this field will be 0 and the relevant message will be unusable until it is actually sent.
  * @param messageThreadId Optional. Unique identifier of a message thread or forum topic to which the message belongs; for supergroups and private chats only
  * @param directMessagesTopic Optional. Information about the direct messages chat topic that contains the message
- * @param from Optional. Sender of the message; may be empty for messages sent to channels. For backward compatibility, if the message was sent on behalf of a chat, the field contains a fake sender user in non-channel chats
+ * @param from Optional. Sender of the message; may be empty for messages sent to channels. For backward compatibility, if the message was sent on behalf of a chat, the field contains a fake sender user in non-channel chats.
  * @param senderChat Optional. Sender of the message when sent on behalf of a chat. For example, the supergroup itself for messages sent by its anonymous administrators or a linked channel for messages automatically forwarded to the channel's discussion group. For backward compatibility, if the message was sent on behalf of a chat, the field from contains a fake sender user in non-channel chats.
  * @param senderBoostCount Optional. If the sender of the message boosted the chat, the number of boosts added by the user
  * @param senderBusinessBot Optional. The bot that actually sent the message on behalf of the business account. Available only for outgoing messages sent on behalf of the connected business account.
  * @param senderTag Optional. Tag or custom title of the sender of the message; for supergroups only
  * @param date Date the message was sent in Unix time. It is always a positive number, representing a valid date.
+ * @param guestQueryId Optional. The unique identifier for the guest query. Use this identifier with the method answerGuestQuery to send a response message. If non-empty, the message belongs to the chat where the guest bot was summoned, which may not coincide with other existing bot chats sharing the same identifier.
  * @param businessConnectionId Optional. Unique identifier of the business connection from which the message was received. If non-empty, the message belongs to a chat of the corresponding business account that is independent from any potential bot chat which might share the same identifier.
  * @param chat Chat the message belongs to
  * @param forwardOrigin Optional. Information about the original message for forwarded messages
@@ -102,6 +104,8 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticip
  * @param replyToChecklistTaskId Optional. Identifier of the specific checklist task that is being replied to
  * @param replyToPollOptionId Optional. Persistent identifier of the specific poll option that is being replied to
  * @param viaBot Optional. Bot through which the message was sent
+ * @param guestBotCallerUser Optional. For a message sent by a guest bot, this is the user whose original message triggered the bot's response
+ * @param guestBotCallerChat Optional. For a message sent by a guest bot, this is the chat whose original message triggered the bot's response
  * @param editDate Optional. Date the message was last edited in Unix time
  * @param hasProtectedContent Optional. True, if the message can't be forwarded
  * @param isFromOffline Optional. True, if the message was sent by an implicit action, for example, as an away or a greeting business message, or as a scheduled message
@@ -114,9 +118,10 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticip
  * @param linkPreviewOptions Optional. Options used for link preview generation for the message, if it is a text message and link preview options were changed
  * @param suggestedPostInfo Optional. Information about suggested post parameters if the message is a suggested post in a channel direct messages chat. If the message is an approved or declined suggested post, then it can't be edited.
  * @param effectId Optional. Unique identifier of the message effect added to the message
- * @param animation Optional. Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set
+ * @param animation Optional. Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set.
  * @param audio Optional. Message is an audio file, information about the file
  * @param document Optional. Message is a general file, information about the file
+ * @param livePhoto Optional. Message is a live photo, information about the live photo. For backward compatibility, when this field is set, the photo field will also be set.
  * @param paidMedia Optional. Message contains paid media; information about the paid media
  * @param photo Optional. Message is a photo, available sizes of the photo
  * @param sticker Optional. Message is a sticker, information about the sticker
@@ -133,7 +138,7 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticip
  * @param dice Optional. Message is a dice with random value
  * @param game Optional. Message is a game, information about the game. More about games: https://core.telegram.org/bots/api#games
  * @param poll Optional. Message is a native poll, information about the poll
- * @param venue Optional. Message is a venue, information about the venue. For backward compatibility, when this field is set, the location field will also be set
+ * @param venue Optional. Message is a venue, information about the venue. For backward compatibility, when this field is set, the location field will also be set.
  * @param location Optional. Message is a shared location, information about the location
  * @param newChatMembers Optional. New members that were added to the group or supergroup and information about them (the bot itself may be one of these members)
  * @param leftChatMember Optional. A member was removed from the group, information about them (this member may be the bot itself)
@@ -194,8 +199,8 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticip
  */
 @Serializable
 data class Message(
-    @SerialName("message_id") override val messageId: Long,
-    override val date: Long,
+    @SerialName("message_id") val messageId: Long,
+    val date: Long,
     override val chat: Chat,
     @SerialName("message_thread_id") val messageThreadId: Long? = null,
     @SerialName("direct_messages_topic") val directMessagesTopic: DirectMessagesTopic? = null,
@@ -204,6 +209,7 @@ data class Message(
     @SerialName("sender_boost_count") val senderBoostCount: Long? = null,
     @SerialName("sender_business_bot") val senderBusinessBot: User? = null,
     @SerialName("sender_tag") val senderTag: String? = null,
+    @SerialName("guest_query_id") val guestQueryId: String? = null,
     @SerialName("business_connection_id") val businessConnectionId: String? = null,
     @SerialName("forward_origin") val forwardOrigin: MessageOrigin? = null,
     @SerialName("is_topic_message") val isTopicMessage: Boolean? = null,
@@ -215,6 +221,8 @@ data class Message(
     @SerialName("reply_to_checklist_task_id") val replyToChecklistTaskId: Long? = null,
     @SerialName("reply_to_poll_option_id") val replyToPollOptionId: String? = null,
     @SerialName("via_bot") val viaBot: User? = null,
+    @SerialName("guest_bot_caller_user") val guestBotCallerUser: User? = null,
+    @SerialName("guest_bot_caller_chat") val guestBotCallerChat: Chat? = null,
     @SerialName("edit_date") val editDate: Long? = null,
     @SerialName("has_protected_content") val hasProtectedContent: Boolean? = null,
     @SerialName("is_from_offline") val isFromOffline: Boolean? = null,
@@ -230,6 +238,7 @@ data class Message(
     val animation: Animation? = null,
     val audio: Audio? = null,
     val document: Document? = null,
+    @SerialName("live_photo") val livePhoto: LivePhoto? = null,
     @SerialName("paid_media") val paidMedia: PaidMediaInfo? = null,
     val photo: List<PhotoSize>? = null,
     val sticker: Sticker? = null,
@@ -242,7 +251,7 @@ data class Message(
     @SerialName("show_caption_above_media") val showCaptionAboveMedia: Boolean? = null,
     @SerialName("has_media_spoiler") val hasMediaSpoiler: Boolean? = null,
     val checklist: Checklist? = null,
-    @JvmField val contact: Contact? = null,
+    val contact: Contact? = null,
     val dice: Dice? = null,
     val game: Game? = null,
     val poll: Poll? = null,

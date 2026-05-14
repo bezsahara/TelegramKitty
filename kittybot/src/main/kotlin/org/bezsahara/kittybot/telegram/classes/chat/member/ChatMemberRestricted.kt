@@ -25,12 +25,13 @@ import kotlinx.serialization.Serializable
  * @param canSendPolls True, if the user is allowed to send polls and checklists
  * @param canSendOtherMessages True, if the user is allowed to send animations, games, stickers and use inline bots
  * @param canAddWebPagePreviews True, if the user is allowed to add web page previews to their messages
+ * @param canReactToMessages True, if the user is allowed to react to messages
  * @param canEditTag True, if the user is allowed to edit their own tag
  * @param canChangeInfo True, if the user is allowed to change the chat title, photo and other settings
  * @param canInviteUsers True, if the user is allowed to invite new users to the chat
  * @param canPinMessages True, if the user is allowed to pin messages
  * @param canManageTopics True, if the user is allowed to create forum topics
- * @param untilDate Date when restrictions will be lifted for this user; Unix time. If 0, then the user is restricted forever
+ * @param untilDate Date when restrictions will be lifted for this user; Unix time. If 0, then the user is restricted forever.
  */
 @Serializable
 data class ChatMemberRestricted(
@@ -46,6 +47,7 @@ data class ChatMemberRestricted(
     @SerialName("can_send_polls") val canSendPolls: Boolean,
     @SerialName("can_send_other_messages") val canSendOtherMessages: Boolean,
     @SerialName("can_add_web_page_previews") val canAddWebPagePreviews: Boolean,
+    @SerialName("can_react_to_messages") val canReactToMessages: Boolean,
     @SerialName("can_edit_tag") val canEditTag: Boolean,
     @SerialName("can_change_info") val canChangeInfo: Boolean,
     @SerialName("can_invite_users") val canInviteUsers: Boolean,

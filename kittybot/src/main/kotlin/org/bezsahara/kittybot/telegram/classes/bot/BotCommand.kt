@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * [link](https://core.telegram.org/bots/api#botcommand): https://core.telegram.org/bots/api#botcommand
  * 
  * @param command Text of the command; 1-32 characters. Can contain only lowercase English letters, digits and underscores.
- * @param description Description of the command; 1-256 characters.
+ * @param description Description of the command; 1-256 characters
  */
 @Serializable
 data class BotCommand(

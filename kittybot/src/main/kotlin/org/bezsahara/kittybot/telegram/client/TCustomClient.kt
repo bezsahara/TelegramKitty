@@ -1,15 +1,51 @@
 package org.bezsahara.kittybot.telegram.client
 
-import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
-import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
 import org.bezsahara.kittybot.telegram.classes.keyboard.PreparedKeyboardButton
 import org.bezsahara.kittybot.telegram.values.StickerType
 import org.bezsahara.kittybot.telegram.client.file.createBoundary
 import org.bezsahara.kittybot.telegram.classes.input.InputMedia
-import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfo
 import org.bezsahara.kittybot.telegram.values.ChatAction
-import org.bezsahara.kittybot.telegram.utils.TBytesInfo
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
+import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
+import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
+import org.bezsahara.kittybot.telegram.classes.user.User
+import org.bezsahara.kittybot.telegram.classes.user.UserProfilePhotos
+import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultsButton
+import org.bezsahara.kittybot.telegram.classes.message.Message
+import org.bezsahara.kittybot.bot.json.JsonByteBuffer
+import org.bezsahara.kittybot.telegram.classes.input.InputChecklist
+import org.bezsahara.kittybot.telegram.classes.bot.BotShortDescription
+import org.bezsahara.kittybot.telegram.values.ParseMode
+import org.bezsahara.kittybot.telegram.classes.chat.ChatPermissions
+import org.bezsahara.kittybot.telegram.classes.user.UserProfileAudios
+import org.bezsahara.kittybot.telegram.classes.games.GameHighScore
+import org.bezsahara.kittybot.telegram.classes.payments.StarAmount
+import kotlinx.serialization.json.Json
+import org.bezsahara.kittybot.telegram.client.file.mpContentType
+import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
+import kotlinx.serialization.json.JsonObject
+import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGifts
+import org.bezsahara.kittybot.telegram.classes.bot.BotName
+import org.bezsahara.kittybot.telegram.classes.chat.ForumTopic
+import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
+import org.bezsahara.kittybot.telegram.classes.media.story.Story
+import org.bezsahara.kittybot.telegram.client.CustomClient
+import kotlin.collections.List
+import org.bezsahara.kittybot.telegram.values.PollType
+import org.bezsahara.kittybot.telegram.classes.inline.SentWebAppMessage
+import org.bezsahara.kittybot.telegram.client.TPathCustom
+import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
+import org.bezsahara.kittybot.telegram.classes.keyboard.ReplyMarkup
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.JsonPrimitive
+import org.bezsahara.kittybot.telegram.classes.bot.BotDescription
+import org.bezsahara.kittybot.telegram.classes.media.stickers.StickerSet
+import org.bezsahara.kittybot.telegram.values.StickerFormat
+import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
+import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
+import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
+import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfo
+import org.bezsahara.kittybot.telegram.utils.TBytesInfo
 import org.bezsahara.kittybot.telegram.classes.input.InputSticker
 import org.bezsahara.kittybot.telegram.utils.TResult
 import org.bezsahara.kittybot.telegram.classes.core.MessageId
@@ -18,68 +54,35 @@ import org.bezsahara.kittybot.telegram.classes.inline.PreparedInlineMessage
 import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
 import org.bezsahara.kittybot.telegram.classes.input.InputPaidMedia
 import org.bezsahara.kittybot.telegram.client.OkBoolOpt
-import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
+import org.bezsahara.kittybot.telegram.classes.inline.SentGuestMessage
 import org.bezsahara.kittybot.telegram.classes.core.WebhookInfo
-import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
-import org.bezsahara.kittybot.telegram.classes.user.User
+import org.bezsahara.kittybot.telegram.classes.bot.BotAccessSettings
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
-import org.bezsahara.kittybot.telegram.classes.user.UserProfilePhotos
 import org.bezsahara.kittybot.telegram.classes.business.BusinessConnection
 import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResult
 import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButton
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultsButton
 import org.bezsahara.kittybot.telegram.classes.message.ReplyParameters
-import org.bezsahara.kittybot.telegram.classes.message.Message
 import org.bezsahara.kittybot.telegram.classes.message.polls.InputPollOption
-import org.bezsahara.kittybot.bot.json.JsonByteBuffer
-import org.bezsahara.kittybot.telegram.classes.input.InputChecklist
 import org.bezsahara.kittybot.telegram.client.file.CustomMPB
 import org.bezsahara.kittybot.telegram.classes.core.File
-import org.bezsahara.kittybot.telegram.classes.bot.BotShortDescription
-import org.bezsahara.kittybot.telegram.values.ParseMode
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
 import org.bezsahara.kittybot.telegram.classes.passport.PassportElementError
 import org.bezsahara.kittybot.telegram.classes.message.LinkPreviewOptions
 import kotlinx.serialization.builtins.serializer
-import org.bezsahara.kittybot.telegram.classes.chat.ChatPermissions
 import org.bezsahara.kittybot.telegram.utils.TSerials
 import org.bezsahara.kittybot.telegram.classes.chat.ChatInviteLink
-import org.bezsahara.kittybot.telegram.classes.user.UserProfileAudios
-import org.bezsahara.kittybot.telegram.classes.games.GameHighScore
-import org.bezsahara.kittybot.telegram.classes.payments.StarAmount
-import kotlinx.serialization.json.Json
 import org.bezsahara.kittybot.telegram.classes.chat.boosts.UserChatBoosts
-import org.bezsahara.kittybot.telegram.client.file.mpContentType
-import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
-import kotlinx.serialization.json.JsonObject
 import org.bezsahara.kittybot.telegram.classes.input.MediaGroupAccepted
-import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGifts
-import org.bezsahara.kittybot.telegram.classes.bot.BotName
 import org.bezsahara.kittybot.telegram.utils.TResultFailure
-import org.bezsahara.kittybot.telegram.classes.chat.ForumTopic
-import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
-import org.bezsahara.kittybot.telegram.classes.media.story.Story
-import org.bezsahara.kittybot.telegram.client.CustomClient
 import org.bezsahara.kittybot.telegram.classes.gifts.Gifts
-import kotlin.collections.List
 import org.bezsahara.kittybot.telegram.classes.message.SuggestedPostParameters
-import org.bezsahara.kittybot.telegram.values.PollType
 import org.bezsahara.kittybot.telegram.classes.input.InputStoryContent
-import org.bezsahara.kittybot.telegram.classes.inline.SentWebAppMessage
 import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButton
-import org.bezsahara.kittybot.telegram.client.TPathCustom
 import org.bezsahara.kittybot.telegram.classes.payments.StarTransactions
-import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
-import org.bezsahara.kittybot.telegram.classes.keyboard.ReplyMarkup
+import org.bezsahara.kittybot.telegram.classes.input.InputPollMedia
 import org.bezsahara.kittybot.telegram.classes.chat.ChatAdministratorRights
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.json.JsonPrimitive
 import org.bezsahara.kittybot.telegram.client.opt.RequestOptions
-import org.bezsahara.kittybot.telegram.classes.bot.BotDescription
-import org.bezsahara.kittybot.telegram.classes.media.stickers.StickerSet
-import org.bezsahara.kittybot.telegram.values.StickerFormat
-import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
 import org.bezsahara.kittybot.telegram.utils.TResultFailureEither
 import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
 import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
@@ -829,12 +832,14 @@ class TCustomClient internal constructor(
     }
 
     override suspend fun getChatAdministrators(
-        chatId: ChatId
+        chatId: ChatId,
+        returnBots: Boolean?
     ): TResult<List<ChatMember>> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.getChatAdministrators,
             JsonByteBuffer(47).run {
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
+                if (returnBots != null) putBoolUnsafe(TBytesInfo.return_bots, returnBots)
                 toByteArray()
             },
             false
@@ -997,6 +1002,39 @@ class TCustomClient internal constructor(
         }
     }
 
+    private val deleteMessageReactionBSP = BufferSizePredictor(37, 1073741824, 74, 148)
+    override suspend fun deleteMessageReaction(
+        chatId: ChatId,
+        messageId: Long,
+        userId: Long?,
+        actorChatId: Long?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.deleteMessageReaction,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: deleteMessageReactionBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
+                    putNumberUnsafe(TBytesInfo.message_id, messageId)
+                    if (userId != null) putNumberUnsafe(TBytesInfo.user_id, userId)
+                    if (actorChatId != null) putNumberUnsafe(TBytesInfo.actor_chat_id, actorChatId)
+                    if (requestOptions == null) deleteMessageReactionBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Boolean>(
+                json.decodeFromString(OkBoolOpt.serializer(), strResult).result
+            )
+        } else {
+            TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
     override suspend fun sendSticker(
         chatId: ChatId,
         sticker: TelegramFile,
@@ -1074,7 +1112,7 @@ class TCustomClient internal constructor(
     private val editMessageChecklistBSP = BufferSizePredictor(60, 1073741824, 120, 240)
     override suspend fun editMessageChecklist(
         businessConnectionId: String,
-        chatId: Long,
+        chatId: ChatId,
         messageId: Long,
         checklist: InputChecklist,
         replyMarkup: InlineKeyboardMarkup?,
@@ -1086,7 +1124,7 @@ class TCustomClient internal constructor(
                 val bbSize0 = requestOptions?.bufferSize ?: editMessageChecklistBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
-                    putNumberUnsafe(TBytesInfo.chat_id, chatId)
+                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                     putNumberUnsafe(TBytesInfo.message_id, messageId)
                     putJsonObject(TBytesInfo.checklist, InputChecklist.serializer(), checklist)
                     if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
@@ -1184,7 +1222,6 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val sendPollBSP = BufferSizePredictor(465, 1073741824, 930, 1860)
     override suspend fun sendPoll(
         chatId: ChatId,
         question: String,
@@ -1200,65 +1237,69 @@ class TCustomClient internal constructor(
         shuffleOptions: Boolean?,
         allowAddingOptions: Boolean?,
         hideResultsUntilCloses: Boolean?,
+        membersOnly: Boolean?,
+        countryCodes: List<String>?,
         correctOptionIds: List<Long>?,
         explanation: String?,
         explanationParseMode: ParseMode?,
         explanationEntities: List<MessageEntity>?,
+        explanationMedia: InputPollMedia?,
         openPeriod: Long?,
         closeDate: Long?,
         isClosed: Boolean?,
         description: String?,
         descriptionParseMode: ParseMode?,
         descriptionEntities: List<MessageEntity>?,
+        media: InputPollMedia?,
         disableNotification: Boolean?,
         protectContent: Boolean?,
         allowPaidBroadcast: Boolean?,
         messageEffectId: String?,
         replyParameters: ReplyParameters?,
-        replyMarkup: ReplyMarkup?,
-        requestOptions: RequestOptions?
+        replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(
-            tPathC.sendPoll,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: sendPollBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
-                    putStringUnsafe(TBytesInfo.question, question)
-                    putListOfJsonObjects(TBytesInfo.options, InputPollOption.serializer(), options)
-                    if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
-                    if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
-                    if (questionParseMode != null) putStringUnsafe(TBytesInfo.question_parse_mode, questionParseMode.value)
-                    if (questionEntities != null) putListOfJsonObjects(TBytesInfo.question_entities, MessageEntity.serializer(), questionEntities)
-                    if (isAnonymous != null) putBoolUnsafe(TBytesInfo.is_anonymous, isAnonymous)
-                    if (type != null) putStringUnsafe(TBytesInfo.type, type.value)
-                    if (allowsMultipleAnswers != null) putBoolUnsafe(TBytesInfo.allows_multiple_answers, allowsMultipleAnswers)
-                    if (allowsRevoting != null) putBoolUnsafe(TBytesInfo.allows_revoting, allowsRevoting)
-                    if (shuffleOptions != null) putBoolUnsafe(TBytesInfo.shuffle_options, shuffleOptions)
-                    if (allowAddingOptions != null) putBoolUnsafe(TBytesInfo.allow_adding_options, allowAddingOptions)
-                    if (hideResultsUntilCloses != null) putBoolUnsafe(TBytesInfo.hide_results_until_closes, hideResultsUntilCloses)
-                    if (correctOptionIds != null) putListOfLongUnsafe(TBytesInfo.correct_option_ids, correctOptionIds)
-                    if (explanation != null) putStringUnsafe(TBytesInfo.explanation, explanation)
-                    if (explanationParseMode != null) putStringUnsafe(TBytesInfo.explanation_parse_mode, explanationParseMode.value)
-                    if (explanationEntities != null) putListOfJsonObjects(TBytesInfo.explanation_entities, MessageEntity.serializer(), explanationEntities)
-                    if (openPeriod != null) putNumberUnsafe(TBytesInfo.open_period, openPeriod)
-                    if (closeDate != null) putNumberUnsafe(TBytesInfo.close_date, closeDate)
-                    if (isClosed != null) putBoolUnsafe(TBytesInfo.is_closed, isClosed)
-                    if (description != null) putStringUnsafe(TBytesInfo.description, description)
-                    if (descriptionParseMode != null) putStringUnsafe(TBytesInfo.description_parse_mode, descriptionParseMode.value)
-                    if (descriptionEntities != null) putListOfJsonObjects(TBytesInfo.description_entities, MessageEntity.serializer(), descriptionEntities)
-                    if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
-                    if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
-                    if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
-                    if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
-                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
-                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), replyMarkup)
-                    if (requestOptions == null) sendPollBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
-            },
-            false
-        )
+        val boundary44 = createBoundary()
+        val resultPre1 = client.run { createMPRequest(tPathC.sendPoll, mpContentType(boundary44)) }
+        val mpb = CustomMPB(resultPre1, boundary44)
+        mpb.writeNormalPart("chat_id", chatId.value)
+        mpb.writeNormalPart("question", question)
+        for (mIdx in options.indices) { options[mIdx].executeAll(mpb) }
+        mpb.writeJsonPart("options", TSerials.aListInputPollOption, options, json)
+        if (businessConnectionId != null) mpb.writeNormalPart("business_connection_id", businessConnectionId)
+        if (messageThreadId != null) mpb.writeNormalPart("message_thread_id", messageThreadId.toString())
+        if (questionParseMode != null) mpb.writeNormalPart("question_parse_mode", questionParseMode.value)
+        if (questionEntities != null) mpb.writeJsonPart("question_entities", TSerials.aListMessageEntity, questionEntities, json)
+        if (isAnonymous != null) mpb.writeNormalPart("is_anonymous", isAnonymous.toString())
+        if (type != null) mpb.writeNormalPart("type", type.value)
+        if (allowsMultipleAnswers != null) mpb.writeNormalPart("allows_multiple_answers", allowsMultipleAnswers.toString())
+        if (allowsRevoting != null) mpb.writeNormalPart("allows_revoting", allowsRevoting.toString())
+        if (shuffleOptions != null) mpb.writeNormalPart("shuffle_options", shuffleOptions.toString())
+        if (allowAddingOptions != null) mpb.writeNormalPart("allow_adding_options", allowAddingOptions.toString())
+        if (hideResultsUntilCloses != null) mpb.writeNormalPart("hide_results_until_closes", hideResultsUntilCloses.toString())
+        if (membersOnly != null) mpb.writeNormalPart("members_only", membersOnly.toString())
+        if (countryCodes != null) mpb.writeJsonPart("country_codes", TSerials.aListString, countryCodes, json)
+        if (correctOptionIds != null) mpb.writeJsonPart("correct_option_ids", TSerials.aListLong, correctOptionIds, json)
+        if (explanation != null) mpb.writeNormalPart("explanation", explanation)
+        if (explanationParseMode != null) mpb.writeNormalPart("explanation_parse_mode", explanationParseMode.value)
+        if (explanationEntities != null) mpb.writeJsonPart("explanation_entities", TSerials.aListMessageEntity, explanationEntities, json)
+        explanationMedia?.executeAll(mpb)
+        if (explanationMedia != null) mpb.writeJsonPart("explanation_media", InputPollMedia.serializer(), explanationMedia, json)
+        if (openPeriod != null) mpb.writeNormalPart("open_period", openPeriod.toString())
+        if (closeDate != null) mpb.writeNormalPart("close_date", closeDate.toString())
+        if (isClosed != null) mpb.writeNormalPart("is_closed", isClosed.toString())
+        if (description != null) mpb.writeNormalPart("description", description)
+        if (descriptionParseMode != null) mpb.writeNormalPart("description_parse_mode", descriptionParseMode.value)
+        if (descriptionEntities != null) mpb.writeJsonPart("description_entities", TSerials.aListMessageEntity, descriptionEntities, json)
+        media?.executeAll(mpb)
+        if (media != null) mpb.writeJsonPart("media", InputPollMedia.serializer(), media, json)
+        if (disableNotification != null) mpb.writeNormalPart("disable_notification", disableNotification.toString())
+        if (protectContent != null) mpb.writeNormalPart("protect_content", protectContent.toString())
+        if (allowPaidBroadcast != null) mpb.writeNormalPart("allow_paid_broadcast", allowPaidBroadcast.toString())
+        if (messageEffectId != null) mpb.writeNormalPart("message_effect_id", messageEffectId)
+        if (replyParameters != null) mpb.writeJsonPart("reply_parameters", ReplyParameters.serializer(), replyParameters, json)
+        if (replyMarkup != null) mpb.writeJsonPart("reply_markup", ReplyMarkup.serializer(), replyMarkup, json)
+        mpb.finish()
+        val result1 = resultPre1.endAndSend()
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Message>(
@@ -1833,6 +1874,33 @@ class TCustomClient internal constructor(
         }
     }
 
+    private val getManagedBotAccessSettingsBSP = BufferSizePredictor(7, 1073741824, 14, 28)
+    override suspend fun getManagedBotAccessSettings(
+        userId: Long,
+        requestOptions: RequestOptions?
+    ): TResult<BotAccessSettings> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.getManagedBotAccessSettings,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: getManagedBotAccessSettingsBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putNumberUnsafe(TBytesInfo.user_id, userId)
+                    if (requestOptions == null) getManagedBotAccessSettingsBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<BotAccessSettings>(
+                json.decodeFromString(TSerials.sBotAccessSettings, strResult).result
+            )
+        } else {
+            TResultFailure<BotAccessSettings>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
     private val savePreparedKeyboardButtonBSP = BufferSizePredictor(13, 1073741824, 26, 52)
     override suspend fun savePreparedKeyboardButton(
         userId: Long,
@@ -1973,6 +2041,88 @@ class TCustomClient internal constructor(
             )
         } else {
             TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
+    override suspend fun sendLivePhoto(
+        chatId: ChatId,
+        livePhoto: TelegramFile,
+        photo: TelegramFile,
+        businessConnectionId: String?,
+        messageThreadId: Long?,
+        directMessagesTopicId: Long?,
+        caption: String?,
+        parseMode: ParseMode?,
+        captionEntities: List<MessageEntity>?,
+        showCaptionAboveMedia: Boolean?,
+        hasSpoiler: Boolean?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        allowPaidBroadcast: Boolean?,
+        messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: ReplyMarkup?
+    ): TResult<Message> = withContext(dispatcher) {
+        val boundary44 = createBoundary()
+        val resultPre1 = client.run { createMPRequest(tPathC.sendLivePhoto, mpContentType(boundary44)) }
+        val mpb = CustomMPB(resultPre1, boundary44)
+        mpb.writeNormalPart("chat_id", chatId.value)
+        livePhoto.asVertx().executeCustom(mpb, "live_photo")
+        photo.asVertx().executeCustom(mpb, "photo")
+        if (businessConnectionId != null) mpb.writeNormalPart("business_connection_id", businessConnectionId)
+        if (messageThreadId != null) mpb.writeNormalPart("message_thread_id", messageThreadId.toString())
+        if (directMessagesTopicId != null) mpb.writeNormalPart("direct_messages_topic_id", directMessagesTopicId.toString())
+        if (caption != null) mpb.writeNormalPart("caption", caption)
+        if (parseMode != null) mpb.writeNormalPart("parse_mode", parseMode.value)
+        if (captionEntities != null) mpb.writeJsonPart("caption_entities", TSerials.aListMessageEntity, captionEntities, json)
+        if (showCaptionAboveMedia != null) mpb.writeNormalPart("show_caption_above_media", showCaptionAboveMedia.toString())
+        if (hasSpoiler != null) mpb.writeNormalPart("has_spoiler", hasSpoiler.toString())
+        if (disableNotification != null) mpb.writeNormalPart("disable_notification", disableNotification.toString())
+        if (protectContent != null) mpb.writeNormalPart("protect_content", protectContent.toString())
+        if (allowPaidBroadcast != null) mpb.writeNormalPart("allow_paid_broadcast", allowPaidBroadcast.toString())
+        if (messageEffectId != null) mpb.writeNormalPart("message_effect_id", messageEffectId)
+        if (suggestedPostParameters != null) mpb.writeJsonPart("suggested_post_parameters", SuggestedPostParameters.serializer(), suggestedPostParameters, json)
+        if (replyParameters != null) mpb.writeJsonPart("reply_parameters", ReplyParameters.serializer(), replyParameters, json)
+        if (replyMarkup != null) mpb.writeJsonPart("reply_markup", ReplyMarkup.serializer(), replyMarkup, json)
+        mpb.finish()
+        val result1 = resultPre1.endAndSend()
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Message>(
+                json.decodeFromString(TSerials.sMessage, strResult).result
+            )
+        } else {
+            TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
+    private val getUserPersonalChatMessagesBSP = BufferSizePredictor(12, 1073741824, 24, 48)
+    override suspend fun getUserPersonalChatMessages(
+        userId: Long,
+        limit: Long,
+        requestOptions: RequestOptions?
+    ): TResult<List<Message>> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.getUserPersonalChatMessages,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: getUserPersonalChatMessagesBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putNumberUnsafe(TBytesInfo.user_id, userId)
+                    putNumberUnsafe(TBytesInfo.limit, limit)
+                    if (requestOptions == null) getUserPersonalChatMessagesBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<List<Message>>(
+                json.decodeFromString(TSerials.sListMessage, strResult).result
+            )
+        } else {
+            TResultFailure<List<Message>>(json.decodeFromString(TelegramError.serializer(), strResult))
         }
     }
 
@@ -2471,6 +2621,37 @@ class TCustomClient internal constructor(
                     putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                     putNumberUnsafe(TBytesInfo.story_id, storyId)
                     deleteStoryBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Boolean>(
+                json.decodeFromString(OkBoolOpt.serializer(), strResult).result
+            )
+        } else {
+            TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
+    private val setManagedBotAccessSettingsBSP = BufferSizePredictor(41, 1073741824, 82, 164)
+    override suspend fun setManagedBotAccessSettings(
+        userId: Long,
+        isAccessRestricted: Boolean,
+        addedUserIds: List<Long>?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.setManagedBotAccessSettings,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: setManagedBotAccessSettingsBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putNumberUnsafe(TBytesInfo.user_id, userId)
+                    putBoolUnsafe(TBytesInfo.is_access_restricted, isAccessRestricted)
+                    if (addedUserIds != null) putListOfLongUnsafe(TBytesInfo.added_user_ids, addedUserIds)
+                    if (requestOptions == null) setManagedBotAccessSettingsBSP.record(size9, bbSize0)
                     toByteArray()
                 }
             },
@@ -3499,6 +3680,35 @@ class TCustomClient internal constructor(
         }
     }
 
+    private val answerGuestQueryBSP = BufferSizePredictor(20, 1073741824, 40, 80)
+    override suspend fun answerGuestQuery(
+        guestQueryId: String,
+        result: InlineQueryResult,
+        requestOptions: RequestOptions?
+    ): TResult<SentGuestMessage> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.answerGuestQuery,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: answerGuestQueryBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putStringUnsafe(TBytesInfo.guest_query_id, guestQueryId)
+                    putJsonObject(TBytesInfo.result, InlineQueryResult.serializer(), result)
+                    if (requestOptions == null) answerGuestQueryBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<SentGuestMessage>(
+                json.decodeFromString(TSerials.sSentGuestMessage, strResult).result
+            )
+        } else {
+            TResultFailure<SentGuestMessage>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
     private val setMyCommandsBSP = BufferSizePredictor(26, 1073741824, 52, 104)
     override suspend fun setMyCommands(
         commands: List<BotCommand>,
@@ -3818,6 +4028,37 @@ class TCustomClient internal constructor(
         }
     }
 
+    private val deleteAllMessageReactionsBSP = BufferSizePredictor(27, 1073741824, 54, 108)
+    override suspend fun deleteAllMessageReactions(
+        chatId: ChatId,
+        userId: Long?,
+        actorChatId: Long?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.deleteAllMessageReactions,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: deleteAllMessageReactionsBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
+                    if (userId != null) putNumberUnsafe(TBytesInfo.user_id, userId)
+                    if (actorChatId != null) putNumberUnsafe(TBytesInfo.actor_chat_id, actorChatId)
+                    if (requestOptions == null) deleteAllMessageReactionsBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Boolean>(
+                json.decodeFromString(OkBoolOpt.serializer(), strResult).result
+            )
+        } else {
+            TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
     private val getChatGiftsBSP = BufferSizePredictor(169, 1073741824, 338, 676)
     override suspend fun getChatGifts(
         chatId: ChatId,
@@ -3918,8 +4159,8 @@ class TCustomClient internal constructor(
     override suspend fun sendMessageDraft(
         chatId: Long,
         draftId: Long,
-        text: String,
         messageThreadId: Long?,
+        text: String?,
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
         requestOptions: RequestOptions?
@@ -3931,8 +4172,8 @@ class TCustomClient internal constructor(
                 JsonByteBuffer(bbSize0).run {
                     putNumberUnsafe(TBytesInfo.chat_id, chatId)
                     putNumberUnsafe(TBytesInfo.draft_id, draftId)
-                    putStringUnsafe(TBytesInfo.text, text)
                     if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
+                    if (text != null) putStringUnsafe(TBytesInfo.text, text)
                     if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
                     if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), entities)
                     if (requestOptions == null) sendMessageDraftBSP.record(size9, bbSize0)
@@ -4364,7 +4605,7 @@ class TCustomClient internal constructor(
 
     private val sendGameBSP = BufferSizePredictor(161, 1073741824, 322, 644)
     override suspend fun sendGame(
-        chatId: Long,
+        chatId: ChatId,
         gameShortName: String,
         businessConnectionId: String?,
         messageThreadId: Long?,
@@ -4381,7 +4622,7 @@ class TCustomClient internal constructor(
             run {
                 val bbSize0 = requestOptions?.bufferSize ?: sendGameBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
-                    putNumberUnsafe(TBytesInfo.chat_id, chatId)
+                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                     putStringUnsafe(TBytesInfo.game_short_name, gameShortName)
                     if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                     if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
@@ -4654,7 +4895,7 @@ class TCustomClient internal constructor(
     private val sendChecklistBSP = BufferSizePredictor(118, 1073741824, 236, 472)
     override suspend fun sendChecklist(
         businessConnectionId: String,
-        chatId: Long,
+        chatId: ChatId,
         checklist: InputChecklist,
         disableNotification: Boolean?,
         protectContent: Boolean?,
@@ -4669,7 +4910,7 @@ class TCustomClient internal constructor(
                 val bbSize0 = requestOptions?.bufferSize ?: sendChecklistBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
-                    putNumberUnsafe(TBytesInfo.chat_id, chatId)
+                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                     putJsonObject(TBytesInfo.checklist, InputChecklist.serializer(), checklist)
                     if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)

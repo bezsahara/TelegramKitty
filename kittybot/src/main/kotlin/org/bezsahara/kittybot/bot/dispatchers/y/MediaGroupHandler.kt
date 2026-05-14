@@ -35,8 +35,11 @@ fun HandlerStore.mediaGroup(
             val mediaUpdate = (update as? GroupedMediaUpdate) ?: return Decision.Next
             if (!check(mediaUpdate.mediaMessagesGrouped)) return Decision.Next
 
-            MediaGroupScope(bot, handlerContext, update).block()
-
+            return apply(MediaGroupScope(bot, handlerContext, update))
+        }
+        
+        private suspend fun apply(scope: MediaGroupScope): Decision {
+            scope.block()
             return Decision.Consumed
         }
     })
