@@ -12,7 +12,7 @@ class BuildVertxClient : ClientBuilder {
         botApiServerConfig: BotApiServerConfig,
         json: Json,
     ): KittyBot {
-        return TApiClient(v, json, TPath(botApiServerConfig.buildLink(), botApiServerConfig.token))
+        return TApiClient(v, json, TPath(botApiServerConfig.buildLink(), botApiServerConfig.token, botApiServerConfig.timeout))
     }
 
     override fun close() {

@@ -2,9 +2,11 @@ package org.bezsahara.kittybot.bot.builder
 
 import java.net.URI
 
+// Timeout in seconds (for polling)
 data class BotApiServerConfig(
     val token: String,
-    val baseURI: URI
+    val baseURI: URI,
+    val timeout: Long
 ) {
     init {
         val scheme = baseURI.scheme

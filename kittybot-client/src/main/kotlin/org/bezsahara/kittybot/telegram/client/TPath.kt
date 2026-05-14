@@ -6,7 +6,8 @@ import io.vertx.core.http.RequestOptions
 
 internal class TPath(
     val basePath: String,
-    val token: String
+    val token: String,
+    val timeout: Long
 ) {
     @JvmField val deleteMessages = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/deleteMessages").setMethod(HttpMethod.POST)
@@ -72,6 +73,8 @@ internal class TPath(
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/removeBusinessAccountProfilePhoto").setMethod(HttpMethod.POST)
     @JvmField val sendPhoto = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/sendPhoto").setMethod(HttpMethod.POST)
+    @JvmField val deleteMessageReaction = RequestOptions()
+        .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/deleteMessageReaction").setMethod(HttpMethod.POST)
     @JvmField val sendSticker = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/sendSticker").setMethod(HttpMethod.POST)
     @JvmField val getUserProfileAudios = RequestOptions()
@@ -90,7 +93,7 @@ internal class TPath(
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/getChatMenuButton").setMethod(HttpMethod.POST)
     @JvmField val getUpdates = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/getUpdates").setMethod(HttpMethod.POST)
-        .setTimeout(61 * 1000)
+        .setTimeout(timeout * 1000)
     @JvmField val setMyName = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/setMyName").setMethod(HttpMethod.POST)
     @JvmField val setBusinessAccountName = RequestOptions()
@@ -127,6 +130,8 @@ internal class TPath(
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/leaveChat").setMethod(HttpMethod.POST)
     @JvmField val closeGeneralForumTopic = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/closeGeneralForumTopic").setMethod(HttpMethod.POST)
+    @JvmField val getManagedBotAccessSettings = RequestOptions()
+        .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/getManagedBotAccessSettings").setMethod(HttpMethod.POST)
     @JvmField val savePreparedKeyboardButton = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/savePreparedKeyboardButton").setMethod(HttpMethod.POST)
     @JvmField val setStickerSetThumbnail = RequestOptions()
@@ -139,6 +144,10 @@ internal class TPath(
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/setStickerPositionInSet").setMethod(HttpMethod.POST)
     @JvmField val setCustomEmojiStickerSetThumbnail = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/setCustomEmojiStickerSetThumbnail").setMethod(HttpMethod.POST)
+    @JvmField val sendLivePhoto = RequestOptions()
+        .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/sendLivePhoto").setMethod(HttpMethod.POST)
+    @JvmField val getUserPersonalChatMessages = RequestOptions()
+        .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/getUserPersonalChatMessages").setMethod(HttpMethod.POST)
     @JvmField val close = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/close").setMethod(HttpMethod.POST)
     @JvmField val pinChatMessage = RequestOptions()
@@ -173,6 +182,8 @@ internal class TPath(
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/savePreparedInlineMessage").setMethod(HttpMethod.POST)
     @JvmField val deleteStory = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/deleteStory").setMethod(HttpMethod.POST)
+    @JvmField val setManagedBotAccessSettings = RequestOptions()
+        .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/setManagedBotAccessSettings").setMethod(HttpMethod.POST)
     @JvmField val giftPremiumSubscription = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/giftPremiumSubscription").setMethod(HttpMethod.POST)
     @JvmField val editForumTopic = RequestOptions()
@@ -239,6 +250,8 @@ internal class TPath(
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/banChatSenderChat").setMethod(HttpMethod.POST)
     @JvmField val getWebhookInfo = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/getWebhookInfo").setMethod(HttpMethod.POST)
+    @JvmField val answerGuestQuery = RequestOptions()
+        .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/answerGuestQuery").setMethod(HttpMethod.POST)
     @JvmField val setMyCommands = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/setMyCommands").setMethod(HttpMethod.POST)
     @JvmField val editMessageText = RequestOptions()
@@ -255,6 +268,8 @@ internal class TPath(
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/sendVideoNote").setMethod(HttpMethod.POST)
     @JvmField val setMyDefaultAdministratorRights = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/setMyDefaultAdministratorRights").setMethod(HttpMethod.POST)
+    @JvmField val deleteAllMessageReactions = RequestOptions()
+        .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/deleteAllMessageReactions").setMethod(HttpMethod.POST)
     @JvmField val getChatGifts = RequestOptions()
         .putHeader("Content-Type", "application/json").setAbsoluteURI("$basePath/getChatGifts").setMethod(HttpMethod.POST)
     @JvmField val getChat = RequestOptions()
