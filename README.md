@@ -15,6 +15,17 @@ Project layout:
 - `kittybot-client` - default Vert.x HTTP client, file helpers, and cat helpers
 - `samples` - runnable examples
 
+## For AI Agents
+
+This repository includes [FOR_AGENTS.md](FOR_AGENTS.md), an extensive usage guide
+for AI coding agents and tool-using assistants. It explains configuration,
+dispatcher mechanics, handler identity, update kinds, and the preferred DSL
+patterns with imports and code snippets.
+
+When an agent uses TelegramKitty in another project, it should first try to find
+the local library sources through the user's build system, dependency cache,
+source jars, included builds, or IDE external library paths before guessing APIs.
+
 ## Features
 
 - Generated Telegram Bot API methods and serializable Telegram types with official docs in KDoc
