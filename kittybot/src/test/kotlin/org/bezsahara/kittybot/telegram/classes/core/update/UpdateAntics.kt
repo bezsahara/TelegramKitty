@@ -42,11 +42,11 @@ class UpdateAntics {
 
         val unsafe = getUnsafe()
 
-        fun lookupByClass(cls: Class<*>): UpdateKind<*> {
+        fun lookupByClass(cls: Class<*>): UpdKind {
             return telegramUpdateKinds.first { it.clazz == cls }
         }
 
-        val updKindClass = UpdateKind::class.java
+        val updKindClass = UpdKind::class.java
 
         val subClasses = updKindClass.permittedSubclasses
 

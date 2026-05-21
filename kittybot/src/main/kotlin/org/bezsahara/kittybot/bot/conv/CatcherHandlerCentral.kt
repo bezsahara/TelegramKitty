@@ -1,15 +1,12 @@
 package org.bezsahara.kittybot.bot.conv
 
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.Job
-import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.Decision
-import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.core.update.telegramUpdateKinds
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.atomic.AtomicLong
@@ -27,7 +24,7 @@ private class CatchRegistration<T>(
     private val catcherHandler: CatcherHandler<T>,
     val deferred: CompletableDeferred<T>,
 ) {
-    suspend fun tryCatch(update: Update, handlerContext: HandlerContext): CatchAttempt {
+    fun tryCatch(update: Update, handlerContext: HandlerContext): CatchAttempt {
         val caught = try {
             catcherHandler.catchOrNull(update, handlerContext)
         } catch (t: Throwable) {
@@ -79,7 +76,7 @@ abstract class CatcherHandlerCentral {
         return deferred
     }
 
-    protected suspend fun handleWaiters(
+    protected fun handleWaiters(
         update: Update,
         handlerContext: HandlerContext
     ): Decision {

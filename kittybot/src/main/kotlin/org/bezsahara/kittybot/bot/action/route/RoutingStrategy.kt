@@ -1,22 +1,20 @@
 package org.bezsahara.kittybot.bot.action.route
 
 import org.bezsahara.kittybot.bot.action.other.replaceLast
-import org.bezsahara.kittybot.bot.dispatchers.Decision
-import org.bezsahara.kittybot.bot.dispatchers.Handler
-import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
-import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.TransparentHandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.asDelegate
-import org.bezsahara.kittybot.bot.dispatchers.ensureHasIdentity
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
+import org.bezsahara.kittybot.bot.dispatchers.*
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 
 sealed class RoutingStrategy<T>(val original: HandlerStore) {
-    protected val sections by lazy { sectionsMap.toList().filter { !it.second.isEmpty() } }
+//    protected val sections by lazy { sectionsMap.toList().filter { !it.second.isEmpty() } }
+
+    protected fun computeSections(): List<Pair<T, RoutingPart>> {
+        return sectionsMap.toList().filter { !it.second.isEmpty() }
+    }
 
     protected val sectionsMap = linkedMapOf<T, RoutingPart>()
 
-    protected fun computeRoutingUpdKinds(): Set<UpdateKind<*>>? {
-        val set: MutableSet<UpdateKind<*>> = mutableSetOf()
+    protected fun computeRoutingUpdKinds(sections: List<Pair<T, RoutingPart>>): Set<UpdKind>? {
+        val set: MutableSet<UpdKind> = mutableSetOf()
 
         for (section in sections) {
             for (handler in section.second.handlers) {
@@ -49,7 +47,7 @@ sealed class RoutingStrategy<T>(val original: HandlerStore) {
             return field
         }
 
-    protected fun computeExits(): Pair<Decision?, Decision> {
+    protected fun computeExits(sections: List<Pair<T, RoutingPart>>): Pair<Decision?, Decision> {
         val exitHandler = sections.last().second.handlers.replaceLast { it.ensureHasIdentity() }
         val exitHandlerIdentityD = if (default == null) {
             null
@@ -73,12 +71,12 @@ sealed class RoutingStrategy<T>(val original: HandlerStore) {
         common = handler
     }
 
-    fun common(allowedKinds: Set<UpdateKind<*>>? = null, identity: HandlerIdentity? = null, handler: Handler) {
+    fun common(allowedKinds: Set<UpdKind>? = null, identity: HandlerIdentity? = null, handler: Handler) {
         common(handler.asDelegate(identity, allowedKinds))
     }
 
-    protected fun reduceAllowedKinds(list: List<Handler>): Set<UpdateKind<*>>? {
-        val set = hashSetOf<UpdateKind<*>>()
+    protected fun reduceAllowedKinds(list: List<Handler>): Set<UpdKind>? {
+        val set = hashSetOf<UpdKind>()
         list.forEach {
             val ac = it.allowedKinds ?: return null
             set.addAll(ac)

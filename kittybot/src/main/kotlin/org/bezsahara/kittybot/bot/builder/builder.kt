@@ -6,19 +6,22 @@ import kotlinx.serialization.json.Json
 import org.bezsahara.kittybot.bot.DelegatingKittyBot
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.KittyBotConfig
+import org.bezsahara.kittybot.bot.KittyBotResult
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.dispatchers.TypeAwareMap
 import org.bezsahara.kittybot.bot.dispatchers.prepare
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
+import org.bezsahara.kittybot.bot.errors.KittyError
 import org.bezsahara.kittybot.bot.errors.hiss
-import org.bezsahara.kittybot.bot.updates.CustomUpdaterSetup
 import org.bezsahara.kittybot.bot.updates.FurballConfig
-import org.bezsahara.kittybot.bot.updates.MultiIdentity
+import org.bezsahara.kittybot.bot.updates.furballs.UpdateVisitor
 import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.UpdateReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.WebhookReceiver
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
+import org.bezsahara.kittybot.bot.updates.updaters.CustomUpdaterSetup
+import org.bezsahara.kittybot.bot.updates.updaters.MultiIdentity
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.client.CustomClient
 import org.bezsahara.kittybot.telegram.client.TCustomClient
 import org.bezsahara.kittybot.telegram.client.TPathCustom
@@ -78,7 +81,7 @@ enum class UpdateOrigin {
 }
 
 class FelineBuilder<T : UpdateReceiver> internal constructor(
-    val parentJob: Job?,
+    parentJob: Job?,
     val updateOrigin: UpdateOrigin
 ) {
     val botContext = TypeAwareMap()
@@ -170,14 +173,14 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
      * It Can be used if you do not want the bot to get updates from when it was offline
      * or if it was killed without a chance to invalidate the last update.
      */
-    fun ensureOnlyNewUpdates(tries: Int = 2) {
+    fun ensureOnlyNewUpdates(tries: Int = 2, timeout: Long? = 1) {
         init {
             var offset: Long? = -1
             repeat(tries) { i ->
                 val result = getUpdates(
                     offset,
                     null,
-                    1,
+                    timeout,
                     null,
                     null
                 ).unwrapOrNull()
@@ -194,8 +197,31 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
      * Adds handlers for the bot.
      */
     inline fun dispatchers(builder: FelineDispatcher.() -> Unit) {
+        checkUsage(true)
         dispatchers.apply(builder)
     }
+
+    // Instead of list of handlers
+    // you can use an update visitor
+    fun useUpdatesVisitor(updateVisitor: UpdateVisitor) {
+        checkUsage(false)
+        updVisitor = updateVisitor
+    }
+
+    fun checkUsage(usingDispatchers: Boolean) {
+        when (this.usingDispatchers) {
+            null -> this.usingDispatchers = usingDispatchers
+            true -> if (!usingDispatchers) {
+                throw KittyError("You are already using a visitor. You cannot use both visitor and dispatchers pattern.")
+            }
+            false -> if (usingDispatchers) {
+                throw KittyError("You are already using dispatchers. You cannot use both visitor and dispatchers pattern.")
+            }
+        }
+    }
+
+    private var usingDispatchers: Boolean? = null
+    private var updVisitor: UpdateVisitor? = null
 
     private val preActions = arrayListOf<suspend KittyBot.() -> Unit>()
 
@@ -265,15 +291,15 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
         }
     }
 
-    private var allowedUpdates: HashSet<UpdateKind<*>>? = null
+    private var allowedUpdates: HashSet<UpdKind>? = null
 
-    fun allowUpdatesOf(cl: UpdateKind<*>) {
+    fun allowUpdatesOf(cl: UpdKind) {
         checkClosed()
         if (allowedUpdates == null) allowedUpdates = hashSetOf()
         allowedUpdates!!.add(cl)
     }
 
-    fun allowUpdatesOf(vararg cl: UpdateKind<*>) {
+    fun allowUpdatesOf(vararg cl: UpdKind) {
         checkClosed()
         if (cl.isEmpty()) return
         if (allowedUpdates == null) allowedUpdates = hashSetOf()
@@ -307,18 +333,23 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
         prepare()
         close()
         return KittyBotConfig<T>(
-            dispatchers,
-            updaterMode,
-            updateOrigin,
-            pollingTimeoutP,
-            preActions,
-            BotApiServerConfig(token, baseUri, pollingTimeoutP + 1),
-            lastIdRecovery,
-            errorHandler,
-            deFactoBuilder,
-            allowedUpdates?.map { it.name },
-            furballConfig,
-            botContext
+            KittyBotResult(
+                dispatchers.identityScope,
+                dispatchers.handlerList,
+                updateOrigin,
+                pollingTimeoutP,
+                preActions,
+                BotApiServerConfig(token, baseUri, pollingTimeoutP + 1),
+                lastIdRecovery,
+                furballConfig,
+                deFactoBuilder,
+                errorHandler,
+                botContext,
+                allowedUpdates?.map { it.name },
+                supervisorJob,
+                updaterMode,
+                if (usingDispatchers == null || usingDispatchers == true) null else updVisitor!!,
+            )
         )
     }
 }

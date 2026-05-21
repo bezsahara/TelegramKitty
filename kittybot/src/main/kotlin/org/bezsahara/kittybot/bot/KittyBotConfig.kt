@@ -4,86 +4,106 @@ package org.bezsahara.kittybot.bot
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import org.bezsahara.kittybot.bot.builder.*
-import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
+import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.TypeAwareMap
 import org.bezsahara.kittybot.bot.dispatchers.createTypeAwareKey
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
 import org.bezsahara.kittybot.bot.errors.hiss
 import org.bezsahara.kittybot.bot.json.jsonInstance
-import org.bezsahara.kittybot.bot.updates.*
+import org.bezsahara.kittybot.bot.updates.FurballConfig
+import org.bezsahara.kittybot.bot.updates.furballs.Furball
+import org.bezsahara.kittybot.bot.updates.furballs.FurballDispatchers
+import org.bezsahara.kittybot.bot.updates.furballs.FurballVisitor
+import org.bezsahara.kittybot.bot.updates.furballs.UpdateVisitor
 import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.UpdateReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.WebhookReceiver
+import org.bezsahara.kittybot.bot.updates.updaters.CustomUpdater
+import org.bezsahara.kittybot.bot.updates.updaters.MultiUpdater
+import org.bezsahara.kittybot.bot.updates.updaters.SingleUpdater
+import org.bezsahara.kittybot.bot.updates.updaters.Updater
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 
 
-class KittyBotConfig<T : UpdateReceiver>(
-    felineDispatcher: FelineDispatcher,
-    updaterMode: UpdaterMode,
+data class KittyBotResult(
+    val identityScope: IdentityScope,
+    val handlerList: List<Handler>,
     val updateOrigin: UpdateOrigin,
-    pollingTimeout: Long,
-    preActions: List<suspend KittyBot.() -> Unit>,
-    botApiServerConfig: BotApiServerConfig,
-    lastIdRecovery: RecoverLastId?,
+    val pollingTimeout: Long,
+    val preActions: List<suspend KittyBot.() -> Unit>,
+    val botApiServerConfig: BotApiServerConfig,
+    val lastIdRecovery: RecoverLastId?,
+    val furballConfig: FurballConfig,
+    val apiClientBuilder: ClientBuilder,
     val errorHandler: HandlerErrorHandler,
-    private val apiClientBuilder: ClientBuilder,
+    val botContext: TypeAwareMap,
     val allowedUpdates: List<String>?,
-    furballConfig: FurballConfig,
-    val botContext: TypeAwareMap
+    val supervisorJob: CompletableJob,
+    val updaterMode: UpdaterMode,
+    val visitor: UpdateVisitor?
+)
+
+class KittyBotConfig<T : UpdateReceiver>(
+    result: KittyBotResult,
 ) {
+    val updateOrigin: UpdateOrigin = result.updateOrigin
+    val errorHandler: HandlerErrorHandler = result.errorHandler
+    val botContext: TypeAwareMap = result.botContext
+    val allowedUpdates: List<String>? = result.allowedUpdates
+    val supervisorJob = result.supervisorJob
+    internal val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
+
+
     init {
         botContext.kittyBotConfig = this
     }
+
     val json get() = jsonInstance
 
     @JvmField
     val updatesChannel =
         Channel<Update>(1024)
 
-    private val tApiClient = apiClientBuilder.build(botApiServerConfig, json)//
+    private val apiClientBuilder: ClientBuilder = result.apiClientBuilder
+    @JvmField
+    val kittyBot: KittyBot = apiClientBuilder.build(result.botApiServerConfig, json)//
+
 
     internal val updateReceiver = when (updateOrigin) {
-        UpdateOrigin.Polling -> PollingReceiver(tApiClient, pollingTimeout, lastIdRecovery, allowedUpdates)
+        UpdateOrigin.Polling -> PollingReceiver(
+            kittyBot,
+            result.pollingTimeout,
+            result.lastIdRecovery,
+            allowedUpdates
+        )
+
         UpdateOrigin.Webhook -> null
     }
 
-    val supervisorJob = felineDispatcher.felineBuilder.supervisorJob
-    internal val scope = CoroutineScope(Dispatchers.IO + supervisorJob)
+    internal val furball: Furball = if (result.visitor != null) FurballVisitor(kittyBot, result.visitor)
+    else FurballDispatchers(kittyBot, updatesChannel, result)
 
-    internal val updater: Furball = when (updaterMode) {
+    internal val updater: Updater = when (result.updaterMode) {
         is UpdaterMode.SingleThread -> SingleUpdater(
-            tApiClient,
-            felineDispatcher,
-            updatesChannel,
-            scope,
-            errorHandler,
-            furballConfig
+            updatesChannel, scope, furball
         )
 
         is UpdaterMode.MultiThread -> MultiUpdater(
-            tApiClient,
-            felineDispatcher,
             updatesChannel,
             scope,
-            updaterMode.multiIdentity,
-            updaterMode.parallelism,
-            errorHandler,
-            furballConfig
+            result.updaterMode.multiIdentity,
+            result.updaterMode.parallelism,
+            result.furballConfig,
+            furball
         )
 
         is UpdaterMode.Custom -> CustomUpdater(
-            tApiClient,
-            updaterMode.customUpdater,
-            felineDispatcher,
+            result.updaterMode.customUpdater,
             updatesChannel,
             supervisorJob,
-            errorHandler,
-            furballConfig
+            furball
         )
     }
-
-    @JvmField
-    val kittyBot: KittyBot = updater.bot
 
     private var closed = false
 
@@ -96,6 +116,7 @@ class KittyBotConfig<T : UpdateReceiver>(
     }
 
     init {
+        val preActions = result.preActions
         if (preActions.isNotEmpty()) {
             runBlocking(Dispatchers.IO) {
                 preActions.forEach {

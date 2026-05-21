@@ -1,8 +1,8 @@
 package org.bezsahara.kittybot.bot.conv
 
 import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 /**
  * One-shot matcher used by a conversation to suspend until a matching update arrives.
@@ -15,7 +15,7 @@ interface CatcherHandler<T> {
     /**
      * Telegram update kind this catcher wants to inspect.
      */
-    val updateKind: UpdateKind<*>
+    val updateKind: UpdKind
 
     /**
      * Tries to extract a value from [update].
@@ -23,5 +23,5 @@ interface CatcherHandler<T> {
      * Return `null` when the update should be ignored, or a value of type [T] when the
      * waiter should complete and consume that update for the conversation.
      */
-    suspend fun catchOrNull(update: Update, handlerContext: HandlerContext): T?
+    fun catchOrNull(update: Update, handlerContext: HandlerContext): T?
 }

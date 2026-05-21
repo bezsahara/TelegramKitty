@@ -4,11 +4,10 @@ import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.asDelegate
-import org.bezsahara.kittybot.bot.updates.Furball
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 
 class OnlyTypeBlock(
-    private val acceptTypes: Set<UpdateKind<*>>,
+    private val acceptTypes: Set<UpdKind>,
     private val original: HandlerStore
 ) : HandlerStore {
     override fun addHandler(handler: Handler) {
@@ -19,7 +18,7 @@ class OnlyTypeBlock(
         get() = original.felineDispatcher
 }
 
-inline fun HandlerStore.scopeOfType(vararg types: UpdateKind<*>, block: HandlerStore.() -> Unit) {
+inline fun HandlerStore.scopeOfType(vararg types: UpdKind, block: HandlerStore.() -> Unit) {
     val otb = OnlyTypeBlock(types.toSet(), this)
     otb.block()
 }

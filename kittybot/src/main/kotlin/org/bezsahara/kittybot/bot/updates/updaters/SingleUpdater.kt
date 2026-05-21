@@ -1,31 +1,20 @@
-package org.bezsahara.kittybot.bot.updates
+package org.bezsahara.kittybot.bot.updates.updaters
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
-import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
+import org.bezsahara.kittybot.bot.updates.furballs.Furball
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class SingleUpdater(
-    bot: KittyBot,
-    botDispatchers: FelineDispatcher,
     private val channel: Channel<Update>,
     private val coroutineScope: CoroutineScope,
-    errorHandler: HandlerErrorHandler,
-    furballConfig: FurballConfig
-) : Furball(
-    bot,
-    botDispatchers,
-    errorHandler,
-    furballConfig,
-    channel
-) {
+    private val furball: Furball
+) : Updater {
 
     private suspend fun getUpdates() = coroutineScope {
         while (isActive) {
-            applyHandlers(channel.receive())
+            furball.applyHandlers(channel.receive())
         }
     }
 

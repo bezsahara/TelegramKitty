@@ -3,19 +3,11 @@ package org.bezsahara.kittybot.bot.action.route
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.action.other.EmptyHandler
 import org.bezsahara.kittybot.bot.action.other.createBoolUpdateKindArray
-import org.bezsahara.kittybot.bot.action.other.replaceLast
-import org.bezsahara.kittybot.bot.action.route.RoutingStrategyAny
-import org.bezsahara.kittybot.bot.dispatchers.Decision
-import org.bezsahara.kittybot.bot.dispatchers.Handler
-import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
-import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.TransparentHandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.ensureHasIdentity
-import org.bezsahara.kittybot.bot.dispatchers.real
+import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.bot.updates.IntIntHashMap
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 
 class RoutingStrategyInt(
@@ -26,7 +18,7 @@ class RoutingStrategyInt(
     constructor(
         keyGeneratorAny: KeyGeneratorInt,
         original: HandlerStore,
-        ofKinds: Set<UpdateKind<*>>?,
+        ofKinds: Set<UpdKind>?,
     ) : this(keyGeneratorAny, original)
 
     inline fun section(key: Int, block: TransparentHandlerStore.() -> Unit) {
@@ -35,6 +27,7 @@ class RoutingStrategyInt(
     }
 
     fun build() {
+        val sections = computeSections()
         if (sections.isEmpty()) return
 
         val map = HashMap<Int, HandlerIdentity>(sections.size * 2)
@@ -46,7 +39,7 @@ class RoutingStrategyInt(
             error("Duplicate routing keys detected in RoutingStrategyInt")
         }
 
-        val (exitHandlerIdentityD, actualExit) = computeExits()
+        val (exitHandlerIdentityD, actualExit) = computeExits(sections)
 
         val lookup = RoutingMainInt.buildLookup(map.keys, map)
 
@@ -58,7 +51,7 @@ class RoutingStrategyInt(
                     exitDecisionWithDefault = exitHandlerIdentityD,
                     exitDecision = actualExit,
                     common!!,
-                    computeRoutingUpdKinds()
+                    computeRoutingUpdKinds(sections)
                 )
             } else {
                 RoutingMainInt(
@@ -66,7 +59,7 @@ class RoutingStrategyInt(
                     lookup,
                     exitDecisionWithDefault = exitHandlerIdentityD,
                     exitDecision = actualExit,
-                    computeRoutingUpdKinds()
+                    computeRoutingUpdKinds(sections)
                 )
             }
         )
@@ -76,6 +69,7 @@ class RoutingStrategyInt(
             if (default != null || sections.lastIndex != index) {
                 original.addHandler(EmptyHandler(actualExit, reduceAllowedKinds(part.handlers)))
             }
+            part.free()
         }
 
         default?.handlers?.forEach { original.addHandler(it) }
@@ -87,7 +81,7 @@ class RoutingMainInt(
     private val lookup: Lookup,
     private val exitDecisionWithDefault: Decision?,
     private val exitDecision: Decision,
-    override val allowedKinds: Set<UpdateKind<*>>?
+    override val allowedKinds: Set<UpdKind>?
 ) : Handler {
 
     abstract class Lookup {
@@ -186,7 +180,7 @@ class RoutingMainIntWithCommon(
     private val exitDecisionWithDefault: Decision?,
     private val exitDecision: Decision,
     commonHandler: Handler,
-    override val allowedKinds: Set<UpdateKind<*>>?
+    override val allowedKinds: Set<UpdKind>?
 ) : Handler {
 
     private val ach = commonHandler.real()

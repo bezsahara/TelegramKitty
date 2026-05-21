@@ -8,8 +8,8 @@ import org.bezsahara.kittybot.bot.dispatchers.y.scopes.CallScope
 import org.bezsahara.kittybot.bot.errors.KittyError
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.CallbackQueryUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.utils.key.InlineKeyboardBuilder
 import org.bezsahara.kittybot.telegram.values.KeyboardButtonStyle
 import java.util.concurrent.ConcurrentHashMap
@@ -23,7 +23,7 @@ inline fun InlineKeyboardBuilder.dynamicScope(d: DynamicCallbackQData, block: Dy
 class DynamicCallbackQData(
     val callQIdentity: CallQIdentity
 ) : Handler {
-    override val allowedKinds: Set<UpdateKind<*>>
+    override val allowedKinds: Set<UpdKind>
         get() = setOf(CallbackQueryUpdate)
 
     private val counter = AtomicInteger(0)

@@ -1,6 +1,7 @@
 package org.bezsahara.kittybot.bot.updates
 
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
+import org.bezsahara.kittybot.bot.updates.furballs.FurballDispatchers
 
 sealed class HIdentity {
     abstract fun get(i: Int): Int
@@ -29,7 +30,7 @@ sealed class HIdentity {
         private const val SMALL_ARRAY_SPAN = 32
         private const val ARRAY_SPREAD_FACTOR = 4
 
-        internal fun create(mappings: HashMap<HandlerIdentity, Furball.AHandlerStore2>): HIdentity {
+        internal fun create(mappings: HashMap<HandlerIdentity, FurballDispatchers.AHandlerStore2>): HIdentity {
             if (mappings.isEmpty()) {
                 return ByArray(intArrayOf(-1))
             }

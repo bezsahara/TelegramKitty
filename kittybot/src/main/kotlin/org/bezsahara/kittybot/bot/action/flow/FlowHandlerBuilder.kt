@@ -3,11 +3,11 @@ package org.bezsahara.kittybot.bot.action.flow
 import org.bezsahara.kittybot.bot.action.route.RoutingStrategyInt
 import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.updates.HandlerContext
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 
 inline fun <T> TransparentHandlerStore.flowHandler(
     flowIdentityFinder: FlowIdentityFinder,
-    updateKinds: Set<UpdateKind<*>>? = null,
+    updateKinds: Set<UpdKind>? = null,
     flowIdentityStorage: FlowIdentityStorage<T> = FlowIdentityStorageInMem(),
     builder: FlowHandlerBuilder<T>.() -> Unit
 ) {
@@ -57,7 +57,7 @@ class FlowHandlerBuilder<T>(
     private val original: HandlerStore,
     val flowIdentityStorage: FlowIdentityStorage<T>,
     private val flowIdentityFinder: FlowIdentityFinder,
-    private val ofKinds: Set<UpdateKind<*>>?
+    private val ofKinds: Set<UpdKind>?
 ) {
     val fidAttribute = original.felineDispatcher.identityScope.attrKeyOf<FlowIdentityData<T>>()
 

@@ -8,13 +8,13 @@ import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScope
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScopeImpl
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.UnknownUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 class UnknownUpdateHandler(
     val block: suspend HandlerScope<UnknownUpdate>.() -> Unit
 ) : Handler {
-    override val allowedKinds: Set<UpdateKind<*>>
+    override val allowedKinds: Set<UpdKind>
         get() = setOf(UnknownUpdate)
 
     override suspend fun handleUpdate(

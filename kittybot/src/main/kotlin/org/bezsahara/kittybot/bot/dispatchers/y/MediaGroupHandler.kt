@@ -4,14 +4,13 @@ import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.addHandler
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScope
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.chat.toChatId
 import org.bezsahara.kittybot.telegram.classes.core.update.GroupedMediaUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.SyntheticUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.message.Message
 
 class MediaGroupScope(
@@ -28,7 +27,7 @@ fun HandlerStore.mediaGroup(
     block: suspend MediaGroupScope.() -> Unit
 ) {
     addHandler(object : Handler {
-        override val allowedKinds: Set<UpdateKind<*>>
+        override val allowedKinds: Set<UpdKind>
             get() = setOf(SyntheticUpdate)
 
         override suspend fun handleUpdate(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision {

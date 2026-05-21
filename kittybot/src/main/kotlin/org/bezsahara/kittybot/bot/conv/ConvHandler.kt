@@ -1,18 +1,11 @@
 package org.bezsahara.kittybot.bot.conv
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.job
+import kotlinx.coroutines.*
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentityDelegate
 import org.bezsahara.kittybot.bot.updates.HandlerContext
-import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 
 fun interface ConvHandlerBuilder<T: ConvScope> {
@@ -39,11 +32,11 @@ abstract class ConvScope {
         throw cause
     }
 
-    suspend fun <T> receive(h: CatcherHandler<T>): Deferred<T> {
-        return chc.register(h, currentCoroutineContext().job)
+    suspend inline fun <T> receive(h: CatcherHandler<T>): Deferred<T> {
+        return receive(h, currentCoroutineContext().job)
     }
 
-    fun <T> receive(h: CatcherHandler<T>, job: Job? = null): Deferred<T> {
+    fun <T> receive(h: CatcherHandler<T>, job: Job?): Deferred<T> {
         return chc.register(h, job)
     }
 }

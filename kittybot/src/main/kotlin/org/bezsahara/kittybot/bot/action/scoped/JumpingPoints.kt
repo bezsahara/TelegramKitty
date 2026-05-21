@@ -3,11 +3,11 @@ package org.bezsahara.kittybot.bot.action.scoped
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 fun <T> TransparentHandlerStore.centralJumpPoint(
-    updateKinds: Set<UpdateKind<*>>? = null,
+    updateKinds: Set<UpdKind>? = null,
     resolve: (update: Update, handlerContext: HandlerContext) -> T,
 ): JumpingPoints<T> {
     val jp = JumpingPoints<T>(updateKinds, this)
@@ -16,7 +16,7 @@ fun <T> TransparentHandlerStore.centralJumpPoint(
 }
 
 class JumpingPoints<T>(
-    val ofKinds: Set<UpdateKind<*>>?,
+    val ofKinds: Set<UpdKind>?,
     private val original: HandlerStore,
 ) {
     private val resolution = hashMapOf<T, Decision>()
@@ -36,7 +36,7 @@ class JumpingPoints<T>(
 }
 
 class JumpPoint() : Handler {
-    override val allowedKinds: Set<UpdateKind<*>> get() = emptySet()
+    override val allowedKinds: Set<UpdKind> get() = emptySet()
 
     override val identity: HandlerIdentity = HandlerIdentity.createNew()
 

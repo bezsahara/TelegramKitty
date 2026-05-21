@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.bot.action.comms
 
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScope
-import org.bezsahara.kittybot.bot.dispatchers.y.scopes.chatId
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
 
 interface CommandGroup {

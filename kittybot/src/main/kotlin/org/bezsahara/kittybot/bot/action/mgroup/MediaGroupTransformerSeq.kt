@@ -1,12 +1,7 @@
 package org.bezsahara.kittybot.bot.action.mgroup
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
@@ -14,12 +9,10 @@ import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.GroupedMediaUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.message.Message
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicReference
-import kotlin.math.exp
 
 private const val EXPECTED_MEDIA_GROUP_SIZE = 10
 
@@ -51,7 +44,7 @@ class MediaGroupTransformerSeq(
     felineDispatcher: FelineDispatcher,
     val periodLimitMillis: Long
 ) : Handler {
-    override val allowedKinds: Set<UpdateKind<*>> = setOf(MessageUpdate)
+    override val allowedKinds: Set<UpdKind> = setOf(MessageUpdate)
 
     private val scope = CoroutineScope(
         SupervisorJob(felineDispatcher.felineBuilder.supervisorJob) + Dispatchers.IO

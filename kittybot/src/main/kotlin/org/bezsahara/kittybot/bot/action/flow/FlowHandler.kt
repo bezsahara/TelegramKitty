@@ -1,7 +1,7 @@
 package org.bezsahara.kittybot.bot.action.flow
 
 import org.bezsahara.kittybot.bot.action.route.KeyGeneratorInt
-import org.bezsahara.kittybot.bot.dispatchers.*
+import org.bezsahara.kittybot.bot.dispatchers.AttrKey
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 

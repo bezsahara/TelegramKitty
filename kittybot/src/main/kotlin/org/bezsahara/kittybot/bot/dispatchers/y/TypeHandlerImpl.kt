@@ -9,12 +9,12 @@ import org.bezsahara.kittybot.bot.dispatchers.TypeHandler
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScope
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScopeImpl
 import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.core.update.telegramUpdateKinds
 
 class TypeHandlerImpl<T : Update>(
-    expect: UpdateKind<T>,
+    expect: UpdKind,
     private val testUpdate: (T, HandlerContext) -> Boolean,
     private val onSuccess: suspend HandlerScope<T>.() -> Unit,
 ) : TypeHandler<T>(expect) {
@@ -45,9 +45,9 @@ inline fun <reified T : Update> FelineDispatcher.handleTypeOf(
     noinline onSuccess: suspend HandlerScope<T>.() -> Unit,
 ) {
     addHandler(
-        TypeHandlerImpl(typesMapToKind[T::class.java]!! as UpdateKind<T>, check, onSuccess)
+        TypeHandlerImpl(typesMapToKind[T::class.java]!! as UpdKind, check, onSuccess)
     )
 }
 
-val typesMapToKind: Map<Class<out Update>, UpdateKind<*>> =
+val typesMapToKind: Map<Class<out Update>, UpdKind> =
     telegramUpdateKinds.associateBy { it.clazz as Class<out Update> }

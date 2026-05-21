@@ -8,8 +8,8 @@ import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScope
 import org.bezsahara.kittybot.bot.errors.KittyError
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.CallbackQueryUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import java.util.concurrent.ConcurrentHashMap
 
 fun <T> HandlerStore.callbackQueryRoute(asConcurrent: Boolean = false, selector: (CallbackQueryUpdate, HandlerContext) -> T?): CallbackQueryRoute<T> {
@@ -53,7 +53,7 @@ class CallQHandler<T>(
     private val selector: (CallbackQueryUpdate, HandlerContext) -> T?,
     private val defRef: TRef<(suspend CallQDataScope.() -> Unit)?>,
 ) : Handler {
-    override val allowedKinds: Set<UpdateKind<*>>
+    override val allowedKinds: Set<UpdKind>
         get() = setOf(CallbackQueryUpdate)
 
     override suspend fun handleUpdate(

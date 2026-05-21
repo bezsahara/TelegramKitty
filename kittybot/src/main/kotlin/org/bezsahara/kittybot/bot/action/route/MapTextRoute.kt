@@ -7,8 +7,8 @@ import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.MessageScope
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 inline fun HandlerStore.textMapHandler(block: MapTextRouteBuilder.() -> Unit) {
     val builder = MapTextRouteBuilder()
@@ -33,7 +33,7 @@ class MapTextRouteBuilder {
 class MapTextRouteHandler(
     val map: Map<String, suspend MessageScope.() -> Unit>
 ) : Handler {
-    override val allowedKinds: Set<UpdateKind<*>> = setOf(MessageUpdate)
+    override val allowedKinds: Set<UpdKind> = setOf(MessageUpdate)
 
     override suspend fun handleUpdate(
         update: Update,

@@ -6,8 +6,8 @@ import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScope
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScopeImpl
 import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 /**
  * A handler that performs side effects on [HandlerContext] and then continues dispatch.
@@ -20,10 +20,10 @@ import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
  * means this handler never consumes the update on its own.
  */
 class ContextManipulation(
-    private val forUpdates: Set<UpdateKind<*>>? = null,
+    private val forUpdates: Set<UpdKind>? = null,
     private val contextBlock: suspend (update: Update, handlerContext: HandlerContext) -> Unit,
 ) : Handler {
-    override val allowedKinds: Set<UpdateKind<*>>?
+    override val allowedKinds: Set<UpdKind>?
         get() = forUpdates
 
     override suspend fun handleUpdate(
@@ -48,7 +48,7 @@ class ContextManipulation(
  * the [HandlerContext].
  */
 fun HandlerStore.contextHook(
-    forUpdates: Set<UpdateKind<*>>? = null,
+    forUpdates: Set<UpdKind>? = null,
     contextBlock: suspend (update: Update, handlerContext: HandlerContext) -> Unit,
 ) {
     addHandler(ContextManipulation(forUpdates, contextBlock))
@@ -57,11 +57,11 @@ fun HandlerStore.contextHook(
 
 
 fun HandlerStore.debugHook(
-    forUpdates: Set<UpdateKind<*>>? = null,
+    forUpdates: Set<UpdKind>? = null,
     block: suspend HandlerScope<Update>.() -> Unit,
 ) {
     addHandler(object : Handler {
-        override val allowedKinds: Set<UpdateKind<*>>?
+        override val allowedKinds: Set<UpdKind>?
             get() = forUpdates
 
         override suspend fun handleUpdate(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision {

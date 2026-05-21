@@ -1,31 +1,34 @@
-package org.bezsahara.kittybot.bot.updates
+package org.bezsahara.kittybot.bot.updates.furballs
 
 import kotlinx.coroutines.channels.Channel
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.action.dyn.DynIdentityFinder
-import org.bezsahara.kittybot.bot.dispatchers.*
-import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.CONSUMED
-import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.NEXT
+import org.bezsahara.kittybot.bot.KittyBotResult
+import org.bezsahara.kittybot.bot.action.dyn.findDynamicHandlers
+import org.bezsahara.kittybot.bot.dispatchers.Decision
+import org.bezsahara.kittybot.bot.dispatchers.Handler
+import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
+import org.bezsahara.kittybot.bot.dispatchers.real
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
 import org.bezsahara.kittybot.bot.errors.KittyError
+import org.bezsahara.kittybot.bot.updates.*
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.core.update.telegramUpdateKinds
-import java.util.*
 
 // Base class for handling updates
-abstract class Furball(
+class FurballDispatchers(
     val bot: KittyBot,
-    botDispatchers: FelineDispatcher,
-    private val errorHandler: HandlerErrorHandler,
-    private val furballConfig: FurballConfig,
     private val channel: Channel<Update>,
-) {
+    result: KittyBotResult
+) : Furball() {
 
     private val attrKeyMaxSize: Int
 
     //    private val handlerContextBuilder: HandlerContextBuilder
-    private val identityScope = botDispatchers.identityScope
+    private val identityScope = result.identityScope
+    private val errorHandler: HandlerErrorHandler = result.errorHandler
+    private val furballConfig: FurballConfig = result.furballConfig
+
 
     init {
         telegramUpdateKinds
@@ -34,7 +37,7 @@ abstract class Furball(
         attrKeyMaxSize = size
 
         if (!furballConfig.ignoreIdentityDuplicated) {
-            botDispatchers.handlerList.checkIfIdentityDuplicated()?.let { (a, b) ->
+            result.handlerList.checkIfIdentityDuplicated()?.let { (a, b) ->
                 throw KittyError(
                     "You have duplicated identities in handler list! A<${a.real().javaClass.name}>: $a, B<${a.real().javaClass.name}>: $b." +
                             "\n to disable this set FurballConfig.ignoreIdentityDuplicated = true"
@@ -45,7 +48,7 @@ abstract class Furball(
 
     internal data class AHandlerStore2(val h: Handler, val arrayPos: Int)
 
-    private val handlerListIdentity: HIdentity = botDispatchers.handlerList.let {
+    private val handlerListIdentity: HIdentity = result.handlerList.let {
         val map = HashMap<HandlerIdentity, AHandlerStore2>()
         for (handlerIdx in it.indices) {
             val handler = it[handlerIdx]
@@ -58,66 +61,59 @@ abstract class Furball(
         HIdentity.create(map)
     }
 
-    // each piece is a number that indicates how far away is next handler with needed type
-    private val handlerByKindMap = botDispatchers.handlerList.let { handlers ->
+    // Last slot is the start slot. Other slots point to the next matching handler after that index.
+    private val handlerByKindMap = result.handlerList.let { handlers ->
         val map = arrayOfNulls<IntArray>(telegramUpdateKinds.size)
 
-        fun Array<IntArray?>.fillIfEmpty(clazz: UpdateKind<*>): IntArray {
+        fun Array<IntArray?>.fillIfEmpty(clazz: UpdKind): IntArray {
             var r = get(clazz.ordinal)
             if (r == null) {
-                r = IntArray(handlers.size) { handlers.size - it }
+                r = IntArray(handlers.size + 1) { handlers.size }
                 set(clazz.ordinal, r)
             }
             return r
         }
 
-        val lastFilled = IdentityHashMap<UpdateKind<*>, Int>()
+        val lastFilled = IntArray(telegramUpdateKinds.size) { -1 }
 
         handlers.forEachIndexed { index, handler ->
-            val allowedTypes = handler.allowedKinds
 
-            (allowedTypes ?: telegramUpdateKinds).forEach { kind ->
-                val arr = map.fillIfEmpty(kind)
+            (handler.allowedKinds ?: telegramUpdateKinds).forEach { kind ->
+                val array = map.fillIfEmpty(kind)
 
-                // fill distances from (lastFilled+1) up to (index-1)
-                val last = lastFilled[kind] ?: -1
-                for (i in (last + 1) until index) {
-                    val d = index - i
-//                    if (d < arr[i])
-                    arr[i] = d
+                val last = lastFilled[kind.ordinal]
+                lastFilled[kind.ordinal] = index
+                if (last == -1) {
+                    array[array.size - 1] = index
+                    for (i in 0 until index) {
+                        array[i] = index
+                    }
+                } else {
+                    for (i in last until index) {
+                        array[i] = index
+                    }
                 }
-
-                // at the eligible index itself distance is 0
-                arr[index] = 0
-                lastFilled[kind] = index
             }
         }
-
         map
     }
 
-
-    private val hlSize = botDispatchers.handlerList.size
+    private val hlSize = result.handlerList.size
 
     private val hopSafetyLimit = hlSize * furballConfig.hopSafetyTimes
 
-    private val dynamic = DynIdentityFinder.fromList(botDispatchers.handlerList)
+    private val dynamic = findDynamicHandlers(result.handlerList)
 
-    private val handlerList = botDispatchers.handlerList.let { hl ->
+    private val handlerList = result.handlerList.let { hl ->
         Array(hl.size) {
-            val h = hl[it]
-            if (h is HandlerDelegate) {
-                h.originalHandler
-            } else {
-                h
-            }
+            hl[it].real()
         }
     }
 
-    suspend fun applyHandlers(update: Update) {
+    override suspend fun applyHandlers(update: Update) {
         val jumpTable = handlerByKindMap[update.ordinal] ?: return
-        var pos = jumpTable[0]
-        val jumpTableSize = jumpTable.size
+        var pos = jumpTable[hlSize]
+        if (hlSize <= pos) return
         val handlerContext = HandlerContextArray(attrKeyMaxSize, identityScope, channel)
         var hopSafety = 0
         while (true) {
@@ -135,12 +131,10 @@ abstract class Furball(
             }
 
             when (res.result) {
-                CONSUMED -> break
-                NEXT -> {
-                    pos += 1
-                    if (jumpTableSize <= pos) break
-                    pos += jumpTable[pos]
-                    if (jumpTableSize <= pos) break
+                Decision.CONSUMED -> break
+                Decision.NEXT -> {
+                    pos = jumpTable[pos]
+                    if (hlSize <= pos) break
                     continue
                 }
 
@@ -148,7 +142,7 @@ abstract class Furball(
                     hopSafety += 1
                     pos = handlerListIdentity.get(res.result)
                     if (pos == -1) {
-                        pos = maybeDynHI(res.result, res.offset, res.adjust, handlerContext)
+                        pos = maybeDynHI(res, handlerContext, update.ordinal)
                         if (pos != -1) continue
                         throw HandlerException("Did not find a handler `${res.result}`!")
                     }
@@ -157,11 +151,11 @@ abstract class Furball(
                         if (pos < 0) {
                             throw HandlerException("pos is less than 0 after applying offset of ${res.offset}!")
                         }
-                        if (jumpTableSize <= pos) break
+                        if (hlSize <= pos) break
                     }
                     if (res.adjust) {
-                        pos += jumpTable[pos]
-                        if (jumpTableSize <= pos) break
+                        pos = if (pos == 0) jumpTable[hlSize] else jumpTable[pos - 1]
+                        if (hlSize <= pos) break
                     }
                 }
             }
@@ -172,11 +166,11 @@ abstract class Furball(
         }
     }
 
-    abstract fun start()
-
-
-    private fun maybeDynHI(hi: Int, offset: Int, adjust: Boolean, context: HandlerContext): Int {
-        val r = dynamic.jumpIfDynIdentity(HandlerIdentity(hi), offset, adjust, context)
-        return if (r == HandlerIdentity.emptyID) -1 else handlerListIdentity.get(r.value)
+    private fun maybeDynHI(decision: Decision, context: HandlerContext, updType: Int): Int {
+        for (registry in dynamic) {
+            val d = registry.createJumpDecision(context, decision, updType) ?: continue
+            return handlerListIdentity.get(d.result)
+        }
+        return -1
     }
 }

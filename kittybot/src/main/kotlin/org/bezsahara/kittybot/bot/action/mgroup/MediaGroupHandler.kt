@@ -13,8 +13,8 @@ import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScope
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.message.Message
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
@@ -53,7 +53,7 @@ class MediaGroupHandler(
     val periodLimitMillis: Long,
     val block: suspend MediaGroupScope.() -> Unit,
 ) : Handler {
-    override val allowedKinds: Set<UpdateKind<*>>
+    override val allowedKinds: Set<UpdKind>
         get() = setOf(MessageUpdate)
 
     private val scope = CoroutineScope(

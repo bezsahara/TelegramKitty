@@ -14,8 +14,8 @@ import org.bezsahara.kittybot.bot.errors.KittyError
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.chat.toChatId
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.core.update.asMessageUpdateOrNull
 import org.bezsahara.kittybot.telegram.classes.message.Message
 
@@ -72,7 +72,7 @@ internal class CommandGroupHandler(
     private val flowManager: FlowManager<String>?,
     private val firstStepReply: (Message, HandlerContext) -> String,
 ) : Handler {
-    override val allowedKinds: Set<UpdateKind<*>>
+    override val allowedKinds: Set<UpdKind>
         get() = setOf(MessageUpdate)
 
     internal class Scope(
@@ -138,7 +138,7 @@ internal class CommandGroupHandler(
         val flowManager: FlowManager<String>,
         private val commandGroupStore: CommandGroupStore,
     ) : Handler {
-        override val allowedKinds: Set<UpdateKind<*>>
+        override val allowedKinds: Set<UpdKind>
             get() = setOf(MessageUpdate)
 
         override suspend fun handleUpdate(

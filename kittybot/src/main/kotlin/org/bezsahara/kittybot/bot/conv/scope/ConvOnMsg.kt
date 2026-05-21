@@ -5,19 +5,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.conv.CatcherHandlerCentral
-import org.bezsahara.kittybot.bot.conv.ConvHandler
-import org.bezsahara.kittybot.bot.conv.ConvHandlerBuilder
-import org.bezsahara.kittybot.bot.conv.ConvInfo
-import org.bezsahara.kittybot.bot.conv.ConvScope
-import org.bezsahara.kittybot.bot.conv.ConversationBuilder
+import org.bezsahara.kittybot.bot.conv.*
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.HandlerScope
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.message.Message
 
 
@@ -44,7 +39,7 @@ class ConvOnMsg(
     private val msgCheck: FullMsgCheck,
     val block: suspend OnMsgScope.() -> Unit,
 ) : ConvHandler<OnMsgScope>() {
-    override val allowedKinds: Set<UpdateKind<*>>? get() = null
+    override val allowedKinds: Set<UpdKind>? get() = null
 
     override val scope: CoroutineScope
         get() = convInfo.scope

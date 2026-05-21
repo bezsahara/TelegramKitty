@@ -1,7 +1,5 @@
 package org.bezsahara.kittybot.bot.action.comms
 
-import java.util.Arrays
-
 sealed interface ParsedBotResult
 
 data class ParsedBotError(
@@ -406,7 +404,11 @@ private class BotCallParser(private val text: String) {
 
 
 inline fun <T, reified R> List<T>.mapAsList(transform: (T) -> R): List<R> {
-    return Array<R>(size) {
-        transform(get(it))
-    }.asList()
+    return when (size) {
+        0 -> emptyList()
+        1 -> listOf(transform(get(0)))
+        else -> Array<R>(size) {
+            transform(get(it))
+        }.asList()
+    }
 }

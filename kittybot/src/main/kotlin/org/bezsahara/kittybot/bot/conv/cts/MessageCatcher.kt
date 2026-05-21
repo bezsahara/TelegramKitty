@@ -4,18 +4,10 @@ import org.bezsahara.kittybot.bot.conv.CatcherHandler
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.games.Game
-import org.bezsahara.kittybot.telegram.classes.media.Animation
-import org.bezsahara.kittybot.telegram.classes.media.Audio
-import org.bezsahara.kittybot.telegram.classes.media.Contact
-import org.bezsahara.kittybot.telegram.classes.media.Dice
-import org.bezsahara.kittybot.telegram.classes.media.Document
-import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
-import org.bezsahara.kittybot.telegram.classes.media.Video
-import org.bezsahara.kittybot.telegram.classes.media.VideoNote
-import org.bezsahara.kittybot.telegram.classes.media.Voice
+import org.bezsahara.kittybot.telegram.classes.media.*
 import org.bezsahara.kittybot.telegram.classes.media.geo.Location
 import org.bezsahara.kittybot.telegram.classes.media.geo.Venue
 import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
@@ -30,7 +22,7 @@ abstract class SameChatMessageCatcher<T>(
     ofChatId: ChatId
 ) : CatcherHandler<T> {
     private val ofChatId = ofChatId.value.toLong()
-    final override val updateKind: UpdateKind<*> get() = MessageUpdate
+    final override val updateKind: UpdKind get() = MessageUpdate
 
     protected fun sameChatMessageOrNull(update: Update): Message? {
         update as MessageUpdate
@@ -54,7 +46,7 @@ open class MessageFieldCatcher<T>(
     ofChatId: ChatId,
     private val extractor: (Message) -> T?,
 ) : SameChatMessageCatcher<T>(ofChatId) {
-    final override suspend fun catchOrNull(
+    final override fun catchOrNull(
         update: Update,
         handlerContext: HandlerContext,
     ): T? {
@@ -69,7 +61,7 @@ open class MessageFieldCatcher<T>(
  * Waiter matcher for any message from a specific chat.
  */
 class MessageCatcher(private val checker: ((Message) -> Boolean)?, ofChatId: ChatId) : SameChatMessageCatcher<Message>(ofChatId) {
-    override suspend fun catchOrNull(
+    override fun catchOrNull(
         update: Update,
         handlerContext: HandlerContext,
     ): Message? {

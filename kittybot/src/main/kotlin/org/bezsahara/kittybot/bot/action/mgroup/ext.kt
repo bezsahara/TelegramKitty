@@ -1,7 +1,7 @@
 package org.bezsahara.kittybot.bot.action.mgroup
 
 import org.bezsahara.kittybot.bot.builder.UpdaterMode
-import org.bezsahara.kittybot.bot.updates.MultiIdentity
+import org.bezsahara.kittybot.bot.updates.updaters.MultiIdentity
 
 
 fun UpdaterMode.isSequential(): Boolean {

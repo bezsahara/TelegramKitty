@@ -7,15 +7,15 @@ import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.y.HandlerCheck
 import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 
 data class UpdateAndContext(val update: Update, val handlerContext: HandlerContext)
 
 class ChannelConsumption(
     private val handlerCheck: HandlerCheck,
-    override val allowedKinds: Set<UpdateKind<*>>?,
+    override val allowedKinds: Set<UpdKind>?,
     private val channel: Channel<UpdateAndContext>
 ) : Handler {
     override suspend fun handleUpdate(
@@ -33,7 +33,7 @@ class ChannelConsumption(
 
 fun HandlerStore.consumeUpdatesInChannel(
     handlerCheck: HandlerCheck,
-    allowedKinds: Set<UpdateKind<*>>? = null,
+    allowedKinds: Set<UpdKind>? = null,
     channel: Channel<UpdateAndContext> = Channel(1024)
 ): Channel<UpdateAndContext> {
     addHandler(ChannelConsumption(handlerCheck, allowedKinds, channel))

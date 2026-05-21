@@ -4,8 +4,8 @@ import org.bezsahara.kittybot.bot.action.route.KeyGeneratorInt
 import org.bezsahara.kittybot.bot.action.route.RoutingStrategyInt
 import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import java.lang.reflect.Modifier
 
 /**
@@ -24,7 +24,7 @@ import java.lang.reflect.Modifier
  */
 inline fun <T> TransparentHandlerStore.stateHandler(
     stateFinder: StateFinder<T>,
-    allowedKinds: Set<UpdateKind<*>>? = null,
+    allowedKinds: Set<UpdKind>? = null,
     builder: StateHandlerBuilder<T>.() -> Unit,
 ) {
     val builderHandler = StateHandlerBuilder<T>(stateFinder, this, allowedKinds)
@@ -50,7 +50,7 @@ fun interface StateFinder<T> {
 class StateHandlerBuilder<T>(
     private val stateFinder: StateFinder<T>,
     handlerStore: TransparentHandlerStore,
-    allowedKinds: Set<UpdateKind<*>>? = null,
+    allowedKinds: Set<UpdKind>? = null,
 ) {
     private val map = linkedMapOf<StateTester, Int>()
     fun addToMap(stateTester: StateTester, state: Int) {

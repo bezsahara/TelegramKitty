@@ -4,15 +4,14 @@ import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.action.other.withStartOf
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
-import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.botCommandsKey
-import org.bezsahara.kittybot.bot.dispatchers.y.CommandHandler.Companion.commandRegex
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.CommandScope
+import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommand
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 
 class CommandHandler(
@@ -29,9 +28,9 @@ class CommandHandler(
         }
     }
 
-    private val spaceIndex = command.length
+    private val commandLength = command.length
 
-    override val allowedKinds: Set<UpdateKind<*>> get() = setOf(MessageUpdate)
+    override val allowedKinds: Set<UpdKind> get() = setOf(MessageUpdate)
 
     private suspend fun apply(scope: CommandScope): Decision {
         scope.onSuccess()
@@ -42,11 +41,11 @@ class CommandHandler(
         val text = (update as MessageUpdate).message.text ?: return Decision.Next
 
         return if (text.withStartOf(command)) {
-            val parsedArgs = if (command.length == text.length) {
+            val parsedArgs = if (commandLength == text.length) {
                 null
             } else {
-                if (text[command.length] != ' ') return Decision.Next
-                text.substring(spaceIndex + 1, text.length)
+                if (text[commandLength] != ' ') return Decision.Next
+                text.substring(commandLength + 1, text.length)
             }
             apply(CommandScope(
                 bot,

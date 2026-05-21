@@ -3,8 +3,8 @@ package org.bezsahara.kittybot.bot.conv.cts
 import org.bezsahara.kittybot.bot.conv.CatcherHandler
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.CallbackQueryUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.inline.CallbackQuery
 import org.bezsahara.kittybot.telegram.classes.message.MaybeInaccessibleMessage
 
@@ -14,7 +14,7 @@ import org.bezsahara.kittybot.telegram.classes.message.MaybeInaccessibleMessage
 abstract class SameUserCallbackQueryCatcher<T>(
     private val userId: Long
 ) : CatcherHandler<T> {
-    final override val updateKind: UpdateKind<*> get() = CallbackQueryUpdate
+    final override val updateKind: UpdKind get() = CallbackQueryUpdate
 
     protected fun sameUserCallbackQueryOrNull(update: Update): CallbackQuery? {
         update as CallbackQueryUpdate
@@ -38,7 +38,7 @@ open class CallbackQueryFieldCatcher<T>(
     userId: Long,
     private val extractor: (CallbackQuery) -> T?,
 ) : SameUserCallbackQueryCatcher<T>(userId) {
-    override suspend fun catchOrNull(
+    override fun catchOrNull(
         update: Update,
         handlerContext: HandlerContext,
     ): T? {
@@ -56,7 +56,7 @@ class CallbackQueryCatcher(
     private val checker: ((CallbackQuery) -> Boolean)?,
     userId: Long
 ) : SameUserCallbackQueryCatcher<CallbackQuery>(userId) {
-    override suspend fun catchOrNull(
+    override fun catchOrNull(
         update: Update,
         handlerContext: HandlerContext,
     ): CallbackQuery? {

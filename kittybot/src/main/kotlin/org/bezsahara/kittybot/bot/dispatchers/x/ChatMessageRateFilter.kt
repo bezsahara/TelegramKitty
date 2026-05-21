@@ -4,12 +4,11 @@ import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.dispatchers.Handler
-import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.MessageScope
+import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
-import org.bezsahara.kittybot.telegram.classes.core.update.toSet
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.min
 
@@ -21,7 +20,7 @@ class ChatMessageRateFilter(
     private val cleanThreshold = maxOf(timePeriodMillis * 3, 1000 * 60 * 10)
     private var sizeThresholdDynamic = 10_000
 
-    override val allowedKinds: Set<UpdateKind<*>> = MessageUpdate.toSet()
+    override val allowedKinds: Set<UpdKind> = MessageUpdate.toSet()
 
     private fun cleanMap() {
         val current = System.currentTimeMillis()

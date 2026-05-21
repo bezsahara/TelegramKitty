@@ -14,7 +14,7 @@ import org.bezsahara.kittybot.bot.dispatchers.y.command
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.chatId
 import org.bezsahara.kittybot.bot.dispatchers.y.text
 import org.bezsahara.kittybot.bot.sendHttpCat
-import org.bezsahara.kittybot.bot.updates.MultiIdentity
+import org.bezsahara.kittybot.bot.updates.updaters.MultiIdentity
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommand
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeChat
 import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeDefault

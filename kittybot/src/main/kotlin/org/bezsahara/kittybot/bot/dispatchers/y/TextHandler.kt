@@ -3,18 +3,17 @@ package org.bezsahara.kittybot.bot.dispatchers.y
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
-import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.addHandler
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.MessageScope
+import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 abstract class TextHandler(
     val onSuccess: suspend MessageScope.() -> Unit
 ) : Handler {
-    override val allowedKinds: Set<UpdateKind<*>> = setOf(MessageUpdate)
+    override val allowedKinds: Set<UpdKind> = setOf(MessageUpdate)
 
     final override suspend fun handleUpdate(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision {
         if (!isFine(update as MessageUpdate)) return Decision.Next
@@ -51,7 +50,7 @@ fun HandlerStore.text(text: String, onSuccess: suspend MessageScope.() -> Unit) 
 
 fun HandlerStore.text(onSuccess: suspend MessageScope.() -> Unit) {
     addHandler(object : Handler {
-        override val allowedKinds: Set<UpdateKind<*>>
+        override val allowedKinds: Set<UpdKind>
             get() = setOf(MessageUpdate)
 
         override suspend fun handleUpdate(

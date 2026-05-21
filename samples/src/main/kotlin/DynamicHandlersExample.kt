@@ -2,7 +2,9 @@ package org.bezsahara.samples
 
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import org.bezsahara.kittybot.bot.action.dyn.createDynamicHandlerRegistry
+import org.bezsahara.kittybot.bot.action.dyn.collectAndAdd
+import org.bezsahara.kittybot.bot.action.dyn.createDynamicHandlerStore
+import org.bezsahara.kittybot.bot.action.route.textMapHandler
 import org.bezsahara.kittybot.bot.conv.buildConversation
 import org.bezsahara.kittybot.bot.conv.cts.receiveCommand
 import org.bezsahara.kittybot.bot.conv.cts.receiveMessage
@@ -17,13 +19,25 @@ import org.bezsahara.kittybot.telegram.utils.setMyCommands
 import org.bezsahara.kittybot.telegram.utils.unwrap
 
 fun FelineDispatcher.dynamicHandlersExample() {
-    val register = createDynamicHandlerRegistry()
+    var hands: List<Handler>? = null
+    val register = createDynamicHandlerStore {
+        hands = collectAndAdd {
+            textMapHandler {
+                text("Hello World") {
+                    bot.sendMessage(chatId, "Hello World!")
+                }
+                text("Bye Byeee") {
+                    bot.sendMessage(chatId, "Bye!")
+                }
+            }
+        }
+    }
 
     val handlerToAdd = Handler { update, bot, context ->
         if (update.asMessageUpdateOrNull()?.message?.text != "added") {
             return@Handler Decision.Next
         }
-        bot.sendMessage(update.chatIdOrNull()!!, "Reply")
+        bot.sendMessage(update.chatIdOrNull(), "Reply")
         Decision.Consumed
     }
 
@@ -41,6 +55,17 @@ fun FelineDispatcher.dynamicHandlersExample() {
                     added = handlerToAdd
                     register.addHandler(added!!)
                     bot.sendMessage(chatId, "Added")
+                }
+            }
+
+            launch {
+                while (isActive) {
+                    receiveCommand("/remove_map").await()
+                    hands?.let {
+                        register.removeHandlers(it)
+                        bot.sendMessage(chatId, "Removed groups of handlers")
+                        return@launch
+                    }
                 }
             }
 
@@ -68,7 +93,8 @@ fun FelineDispatcher.dynamicHandlersExample() {
 
             bot.sendMessage(
                 chatId,
-                "Send /add to add dynamic handler or /remove to remove it. Or /cancel to cancel this conversation."
+                "Send /add to add dynamic handler or /remove to remove it." +
+                        "Also /remove_map to remove several handlers. Or /cancel to cancel this conversation."
             ).consume()
 
             receiveMessage { it.text == "/cancel" }.await()

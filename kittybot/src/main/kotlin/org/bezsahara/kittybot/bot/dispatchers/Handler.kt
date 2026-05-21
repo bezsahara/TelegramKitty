@@ -1,6 +1,5 @@
 package org.bezsahara.kittybot.bot.dispatchers
 
-import kotlinx.coroutines.suspendCancellableCoroutine
 import org.bezsahara.kittybot.bot.IdentityScope
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.AfterNextTo
@@ -8,8 +7,8 @@ import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.Consumed
 import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.Next
 import org.bezsahara.kittybot.bot.dispatchers.Decision.Companion.NextTo
 import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -69,10 +68,10 @@ value class HandlerIdentity internal constructor(val value: Int) {
  * Convenience base class for handlers that have a fixed set of accepted update kinds and
  * sometimes need a real [identity] field.
  */
-abstract class SimpleHandler(vararg updateKinds: UpdateKind<*>) : Handler {
+abstract class SimpleHandler(vararg updateKinds: UpdKind) : Handler {
     final override val identity: HandlerIdentity by HandlerIdentityDelegate()
 
-    final override val allowedKinds: Set<UpdateKind<*>>? = updateKinds.let { if (it.isEmpty()) null else it.toSet() }
+    final override val allowedKinds: Set<UpdKind>? = updateKinds.let { if (it.isEmpty()) null else it.toSet() }
 }
 
 
@@ -103,7 +102,7 @@ abstract class SimpleHandler(vararg updateKinds: UpdateKind<*>) : Handler {
 fun interface Handler {
     val identity: HandlerIdentity? get() = null
 
-    val allowedKinds: Set<UpdateKind<*>>? get() = null
+    val allowedKinds: Set<UpdKind>? get() = null
 
     suspend fun handleUpdate(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision
 }
@@ -115,9 +114,9 @@ fun interface Handler {
 // Reason: Kotlin coroutine codegen is pretty terrible, it may allocate a Continuation frame at the
 // start of a suspend function once a state machine is needed, even on paths
 // that return before any suspension point.
-abstract class HandlerNonSuspend(override val allowedKinds: Set<UpdateKind<*>>?) : Handler {
+abstract class HandlerNonSuspend(override val allowedKinds: Set<UpdKind>?) : Handler {
     constructor() : this(null)
-    constructor(vararg kinds: UpdateKind<*>) : this(kinds.toSet())
+    constructor(vararg kinds: UpdKind) : this(kinds.toSet())
 
     abstract fun check(update: Update, bot: KittyBot, handlerContext: HandlerContext): Decision
 
@@ -145,7 +144,7 @@ abstract class HandlerNonSuspend(override val allowedKinds: Set<UpdateKind<*>>?)
  *
  * @param result -1 or -2 are reserved for next or consumed. Anything else is just HandlerIdentity
  * @param offset relative offset if it is a jump decision
- * @param adjust flag for [org.bezsahara.kittybot.bot.updates.Furball] to adjust what handler will get the update based on update kinds it can receive.
+ * @param adjust flag for [org.bezsahara.kittybot.bot.updates.furballs.Furball] to adjust what handler will get the update based on update kinds it can receive.
  * Although it is done automatically for next and consumed, jump decisions are exempt from it, this flag changes it.
  */
 class Decision

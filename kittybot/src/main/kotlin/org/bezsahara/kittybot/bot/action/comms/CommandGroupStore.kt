@@ -7,7 +7,6 @@ import java.lang.invoke.MethodHandles
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.lang.reflect.WildcardType
-import kotlin.math.sign
 
 /**
  * Reflection-backed command registry for a [CommandGroup].
@@ -53,7 +52,7 @@ class CommandGroupStore(
     /**
      * Registered command descriptions keyed by command name without the leading `/`.
      */
-    val commands: Map<String, String>, // Command (without /) to description
+    val commands: List<Pair<String, String>>, // Command (without /) to description
 ) {
     // Following are helper methods, however you can use fields however you like
 
@@ -111,11 +110,11 @@ class CommandGroupStore(
             )
         }
 
-        private fun build(commandGroup: CommandGroup): Pair<Map<String, String>, Map<String, Map<List<BotType>, MethodHandle>>> {
+        private fun build(commandGroup: CommandGroup): Pair<List<Pair<String, String>>, Map<String, Map<List<BotType>, MethodHandle>>> {
             val lookup = MethodHandles.lookup()
             val clazz = commandGroup::class.java
 
-            val commands = hashMapOf<String, String>()
+            val commands = arrayListOf<Pair<String, String>>()
             val execMap = hashMapOf<String, HashMap<List<BotType>, MethodHandle>>()
 
             clazz.declaredMethods.forEach { method ->
@@ -125,7 +124,7 @@ class CommandGroupStore(
                 val params = method.parameters.map { param ->
                     botTypeOf(param.parameterizedType)
                 }
-                commands[methodName] = annot.description
+                commands.add(methodName to annot.description)
                 val nameMap = execMap.getOrPut(methodName) { hashMapOf() }
                 val bound = lookup.unreflect(method).bindTo(commandGroup)
                 nameMap[optimizeList(params)] = bound.asSpreader(Array<Any?>::class.java, params.size)

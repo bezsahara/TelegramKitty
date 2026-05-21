@@ -1,8 +1,6 @@
 package org.bezsahara.kittybot.bot
 
 import org.bezsahara.kittybot.bot.dispatchers.AttrKey
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 class IdentityScope {
     private var attrKeyIdGen = 0

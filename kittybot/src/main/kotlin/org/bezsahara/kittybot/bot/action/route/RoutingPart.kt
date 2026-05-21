@@ -1,13 +1,11 @@
 package org.bezsahara.kittybot.bot.action.route
 
-import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
-import org.bezsahara.kittybot.bot.dispatchers.Handler
-import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.TransparentHandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.ensureHasIdentity
+import org.bezsahara.kittybot.bot.dispatchers.*
 
 class RoutingPart(internal val original: HandlerStore) : TransparentHandlerStore {
-    internal val handlers = arrayListOf<Handler>()
+    private val handlersP = FreeRef(arrayListOf<Handler>())
+
+    val handlers get() = handlersP.get()
 
     fun isEmpty() = handlers.isEmpty()
 
@@ -20,6 +18,8 @@ class RoutingPart(internal val original: HandlerStore) : TransparentHandlerStore
         }
         handlers.add(handler)
     }
+
+    internal fun free() = handlersP.free()
 
     override val felineDispatcher: FelineDispatcher
         get() = original.felineDispatcher

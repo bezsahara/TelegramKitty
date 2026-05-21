@@ -5,8 +5,8 @@ import org.bezsahara.kittybot.bot.action.other.EmptyHandler
 import org.bezsahara.kittybot.bot.action.other.createBoolUpdateKindArray
 import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 
 class RoutingStrategyAny<T>(
@@ -17,7 +17,7 @@ class RoutingStrategyAny<T>(
     constructor(
         keyGeneratorAny: KeyGeneratorAny<T>,
         original: HandlerStore,
-        ofKinds: Set<UpdateKind<*>>?,
+        ofKinds: Set<UpdKind>?,
     ) : this(keyGeneratorAny, original)
 
     inline fun section(key: T, block: TransparentHandlerStore.() -> Unit) {
@@ -26,6 +26,7 @@ class RoutingStrategyAny<T>(
     }
 
     fun build() {
+        val sections = computeSections()
         if (sections.isEmpty()) return
 
         val map = HashMap<T, HandlerIdentity>(sections.size * 2)
@@ -39,7 +40,7 @@ class RoutingStrategyAny<T>(
             }
         }
 
-        val (exitHandlerIdentityD, actualExit) = computeExits()
+        val (exitHandlerIdentityD, actualExit) = computeExits(sections)
 
         original.addHandler(
             if (common != null) {
@@ -49,7 +50,7 @@ class RoutingStrategyAny<T>(
                     exitDecisionWithDefault = exitHandlerIdentityD,
                     exitDecision = actualExit,
                     common!!,
-                    computeRoutingUpdKinds()
+                    computeRoutingUpdKinds(sections)
                 )
             } else {
                 RoutingMainAny(
@@ -57,7 +58,7 @@ class RoutingStrategyAny<T>(
                     map,
                     exitDecisionWithDefault = exitHandlerIdentityD,
                     exitDecision = actualExit,
-                    computeRoutingUpdKinds()
+                    computeRoutingUpdKinds(sections)
                 )
             }
         )
@@ -67,6 +68,7 @@ class RoutingStrategyAny<T>(
             if (default != null || sections.lastIndex != index) {
                 original.addHandler(EmptyHandler(actualExit, reduceAllowedKinds(part.handlers)))
             }
+            part.free()
         }
 
         default?.handlers?.forEach { original.addHandler(it) }
@@ -79,7 +81,7 @@ class RoutingMainAny(
     private val map: HashMap<*, HandlerIdentity>,
     private val exitDecisionWithDefault: Decision?,
     private val exitDecision: Decision,
-    override val allowedKinds: Set<UpdateKind<*>>?,
+    override val allowedKinds: Set<UpdKind>?,
 ) : Handler {
     override suspend fun handleUpdate(
         update: Update,
@@ -102,7 +104,7 @@ class RoutingMainAnyWithCommon(
     private val exitDecisionWithDefault: Decision?,
     private val exitDecision: Decision,
     commonHandler: Handler,
-    override val allowedKinds: Set<UpdateKind<*>>?,
+    override val allowedKinds: Set<UpdKind>?,
 ) : Handler {
 
     private val ach = commonHandler.real()

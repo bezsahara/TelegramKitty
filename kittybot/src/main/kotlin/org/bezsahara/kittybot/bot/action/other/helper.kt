@@ -2,7 +2,7 @@
 
 package org.bezsahara.kittybot.bot.action.other
 
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.telegramUpdateKinds
 
 inline fun <T> MutableList<T>.replaceLast(block: (T) -> T): T {
@@ -23,7 +23,7 @@ internal inline fun <reified T> createArrayOfUKSize(): Array<T?> {
     return arrayOfNulls(telegramUpdateKinds.size)
 }
 
-internal fun createBoolUpdateKindArray(ofKinds: Collection<UpdateKind<*>>): BooleanArray {
+internal fun createBoolUpdateKindArray(ofKinds: Collection<UpdKind>): BooleanArray {
     val array = createBoolUpdateKindArray()
     ofKinds.forEach { updateKind ->
         array[updateKind.ordinal] = true

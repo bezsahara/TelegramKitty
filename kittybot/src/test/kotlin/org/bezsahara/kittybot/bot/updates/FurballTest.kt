@@ -7,11 +7,12 @@ import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
+import org.bezsahara.kittybot.bot.updates.furballs.Furball
 import org.bezsahara.kittybot.telegram.classes.chat.Chat
 import org.bezsahara.kittybot.telegram.classes.core.update.EditedMessageUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.message.Message
 import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.client.CustomClient
@@ -106,7 +107,7 @@ class FurballTest {
         }
 
         try {
-            block(config.updater)
+            block(config.furball)
         } finally {
             config.supervisorJob.cancel()
             config.close()
@@ -114,7 +115,7 @@ class FurballTest {
     }
 
     private class RecordingHandler(
-        override val allowedKinds: Set<UpdateKind<*>>?,
+        override val allowedKinds: Set<UpdKind>?,
         private val action: suspend (Update) -> Decision,
     ) : Handler {
         override suspend fun handleUpdate(
@@ -128,7 +129,7 @@ class FurballTest {
 
     private class AnchorHandler : Handler {
         override val identity: HandlerIdentity = HandlerIdentity.createNew()
-        override val allowedKinds: Set<UpdateKind<*>> = emptySet()
+        override val allowedKinds: Set<UpdKind> = emptySet()
 
         override suspend fun handleUpdate(
             update: Update,

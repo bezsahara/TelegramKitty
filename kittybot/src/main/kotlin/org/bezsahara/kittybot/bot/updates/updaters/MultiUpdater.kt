@@ -1,21 +1,16 @@
-package org.bezsahara.kittybot.bot.updates
+package org.bezsahara.kittybot.bot.updates.updaters
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
-import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
 import org.bezsahara.kittybot.bot.errors.KittyError
+import org.bezsahara.kittybot.bot.updates.FurballConfig
+import org.bezsahara.kittybot.bot.updates.furballs.Furball
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.utils.forList
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.function.Function
 import kotlin.math.min
 
 fun interface MultiIdentity {
@@ -40,21 +35,13 @@ fun interface MultiIdentity {
 // While processing identities in parallel
 @OptIn(DelicateCoroutinesApi::class)
 internal class MultiUpdater(
-    bot: KittyBot,
-    botDispatchers: FelineDispatcher,
     private val channel: Channel<Update>,
     private val scope: CoroutineScope,
     private val identity: MultiIdentity,
     private val parallelism: Int,
-    errorHandler: HandlerErrorHandler,
-    furballConfig: FurballConfig
-) : Furball(
-    bot,
-    botDispatchers,
-    errorHandler,
-    furballConfig,
-    channel
-) {
+    furballConfig: FurballConfig,
+    private val furball: Furball
+) : Updater {
     private val shards = if (furballConfig.multiUpdaterUseMap)
         ShardsMap.HashMap(furballConfig.multiUpdaterMapLimit) else ShardsMap.ArrayMap.fromParallelism(parallelism)
     private val ready = Channel<Any>(1024)
@@ -81,7 +68,7 @@ internal class MultiUpdater(
             val shard = ready.receive()
 
             if (shard.javaClass !== Shard::class.java) {
-                applyHandlers(shard as Update)
+                furball.applyHandlers(shard as Update)
                 shards.registerEnd()
                 continue
             }
@@ -89,7 +76,7 @@ internal class MultiUpdater(
             val q = (shard as Shard).queue
             while (true) {
                 val update = q.poll() ?: break
-                applyHandlers(update)
+                furball.applyHandlers(update)
                 shards.registerEnd()
             }
 
@@ -271,7 +258,7 @@ internal sealed class ShardsMap {
             private const val MAINTENANCE_IDLE_STARTS = 32
             private const val FORCE_CLEAN_WAIT_MS = 30_000L
 
-            private val mutexFun = java.util.function.Function<Any, ShardEntry> { ShardEntry() }
+            private val mutexFun = Function<Any, ShardEntry> { ShardEntry() }
 
             private fun forcedBound(bound: Int): Int = scale(bound, 3, 2)
 

@@ -1,16 +1,10 @@
 package org.bezsahara.kittybot.bot.action.other
 
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.dispatchers.Decision
-import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
-import org.bezsahara.kittybot.bot.dispatchers.Handler
+import org.bezsahara.kittybot.bot.dispatchers.*
 import org.bezsahara.kittybot.bot.updates.HandlerContext
-import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
-import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.TransparentHandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.ensureHasIdentity
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 
 inline fun HandlerStore.guardHandler(noinline check: (Update, HandlerContext) -> Boolean, builder: TransparentHandlerStore.() -> Unit) {
@@ -21,12 +15,12 @@ class GuardHandlerBuilder(
     val check: (Update, HandlerContext) -> Boolean,
     val original: HandlerStore
 ) : TransparentHandlerStore {
-    private val handlers = arrayListOf<Handler>()
+    private val handlers = FreeRef(arrayListOf<Handler>())
 
     override val felineDispatcher: FelineDispatcher
         get() = original.felineDispatcher
 
-    private var allowedKinds: HashSet<UpdateKind<*>>? = hashSetOf()
+    private var allowedKinds: HashSet<UpdKind>? = hashSetOf()
 
     override fun addHandler(handler: Handler) {
         val ak = handler.allowedKinds
@@ -35,10 +29,11 @@ class GuardHandlerBuilder(
         } else {
             allowedKinds?.addAll(ak)
         }
-        handlers.add(handler)
+        handlers.get().add(handler)
     }
 
     fun build() {
+        val handlers = handlers.get()
         if (handlers.isEmpty()) {
             return
         }
@@ -51,13 +46,14 @@ class GuardHandlerBuilder(
 
         original.addHandler(ao)
         handlers.forEach { original.addHandler(it) }
+        this.handlers.free()
     }
 }
 
 class GuardHandlerStart(
     private val check: (Update, HandlerContext) -> Boolean,
     endIdentity: HandlerIdentity,
-    override val allowedKinds: HashSet<UpdateKind<*>>?
+    override val allowedKinds: HashSet<UpdKind>?
 ): Handler {
     private val endIdentity = Decision.AfterNextTo(endIdentity, true)
 

@@ -5,12 +5,12 @@ import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.updates.HandlerContext
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 
 fun HandlerStore.replayUpdates(
-    allowedKinds: Set<UpdateKind<*>>? = null,
+    allowedKinds: Set<UpdKind>? = null,
     replayBlock: (Update, HandlerContext) -> Update?,
 ) {
     addHandler(ReplayUpd(allowedKinds, replayBlock))
@@ -18,7 +18,7 @@ fun HandlerStore.replayUpdates(
 
 
 class ReplayUpd(
-    override val allowedKinds: Set<UpdateKind<*>>?,
+    override val allowedKinds: Set<UpdKind>?,
     private val replayBlock: (Update, HandlerContext) -> Update?,
 ) : Handler {
     override suspend fun handleUpdate(

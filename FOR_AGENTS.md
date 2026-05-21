@@ -78,7 +78,7 @@ import org.bezsahara.kittybot.bot.builder.pollingTimeout
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.y.command
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.chatId
-import org.bezsahara.kittybot.bot.updates.MultiIdentity
+import org.bezsahara.kittybot.bot.updates.updaters.MultiIdentity
 import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
 import org.bezsahara.kittybot.telegram.classes.core.update.CallbackQueryUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
@@ -208,6 +208,9 @@ Built-in `MultiIdentity` choices:
 Use thread-safe state such as `ConcurrentHashMap` when `MultiThread` can run
 different updates at the same time.
 
+`MultiIdentity` now lives in
+`org.bezsahara.kittybot.bot.updates.updaters.MultiIdentity`.
+
 ### Dispatcher Runtime Configuration
 
 `furballConfig` controls safety limits and a few internal dispatch strategies.
@@ -247,6 +250,24 @@ Runtime config notes:
 `botContext` is a bot-level `TypeAwareMap` available during setup and runtime.
 It is intended for framework-level integrations. For values that belong only to
 one update, use `HandlerContext` instead.
+
+### Update Visitor Mode
+
+`dispatchers { ... }` can be replaced with `useUpdatesVisitor(...)` when a bot
+wants one visitor object with typed `onMessageUpdate`, `onCallbackQueryUpdate`,
+and similar methods. Visitor mode is mutually exclusive with `dispatchers { ... }`.
+
+```kotlin
+import org.bezsahara.kittybot.bot.KittyBot
+import org.bezsahara.kittybot.bot.updates.furballs.UpdateVisitor
+import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+
+useUpdatesVisitor(object : UpdateVisitor() {
+    override suspend fun onMessageUpdate(bot: KittyBot, update: MessageUpdate) {
+        // ...
+    }
+})
+```
 
 ### Client Configuration
 
@@ -355,7 +376,7 @@ The low-level handler interface is:
 ```kotlin
 fun interface Handler {
     val identity: HandlerIdentity? get() = null
-    val allowedKinds: Set<UpdateKind<*>>? get() = null
+    val allowedKinds: Set<UpdKind>? get() = null
 
     suspend fun handleUpdate(
         update: Update,
@@ -378,9 +399,14 @@ Important rules:
 - For raw handlers, always specify `allowedKinds` when possible. It lets the
   dispatcher skip irrelevant handlers without calling them.
 
-The dispatcher precomputes jump tables by `UpdateKind`. For `Decision.Next`, it
+The dispatcher precomputes jump tables by `UpdKind`. For `Decision.Next`, it
 jumps directly to the next handler that accepts the current update kind. This is
 why correct `allowedKinds` matter for speed.
+
+`UpdateKind<T>` used to be generic. New code should import and use `UpdKind`
+instead, for example `Set<UpdKind>`. `UpdateKind<T>` remains only as a deprecated
+compatibility typealias, and the old top-level `toSet()` helper is also
+deprecated; prefer `MessageUpdate.toSet()` or `setOf(MessageUpdate)`.
 
 ### Handler Identity
 
@@ -397,13 +423,13 @@ import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.chat.toChatId
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 
 val targetIdentity = HandlerIdentity.createNew()
 
 val gate = object : Handler {
-    override val allowedKinds: Set<UpdateKind<*>> = setOf(MessageUpdate)
+    override val allowedKinds: Set<UpdKind> = setOf(MessageUpdate)
 
     override suspend fun handleUpdate(
         update: Update,
@@ -421,7 +447,7 @@ val gate = object : Handler {
 
 val target = object : Handler {
     override val identity: HandlerIdentity = targetIdentity
-    override val allowedKinds: Set<UpdateKind<*>> = setOf(MessageUpdate)
+    override val allowedKinds: Set<UpdKind> = setOf(MessageUpdate)
 
     override suspend fun handleUpdate(
         update: Update,
@@ -445,7 +471,7 @@ Duplicate identities are rejected at startup unless
 ### Update Kinds And Update Subtypes
 
 `Update` is a sealed class with one concrete subtype per Telegram update field.
-Each subtype has a companion object that is also its `UpdateKind`. For example,
+Each subtype has a companion object that is also its `UpdKind`. For example,
 `MessageUpdate` is both the class name and the update-kind object used in
 `setOf(MessageUpdate)`.
 
@@ -1034,14 +1060,14 @@ Use dynamic handlers when handlers must be added or removed while the bot is
 running.
 
 ```kotlin
-import org.bezsahara.kittybot.bot.action.dyn.createDynamicHandlerRegistry
+import org.bezsahara.kittybot.bot.action.dyn.createDynamicHandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.telegram.classes.core.update.asMessageUpdateOrNull
 
 fun FelineDispatcher.dynamicExample() {
-    val registry = createDynamicHandlerRegistry()
+    val registry = createDynamicHandlerStore()
 
     val handler = Handler { update, bot, _ ->
         val message = update.asMessageUpdateOrNull()?.message
@@ -1060,6 +1086,8 @@ fun FelineDispatcher.dynamicExample() {
 
 The registry publishes immutable snapshots for readers, so add/remove operations
 are safe while updates are being handled.
+`collectAndAdd { ... }` is available when a setup block should return the exact
+handlers it added so they can be removed later with `removeHandlers(...)`.
 
 ### Filters And Control Helpers
 

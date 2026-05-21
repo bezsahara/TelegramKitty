@@ -11,10 +11,12 @@ import org.bezsahara.kittybot.bot.builder.UpdaterMode
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
+import org.bezsahara.kittybot.bot.updates.updaters.MultiIdentity
+import org.bezsahara.kittybot.bot.updates.updaters.ShardsMap
 import org.bezsahara.kittybot.telegram.classes.chat.Chat
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
+import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.core.update.UpdateKind
 import org.bezsahara.kittybot.telegram.classes.message.Message
 import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.client.CustomClient
@@ -295,7 +297,7 @@ class MultiUpdaterTest {
         val maxActive = AtomicInteger()
 
         val handler = object : Handler {
-            override val allowedKinds: Set<UpdateKind<*>> = setOf(MessageUpdate)
+            override val allowedKinds: Set<UpdKind> = setOf(MessageUpdate)
 
             override suspend fun handleUpdate(
                 update: Update,
