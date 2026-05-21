@@ -1,13 +1,9 @@
 package org.bezsahara.kittybot.telegram.client.file
 
-import io.vertx.core.buffer.Buffer
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import org.bezsahara.kittybot.telegram.client.CustomRequest
-import java.util.UUID
-import kotlin.coroutines.CoroutineContext
+import java.util.*
 
 fun createBoundary(): String {
     return "----kitty-${UUID.randomUUID()}"

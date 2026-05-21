@@ -1,7 +1,5 @@
 package org.bezsahara.kittybot.telegram.utils
 
-import kotlin.ByteArray
-
 
 object TBytesInfo {
     @JvmField val accepted_gift_types: ByteArray = "accepted_gift_types".toByteArray()

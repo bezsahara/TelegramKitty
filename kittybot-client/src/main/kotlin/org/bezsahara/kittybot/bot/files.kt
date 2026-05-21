@@ -75,7 +75,7 @@ fun KittyBot.vertxClient(reason: String): TApiClient {
     val jc = javaClass
     return when {
         jc === TApiClient::class.java -> this as TApiClient
-        jc === DelegatingKittyBot::class.java -> (DKBMh.mh.invokeExact((this as DelegatingKittyBot)) as KittyBot).vertxClient(reason)
+        this is DelegatingKittyBot -> (DKBMh.mh.invokeExact((this as DelegatingKittyBot)) as KittyBot).vertxClient(reason)
         jc === TConsumeBot::class.java -> (this as TConsumeBot).delegate.vertxClient(reason)
         else -> hiss(reason)
     }

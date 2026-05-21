@@ -1,18 +1,8 @@
 package org.bezsahara.kittybot.telegram.utils
 
 import org.bezsahara.kittybot.bot.KittyBot
-import org.bezsahara.kittybot.bot.json.jsonInstance
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommand
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllChatAdministrators
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllGroupChats
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeAllPrivateChats
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeChat
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeChatAdministrators
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeChatMember
+import org.bezsahara.kittybot.telegram.classes.bot.*
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
-import kotlin.collections.component1
-import kotlin.collections.component2
 
 
 /**

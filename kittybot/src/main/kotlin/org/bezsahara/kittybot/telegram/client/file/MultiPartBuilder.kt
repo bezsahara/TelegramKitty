@@ -4,13 +4,9 @@ import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.file.OpenOptions
 import io.vertx.core.http.HttpClientRequest
-import io.vertx.kotlin.coroutines.coAwait
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import java.io.File
-import java.nio.file.OpenOption
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 

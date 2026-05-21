@@ -1,12 +1,6 @@
 package org.bezsahara.kittybot.telegram.client.jclient
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.future.asDeferred
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.bezsahara.kittybot.telegram.client.CustomClient
 import org.bezsahara.kittybot.telegram.client.CustomRequest
 import org.bezsahara.kittybot.telegram.client.CustomResponse

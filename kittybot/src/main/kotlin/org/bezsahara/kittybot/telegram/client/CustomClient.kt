@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.net.URI
-import java.nio.charset.Charset
 
 /**
  * SPI for plugging a custom HTTP engine into [TCustomClient].
