@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.telegram.client
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.bot.action.other.withStartOf
 
 @Serializable
 data class Ok<T>(
@@ -24,6 +25,14 @@ data class TelegramError(
 
     fun botWasBlocked(): Boolean {
         return description == "Forbidden: bot was blocked by the user"
+    }
+
+    fun tooManyRequests(): Boolean {
+        return description.withStartOf("Too Many Requests: retry after")
+    }
+
+    fun fileTooBig(): Boolean {
+        return description == "Bad Request: file is too big"
     }
 
     companion object {
