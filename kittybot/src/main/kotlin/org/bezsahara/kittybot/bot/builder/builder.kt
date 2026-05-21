@@ -212,10 +212,10 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
         when (this.usingDispatchers) {
             null -> this.usingDispatchers = usingDispatchers
             true -> if (!usingDispatchers) {
-                throw KittyError("You are already using a visitor. You cannot use both visitor and dispatchers pattern.")
+                throw KittyError("You are already using dispatchers. You cannot use both visitor and dispatchers pattern.")
             }
             false -> if (usingDispatchers) {
-                throw KittyError("You are already using dispatchers. You cannot use both visitor and dispatchers pattern.")
+                throw KittyError("You are already using a visitor. You cannot use both visitor and dispatchers pattern.")
             }
         }
     }
