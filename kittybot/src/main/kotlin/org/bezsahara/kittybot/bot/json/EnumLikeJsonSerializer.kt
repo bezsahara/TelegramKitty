@@ -1,14 +1,12 @@
 package org.bezsahara.kittybot.bot.json
 
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import org.bezsahara.kittybot.bot.errors.KittyException
-import java.util.EnumMap
 
 abstract class EnumLike<E: Enum<*>> {
     abstract val value: String

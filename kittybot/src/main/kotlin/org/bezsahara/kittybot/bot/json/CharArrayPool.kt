@@ -1,8 +1,5 @@
 package org.bezsahara.kittybot.bot.json
 
-import java.util.concurrent.ConcurrentLinkedQueue
-import kotlin.math.max
-
 
 object CharArrayPool {
     private val map = ThreadLocal.withInitial { CharArray(MIN_ARRAY_SIZE) }!!
