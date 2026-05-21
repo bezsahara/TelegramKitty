@@ -11,7 +11,7 @@ abstract class SyntheticUpdate() : Update() {
     override val updateId: Long
         get() = 0
 
-    companion object : UpdateKind<SyntheticUpdate>(25, SyntheticUpdate::class.java, "SyntheticUpdate")
+    companion object : UpdKind(25, SyntheticUpdate::class.java, "SyntheticUpdate")
 }
 
 // An Update kind for Grouped Media messages

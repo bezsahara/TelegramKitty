@@ -1,14 +1,12 @@
 package org.bezsahara.kittybot.telegram.classes.message.polls
 
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
-import org.bezsahara.kittybot.telegram.client.file.CustomMPB
-import org.bezsahara.kittybot.telegram.values.ParseMode
-import kotlin.Unit
-import org.bezsahara.kittybot.telegram.classes.input.InputPollOptionMedia
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.input.InputPollOptionMedia
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
+import org.bezsahara.kittybot.telegram.client.file.CustomMPB
+import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
+import org.bezsahara.kittybot.telegram.values.ParseMode
 
 
 /**

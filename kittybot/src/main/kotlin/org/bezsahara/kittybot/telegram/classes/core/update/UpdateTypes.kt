@@ -5,19 +5,8 @@ import org.bezsahara.kittybot.telegram.classes.business.BusinessMessagesDeleted
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 import org.bezsahara.kittybot.telegram.classes.chat.ChatJoinRequest
 import org.bezsahara.kittybot.telegram.classes.chat.ChatMemberUpdated
-import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostSource
-import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostSourceGiftCode
-import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostSourceGiveaway
-import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostSourcePremium
-import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostRemoved
-import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoostUpdated
-import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
-import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberAdministrator
-import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberBanned
-import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberLeft
-import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberMember
-import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberOwner
-import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMemberRestricted
+import org.bezsahara.kittybot.telegram.classes.chat.boosts.*
+import org.bezsahara.kittybot.telegram.classes.chat.member.*
 import org.bezsahara.kittybot.telegram.classes.chat.toChatId
 import org.bezsahara.kittybot.telegram.classes.core.ManagedBotUpdated
 import org.bezsahara.kittybot.telegram.classes.inline.CallbackQuery
@@ -32,7 +21,7 @@ import org.bezsahara.kittybot.telegram.classes.payments.PaidMediaPurchased
 import org.bezsahara.kittybot.telegram.classes.payments.PreCheckoutQuery
 import org.bezsahara.kittybot.telegram.classes.payments.ShippingQuery
 
-val telegramUpdateKinds: Set<UpdateKind<*>> = setOf(
+val telegramUpdateKinds: Set<UpdKind> = setOf(
     MessageUpdate,
     EditedMessageUpdate,
     ChannelPostUpdate,
@@ -61,10 +50,6 @@ val telegramUpdateKinds: Set<UpdateKind<*>> = setOf(
     SyntheticUpdate
 )
 
-fun UpdateKind<out Update>.toSet(): Set<UpdateKind<out Update>> = setOf(this)
-
-
-
 /**
  * This object represents an incoming update containing a new message.
  *
@@ -78,7 +63,7 @@ data class MessageUpdate(
     override fun chatIdOrNull(): ChatId = message.chat.id.toChatId()
     override fun userIdOrNull(): ChatId? = message.userIdOrNull()
 
-    companion object : UpdateKind<MessageUpdate>(
+    companion object : UpdKind(
         0, MessageUpdate::class.java,
         "message"
     )
@@ -100,7 +85,7 @@ data class EditedMessageUpdate(
     override fun chatIdOrNull(): ChatId = editedMessage.chat.id.toChatId()
     override fun userIdOrNull(): ChatId? = editedMessage.userIdOrNull()
 
-    companion object : UpdateKind<EditedMessageUpdate>(
+    companion object : UpdKind(
         1, EditedMessageUpdate::class.java,
         "edited_message"
     )
@@ -119,7 +104,7 @@ data class ChannelPostUpdate(
     override fun chatIdOrNull(): ChatId = channelPost.chat.id.toChatId()
     override fun userIdOrNull(): ChatId? = channelPost.userIdOrNull()
 
-    companion object : UpdateKind<ChannelPostUpdate>(
+    companion object : UpdKind(
         2, ChannelPostUpdate::class.java,
         "channel_post"
     )
@@ -140,7 +125,7 @@ data class EditedChannelPostUpdate(
     override fun chatIdOrNull(): ChatId = editedChannelPost.chat.id.toChatId()
     override fun userIdOrNull(): ChatId? = editedChannelPost.userIdOrNull()
 
-    companion object : UpdateKind<EditedChannelPostUpdate>(
+    companion object : UpdKind(
         3, EditedChannelPostUpdate::class.java,
         "edited_channel_post"
     )
@@ -160,7 +145,7 @@ data class BusinessConnectionUpdate(
     override fun chatIdOrNull(): ChatId = businessConnection.userChatId.toChatId()
     override fun userIdOrNull(): ChatId = businessConnection.user.id.toChatId()
 
-    companion object : UpdateKind<BusinessConnectionUpdate>(
+    companion object : UpdKind(
         4, BusinessConnectionUpdate::class.java,
         "business_connection"
     )
@@ -179,7 +164,7 @@ data class BusinessMessageUpdate(
     override fun chatIdOrNull(): ChatId = businessMessage.chat.id.toChatId()
     override fun userIdOrNull(): ChatId? = businessMessage.userIdOrNull()
 
-    companion object : UpdateKind<BusinessMessageUpdate>(
+    companion object : UpdKind(
         5, BusinessMessageUpdate::class.java,
         "business_message"
     )
@@ -198,7 +183,7 @@ data class EditedBusinessMessageUpdate(
     override fun chatIdOrNull(): ChatId = editedBusinessMessage.chat.id.toChatId()
     override fun userIdOrNull(): ChatId? = editedBusinessMessage.userIdOrNull()
 
-    companion object : UpdateKind<EditedBusinessMessageUpdate>(
+    companion object : UpdKind(
         6, EditedBusinessMessageUpdate::class.java,
         "edited_business_message"
     )
@@ -217,7 +202,7 @@ data class DeletedBusinessMessagesUpdate(
     override fun chatIdOrNull(): ChatId = deletedBusinessMessages.chat.id.toChatId()
     override fun userIdOrNull(): ChatId? = null
 
-    companion object : UpdateKind<DeletedBusinessMessagesUpdate>(
+    companion object : UpdKind(
         7, DeletedBusinessMessagesUpdate::class.java,
         "deleted_business_messages"
     )
@@ -239,7 +224,7 @@ data class MessageReactionUpdate(
     override fun chatIdOrNull(): ChatId = messageReaction.chat.id.toChatId()
     override fun userIdOrNull(): ChatId? = messageReaction.user?.id?.toChatId()
 
-    companion object : UpdateKind<MessageReactionUpdate>(
+    companion object : UpdKind(
         8, MessageReactionUpdate::class.java,
         "message_reaction"
     )
@@ -261,7 +246,7 @@ data class MessageReactionCountUpdate(
     override fun chatIdOrNull(): ChatId = messageReactionCount.chat.id.toChatId()
     override fun userIdOrNull(): ChatId? = null
 
-    companion object : UpdateKind<MessageReactionCountUpdate>(
+    companion object : UpdKind(
         9, MessageReactionCountUpdate::class.java,
         "message_reaction_count"
     )
@@ -280,7 +265,7 @@ data class InlineQueryUpdate(
     override fun chatIdOrNull(): ChatId? = null
     override fun userIdOrNull(): ChatId = inlineQuery.from.id.toChatId()
 
-    companion object : UpdateKind<InlineQueryUpdate>(
+    companion object : UpdKind(
         10, InlineQueryUpdate::class.java,
         "inline_query"
     )
@@ -300,7 +285,7 @@ data class ChosenInlineResultUpdate(
     override fun chatIdOrNull(): ChatId? = null
     override fun userIdOrNull(): ChatId = chosenInlineResult.from.id.toChatId()
 
-    companion object : UpdateKind<ChosenInlineResultUpdate>(
+    companion object : UpdKind(
         11, ChosenInlineResultUpdate::class.java,
         "chosen_inline_result"
     )
@@ -319,7 +304,7 @@ data class CallbackQueryUpdate(
     override fun chatIdOrNull(): ChatId? = callbackQuery.message?.chat?.id?.toChatId()
     override fun userIdOrNull(): ChatId = callbackQuery.from.id.toChatId()
 
-    companion object : UpdateKind<CallbackQueryUpdate>(
+    companion object : UpdKind(
         12, CallbackQueryUpdate::class.java,
         "callback_query"
     )
@@ -338,7 +323,7 @@ data class ShippingQueryUpdate(
     override fun chatIdOrNull(): ChatId? = null
     override fun userIdOrNull(): ChatId = shippingQuery.from.id.toChatId()
 
-    companion object : UpdateKind<ShippingQueryUpdate>(
+    companion object : UpdKind(
         13, ShippingQueryUpdate::class.java,
         "shipping_query"
     )
@@ -357,7 +342,7 @@ data class PreCheckoutQueryUpdate(
     override fun chatIdOrNull(): ChatId? = null
     override fun userIdOrNull(): ChatId = preCheckoutQuery.from.id.toChatId()
 
-    companion object : UpdateKind<PreCheckoutQueryUpdate>(
+    companion object : UpdKind(
         14, PreCheckoutQueryUpdate::class.java,
         "pre_checkout_query"
     )
@@ -372,7 +357,7 @@ data class PaidMediaPurchasedUpdate(
     override fun chatIdOrNull(): ChatId? = null
     override fun userIdOrNull(): ChatId = purchasedPaidMedia.from.id.toChatId()
 
-    companion object : UpdateKind<PaidMediaPurchasedUpdate>(
+    companion object : UpdKind(
         15, PaidMediaPurchasedUpdate::class.java,
         "purchased_paid_media"
     )
@@ -392,7 +377,7 @@ data class PollUpdate(
     override fun chatIdOrNull(): ChatId? = null
     override fun userIdOrNull(): ChatId? = null
 
-    companion object : UpdateKind<PollUpdate>(
+    companion object : UpdKind(
         16, PollUpdate::class.java,
         "poll"
     )
@@ -412,7 +397,7 @@ data class PollAnswerUpdate(
     override fun chatIdOrNull(): ChatId? = pollAnswer.voterChat?.id?.toChatId()
     override fun userIdOrNull(): ChatId? = pollAnswer.user?.id?.toChatId()
 
-    companion object : UpdateKind<PollAnswerUpdate>(
+    companion object : UpdKind(
         17, PollAnswerUpdate::class.java,
         "poll_answer"
     )
@@ -432,7 +417,7 @@ data class MyChatMemberUpdate(
     override fun chatIdOrNull(): ChatId = myChatMember.chat.id.toChatId()
     override fun userIdOrNull(): ChatId = myChatMember.newChatMember.userId()
 
-    companion object : UpdateKind<MyChatMemberUpdate>(
+    companion object : UpdKind(
         18, MyChatMemberUpdate::class.java,
         "my_chat_member"
     )
@@ -453,7 +438,7 @@ data class ChatMemberUpdate(
     override fun chatIdOrNull(): ChatId = chatMember.chat.id.toChatId()
     override fun userIdOrNull(): ChatId = chatMember.newChatMember.userId()
 
-    companion object : UpdateKind<ChatMemberUpdate>(
+    companion object : UpdKind(
         19, ChatMemberUpdate::class.java,
         "chat_member"
     )
@@ -473,7 +458,7 @@ data class ChatJoinRequestUpdate(
     override fun chatIdOrNull(): ChatId = chatJoinRequest.chat.id.toChatId()
     override fun userIdOrNull(): ChatId = chatJoinRequest.from.id.toChatId()
 
-    companion object : UpdateKind<ChatJoinRequestUpdate>(
+    companion object : UpdKind(
         20, ChatJoinRequestUpdate::class.java,
         "chat_join_request"
     )
@@ -493,7 +478,7 @@ data class ChatBoostUpdate(
     override fun chatIdOrNull(): ChatId = chatBoost.chat.id.toChatId()
     override fun userIdOrNull(): ChatId? = chatBoost.boost.source.userIdOrNull()
 
-    companion object : UpdateKind<ChatBoostUpdate>(
+    companion object : UpdKind(
         21, ChatBoostUpdate::class.java,
         "chat_boost"
     )
@@ -513,13 +498,11 @@ data class RemovedChatBoostUpdate(
     override fun chatIdOrNull(): ChatId = removedChatBoost.chat.id.toChatId()
     override fun userIdOrNull(): ChatId? = removedChatBoost.source.userIdOrNull()
 
-    companion object : UpdateKind<RemovedChatBoostUpdate>(
+    companion object : UpdKind(
         22, RemovedChatBoostUpdate::class.java,
         "removed_chat_boost"
     )
 }
-
-
 
 data class ManagedBotUpdate(
     override val updateId: Long,
@@ -530,7 +513,7 @@ data class ManagedBotUpdate(
     override fun chatIdOrNull(): ChatId = managedBot.bot.id.toChatId()
     override fun userIdOrNull(): ChatId = managedBot.bot.id.toChatId()
 
-    companion object : UpdateKind<ManagedBotUpdate>(
+    companion object : UpdKind(
         23, ManagedBotUpdate::class.java,
         "managed_bot"
     )

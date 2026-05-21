@@ -1,6 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.media.story
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.Chat
 

@@ -1,9 +1,9 @@
 package org.bezsahara.kittybot.telegram.values
 
-import org.bezsahara.kittybot.bot.json.ResolveEnumLike
+import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.bot.json.EnumLike
 import org.bezsahara.kittybot.bot.json.EnumLikeJsonSerializer
-import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.bot.json.ResolveEnumLike
 
 
 /**

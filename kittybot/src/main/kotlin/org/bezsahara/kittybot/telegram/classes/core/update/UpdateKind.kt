@@ -9,12 +9,21 @@ package org.bezsahara.kittybot.telegram.classes.core.update
  * @see CallbackQueryUpdate
  * @see PreCheckoutQueryUpdate
  */
-sealed class UpdateKind<T>(
+sealed class UpdKind(
     @JvmField val ordinal: Int,
-    @JvmField val clazz: Class<T>,
+    @JvmField val clazz: Class<out Update>,
     @JvmField val name: String
 ) {
+    fun toSet(): Set<UpdKind> = setOf(this)
+
     override fun toString(): String {
         return "UpdateKind($name)"
     }
 }
+
+@Deprecated("Use UpdKind instead without type param", ReplaceWith("UpdKind"))
+typealias UpdateKind<T> = UpdKind
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+@Deprecated("Use UpdKind.toSet() instead", ReplaceWith("this.toSet()"))
+fun UpdKind.toSet(): Set<UpdKind> = setOf(this)

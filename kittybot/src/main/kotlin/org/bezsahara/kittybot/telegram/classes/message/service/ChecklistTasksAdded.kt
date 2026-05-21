@@ -1,10 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.message.service
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.message.Message
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.classes.message.checklists.ChecklistTask
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.message.Message
+import org.bezsahara.kittybot.telegram.classes.message.checklists.ChecklistTask
 
 
 /**

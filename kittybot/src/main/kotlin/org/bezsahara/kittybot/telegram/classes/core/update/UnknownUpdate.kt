@@ -25,7 +25,7 @@ data class UnknownUpdate(
         return jsonObject.toString()
     }
 
-    companion object : UpdateKind<UnknownUpdate>(
+    companion object : UpdKind(
         24, UnknownUpdate::class.java, "UnknownUpdate"
     )
 }

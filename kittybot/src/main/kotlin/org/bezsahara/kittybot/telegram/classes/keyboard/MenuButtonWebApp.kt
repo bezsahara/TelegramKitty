@@ -1,9 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.keyboard
 
-import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButton
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
 
 
 /**

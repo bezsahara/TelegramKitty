@@ -1,8 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.keyboard
 
-import org.bezsahara.kittybot.telegram.classes.keyboard.SharedUser
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
 import kotlinx.serialization.Serializable
 
 

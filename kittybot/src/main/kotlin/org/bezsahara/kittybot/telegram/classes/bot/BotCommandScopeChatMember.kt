@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.bot
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 

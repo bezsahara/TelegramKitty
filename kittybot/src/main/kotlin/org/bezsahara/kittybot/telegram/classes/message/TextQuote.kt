@@ -1,9 +1,7 @@
 package org.bezsahara.kittybot.telegram.classes.message
 
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 
 
 /**

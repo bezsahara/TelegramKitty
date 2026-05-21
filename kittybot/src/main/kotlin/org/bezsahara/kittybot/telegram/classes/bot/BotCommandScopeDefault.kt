@@ -1,12 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.bot
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import org.bezsahara.kittybot.bot.json.PureJsonSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.json.JsonPrimitive
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
-import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScopeDefault
-import kotlinx.serialization.Serializable
 
 
 /**

@@ -1,10 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.inline
 
-import org.bezsahara.kittybot.telegram.classes.inline.InputMessageContent
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResult
 
 
 /**

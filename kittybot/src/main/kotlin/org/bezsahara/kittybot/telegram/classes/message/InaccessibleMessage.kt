@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.message
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.message.MaybeInaccessibleMessage
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.Chat
 
@@ -18,7 +17,7 @@ import org.bezsahara.kittybot.telegram.classes.chat.Chat
 @Serializable
 data class InaccessibleMessage(
     override val chat: Chat,
-    @SerialName("message_id") val messageId: Long,
-    val date: Long
+    @SerialName("message_id") override val messageId: Long,
+    override val date: Long
 ) : MaybeInaccessibleMessage
 

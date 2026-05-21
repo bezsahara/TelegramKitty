@@ -1,8 +1,7 @@
 package org.bezsahara.kittybot.telegram.classes.business
 
-import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 
 
 /**

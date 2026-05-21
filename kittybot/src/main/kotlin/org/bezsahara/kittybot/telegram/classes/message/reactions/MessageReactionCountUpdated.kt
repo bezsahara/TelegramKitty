@@ -1,8 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.message.reactions
 
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionCount
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.Chat
 

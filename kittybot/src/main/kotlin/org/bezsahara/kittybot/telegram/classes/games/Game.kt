@@ -1,10 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.games
 
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
+import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.media.Animation
 import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
-import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 
 

@@ -1,9 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.keyboard
 
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
 
 
 /**

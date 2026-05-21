@@ -1,17 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.message.polls
 
-import org.bezsahara.kittybot.telegram.classes.media.Audio
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.classes.media.Document
-import org.bezsahara.kittybot.telegram.classes.media.Animation
-import org.bezsahara.kittybot.telegram.classes.media.Video
-import org.bezsahara.kittybot.telegram.classes.media.geo.Location
-import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
-import org.bezsahara.kittybot.telegram.classes.media.LivePhoto
-import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
-import org.bezsahara.kittybot.telegram.classes.media.geo.Venue
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.media.*
+import org.bezsahara.kittybot.telegram.classes.media.geo.Location
+import org.bezsahara.kittybot.telegram.classes.media.geo.Venue
+import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 
 
 /**

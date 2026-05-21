@@ -1,9 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.passport
 
-import kotlinx.serialization.SerialName
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.classes.passport.EncryptedCredentials
-import org.bezsahara.kittybot.telegram.classes.passport.EncryptedPassportElement
 import kotlinx.serialization.Serializable
 
 

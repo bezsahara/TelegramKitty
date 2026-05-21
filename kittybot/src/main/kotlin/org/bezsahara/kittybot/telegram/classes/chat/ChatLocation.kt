@@ -1,8 +1,7 @@
 package org.bezsahara.kittybot.telegram.classes.chat
 
-import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.media.geo.Location
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.media.geo.Location
 
 
 /**

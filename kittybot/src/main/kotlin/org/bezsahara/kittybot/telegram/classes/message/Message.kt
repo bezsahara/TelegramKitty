@@ -1,80 +1,35 @@
 package org.bezsahara.kittybot.telegram.classes.message
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.message.TextQuote
-import org.bezsahara.kittybot.telegram.classes.media.PaidMediaInfo
-import org.bezsahara.kittybot.telegram.classes.media.Animation
-import org.bezsahara.kittybot.telegram.classes.chat.ChatOwnerChanged
-import org.bezsahara.kittybot.telegram.classes.message.service.ChecklistTasksDone
-import org.bezsahara.kittybot.telegram.classes.message.service.MessageAutoDeleteTimerChanged
-import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
-import org.bezsahara.kittybot.telegram.classes.media.Voice
-import org.bezsahara.kittybot.telegram.classes.message.service.DirectMessagePriceChanged
-import org.bezsahara.kittybot.telegram.classes.passport.PassportData
-import org.bezsahara.kittybot.telegram.classes.message.service.ProximityAlertTriggered
-import org.bezsahara.kittybot.telegram.classes.message.service.ForumTopicReopened
-import org.bezsahara.kittybot.telegram.classes.message.SuggestedPostInfo
-import org.bezsahara.kittybot.telegram.classes.chat.background.ChatBackground
-import org.bezsahara.kittybot.telegram.classes.message.service.SuggestedPostRefunded
-import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.classes.payments.RefundedPayment
-import org.bezsahara.kittybot.telegram.classes.media.Contact
-import org.bezsahara.kittybot.telegram.classes.message.service.GiveawayCreated
-import org.bezsahara.kittybot.telegram.classes.message.Message
-import org.bezsahara.kittybot.telegram.classes.message.ExternalReplyInfo
-import org.bezsahara.kittybot.telegram.classes.message.service.ChatBoostAdded
-import org.bezsahara.kittybot.telegram.classes.message.service.SuggestedPostPaid
-import org.bezsahara.kittybot.telegram.classes.media.geo.Location
-import org.bezsahara.kittybot.telegram.classes.keyboard.ChatShared
+import org.bezsahara.kittybot.telegram.classes.chat.Chat
+import org.bezsahara.kittybot.telegram.classes.chat.ChatOwnerChanged
+import org.bezsahara.kittybot.telegram.classes.chat.ChatOwnerLeft
+import org.bezsahara.kittybot.telegram.classes.chat.DirectMessagesTopic
+import org.bezsahara.kittybot.telegram.classes.chat.background.ChatBackground
 import org.bezsahara.kittybot.telegram.classes.core.ManagedBotCreated
-import org.bezsahara.kittybot.telegram.classes.message.LinkPreviewOptions
-import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGiftInfo
-import org.bezsahara.kittybot.telegram.classes.message.MessageOrigin
+import org.bezsahara.kittybot.telegram.classes.games.Game
 import org.bezsahara.kittybot.telegram.classes.gifts.GiftInfo
-import org.bezsahara.kittybot.telegram.classes.message.service.GeneralForumTopicUnhidden
-import org.bezsahara.kittybot.telegram.classes.message.service.SuggestedPostApprovalFailed
-import org.bezsahara.kittybot.telegram.classes.message.service.SuggestedPostDeclined
-import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatScheduled
-import org.bezsahara.kittybot.telegram.classes.media.Video
-import org.bezsahara.kittybot.telegram.classes.media.Dice
-import org.bezsahara.kittybot.telegram.classes.message.service.ForumTopicCreated
-import org.bezsahara.kittybot.telegram.classes.message.polls.PollOptionAdded
-import org.bezsahara.kittybot.telegram.classes.message.checklists.Checklist
-import org.bezsahara.kittybot.telegram.classes.message.service.PaidMessagePriceChanged
-import org.bezsahara.kittybot.telegram.classes.message.service.ForumTopicClosed
-import org.bezsahara.kittybot.telegram.classes.message.service.Giveaway
+import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGiftInfo
+import org.bezsahara.kittybot.telegram.classes.keyboard.ChatShared
+import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
+import org.bezsahara.kittybot.telegram.classes.keyboard.UsersShared
+import org.bezsahara.kittybot.telegram.classes.media.*
+import org.bezsahara.kittybot.telegram.classes.media.geo.Location
+import org.bezsahara.kittybot.telegram.classes.media.geo.Venue
 import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 import org.bezsahara.kittybot.telegram.classes.media.story.Story
-import org.bezsahara.kittybot.telegram.classes.media.VideoNote
-import org.bezsahara.kittybot.telegram.classes.payments.Invoice
-import org.bezsahara.kittybot.telegram.classes.payments.SuccessfulPayment
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.classes.message.polls.PollOptionDeleted
-import org.bezsahara.kittybot.telegram.classes.chat.DirectMessagesTopic
-import org.bezsahara.kittybot.telegram.classes.message.MaybeInaccessibleMessage
-import org.bezsahara.kittybot.telegram.classes.chat.ChatOwnerLeft
-import org.bezsahara.kittybot.telegram.classes.message.service.SuggestedPostApproved
-import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
-import org.bezsahara.kittybot.telegram.classes.message.service.WriteAccessAllowed
-import org.bezsahara.kittybot.telegram.classes.webapp.WebAppData
-import org.bezsahara.kittybot.telegram.classes.keyboard.UsersShared
-import org.bezsahara.kittybot.telegram.classes.message.service.GiveawayWinners
-import org.bezsahara.kittybot.telegram.classes.games.Game
-import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatEnded
-import org.bezsahara.kittybot.telegram.classes.message.service.GeneralForumTopicHidden
-import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatStarted
-import org.bezsahara.kittybot.telegram.classes.media.geo.Venue
-import org.bezsahara.kittybot.telegram.classes.message.service.ForumTopicEdited
-import org.bezsahara.kittybot.telegram.classes.media.Audio
-import org.bezsahara.kittybot.telegram.classes.message.service.ChecklistTasksAdded
-import org.bezsahara.kittybot.telegram.classes.media.Document
+import org.bezsahara.kittybot.telegram.classes.message.checklists.Checklist
 import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
-import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
-import org.bezsahara.kittybot.telegram.classes.media.LivePhoto
-import org.bezsahara.kittybot.telegram.classes.message.service.GiveawayCompleted
-import org.bezsahara.kittybot.telegram.classes.chat.Chat
-import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticipantsInvited
+import org.bezsahara.kittybot.telegram.classes.message.polls.PollOptionAdded
+import org.bezsahara.kittybot.telegram.classes.message.polls.PollOptionDeleted
+import org.bezsahara.kittybot.telegram.classes.message.service.*
+import org.bezsahara.kittybot.telegram.classes.passport.PassportData
+import org.bezsahara.kittybot.telegram.classes.payments.Invoice
+import org.bezsahara.kittybot.telegram.classes.payments.RefundedPayment
+import org.bezsahara.kittybot.telegram.classes.payments.SuccessfulPayment
+import org.bezsahara.kittybot.telegram.classes.user.User
+import org.bezsahara.kittybot.telegram.classes.webapp.WebAppData
 
 
 /**
@@ -199,8 +154,8 @@ import org.bezsahara.kittybot.telegram.classes.message.service.VideoChatParticip
  */
 @Serializable
 data class Message(
-    @SerialName("message_id") val messageId: Long,
-    val date: Long,
+    @SerialName("message_id") override val messageId: Long,
+    override val date: Long,
     override val chat: Chat,
     @SerialName("message_thread_id") val messageThreadId: Long? = null,
     @SerialName("direct_messages_topic") val directMessagesTopic: DirectMessagesTopic? = null,

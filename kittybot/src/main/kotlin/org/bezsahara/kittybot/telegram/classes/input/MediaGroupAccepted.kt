@@ -1,9 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.input
 
-import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
-import org.bezsahara.kittybot.telegram.client.file.CustomMPB
-import kotlin.Unit
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.client.file.CustomMPB
+import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
 
 
 @Serializable

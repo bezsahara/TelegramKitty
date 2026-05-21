@@ -1,12 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.payments
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import org.bezsahara.kittybot.bot.json.PureJsonSerializer
-import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalStateFailed
-import org.bezsahara.kittybot.telegram.classes.payments.RevenueWithdrawalState
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.Serializable
 
 
 /**

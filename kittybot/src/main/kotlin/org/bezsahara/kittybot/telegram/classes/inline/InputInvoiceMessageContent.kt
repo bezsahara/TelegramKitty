@@ -1,11 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.inline
 
-import org.bezsahara.kittybot.telegram.classes.inline.InputMessageContent
-import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
+import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
 
 
 /**

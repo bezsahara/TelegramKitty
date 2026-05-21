@@ -1,11 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.inline
 
 import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
+import org.bezsahara.kittybot.bot.json.SealedJsonElementSerializer
 
-object InputMessageContentSerializer : JsonContentPolymorphicSerializer<InputMessageContent>(InputMessageContent::class) {
+object InputMessageContentSerializer : SealedJsonElementSerializer<InputMessageContent>(InputMessageContent::class) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<InputMessageContent> {
         val jsonObject = element.jsonObject
 

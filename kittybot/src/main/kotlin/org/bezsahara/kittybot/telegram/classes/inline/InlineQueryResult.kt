@@ -1,26 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.inline
 
-import kotlinx.serialization.json.jsonObject
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultMpeg4Gif
-import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultGif
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultPhoto
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultContact
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultCachedSticker
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultDocument
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultVoice
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultArticle
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultGame
 import kotlinx.serialization.DeserializationStrategy
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultVideo
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultVenue
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultLocation
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResult
-import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultAudio
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import org.bezsahara.kittybot.bot.json.SealedJsonElementSerializer
 
 
 @Serializable(with = InlineQueryResultSerializer::class)
@@ -29,7 +14,7 @@ sealed interface InlineQueryResult {
 }
 
 
-private object InlineQueryResultSerializer : JsonContentPolymorphicSerializer<InlineQueryResult>(InlineQueryResult::class) {
+private object InlineQueryResultSerializer : SealedJsonElementSerializer<InlineQueryResult>(InlineQueryResult::class) {
     override fun selectDeserializer(
         element: JsonElement
     ): DeserializationStrategy<InlineQueryResult> {

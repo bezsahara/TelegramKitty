@@ -1,6 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.games
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 

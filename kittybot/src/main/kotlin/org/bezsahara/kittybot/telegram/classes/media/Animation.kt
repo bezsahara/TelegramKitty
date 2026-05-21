@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.media
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
 import kotlinx.serialization.Serializable
 
 

@@ -1,11 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.input
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.input.InputChecklistTask
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.values.ParseMode
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
+import org.bezsahara.kittybot.telegram.values.ParseMode
 
 
 /**

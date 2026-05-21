@@ -1,16 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.keyboard
 
-import kotlinx.serialization.json.jsonObject
-import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButton
-import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButtonDefault
-import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButtonCommands
-import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.json.JsonContentPolymorphicSerializer
-import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButtonWebApp
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import org.bezsahara.kittybot.bot.json.SealedJsonElementSerializer
 
 
 @Serializable(with = MenuButtonSerializer::class)
@@ -19,7 +14,7 @@ sealed interface MenuButton {
 }
 
 
-private object MenuButtonSerializer : JsonContentPolymorphicSerializer<MenuButton>(MenuButton::class) {
+private object MenuButtonSerializer : SealedJsonElementSerializer<MenuButton>(MenuButton::class) {
     override fun selectDeserializer(
         element: JsonElement
     ): DeserializationStrategy<MenuButton> {

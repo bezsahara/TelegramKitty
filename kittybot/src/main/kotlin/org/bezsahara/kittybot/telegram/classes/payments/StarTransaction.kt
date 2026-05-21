@@ -1,6 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.payments
 
-import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartner
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

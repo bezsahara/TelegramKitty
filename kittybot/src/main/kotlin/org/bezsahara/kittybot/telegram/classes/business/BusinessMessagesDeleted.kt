@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.business
 
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.Chat
 

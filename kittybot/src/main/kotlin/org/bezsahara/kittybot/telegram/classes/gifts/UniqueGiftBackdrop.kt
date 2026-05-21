@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.gifts
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGiftBackdropColors
 import kotlinx.serialization.Serializable
 
 

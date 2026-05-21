@@ -1,8 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.business
 
-import org.bezsahara.kittybot.telegram.classes.business.BusinessOpeningHoursInterval
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
 import kotlinx.serialization.Serializable
 
 

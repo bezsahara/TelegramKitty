@@ -1,15 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.gifts
 
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.DeserializationStrategy
-import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGiftRegular
-import kotlinx.serialization.json.JsonContentPolymorphicSerializer
-import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGiftUnique
-import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGift
+import org.bezsahara.kittybot.bot.json.SealedJsonElementSerializer
 
 
 @Serializable(with = OwnedGiftSerializer::class)
@@ -18,7 +14,7 @@ sealed interface OwnedGift {
 }
 
 
-private object OwnedGiftSerializer : JsonContentPolymorphicSerializer<OwnedGift>(OwnedGift::class) {
+private object OwnedGiftSerializer : SealedJsonElementSerializer<OwnedGift>(OwnedGift::class) {
     override fun selectDeserializer(
         element: JsonElement
     ): DeserializationStrategy<OwnedGift> {

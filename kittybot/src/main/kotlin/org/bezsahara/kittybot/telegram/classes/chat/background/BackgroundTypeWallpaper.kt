@@ -1,9 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.chat.background
 
-import org.bezsahara.kittybot.telegram.classes.chat.background.BackgroundType
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.media.Document
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.media.Document
 
 
 /**

@@ -1,10 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.passport
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.PassportElementType
-import org.bezsahara.kittybot.telegram.classes.passport.PassportFile
-import kotlin.collections.List
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.values.PassportElementType
 
 
 /**

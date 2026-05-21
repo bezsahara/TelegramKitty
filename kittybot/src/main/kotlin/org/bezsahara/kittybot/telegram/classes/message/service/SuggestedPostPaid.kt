@@ -1,10 +1,10 @@
 package org.bezsahara.kittybot.telegram.classes.message.service
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.message.Message
-import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
-import org.bezsahara.kittybot.telegram.classes.payments.StarAmount
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
+import org.bezsahara.kittybot.telegram.classes.message.Message
+import org.bezsahara.kittybot.telegram.classes.payments.StarAmount
 
 
 /**

@@ -1,14 +1,11 @@
 package org.bezsahara.kittybot.telegram.classes.payments
 
-import org.bezsahara.kittybot.telegram.classes.payments.TransactionPartner
-import org.bezsahara.kittybot.telegram.classes.gifts.Gift
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.values.TransactionType
-import org.bezsahara.kittybot.telegram.classes.payments.AffiliateInfo
+import org.bezsahara.kittybot.telegram.classes.gifts.Gift
 import org.bezsahara.kittybot.telegram.classes.media.PaidMedia
+import org.bezsahara.kittybot.telegram.classes.user.User
+import org.bezsahara.kittybot.telegram.values.TransactionType
 
 
 /**

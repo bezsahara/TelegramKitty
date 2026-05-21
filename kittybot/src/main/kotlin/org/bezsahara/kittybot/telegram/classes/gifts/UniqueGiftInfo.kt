@@ -1,9 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.gifts
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGift
-import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
 import org.bezsahara.kittybot.telegram.values.UniqueGiftOrigin
 
 

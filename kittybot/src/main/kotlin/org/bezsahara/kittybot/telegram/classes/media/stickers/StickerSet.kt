@@ -1,11 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.media.stickers
 
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.values.StickerType
-import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
-import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
+import org.bezsahara.kittybot.telegram.values.StickerType
 
 
 /**

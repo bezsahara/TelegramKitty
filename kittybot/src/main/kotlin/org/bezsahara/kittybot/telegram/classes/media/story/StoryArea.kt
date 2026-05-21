@@ -1,8 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.media.story
 
-import org.bezsahara.kittybot.telegram.classes.media.story.StoryAreaPosition
-import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.media.story.StoryAreaType
 import kotlinx.serialization.Serializable
 
 

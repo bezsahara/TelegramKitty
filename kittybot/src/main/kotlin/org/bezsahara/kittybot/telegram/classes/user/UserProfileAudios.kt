@@ -1,9 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.user
 
-import org.bezsahara.kittybot.telegram.classes.media.Audio
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.media.Audio
 
 
 /**

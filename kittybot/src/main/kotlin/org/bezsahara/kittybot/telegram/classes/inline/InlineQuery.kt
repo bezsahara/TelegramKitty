@@ -1,9 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.inline
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.media.geo.Location
 import org.bezsahara.kittybot.telegram.classes.user.User
-import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.values.InlineQueryChatType
 
 

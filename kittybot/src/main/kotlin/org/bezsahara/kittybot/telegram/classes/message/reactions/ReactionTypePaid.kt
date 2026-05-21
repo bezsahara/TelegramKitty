@@ -1,12 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.message.reactions
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import org.bezsahara.kittybot.bot.json.PureJsonSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.json.JsonPrimitive
-import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
-import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionTypePaid
 
 
 /**

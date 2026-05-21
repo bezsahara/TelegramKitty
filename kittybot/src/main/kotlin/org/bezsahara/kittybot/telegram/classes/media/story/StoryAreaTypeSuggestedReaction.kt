@@ -1,9 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.media.story
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.media.story.StoryAreaType
-import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
 
 
 /**

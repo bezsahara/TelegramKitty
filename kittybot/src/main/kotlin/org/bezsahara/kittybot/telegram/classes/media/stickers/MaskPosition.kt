@@ -1,8 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.media.stickers
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.MaskPositionPoint
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.values.MaskPositionPoint
 
 
 /**

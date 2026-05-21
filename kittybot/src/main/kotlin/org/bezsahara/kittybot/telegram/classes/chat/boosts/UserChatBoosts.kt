@@ -1,8 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.chat.boosts
 
-import org.bezsahara.kittybot.telegram.classes.chat.boosts.ChatBoost
-import kotlinx.serialization.SerialName
-import kotlin.collections.List
 import kotlinx.serialization.Serializable
 
 

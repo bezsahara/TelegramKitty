@@ -1,23 +1,18 @@
 package org.bezsahara.kittybot.telegram.classes.chat
 
-import org.bezsahara.kittybot.telegram.classes.business.BusinessOpeningHours
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.values.ChatType
-import org.bezsahara.kittybot.telegram.classes.message.Message
-import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGiftColors
-import org.bezsahara.kittybot.telegram.classes.business.BusinessIntro
-import org.bezsahara.kittybot.telegram.classes.chat.ChatPhoto
-import org.bezsahara.kittybot.telegram.classes.user.UserRating
-import org.bezsahara.kittybot.telegram.classes.media.Audio
-import org.bezsahara.kittybot.telegram.classes.chat.ChatPermissions
-import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
-import org.bezsahara.kittybot.telegram.classes.business.BusinessLocation
-import org.bezsahara.kittybot.telegram.classes.chat.ChatLocation
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.classes.user.Birthdate
-import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.classes.chat.Chat
+import org.bezsahara.kittybot.telegram.classes.business.BusinessIntro
+import org.bezsahara.kittybot.telegram.classes.business.BusinessLocation
+import org.bezsahara.kittybot.telegram.classes.business.BusinessOpeningHours
+import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
+import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGiftColors
+import org.bezsahara.kittybot.telegram.classes.media.Audio
+import org.bezsahara.kittybot.telegram.classes.message.Message
+import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
+import org.bezsahara.kittybot.telegram.classes.user.Birthdate
+import org.bezsahara.kittybot.telegram.classes.user.UserRating
+import org.bezsahara.kittybot.telegram.values.ChatType
 
 
 /**

@@ -1,32 +1,19 @@
 package org.bezsahara.kittybot.telegram.classes.message
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.media.PaidMediaInfo
-import org.bezsahara.kittybot.telegram.classes.media.Animation
-import org.bezsahara.kittybot.telegram.classes.message.service.Giveaway
+import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.chat.Chat
+import org.bezsahara.kittybot.telegram.classes.games.Game
+import org.bezsahara.kittybot.telegram.classes.media.*
+import org.bezsahara.kittybot.telegram.classes.media.geo.Location
+import org.bezsahara.kittybot.telegram.classes.media.geo.Venue
 import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 import org.bezsahara.kittybot.telegram.classes.media.story.Story
-import org.bezsahara.kittybot.telegram.classes.media.VideoNote
-import org.bezsahara.kittybot.telegram.classes.media.Voice
-import org.bezsahara.kittybot.telegram.classes.payments.Invoice
-import kotlin.collections.List
-import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.classes.media.Contact
-import org.bezsahara.kittybot.telegram.classes.message.service.GiveawayWinners
-import org.bezsahara.kittybot.telegram.classes.games.Game
-import org.bezsahara.kittybot.telegram.classes.media.geo.Location
-import org.bezsahara.kittybot.telegram.classes.message.LinkPreviewOptions
-import org.bezsahara.kittybot.telegram.classes.media.geo.Venue
-import org.bezsahara.kittybot.telegram.classes.message.MessageOrigin
-import org.bezsahara.kittybot.telegram.classes.media.Audio
-import org.bezsahara.kittybot.telegram.classes.media.Document
-import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
-import org.bezsahara.kittybot.telegram.classes.media.Video
-import org.bezsahara.kittybot.telegram.classes.media.Dice
-import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
-import org.bezsahara.kittybot.telegram.classes.media.LivePhoto
-import org.bezsahara.kittybot.telegram.classes.chat.Chat
 import org.bezsahara.kittybot.telegram.classes.message.checklists.Checklist
+import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
+import org.bezsahara.kittybot.telegram.classes.message.service.Giveaway
+import org.bezsahara.kittybot.telegram.classes.message.service.GiveawayWinners
+import org.bezsahara.kittybot.telegram.classes.payments.Invoice
 
 
 /**

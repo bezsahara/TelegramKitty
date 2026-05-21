@@ -1,6 +1,5 @@
 package org.bezsahara.kittybot.telegram.classes.keyboard
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 

@@ -1,10 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.gifts
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.gifts.UniqueGift
-import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGift
+import org.bezsahara.kittybot.telegram.classes.user.User
 
 
 /**

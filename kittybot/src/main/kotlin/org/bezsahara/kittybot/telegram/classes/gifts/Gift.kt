@@ -1,10 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.gifts
 
-import org.bezsahara.kittybot.telegram.classes.gifts.GiftBackground
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 import kotlinx.serialization.Serializable
 import org.bezsahara.kittybot.telegram.classes.chat.Chat
+import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
 
 
 /**

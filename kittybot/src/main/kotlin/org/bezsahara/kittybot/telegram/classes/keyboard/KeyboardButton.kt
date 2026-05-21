@@ -1,13 +1,9 @@
 package org.bezsahara.kittybot.telegram.classes.keyboard
 
-import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButtonRequestUsers
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButtonPollType
-import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
-import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButtonRequestChat
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.webapp.WebAppInfo
 import org.bezsahara.kittybot.telegram.values.KeyboardButtonStyle
-import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButtonRequestManagedBot
 
 
 /**

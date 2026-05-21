@@ -2,7 +2,6 @@ package org.bezsahara.kittybot.telegram.classes.message
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.bezsahara.kittybot.telegram.classes.message.SuggestedPostPrice
 
 
 /**

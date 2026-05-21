@@ -1,7 +1,6 @@
 package org.bezsahara.kittybot.telegram.classes.message.reactions
 
 import kotlinx.serialization.SerialName
-import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
 import kotlinx.serialization.Serializable
 
 

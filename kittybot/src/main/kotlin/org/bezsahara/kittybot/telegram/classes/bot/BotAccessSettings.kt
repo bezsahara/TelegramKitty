@@ -1,9 +1,8 @@
 package org.bezsahara.kittybot.telegram.classes.bot
 
 import kotlinx.serialization.SerialName
-import kotlin.collections.List
-import org.bezsahara.kittybot.telegram.classes.user.User
 import kotlinx.serialization.Serializable
+import org.bezsahara.kittybot.telegram.classes.user.User
 
 
 /**
