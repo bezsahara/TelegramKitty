@@ -12,8 +12,17 @@ fun createTelegramBot(
     baseUri: URI = URI.create("https://api.telegram.org"),
     timeoutSec: Long = 61,
     clientBuilder: ClientBuilder = tryFindDefaultClient()
-): KittyBot {
-    return clientBuilder.build(BotApiServerConfig(token, baseUri, timeoutSec), jsonInstance)
+): CreatedBot {
+    return CreatedBot(clientBuilder.build(BotApiServerConfig(token, baseUri, timeoutSec), jsonInstance), clientBuilder)
+}
+
+data class CreatedBot(
+    val bot: KittyBot,
+    val clientBuilder: ClientBuilder
+) : AutoCloseable {
+    override fun close() {
+        clientBuilder.close()
+    }
 }
 
 fun deserializeUpdate(data: String): Update {
