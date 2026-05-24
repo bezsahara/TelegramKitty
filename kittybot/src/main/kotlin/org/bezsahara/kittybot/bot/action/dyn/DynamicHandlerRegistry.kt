@@ -164,6 +164,17 @@ class DynamicHandlerRegistry(
         return true
     }
 
+    @Synchronized
+    fun removeLast(): Boolean {
+        val state = registryState
+        val size = state.array.size
+        if (size == 0) return false
+        registryState = state.remove(size - 1)
+        return true
+    }
+
+    val size: Int get() = registryState.array.size
+
     override val identity: HandlerIdentity = HandlerIdentity.createNew()
 
     internal data class RegistryKey(
@@ -209,13 +220,15 @@ class DynamicHandlerRegistry(
     // lower level functions if u can maintain HandlerInfo identity you can use them
     fun add(handlerInfo: HandlerInfo) {
         val state = registryState
-        require(state.array.last().id <= handlerInfo.id) { "Id of handler info must be greater or equal to the last one" }
+        val array = state.array
+        require(array.isEmpty() || array[array.size - 1].id <= handlerInfo.id) { "Id of handler info must be greater or equal to the last one" }
         registryState = state.add(handlerInfo)
     }
 
     fun addAll(handlerInfos: Array<HandlerInfo>) {
         val state = registryState
-        var latest = state.array.last().id
+        val array = state.array
+        var latest = if (array.isEmpty()) Long.MIN_VALUE else array[array.size - 1].id
 
         handlerInfos.forEach {
             val id = it.id
@@ -232,6 +245,10 @@ class DynamicHandlerRegistry(
 
     fun removeAll(handlerInfos: Array<HandlerInfo>) {
         registryState = registryState.remove(handlerInfos)
+    }
+
+    fun remove(index: Int) {
+        registryState = registryState.remove(index)
     }
 
     override suspend fun handleUpdate(
