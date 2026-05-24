@@ -339,7 +339,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
                 updateOrigin,
                 pollingTimeoutP,
                 preActions,
-                BotApiServerConfig(token, baseUri, pollingTimeoutP + 1),
+                BotApiServerConfig(token, baseUri, furballConfig.httpTimeout(pollingTimeoutP)),
                 lastIdRecovery,
                 furballConfig,
                 deFactoBuilder,

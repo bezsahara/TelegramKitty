@@ -140,6 +140,13 @@ fun KittyBotConfig<PollingReceiver>.startPolling(wait: Boolean = true): Job {
     val pollingAsync = CoroutineScope(Dispatchers.IO + supervisorJob).async {
         updateReceiver.receiveUpdates(updatesChannel)
     }
+    pollingAsync.invokeOnCompletion { cause ->
+        if (cause != null && cause !is CancellationException) {
+            supervisorJob.cancel(
+                CancellationException("Polling receiver failed", cause)
+            )
+        }
+    }
     updater.start()
     if (wait) {
         runBlocking {
