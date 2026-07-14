@@ -4,6 +4,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import org.bezsahara.kittybot.bot.action.other.allowDynamicDecisions
 import org.bezsahara.kittybot.bot.conv.buildConversation
 import org.bezsahara.kittybot.bot.conv.cts.receiveCallbackData
 import org.bezsahara.kittybot.bot.conv.cts.receiveCallbackQuery
@@ -12,14 +13,15 @@ import org.bezsahara.kittybot.bot.conv.cts.receivePhotos
 import org.bezsahara.kittybot.bot.conv.cts.receiveText
 import org.bezsahara.kittybot.bot.conv.scope.onStartCommand
 import org.bezsahara.kittybot.bot.conv.scope.onText
+import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.FelineDispatcher
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.chatId
+import org.bezsahara.kittybot.bot.dispatchers.y.text
 import org.bezsahara.kittybot.telegram.classes.media.PhotoSize
 import org.bezsahara.kittybot.telegram.client.file.TelegramFile
 import org.bezsahara.kittybot.telegram.utils.key.buildInlineKeyboardMarkup
 
 fun FelineDispatcher.conversations() {
-
     buildConversation {
         onText({ it.text == "/auth" }) {
             bot.sendMessage(chatId, "Hi, auth began. Send your pic")
