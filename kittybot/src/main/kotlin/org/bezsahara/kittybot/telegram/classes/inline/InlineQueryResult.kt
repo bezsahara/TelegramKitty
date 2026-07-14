@@ -2,10 +2,10 @@ package org.bezsahara.kittybot.telegram.classes.inline
 
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import org.bezsahara.kittybot.bot.json.SealedJsonElementSerializer
 
 
 @Serializable(with = InlineQueryResultSerializer::class)
@@ -14,7 +14,7 @@ sealed interface InlineQueryResult {
 }
 
 
-private object InlineQueryResultSerializer : SealedJsonElementSerializer<InlineQueryResult>(InlineQueryResult::class) {
+private object InlineQueryResultSerializer : JsonContentPolymorphicSerializer<InlineQueryResult>(InlineQueryResult::class) {
     override fun selectDeserializer(
         element: JsonElement
     ): DeserializationStrategy<InlineQueryResult> {

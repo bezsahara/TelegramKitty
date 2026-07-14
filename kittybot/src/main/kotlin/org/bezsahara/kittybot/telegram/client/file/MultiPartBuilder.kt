@@ -8,12 +8,13 @@ import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 import kotlin.coroutines.CoroutineContext
 
 
 // Maybe I need to improve this.
 class MultiPartBuilder(@JvmField val request: HttpClientRequest) {
-    val boundary = "----kitty-${UUID.randomUUID()}"
+    val boundary = generateMultiPartBoundary()
 
     init {
         request.putHeader("Content-Type", "multipart/form-data; boundary=$boundary")
@@ -31,10 +32,6 @@ class MultiPartBuilder(@JvmField val request: HttpClientRequest) {
 
     fun write(byteBuffer: Buffer) {
         request.write(byteBuffer)
-    }
-
-    suspend fun writeSuspend(byteBuffer: ByteArray) {
-
     }
 
     fun beginPart(attributes: String) {
@@ -69,4 +66,19 @@ class MultiPartBuilder(@JvmField val request: HttpClientRequest) {
     companion object {
         val d9: ((cause: Throwable, value: Unit, context: CoroutineContext) -> Unit)? = null
     }
+}
+
+private val encoder = Base64.getUrlEncoder().withoutPadding()
+private val prefix = "----kitty-".toByteArray(Charsets.US_ASCII)
+
+internal fun generateMultiPartBoundary(): String {
+    val bytes = ByteArray(18)
+    ThreadLocalRandom.current()
+        .nextBytes(bytes)
+    val output = ByteArray(34) // 24 is base64 + 10 prefix
+    encoder.encode(bytes, output)
+    System.arraycopy(output, 0, output, 10, 24)
+    System.arraycopy(prefix, 0, output, 0, 10)
+    @Suppress("DEPRECATION", "PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+    return java.lang.String(output, 0, 0, 34) as String
 }

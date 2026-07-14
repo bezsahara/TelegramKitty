@@ -4,6 +4,7 @@ import org.bezsahara.kittybot.telegram.classes.keyboard.PreparedKeyboardButton
 import org.bezsahara.kittybot.telegram.values.StickerType
 import org.bezsahara.kittybot.telegram.classes.input.InputMedia
 import org.bezsahara.kittybot.telegram.values.ChatAction
+import org.bezsahara.kittybot.telegram.values.ChatJoinRequestQueryResult
 import org.bezsahara.kittybot.telegram.utils.TResultTrue
 import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
 import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
@@ -42,6 +43,7 @@ import org.bezsahara.kittybot.telegram.values.StickerFormat
 import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
 import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
 import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
+import org.bezsahara.kittybot.telegram.classes.rich.InputRichMessage
 import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfo
 import org.bezsahara.kittybot.telegram.utils.TBytesInfo
 import org.bezsahara.kittybot.telegram.classes.input.InputSticker
@@ -647,6 +649,26 @@ class TApiClient internal constructor(
         return executeJsonTrue(ro00.setChatTitle, jsonByteBuffer0)
     }
 
+    private val sendRichMessageDraftBSP = BufferSizePredictor(44, 1073741824, 88, 176)
+    override suspend fun sendRichMessageDraft(
+        chatId: Long,
+        draftId: Long,
+        richMessage: InputRichMessage,
+        messageThreadId: Long?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> {
+        val bbSize0 = requestOptions?.bufferSize ?: sendRichMessageDraftBSP.decideCapacity()
+        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+            putNumberUnsafe(TBytesInfo.chat_id, chatId)
+            putNumberUnsafe(TBytesInfo.draft_id, draftId)
+            putJsonObject(TBytesInfo.rich_message, InputRichMessage.serializer(), richMessage)
+            if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
+            if (requestOptions == null) sendRichMessageDraftBSP.record(size9, bbSize0)
+            toBuffer()
+        }
+        return executeJsonTrue(ro00.sendRichMessageDraft, jsonByteBuffer0)
+    }
+
     override suspend fun setChatDescription(
         chatId: ChatId,
         description: String?
@@ -671,15 +693,11 @@ class TApiClient internal constructor(
         return executeJson(ro00.getChatAdministrators, jsonByteBuffer0, TSerials.sListChatMember)
     }
 
-    private val getManagedBotTokenBSP = BufferSizePredictor(7, 1073741824, 14, 28)
     override suspend fun getManagedBotToken(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<String> {
-        val bbSize0 = requestOptions?.bufferSize ?: getManagedBotTokenBSP.decideCapacity()
-        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+        val jsonByteBuffer0 = JsonByteBuffer(32).run {
             putNumberUnsafe(TBytesInfo.user_id, userId)
-            if (requestOptions == null) getManagedBotTokenBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJson(ro00.getManagedBotToken, jsonByteBuffer0, TSerials.sString)
@@ -773,21 +791,17 @@ class TApiClient internal constructor(
         }
     }
 
-    private val deleteMessageReactionBSP = BufferSizePredictor(37, 1073741824, 74, 148)
     override suspend fun deleteMessageReaction(
         chatId: ChatId,
         messageId: Long,
         userId: Long?,
-        actorChatId: Long?,
-        requestOptions: RequestOptions?
+        actorChatId: Long?
     ): TResult<Boolean> {
-        val bbSize0 = requestOptions?.bufferSize ?: deleteMessageReactionBSP.decideCapacity()
-        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+        val jsonByteBuffer0 = JsonByteBuffer(149).run {
             putStringUnsafe(TBytesInfo.chat_id, chatId.value)
             putNumberUnsafe(TBytesInfo.message_id, messageId)
             if (userId != null) putNumberUnsafe(TBytesInfo.user_id, userId)
             if (actorChatId != null) putNumberUnsafe(TBytesInfo.actor_chat_id, actorChatId)
-            if (requestOptions == null) deleteMessageReactionBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJsonTrue(ro00.deleteMessageReaction, jsonByteBuffer0)
@@ -838,19 +852,15 @@ class TApiClient internal constructor(
         }
     }
 
-    private val getUserProfileAudiosBSP = BufferSizePredictor(18, 1073741824, 36, 72)
     override suspend fun getUserProfileAudios(
         userId: Long,
         offset: Long?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<UserProfileAudios> {
-        val bbSize0 = requestOptions?.bufferSize ?: getUserProfileAudiosBSP.decideCapacity()
-        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+        val jsonByteBuffer0 = JsonByteBuffer(91).run {
             putNumberUnsafe(TBytesInfo.user_id, userId)
             if (offset != null) putNumberUnsafe(TBytesInfo.offset, offset)
             if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
-            if (requestOptions == null) getUserProfileAudiosBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJson(ro00.getUserProfileAudios, jsonByteBuffer0, TSerials.sUserProfileAudios)
@@ -1037,6 +1047,21 @@ class TApiClient internal constructor(
             toBuffer()
         }
         return executeJson(ro00.getUpdates, jsonByteBuffer0, TSerials.sListUpdate)
+    }
+
+    private val sendChatJoinRequestWebAppBSP = BufferSizePredictor(37, 1073741824, 74, 148)
+    override suspend fun sendChatJoinRequestWebApp(
+        chatJoinRequestQueryId: String,
+        webAppUrl: String
+    ): TResult<Boolean> {
+        val bbSize0 = sendChatJoinRequestWebAppBSP.decideCapacity()
+        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+            putStringUnsafe(TBytesInfo.chat_join_request_query_id, chatJoinRequestQueryId)
+            putStringUnsafe(TBytesInfo.web_app_url, webAppUrl)
+            sendChatJoinRequestWebAppBSP.record(size9, bbSize0)
+            toBuffer()
+        }
+        return executeJsonTrue(ro00.sendChatJoinRequestWebApp, jsonByteBuffer0)
     }
 
     override suspend fun setMyName(
@@ -1361,15 +1386,11 @@ class TApiClient internal constructor(
         return executeJsonTrue(ro00.closeGeneralForumTopic, jsonByteBuffer0)
     }
 
-    private val getManagedBotAccessSettingsBSP = BufferSizePredictor(7, 1073741824, 14, 28)
     override suspend fun getManagedBotAccessSettings(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<BotAccessSettings> {
-        val bbSize0 = requestOptions?.bufferSize ?: getManagedBotAccessSettingsBSP.decideCapacity()
-        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+        val jsonByteBuffer0 = JsonByteBuffer(32).run {
             putNumberUnsafe(TBytesInfo.user_id, userId)
-            if (requestOptions == null) getManagedBotAccessSettingsBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJson(ro00.getManagedBotAccessSettings, jsonByteBuffer0, TSerials.sBotAccessSettings)
@@ -1517,17 +1538,13 @@ class TApiClient internal constructor(
         }
     }
 
-    private val getUserPersonalChatMessagesBSP = BufferSizePredictor(12, 1073741824, 24, 48)
     override suspend fun getUserPersonalChatMessages(
         userId: Long,
-        limit: Long,
-        requestOptions: RequestOptions?
+        limit: Long
     ): TResult<List<Message>> {
-        val bbSize0 = requestOptions?.bufferSize ?: getUserPersonalChatMessagesBSP.decideCapacity()
-        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+        val jsonByteBuffer0 = JsonByteBuffer(61).run {
             putNumberUnsafe(TBytesInfo.user_id, userId)
             putNumberUnsafe(TBytesInfo.limit, limit)
-            if (requestOptions == null) getUserPersonalChatMessagesBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJson(ro00.getUserPersonalChatMessages, jsonByteBuffer0, TSerials.sListMessage)
@@ -1833,19 +1850,15 @@ class TApiClient internal constructor(
         return executeJsonTrue(ro00.deleteStory, jsonByteBuffer0)
     }
 
-    private val setManagedBotAccessSettingsBSP = BufferSizePredictor(41, 1073741824, 82, 164)
     override suspend fun setManagedBotAccessSettings(
         userId: Long,
         isAccessRestricted: Boolean,
-        addedUserIds: List<Long>?,
-        requestOptions: RequestOptions?
+        addedUserIds: List<Long>?
     ): TResult<Boolean> {
-        val bbSize0 = requestOptions?.bufferSize ?: setManagedBotAccessSettingsBSP.decideCapacity()
-        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+        val jsonByteBuffer0 = JsonByteBuffer(290).run {
             putNumberUnsafe(TBytesInfo.user_id, userId)
             putBoolUnsafe(TBytesInfo.is_access_restricted, isAccessRestricted)
             if (addedUserIds != null) putListOfLongUnsafe(TBytesInfo.added_user_ids, addedUserIds)
-            if (requestOptions == null) setManagedBotAccessSettingsBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJsonTrue(ro00.setManagedBotAccessSettings, jsonByteBuffer0)
@@ -2170,19 +2183,15 @@ class TApiClient internal constructor(
         }
     }
 
-    private val setChatMemberTagBSP = BufferSizePredictor(17, 1073741824, 34, 68)
     override suspend fun setChatMemberTag(
         chatId: ChatId,
         userId: Long,
-        tag: String?,
-        requestOptions: RequestOptions?
+        tag: String?
     ): TResult<Boolean> {
-        val bbSize0 = requestOptions?.bufferSize ?: setChatMemberTagBSP.decideCapacity()
-        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+        val jsonByteBuffer0 = JsonByteBuffer(183).run {
             putStringUnsafe(TBytesInfo.chat_id, chatId.value)
             putNumberUnsafe(TBytesInfo.user_id, userId)
             if (tag != null) putStringUnsafe(TBytesInfo.tag, tag)
-            if (requestOptions == null) setChatMemberTagBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJsonTrue(ro00.setChatMemberTag, jsonByteBuffer0)
@@ -2557,29 +2566,31 @@ class TApiClient internal constructor(
         return executeJsonTrue(ro00.setMyCommands, jsonByteBuffer0)
     }
 
-    private val editMessageTextBSP = BufferSizePredictor(110, 1073741824, 220, 440)
+    private val editMessageTextBSP = BufferSizePredictor(122, 1073741824, 244, 488)
     override suspend fun editMessageText(
-        text: String,
         businessConnectionId: String?,
         chatId: ChatId?,
         messageId: Long?,
         inlineMessageId: String?,
+        text: String?,
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
+        richMessage: InputRichMessage?,
         replyMarkup: InlineKeyboardMarkup?,
         requestOptions: RequestOptions?
     ): TResult.Either<Message, Boolean> {
         val bbSize0 = requestOptions?.bufferSize ?: editMessageTextBSP.decideCapacity()
         val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
-            putStringUnsafe(TBytesInfo.text, text)
             if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
             if (chatId != null) putStringUnsafe(TBytesInfo.chat_id, chatId.value)
             if (messageId != null) putNumberUnsafe(TBytesInfo.message_id, messageId)
             if (inlineMessageId != null) putStringUnsafe(TBytesInfo.inline_message_id, inlineMessageId)
+            if (text != null) putStringUnsafe(TBytesInfo.text, text)
             if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
             if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), entities)
             if (linkPreviewOptions != null) putJsonObject(TBytesInfo.link_preview_options, LinkPreviewOptions.serializer(), linkPreviewOptions)
+            if (richMessage != null) putJsonObject(TBytesInfo.rich_message, InputRichMessage.serializer(), richMessage)
             if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
             if (requestOptions == null) editMessageTextBSP.record(size9, bbSize0)
             toBuffer()
@@ -2769,19 +2780,15 @@ class TApiClient internal constructor(
         return executeJsonTrue(ro00.setMyDefaultAdministratorRights, jsonByteBuffer0)
     }
 
-    private val deleteAllMessageReactionsBSP = BufferSizePredictor(27, 1073741824, 54, 108)
     override suspend fun deleteAllMessageReactions(
         chatId: ChatId,
         userId: Long?,
-        actorChatId: Long?,
-        requestOptions: RequestOptions?
+        actorChatId: Long?
     ): TResult<Boolean> {
-        val bbSize0 = requestOptions?.bufferSize ?: deleteAllMessageReactionsBSP.decideCapacity()
-        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+        val jsonByteBuffer0 = JsonByteBuffer(115).run {
             putStringUnsafe(TBytesInfo.chat_id, chatId.value)
             if (userId != null) putNumberUnsafe(TBytesInfo.user_id, userId)
             if (actorChatId != null) putNumberUnsafe(TBytesInfo.actor_chat_id, actorChatId)
-            if (requestOptions == null) deleteAllMessageReactionsBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJsonTrue(ro00.deleteAllMessageReactions, jsonByteBuffer0)
@@ -2799,10 +2806,9 @@ class TApiClient internal constructor(
         excludeUnique: Boolean?,
         sortByPrice: Boolean?,
         offset: String?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<OwnedGifts> {
-        val bbSize0 = requestOptions?.bufferSize ?: getChatGiftsBSP.decideCapacity()
+        val bbSize0 = getChatGiftsBSP.decideCapacity()
         val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
             putStringUnsafe(TBytesInfo.chat_id, chatId.value)
             if (excludeUnsaved != null) putBoolUnsafe(TBytesInfo.exclude_unsaved, excludeUnsaved)
@@ -2815,7 +2821,7 @@ class TApiClient internal constructor(
             if (sortByPrice != null) putBoolUnsafe(TBytesInfo.sort_by_price, sortByPrice)
             if (offset != null) putStringUnsafe(TBytesInfo.offset, offset)
             if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
-            if (requestOptions == null) getChatGiftsBSP.record(size9, bbSize0)
+            getChatGiftsBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJson(ro00.getChatGifts, jsonByteBuffer0, TSerials.sOwnedGifts)
@@ -2996,15 +3002,11 @@ class TApiClient internal constructor(
         }
     }
 
-    private val replaceManagedBotTokenBSP = BufferSizePredictor(7, 1073741824, 14, 28)
     override suspend fun replaceManagedBotToken(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<String> {
-        val bbSize0 = requestOptions?.bufferSize ?: replaceManagedBotTokenBSP.decideCapacity()
-        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+        val jsonByteBuffer0 = JsonByteBuffer(32).run {
             putNumberUnsafe(TBytesInfo.user_id, userId)
-            if (requestOptions == null) replaceManagedBotTokenBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJson(ro00.replaceManagedBotToken, jsonByteBuffer0, TSerials.sString)
@@ -3106,6 +3108,21 @@ class TApiClient internal constructor(
             toBuffer()
         }
         return executeJsonEither(ro00.setGameScore, jsonByteBuffer0)
+    }
+
+    private val answerChatJoinRequestQueryBSP = BufferSizePredictor(32, 1073741824, 64, 128)
+    override suspend fun answerChatJoinRequestQuery(
+        chatJoinRequestQueryId: String,
+        result: ChatJoinRequestQueryResult
+    ): TResult<Boolean> {
+        val bbSize0 = answerChatJoinRequestQueryBSP.decideCapacity()
+        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+            putStringUnsafe(TBytesInfo.chat_join_request_query_id, chatJoinRequestQueryId)
+            putStringUnsafe(TBytesInfo.result, result.value)
+            answerChatJoinRequestQueryBSP.record(size9, bbSize0)
+            toBuffer()
+        }
+        return executeJsonTrue(ro00.answerChatJoinRequestQuery, jsonByteBuffer0)
     }
 
     override suspend fun sendPaidMedia(
@@ -3227,10 +3244,9 @@ class TApiClient internal constructor(
         excludeUnique: Boolean?,
         sortByPrice: Boolean?,
         offset: String?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<OwnedGifts> {
-        val bbSize0 = requestOptions?.bufferSize ?: getUserGiftsBSP.decideCapacity()
+        val bbSize0 = getUserGiftsBSP.decideCapacity()
         val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
             putNumberUnsafe(TBytesInfo.user_id, userId)
             if (excludeUnlimited != null) putBoolUnsafe(TBytesInfo.exclude_unlimited, excludeUnlimited)
@@ -3241,7 +3257,7 @@ class TApiClient internal constructor(
             if (sortByPrice != null) putBoolUnsafe(TBytesInfo.sort_by_price, sortByPrice)
             if (offset != null) putStringUnsafe(TBytesInfo.offset, offset)
             if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
-            if (requestOptions == null) getUserGiftsBSP.record(size9, bbSize0)
+            getUserGiftsBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJson(ro00.getUserGifts, jsonByteBuffer0, TSerials.sOwnedGifts)
@@ -3479,6 +3495,42 @@ class TApiClient internal constructor(
         return executeJson(ro00.getStickerSet, jsonByteBuffer0, TSerials.sStickerSet)
     }
 
+    private val sendRichMessageBSP = BufferSizePredictor(207, 1073741824, 414, 828)
+    override suspend fun sendRichMessage(
+        chatId: ChatId,
+        richMessage: InputRichMessage,
+        businessConnectionId: String?,
+        messageThreadId: Long?,
+        directMessagesTopicId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        allowPaidBroadcast: Boolean?,
+        messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: ReplyMarkup?,
+        requestOptions: RequestOptions?
+    ): TResult<Message> {
+        val bbSize0 = requestOptions?.bufferSize ?: sendRichMessageBSP.decideCapacity()
+        val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
+            putStringUnsafe(TBytesInfo.chat_id, chatId.value)
+            putJsonObject(TBytesInfo.rich_message, InputRichMessage.serializer(), richMessage)
+            if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
+            if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
+            if (directMessagesTopicId != null) putNumberUnsafe(TBytesInfo.direct_messages_topic_id, directMessagesTopicId)
+            if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
+            if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
+            if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
+            if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
+            if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), suggestedPostParameters)
+            if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+            if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), replyMarkup)
+            if (requestOptions == null) sendRichMessageBSP.record(size9, bbSize0)
+            toBuffer()
+        }
+        return executeJson(ro00.sendRichMessage, jsonByteBuffer0, TSerials.sMessage)
+    }
+
     private val editMessageLiveLocationBSP = BufferSizePredictor(144, 1073741824, 288, 576)
     override suspend fun editMessageLiveLocation(
         latitude: Double,
@@ -3619,10 +3671,9 @@ class TApiClient internal constructor(
         fromStoryId: Long,
         activePeriod: Long,
         postToChatPage: Boolean?,
-        protectContent: Boolean?,
-        requestOptions: RequestOptions?
+        protectContent: Boolean?
     ): TResult<Story> {
-        val bbSize0 = requestOptions?.bufferSize ?: repostStoryBSP.decideCapacity()
+        val bbSize0 = repostStoryBSP.decideCapacity()
         val jsonByteBuffer0 = JsonByteBuffer(bbSize0).run {
             putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
             putNumberUnsafe(TBytesInfo.from_chat_id, fromChatId)
@@ -3630,7 +3681,7 @@ class TApiClient internal constructor(
             putNumberUnsafe(TBytesInfo.active_period, activePeriod)
             if (postToChatPage != null) putBoolUnsafe(TBytesInfo.post_to_chat_page, postToChatPage)
             if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
-            if (requestOptions == null) repostStoryBSP.record(size9, bbSize0)
+            repostStoryBSP.record(size9, bbSize0)
             toBuffer()
         }
         return executeJson(ro00.repostStory, jsonByteBuffer0, TSerials.sStory)

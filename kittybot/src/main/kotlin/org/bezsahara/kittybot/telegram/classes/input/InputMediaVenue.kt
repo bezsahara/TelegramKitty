@@ -11,7 +11,7 @@ import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
  * 
  * [link](https://core.telegram.org/bots/api#inputmediavenue): https://core.telegram.org/bots/api#inputmediavenue
  * 
- * @param type Type of the result, must be venue
+ * @param type Type of the media, must be venue
  * @param latitude Latitude of the location
  * @param longitude Longitude of the location
  * @param title Name of the venue

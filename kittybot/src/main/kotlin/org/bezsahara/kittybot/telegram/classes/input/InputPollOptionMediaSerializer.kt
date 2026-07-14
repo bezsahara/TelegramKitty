@@ -32,6 +32,7 @@ internal object InputPollOptionMediaSerializer : KSerializer<InputPollOptionMedi
         element<Long?>("height", isOptional = true)
         element<Long?>("duration", isOptional = true)
         element<Boolean?>("has_spoiler", isOptional = true)
+        element<String>("url", isOptional = true)
         element<TelegramFile>("photo", isOptional = true)
         element<Double>("latitude", isOptional = true)
         element<Double>("longitude", isOptional = true)
@@ -51,6 +52,7 @@ internal object InputPollOptionMediaSerializer : KSerializer<InputPollOptionMedi
     override fun serialize(encoder: Encoder, value: InputPollOptionMedia) {
         when (value) {
             is InputMediaAnimation -> InputMediaAnimation.serializer().serialize(encoder, value)
+            is InputMediaLink -> InputMediaLink.serializer().serialize(encoder, value)
             is InputMediaLivePhoto -> InputMediaLivePhoto.serializer().serialize(encoder, value)
             is InputMediaLocation -> InputMediaLocation.serializer().serialize(encoder, value)
             is InputMediaPhoto -> InputMediaPhoto.serializer().serialize(encoder, value)
@@ -74,6 +76,7 @@ internal object InputPollOptionMediaSerializer : KSerializer<InputPollOptionMedi
         var height: Long? = null
         var duration: Long? = null
         var hasSpoiler: Boolean? = null
+        var url: String? = null
         var photo: TelegramFile? = null
         var latitude: Double = 0.0
         var longitude: Double = 0.0
@@ -102,26 +105,27 @@ internal object InputPollOptionMediaSerializer : KSerializer<InputPollOptionMedi
                 8 -> height = dec.decodeNullableSerializableElement(descriptor, 8, Long.serializer(), null)
                 9 -> duration = dec.decodeNullableSerializableElement(descriptor, 9, Long.serializer(), null)
                 10 -> hasSpoiler = dec.decodeNullableSerializableElement(descriptor, 10, Boolean.serializer(), null)
-                11 -> photo = dec.decodeSerializableElement(descriptor, 11, TelegramFile.serializer())
-                12 -> {
-                    latitude = dec.decodeDoubleElement(descriptor, 12)
+                11 -> url = dec.decodeStringElement(descriptor, 11)
+                12 -> photo = dec.decodeSerializableElement(descriptor, 12, TelegramFile.serializer())
+                13 -> {
+                    latitude = dec.decodeDoubleElement(descriptor, 13)
                     nativeMask = nativeMask.setBit(0)
                 }
-                13 -> {
-                    longitude = dec.decodeDoubleElement(descriptor, 13)
+                14 -> {
+                    longitude = dec.decodeDoubleElement(descriptor, 14)
                     nativeMask = nativeMask.setBit(1)
                 }
-                14 -> horizontalAccuracy = dec.decodeNullableSerializableElement(descriptor, 14, Double.serializer(), null)
-                15 -> emoji = dec.decodeNullableSerializableElement(descriptor, 15, String.serializer(), null)
-                16 -> title = dec.decodeStringElement(descriptor, 16)
-                17 -> address = dec.decodeStringElement(descriptor, 17)
-                18 -> foursquareId = dec.decodeNullableSerializableElement(descriptor, 18, String.serializer(), null)
-                19 -> foursquareType = dec.decodeNullableSerializableElement(descriptor, 19, String.serializer(), null)
-                20 -> googlePlaceId = dec.decodeNullableSerializableElement(descriptor, 20, String.serializer(), null)
-                21 -> googlePlaceType = dec.decodeNullableSerializableElement(descriptor, 21, String.serializer(), null)
-                22 -> cover = dec.decodeNullableSerializableElement(descriptor, 22, TelegramFile.serializer(), null)
-                23 -> startTimestamp = dec.decodeNullableSerializableElement(descriptor, 23, Long.serializer(), null)
-                24 -> supportsStreaming = dec.decodeNullableSerializableElement(descriptor, 24, Boolean.serializer(), null)
+                15 -> horizontalAccuracy = dec.decodeNullableSerializableElement(descriptor, 15, Double.serializer(), null)
+                16 -> emoji = dec.decodeNullableSerializableElement(descriptor, 16, String.serializer(), null)
+                17 -> title = dec.decodeStringElement(descriptor, 17)
+                18 -> address = dec.decodeStringElement(descriptor, 18)
+                19 -> foursquareId = dec.decodeNullableSerializableElement(descriptor, 19, String.serializer(), null)
+                20 -> foursquareType = dec.decodeNullableSerializableElement(descriptor, 20, String.serializer(), null)
+                21 -> googlePlaceId = dec.decodeNullableSerializableElement(descriptor, 21, String.serializer(), null)
+                22 -> googlePlaceType = dec.decodeNullableSerializableElement(descriptor, 22, String.serializer(), null)
+                23 -> cover = dec.decodeNullableSerializableElement(descriptor, 23, TelegramFile.serializer(), null)
+                24 -> startTimestamp = dec.decodeNullableSerializableElement(descriptor, 24, Long.serializer(), null)
+                25 -> supportsStreaming = dec.decodeNullableSerializableElement(descriptor, 25, Boolean.serializer(), null)
                 CompositeDecoder.DECODE_DONE -> break@decodeLoop
                 else -> throw SerializationException("Unexpected index $index while deserializing InputPollOptionMedia")
             }
@@ -139,6 +143,9 @@ internal object InputPollOptionMediaSerializer : KSerializer<InputPollOptionMedi
                 height = height,
                 duration = duration,
                 hasSpoiler = hasSpoiler
+            )
+            "link" -> InputMediaLink(
+                url = url ?: throwMissingField("url")
             )
             "live_photo" -> InputMediaLivePhoto(
                 media = media ?: throwMissingField("media"),

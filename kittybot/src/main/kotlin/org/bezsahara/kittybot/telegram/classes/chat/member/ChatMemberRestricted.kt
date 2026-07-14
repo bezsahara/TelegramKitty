@@ -14,7 +14,7 @@ import org.bezsahara.kittybot.telegram.classes.user.User
  * @param tag Optional. Tag of the member
  * @param user Information about the user
  * @param isMember True, if the user is a member of the chat at the moment of the request
- * @param canSendMessages True, if the user is allowed to send text messages, contacts, giveaways, giveaway winners, invoices, locations and venues
+ * @param canSendMessages True, if the user is allowed to send text messages, rich messages, contacts, giveaways, giveaway winners, invoices, locations and venues
  * @param canSendAudios True, if the user is allowed to send audios
  * @param canSendDocuments True, if the user is allowed to send documents
  * @param canSendPhotos True, if the user is allowed to send photos

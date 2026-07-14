@@ -14,7 +14,7 @@ import org.bezsahara.kittybot.telegram.values.ParseMode
  * 
  * [link](https://core.telegram.org/bots/api#inputmedialivephoto): https://core.telegram.org/bots/api#inputmedialivephoto
  * 
- * @param type Type of the result, must be live_photo
+ * @param type Type of the media, must be live_photo
  * @param media Video of the live photo to send. Pass a file_id to send a file that exists on the Telegram servers (recommended) or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending live photos by a URL is currently unsupported.
  * @param photo The static photo to send. Pass a file_id to send a file that exists on the Telegram servers (recommended) or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending live photos by a URL is currently unsupported.
  * @param caption Optional. Caption of the live photo to be sent, 0-1024 characters after entities parsing

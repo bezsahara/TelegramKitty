@@ -28,6 +28,7 @@ import org.bezsahara.kittybot.telegram.classes.passport.PassportData
 import org.bezsahara.kittybot.telegram.classes.payments.Invoice
 import org.bezsahara.kittybot.telegram.classes.payments.RefundedPayment
 import org.bezsahara.kittybot.telegram.classes.payments.SuccessfulPayment
+import org.bezsahara.kittybot.telegram.classes.rich.RichMessage
 import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.classes.webapp.WebAppData
 
@@ -73,6 +74,7 @@ import org.bezsahara.kittybot.telegram.classes.webapp.WebAppData
  * @param linkPreviewOptions Optional. Options used for link preview generation for the message, if it is a text message and link preview options were changed
  * @param suggestedPostInfo Optional. Information about suggested post parameters if the message is a suggested post in a channel direct messages chat. If the message is an approved or declined suggested post, then it can't be edited.
  * @param effectId Optional. Unique identifier of the message effect added to the message
+ * @param richMessage Optional. Message is a rich formatted message
  * @param animation Optional. Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set.
  * @param audio Optional. Message is an audio file, information about the file
  * @param document Optional. Message is a general file, information about the file
@@ -190,6 +192,7 @@ data class Message(
     @SerialName("link_preview_options") val linkPreviewOptions: LinkPreviewOptions? = null,
     @SerialName("suggested_post_info") val suggestedPostInfo: SuggestedPostInfo? = null,
     @SerialName("effect_id") val effectId: String? = null,
+    @SerialName("rich_message") val richMessage: RichMessage? = null,
     val animation: Animation? = null,
     val audio: Audio? = null,
     val document: Document? = null,

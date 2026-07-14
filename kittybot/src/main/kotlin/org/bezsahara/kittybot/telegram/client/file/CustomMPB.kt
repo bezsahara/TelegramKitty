@@ -3,10 +3,9 @@ package org.bezsahara.kittybot.telegram.client.file
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import org.bezsahara.kittybot.telegram.client.CustomRequest
-import java.util.*
 
 fun createBoundary(): String {
-    return "----kitty-${UUID.randomUUID()}"
+    return generateMultiPartBoundary()
 }
 
 fun mpContentType(boundary: String): String {

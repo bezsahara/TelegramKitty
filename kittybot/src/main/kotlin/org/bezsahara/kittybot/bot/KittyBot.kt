@@ -1,88 +1,126 @@
 package org.bezsahara.kittybot.bot
 
-import org.bezsahara.kittybot.telegram.classes.bot.*
+import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
+import org.bezsahara.kittybot.telegram.classes.keyboard.PreparedKeyboardButton
+import org.bezsahara.kittybot.telegram.classes.rich.InputRichMessage
+import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
+import org.bezsahara.kittybot.telegram.values.StickerType
+import org.bezsahara.kittybot.telegram.classes.input.InputMedia
+import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfo
+import org.bezsahara.kittybot.telegram.values.ChatAction
+import org.bezsahara.kittybot.telegram.values.ChatJoinRequestQueryResult
+import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
+import org.bezsahara.kittybot.telegram.classes.input.InputSticker
+import org.bezsahara.kittybot.telegram.utils.TResult
+import org.bezsahara.kittybot.telegram.values.DiceEmoji
+import org.bezsahara.kittybot.telegram.classes.core.MessageId
+import org.bezsahara.kittybot.telegram.classes.inline.PreparedInlineMessage
+import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
+import org.bezsahara.kittybot.telegram.classes.input.InputPaidMedia
+import org.bezsahara.kittybot.telegram.classes.inline.SentGuestMessage
+import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
+import org.bezsahara.kittybot.telegram.classes.core.WebhookInfo
+import org.bezsahara.kittybot.telegram.classes.bot.BotAccessSettings
+import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
+import org.bezsahara.kittybot.telegram.classes.user.User
+import org.bezsahara.kittybot.telegram.classes.chat.ChatId
+import org.bezsahara.kittybot.telegram.classes.user.UserProfilePhotos
 import org.bezsahara.kittybot.telegram.classes.business.BusinessConnection
-import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
-import org.bezsahara.kittybot.telegram.classes.chat.*
+import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResult
+import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButton
+import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultsButton
+import org.bezsahara.kittybot.telegram.classes.message.ReplyParameters
+import org.bezsahara.kittybot.telegram.classes.message.Message
+import org.bezsahara.kittybot.telegram.classes.message.polls.InputPollOption
+import org.bezsahara.kittybot.telegram.classes.input.InputChecklist
+import org.bezsahara.kittybot.telegram.classes.core.File
+import org.bezsahara.kittybot.telegram.classes.bot.BotShortDescription
+import org.bezsahara.kittybot.telegram.values.ParseMode
+import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
+import org.bezsahara.kittybot.telegram.classes.passport.PassportElementError
+import org.bezsahara.kittybot.telegram.classes.message.LinkPreviewOptions
+import org.bezsahara.kittybot.telegram.classes.chat.ChatPermissions
+import org.bezsahara.kittybot.telegram.classes.chat.ChatInviteLink
+import org.bezsahara.kittybot.telegram.classes.user.UserProfileAudios
+import org.bezsahara.kittybot.telegram.classes.games.GameHighScore
+import org.bezsahara.kittybot.telegram.classes.payments.StarAmount
 import org.bezsahara.kittybot.telegram.classes.chat.boosts.UserChatBoosts
 import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
-import org.bezsahara.kittybot.telegram.classes.core.File
-import org.bezsahara.kittybot.telegram.classes.core.MessageId
-import org.bezsahara.kittybot.telegram.classes.core.WebhookInfo
-import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.games.GameHighScore
-import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
-import org.bezsahara.kittybot.telegram.classes.gifts.Gifts
+import org.bezsahara.kittybot.telegram.classes.input.MediaGroupAccepted
 import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGifts
-import org.bezsahara.kittybot.telegram.classes.inline.*
-import org.bezsahara.kittybot.telegram.classes.input.*
-import org.bezsahara.kittybot.telegram.classes.keyboard.*
-import org.bezsahara.kittybot.telegram.classes.media.stickers.MaskPosition
+import org.bezsahara.kittybot.telegram.classes.bot.BotName
+import org.bezsahara.kittybot.telegram.classes.chat.ForumTopic
 import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
-import org.bezsahara.kittybot.telegram.classes.media.stickers.StickerSet
 import org.bezsahara.kittybot.telegram.classes.media.story.Story
-import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
-import org.bezsahara.kittybot.telegram.classes.message.*
-import org.bezsahara.kittybot.telegram.classes.message.polls.InputPollOption
-import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
-import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
-import org.bezsahara.kittybot.telegram.classes.passport.PassportElementError
-import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
-import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
-import org.bezsahara.kittybot.telegram.classes.payments.StarAmount
+import org.bezsahara.kittybot.telegram.classes.gifts.Gifts
+import kotlin.collections.List
+import org.bezsahara.kittybot.telegram.classes.message.SuggestedPostParameters
+import org.bezsahara.kittybot.telegram.classes.input.InputStoryContent
+import org.bezsahara.kittybot.telegram.values.PollType
+import org.bezsahara.kittybot.telegram.classes.inline.SentWebAppMessage
+import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButton
 import org.bezsahara.kittybot.telegram.classes.payments.StarTransactions
-import org.bezsahara.kittybot.telegram.classes.user.User
-import org.bezsahara.kittybot.telegram.classes.user.UserProfileAudios
-import org.bezsahara.kittybot.telegram.classes.user.UserProfilePhotos
-import org.bezsahara.kittybot.telegram.client.file.TelegramFile
+import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
+import org.bezsahara.kittybot.telegram.classes.input.InputPollMedia
+import org.bezsahara.kittybot.telegram.classes.keyboard.ReplyMarkup
+import org.bezsahara.kittybot.telegram.classes.chat.ChatAdministratorRights
+import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.client.opt.RequestOptions
-import org.bezsahara.kittybot.telegram.utils.TResult
-import org.bezsahara.kittybot.telegram.values.*
+import org.bezsahara.kittybot.telegram.classes.bot.BotDescription
+import org.bezsahara.kittybot.telegram.classes.media.stickers.StickerSet
+import org.bezsahara.kittybot.telegram.values.StickerFormat
+import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
+import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
+import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
+import org.bezsahara.kittybot.telegram.classes.bot.BotCommand
+import org.bezsahara.kittybot.telegram.client.file.TelegramFile
+import org.bezsahara.kittybot.telegram.utils.TResult.Either
+import org.bezsahara.kittybot.telegram.classes.media.stickers.MaskPosition
 
 
 abstract class KittyBot {
     /**
      * Use this method to delete multiple messages simultaneously. If some of the specified messages can't be found, they are skipped. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deletemessages): https://core.telegram.org/bots/api#deletemessages
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages to delete. See deleteMessage for limitations on which messages can be deleted.
      */
     abstract suspend fun deleteMessages(
         chatId: ChatId,
         messageIds: List<Long>
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setchatphoto): https://core.telegram.org/bots/api#setchatphoto
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param photo New chat photo, uploaded using multipart/form-data
      */
     abstract suspend fun setChatPhoto(
         chatId: ChatId,
         photo: TelegramFile
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to clear the list of pinned messages in a General forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#unpinallgeneralforumtopicmessages): https://core.telegram.org/bots/api#unpinallgeneralforumtopicmessages
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun unpinAllGeneralForumTopicMessages(
         chatId: ChatId
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to edit a subscription invite link created by the bot. The bot must have the can_invite_users administrator rights. Returns the edited invite link as a ChatInviteLink object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#editchatsubscriptioninvitelink): https://core.telegram.org/bots/api#editchatsubscriptioninvitelink
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param inviteLink The invite link to edit
      * @param name Invite link name; 0-32 characters
@@ -91,26 +129,26 @@ abstract class KittyBot {
         chatId: ChatId,
         inviteLink: String,
         name: String? = null
-    ): TResult<ChatInviteLink> 
+    ): TResult<ChatInviteLink>
 
     /**
      * Use this method to delete a forum topic along with all its messages in a forum supergroup chat or a private chat with a user. In the case of a supergroup chat the bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deleteforumtopic): https://core.telegram.org/bots/api#deleteforumtopic
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param messageThreadId Unique identifier for the target message thread of the forum topic
      */
     abstract suspend fun deleteForumTopic(
         chatId: ChatId,
         messageThreadId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Marks incoming message as read on behalf of a business account. Requires the can_read_messages business bot right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#readbusinessmessage): https://core.telegram.org/bots/api#readbusinessmessage
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection on behalf of which to read the message
      * @param chatId Unique identifier of the chat in which the message was received. The chat must have been active in the last 24 hours.
      * @param messageId Unique identifier of the message to mark as read
@@ -119,13 +157,13 @@ abstract class KittyBot {
         businessConnectionId: String,
         chatId: Long,
         messageId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the can_restrict_members administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setchatpermissions): https://core.telegram.org/bots/api#setchatpermissions
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param permissions A JSON-serialized object for new default chat permissions
      * @param useIndependentChatPermissions Pass True if chat permissions are set independently. Otherwise, the can_send_other_messages and can_add_web_page_previews permissions will imply the can_send_messages, can_send_audios, can_send_documents, can_send_photos, can_send_videos, can_send_video_notes, and can_send_voice_notes permissions; the can_send_polls permission will imply the can_send_messages permission.
@@ -134,24 +172,24 @@ abstract class KittyBot {
         chatId: ChatId,
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Changes the profile photo of the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setmyprofilephoto): https://core.telegram.org/bots/api#setmyprofilephoto
-     * 
+     *
      * @param photo The new profile photo to set
      */
     abstract suspend fun setMyProfilePhoto(
         photo: InputProfilePhoto
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to edit only the reply markup of messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#editmessagereplymarkup): https://core.telegram.org/bots/api#editmessagereplymarkup
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
      * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
      * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit.
@@ -165,13 +203,13 @@ abstract class KittyBot {
         inlineMessageId: String? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult.Either<Message, Boolean> 
+    ): TResult.Either<Message, Boolean>
 
     /**
      * Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the chat on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#banchatmember): https://core.telegram.org/bots/api#banchatmember
-     * 
+     *
      * @param chatId Unique identifier for the target group or username of the target supergroup or channel in the format @username
      * @param userId Unique identifier of the target user
      * @param untilDate Date when the user will be unbanned; Unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever. Applied for supergroups and channels only.
@@ -182,48 +220,48 @@ abstract class KittyBot {
         userId: Long,
         untilDate: Long? = null,
         revokeMessages: Boolean? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Returns the amount of Telegram Stars owned by a managed business account. Requires the can_view_gifts_and_stars business bot right. Returns StarAmount on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getbusinessaccountstarbalance): https://core.telegram.org/bots/api#getbusinessaccountstarbalance
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      */
     abstract suspend fun getBusinessAccountStarBalance(
         businessConnectionId: String
-    ): TResult<StarAmount> 
+    ): TResult<StarAmount>
 
     /**
      * Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#unhidegeneralforumtopic): https://core.telegram.org/bots/api#unhidegeneralforumtopic
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun unhideGeneralForumTopic(
         chatId: ChatId
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Verifies a chat on behalf of the organization which is represented by the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#verifychat): https://core.telegram.org/bots/api#verifychat
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. Channel direct messages chats can't be verified.
      * @param customDescription Custom description for the verification; 0-70 characters. Must be empty if the organization isn't allowed to provide a custom verification description.
      */
     abstract suspend fun verifyChat(
         chatId: ChatId,
         customDescription: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Edits a story previously posted by the bot on behalf of a managed business account. Requires the can_manage_stories business bot right. Returns Story on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#editstory): https://core.telegram.org/bots/api#editstory
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param storyId Unique identifier of the story to edit
      * @param content Content of the story
@@ -240,24 +278,24 @@ abstract class KittyBot {
         parseMode: ParseMode? = null,
         captionEntities: List<MessageEntity>? = null,
         areas: List<StoryArea>? = null
-    ): TResult<Story> 
+    ): TResult<Story>
 
     /**
      * Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deletechatphoto): https://core.telegram.org/bots/api#deletechatphoto
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      */
     abstract suspend fun deleteChatPhoto(
         chatId: ChatId
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to copy messages of any kind. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#copymessage): https://core.telegram.org/bots/api#copymessage
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param fromChatId Unique identifier for the chat where the original message was sent (or username of the target bot, supergroup or channel in the format @username)
      * @param messageId Message identifier in the chat specified in from_chat_id
@@ -295,26 +333,26 @@ abstract class KittyBot {
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<MessageId> 
+    ): TResult<MessageId>
 
     /**
      * Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#reopenforumtopic): https://core.telegram.org/bots/api#reopenforumtopic
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param messageThreadId Unique identifier for the target message thread of the forum topic
      */
     abstract suspend fun reopenForumTopic(
         chatId: ChatId,
         messageThreadId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to send an animated emoji that will display a random value. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#senddice): https://core.telegram.org/bots/api#senddice
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
@@ -342,42 +380,42 @@ abstract class KittyBot {
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Removes the profile photo of the bot. Requires no parameters. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#removemyprofilephoto): https://core.telegram.org/bots/api#removemyprofilephoto
-     * 
+     *
      */
-    abstract suspend fun removeMyProfilePhoto(): TResult<Boolean> 
+    abstract suspend fun removeMyProfilePhoto(): TResult<Boolean>
 
     /**
      * Refunds a successful payment in Telegram Stars. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#refundstarpayment): https://core.telegram.org/bots/api#refundstarpayment
-     * 
+     *
      * @param userId Identifier of the user whose payment will be refunded
      * @param telegramPaymentChargeId Telegram payment identifier
      */
     abstract suspend fun refundStarPayment(
         userId: Long,
         telegramPaymentChargeId: String
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Returns the list of gifts that can be sent by the bot to users and channel chats. Requires no parameters. Returns a Gifts object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getavailablegifts): https://core.telegram.org/bots/api#getavailablegifts
-     * 
+     *
      */
-    abstract suspend fun getAvailableGifts(): TResult<Gifts> 
+    abstract suspend fun getAvailableGifts(): TResult<Gifts>
 
     /**
      * Use this method to send point on the map. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendlocation): https://core.telegram.org/bots/api#sendlocation
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param latitude Latitude of the location
      * @param longitude Longitude of the location
@@ -415,13 +453,13 @@ abstract class KittyBot {
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to set a custom title for an administrator in a supergroup promoted by the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setchatadministratorcustomtitle): https://core.telegram.org/bots/api#setchatadministratorcustomtitle
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param userId Unique identifier of the target user
      * @param customTitle New custom title for the administrator; 0-16 characters, emoji are not allowed
@@ -430,13 +468,13 @@ abstract class KittyBot {
         chatId: ChatId,
         userId: Long,
         customTitle: String
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Changes the emoji status for a given user that previously allowed the bot to manage their emoji status via the Mini App method requestEmojiStatusAccess. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setuseremojistatus): https://core.telegram.org/bots/api#setuseremojistatus
-     * 
+     *
      * @param userId Unique identifier of the target user
      * @param emojiStatusCustomEmojiId Custom emoji identifier of the emoji status to set. Pass an empty string to remove the status.
      * @param emojiStatusExpirationDate Expiration date of the emoji status, if any
@@ -445,99 +483,116 @@ abstract class KittyBot {
         userId: Long,
         emojiStatusCustomEmojiId: String? = null,
         emojiStatusExpirationDate: Long? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to change the title of a chat. Titles can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setchattitle): https://core.telegram.org/bots/api#setchattitle
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param title New chat title, 1-128 characters
      */
     abstract suspend fun setChatTitle(
         chatId: ChatId,
         title: String
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
+
+    /**
+     * Use this method to stream a partial rich message to a user while the message is being generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized, you must call sendRichMessage with the complete message to persist it in the user's chat. Returns True on success.
+     *
+     * [link](https://core.telegram.org/bots/api#sendrichmessagedraft): https://core.telegram.org/bots/api#sendrichmessagedraft
+     *
+     * @param chatId Unique identifier for the target private chat
+     * @param draftId Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.
+     * @param richMessage The partial message to be streamed
+     * @param messageThreadId Unique identifier for the target message thread
+     */
+    abstract suspend fun sendRichMessageDraft(
+        chatId: Long,
+        draftId: Long,
+        richMessage: InputRichMessage,
+        messageThreadId: Long? = null,
+        requestOptions: RequestOptions? = null
+    ): TResult<Boolean>
 
     /**
      * Use this method to change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setchatdescription): https://core.telegram.org/bots/api#setchatdescription
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param description New chat description, 0-255 characters
      */
     abstract suspend fun setChatDescription(
         chatId: ChatId,
         description: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to get a list of administrators in a chat. Returns an Array of ChatMember objects.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getchatadministrators): https://core.telegram.org/bots/api#getchatadministrators
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup or channel in the format @username
      * @param returnBots Pass True to additionally receive all bots that are administrators of the chat. By default, bots other than the current bot are omitted.
      */
     abstract suspend fun getChatAdministrators(
         chatId: ChatId,
         returnBots: Boolean? = null
-    ): TResult<List<ChatMember>> 
+    ): TResult<List<ChatMember>>
 
     /**
      * Use this method to get the token of a managed bot. Returns the token as String on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getmanagedbottoken): https://core.telegram.org/bots/api#getmanagedbottoken
-     * 
+     *
      * @param userId User identifier of the managed bot whose token will be returned
      */
     abstract suspend fun getManagedBotToken(
-        userId: Long,
-        requestOptions: RequestOptions? = null
-    ): TResult<String> 
+        userId: Long
+    ): TResult<String>
 
     /**
      * Use this method to get the number of members in a chat. Returns Int on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getchatmembercount): https://core.telegram.org/bots/api#getchatmembercount
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup or channel in the format @username
      */
     abstract suspend fun getChatMemberCount(
         chatId: ChatId
-    ): TResult<Long> 
+    ): TResult<Long>
 
     /**
      * Removes verification from a user who is currently verified on behalf of the organization represented by the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#removeuserverification): https://core.telegram.org/bots/api#removeuserverification
-     * 
+     *
      * @param userId Unique identifier of the target user
      */
     abstract suspend fun removeUserVerification(
         userId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Removes the current profile photo of a managed business account. Requires the can_edit_profile_photo business bot right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#removebusinessaccountprofilephoto): https://core.telegram.org/bots/api#removebusinessaccountprofilephoto
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param isPublic Pass True to remove the public photo, which is visible even if the main photo is hidden by the business account's privacy settings. After the main photo is removed, the previous profile photo (if present) becomes the main photo.
      */
     abstract suspend fun removeBusinessAccountProfilePhoto(
         businessConnectionId: String,
         isPublic: Boolean? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to send photos. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendphoto): https://core.telegram.org/bots/api#sendphoto
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param photo Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's width and height must not exceed 10000 in total. Width and height ratio must be at most 20. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -574,13 +629,13 @@ abstract class KittyBot {
         suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to remove a reaction from a message in a group or a supergroup chat. The bot must have the 'can_delete_messages' administrator right in the chat. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deletemessagereaction): https://core.telegram.org/bots/api#deletemessagereaction
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param messageId Identifier of the target message
      * @param userId Identifier of the user whose reaction will be removed, if the reaction was added by a user
@@ -590,15 +645,14 @@ abstract class KittyBot {
         chatId: ChatId,
         messageId: Long,
         userId: Long? = null,
-        actorChatId: Long? = null,
-        requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+        actorChatId: Long? = null
+    ): TResult<Boolean>
 
     /**
      * Use this method to send static .WEBP, animated .TGS, or video .WEBM stickers. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendsticker): https://core.telegram.org/bots/api#sendsticker
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param sticker Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP sticker from the Internet, or upload a new .WEBP, .TGS, or .WEBM sticker using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Video and animated stickers can't be sent via an HTTP URL.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -627,13 +681,13 @@ abstract class KittyBot {
         suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to get a list of profile audios for a user. Returns a UserProfileAudios object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getuserprofileaudios): https://core.telegram.org/bots/api#getuserprofileaudios
-     * 
+     *
      * @param userId Unique identifier of the target user
      * @param offset Sequential number of the first audio to be returned. By default, all audios are returned.
      * @param limit Limits the number of audios to be retrieved. Values between 1-100 are accepted. Defaults to 100.
@@ -641,15 +695,14 @@ abstract class KittyBot {
     abstract suspend fun getUserProfileAudios(
         userId: Long,
         offset: Long? = null,
-        limit: Long? = null,
-        requestOptions: RequestOptions? = null
-    ): TResult<UserProfileAudios> 
+        limit: Long? = null
+    ): TResult<UserProfileAudios>
 
     /**
      * Use this method to edit a checklist on behalf of a connected business account. On success, the edited Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#editmessagechecklist): https://core.telegram.org/bots/api#editmessagechecklist
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param chatId Unique identifier for the target chat or username of the target bot in the format @username
      * @param messageId Unique identifier for the target message
@@ -663,14 +716,14 @@ abstract class KittyBot {
         checklist: InputChecklist,
         replyMarkup: InlineKeyboardMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success.
      * Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setpassportdataerrors): https://core.telegram.org/bots/api#setpassportdataerrors
-     * 
+     *
      * @param userId User identifier
      * @param errors A JSON-serialized array describing the errors
      */
@@ -678,37 +731,37 @@ abstract class KittyBot {
         userId: Long,
         errors: List<PassportElementError>,
         requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to change the bot's menu button in a private chat, or the default menu button. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setchatmenubutton): https://core.telegram.org/bots/api#setchatmenubutton
-     * 
+     *
      * @param chatId Unique identifier for the target private chat. If not specified, the bot's default menu button will be changed.
      * @param menuButton A JSON-serialized object for the bot's new menu button. Defaults to MenuButtonDefault.
      */
     abstract suspend fun setChatMenuButton(
         chatId: Long? = null,
         menuButton: MenuButton? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically closed if it was open. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#hidegeneralforumtopic): https://core.telegram.org/bots/api#hidegeneralforumtopic
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun hideGeneralForumTopic(
         chatId: ChatId
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to send a native poll. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendpoll): https://core.telegram.org/bots/api#sendpoll
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. Polls can't be sent to channel direct messages chats.
      * @param question Poll question, 1-300 characters
      * @param options A JSON-serialized list of 1-12 answer options
@@ -779,24 +832,24 @@ abstract class KittyBot {
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to get the current value of the bot's menu button in a private chat, or the default menu button. Returns MenuButton on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getchatmenubutton): https://core.telegram.org/bots/api#getchatmenubutton
-     * 
+     *
      * @param chatId Unique identifier for the target private chat. If not specified, the bot's default menu button will be returned.
      */
     abstract suspend fun getChatMenuButton(
         chatId: Long? = null
-    ): TResult<MenuButton> 
+    ): TResult<MenuButton>
 
     /**
      * Use this method to receive incoming updates using long polling (wiki). Returns an Array of Update objects.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getupdates): https://core.telegram.org/bots/api#getupdates
-     * 
+     *
      * @param offset Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id. The negative offset can be specified to retrieve updates starting from -offset update from the end of the updates queue. All previous updates will be forgotten.
      * @param limit Limits the number of updates to be retrieved. Values between 1-100 are accepted. Defaults to 100.
      * @param timeout Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling. Should be positive, short polling should be used for testing purposes only.
@@ -808,26 +861,39 @@ abstract class KittyBot {
         timeout: Long? = null,
         allowedUpdates: List<String>? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<List<Update>> 
+    ): TResult<List<Update>>
+
+    /**
+     * Use this method to process a received chat join request query by showing a Mini App to the user before deciding the outcome. Call answerChatJoinRequestQuery to resolve the join request query based on the user interaction with the Mini App. Returns True on success.
+     *
+     * [link](https://core.telegram.org/bots/api#sendchatjoinrequestwebapp): https://core.telegram.org/bots/api#sendchatjoinrequestwebapp
+     *
+     * @param chatJoinRequestQueryId Unique identifier of the join request query
+     * @param webAppUrl The URL of the Mini App to be opened
+     */
+    abstract suspend fun sendChatJoinRequestWebApp(
+        chatJoinRequestQueryId: String,
+        webAppUrl: String
+    ): TResult<Boolean>
 
     /**
      * Use this method to change the bot's name. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setmyname): https://core.telegram.org/bots/api#setmyname
-     * 
+     *
      * @param name New bot name; 0-64 characters. Pass an empty string to remove the dedicated name for the given language.
      * @param languageCode A two-letter ISO 639-1 language code. If empty, the name will be shown to all users for whose language there is no dedicated name.
      */
     abstract suspend fun setMyName(
         name: String? = null,
         languageCode: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Changes the first and last name of a managed business account. Requires the can_change_name business bot right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setbusinessaccountname): https://core.telegram.org/bots/api#setbusinessaccountname
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param firstName The new value of the first name for the business account; 1-64 characters
      * @param lastName The new value of the last name for the business account; 0-64 characters
@@ -836,13 +902,13 @@ abstract class KittyBot {
         businessConnectionId: String,
         firstName: String,
         lastName: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to copy messages of any kind. If some of the specified messages can't be found or copied, they are skipped. Service messages, paid media messages, giveaway messages, giveaway winners messages, and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessages, but the copied messages don't have a link to the original message. Album grouping is kept for copied messages. On success, an array of MessageId of the sent messages is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#copymessages): https://core.telegram.org/bots/api#copymessages
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param fromChatId Unique identifier for the chat where the original messages were sent (or username of the target bot, supergroup or channel in the format @username)
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages in the chat from_chat_id to copy. The identifiers must be specified in a strictly increasing order.
@@ -861,13 +927,13 @@ abstract class KittyBot {
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null,
         removeCaption: Boolean? = null
-    ): TResult<List<MessageId>> 
+    ): TResult<List<MessageId>>
 
     /**
      * Use this method to remove a message from the list of pinned messages in a chat. In private chats and channel direct messages chats, all messages can be unpinned. Conversely, the bot must be an administrator with the 'can_pin_messages' right or the 'can_edit_messages' right to unpin messages in groups and channels respectively. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#unpinchatmessage): https://core.telegram.org/bots/api#unpinchatmessage
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be unpinned
      * @param messageId Identifier of the message to unpin. Required if business_connection_id is specified. If not specified, the most recent pinned message (by sending date) will be unpinned.
@@ -876,13 +942,13 @@ abstract class KittyBot {
         chatId: ChatId,
         businessConnectionId: String? = null,
         messageId: Long? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to stop updating a live location message before live_period expires. On success, if the message is not an inline message, the edited Message is returned, otherwise True is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#stopmessagelivelocation): https://core.telegram.org/bots/api#stopmessagelivelocation
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
      * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
      * @param messageId Required if inline_message_id is not specified. Identifier of the message with live location to stop.
@@ -896,13 +962,13 @@ abstract class KittyBot {
         inlineMessageId: String? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult.Either<Message, Boolean> 
+    ): TResult.Either<Message, Boolean>
 
     /**
      * Use this method to change the list of emoji assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setstickeremojilist): https://core.telegram.org/bots/api#setstickeremojilist
-     * 
+     *
      * @param sticker File identifier of the sticker
      * @param emojiList A JSON-serialized list of 1-20 emoji associated with the sticker
      */
@@ -910,37 +976,37 @@ abstract class KittyBot {
         sticker: String,
         emojiList: List<String>,
         requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to get the current bot description for the given user language. Returns BotDescription on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getmydescription): https://core.telegram.org/bots/api#getmydescription
-     * 
+     *
      * @param languageCode A two-letter ISO 639-1 language code or an empty string
      */
     abstract suspend fun getMyDescription(
         languageCode: String? = null
-    ): TResult<BotDescription> 
+    ): TResult<BotDescription>
 
     /**
      * Use this method to get information about a member of a chat. The method is only guaranteed to work for other users if the bot is an administrator in the chat. Returns a ChatMember object on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getchatmember): https://core.telegram.org/bots/api#getchatmember
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup or channel in the format @username
      * @param userId Unique identifier of the target user
      */
     abstract suspend fun getChatMember(
         chatId: ChatId,
         userId: Long
-    ): TResult<ChatMember> 
+    ): TResult<ChatMember>
 
     /**
      * Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getuserprofilephotos): https://core.telegram.org/bots/api#getuserprofilephotos
-     * 
+     *
      * @param userId Unique identifier of the target user
      * @param offset Sequential number of the first photo to be returned. By default, all photos are returned.
      * @param limit Limits the number of photos to be retrieved. Values between 1-100 are accepted. Defaults to 100.
@@ -949,13 +1015,13 @@ abstract class KittyBot {
         userId: Long,
         offset: Long? = null,
         limit: Long? = null
-    ): TResult<UserProfilePhotos> 
+    ): TResult<UserProfilePhotos>
 
     /**
      * Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#senddocument): https://core.telegram.org/bots/api#senddocument
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param document File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -992,13 +1058,13 @@ abstract class KittyBot {
         suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to create an additional invite link for a chat. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. The link can be revoked using the method revokeChatInviteLink. Returns the new invite link as ChatInviteLink object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#createchatinvitelink): https://core.telegram.org/bots/api#createchatinvitelink
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param name Invite link name; 0-32 characters
      * @param expireDate Point in time (Unix timestamp) when the link will expire
@@ -1011,52 +1077,52 @@ abstract class KittyBot {
         expireDate: Long? = null,
         memberLimit: Long? = null,
         createsJoinRequest: Boolean? = null
-    ): TResult<ChatInviteLink> 
+    ): TResult<ChatInviteLink>
 
     /**
      * Returns the bot's Telegram Star transactions in chronological order. On success, returns a StarTransactions object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getstartransactions): https://core.telegram.org/bots/api#getstartransactions
-     * 
+     *
      * @param offset Number of transactions to skip in the response
      * @param limit The maximum number of transactions to be retrieved. Values between 1-100 are accepted. Defaults to 100.
      */
     abstract suspend fun getStarTransactions(
         offset: Long? = null,
         limit: Long? = null
-    ): TResult<StarTransactions> 
+    ): TResult<StarTransactions>
 
     /**
      * Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setchatstickerset): https://core.telegram.org/bots/api#setchatstickerset
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param stickerSetName Name of the sticker set to be set as the group sticker set
      */
     abstract suspend fun setChatStickerSet(
         chatId: ChatId,
         stickerSetName: String
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to change the bot's short description, which is shown on the bot's profile page and is sent together with the link when users share the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setmyshortdescription): https://core.telegram.org/bots/api#setmyshortdescription
-     * 
+     *
      * @param shortDescription New short description for the bot; 0-120 characters. Pass an empty string to remove the dedicated short description for the given language.
      * @param languageCode A two-letter ISO 639-1 language code. If empty, the short description will be applied to all users for whose language there is no dedicated short description.
      */
     abstract suspend fun setMyShortDescription(
         shortDescription: String? = null,
         languageCode: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to upload a file with a sticker for later use in the createNewStickerSet, addStickerToSet, or replaceStickerInSet methods (the file can be used multiple times). Returns the uploaded File on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#uploadstickerfile): https://core.telegram.org/bots/api#uploadstickerfile
-     * 
+     *
      * @param userId User identifier of sticker file owner
      * @param sticker A file with the sticker in .WEBP, .PNG, .TGS, or .WEBM format. See https://core.telegram.org/stickers for technical requirements. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param stickerFormat Format of the sticker, must be one of "static", "animated", "video"
@@ -1065,13 +1131,13 @@ abstract class KittyBot {
         userId: Long,
         sticker: TelegramFile,
         stickerFormat: StickerFormat
-    ): TResult<File> 
+    ): TResult<File>
 
     /**
      * Use this method to edit a non-primary invite link created by the bot. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the edited invite link as a ChatInviteLink object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#editchatinvitelink): https://core.telegram.org/bots/api#editchatinvitelink
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param inviteLink The invite link to edit
      * @param name Invite link name; 0-32 characters
@@ -1086,47 +1152,46 @@ abstract class KittyBot {
         expireDate: Long? = null,
         memberLimit: Long? = null,
         createsJoinRequest: Boolean? = null
-    ): TResult<ChatInviteLink> 
+    ): TResult<ChatInviteLink>
 
     /**
      * Use this method for your bot to leave a group, supergroup or channel. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#leavechat): https://core.telegram.org/bots/api#leavechat
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup or channel in the format @username. Channel direct messages chats aren't supported; leave the corresponding channel instead.
      */
     abstract suspend fun leaveChat(
         chatId: ChatId
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#closegeneralforumtopic): https://core.telegram.org/bots/api#closegeneralforumtopic
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun closeGeneralForumTopic(
         chatId: ChatId
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to get the access settings of a managed bot. Returns a BotAccessSettings object on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getmanagedbotaccesssettings): https://core.telegram.org/bots/api#getmanagedbotaccesssettings
-     * 
+     *
      * @param userId User identifier of the managed bot whose access settings will be returned
      */
     abstract suspend fun getManagedBotAccessSettings(
-        userId: Long,
-        requestOptions: RequestOptions? = null
-    ): TResult<BotAccessSettings> 
+        userId: Long
+    ): TResult<BotAccessSettings>
 
     /**
      * Stores a keyboard button that can be used by a user within a Mini App. Returns a PreparedKeyboardButton object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#savepreparedkeyboardbutton): https://core.telegram.org/bots/api#savepreparedkeyboardbutton
-     * 
+     *
      * @param userId Unique identifier of the target user that can use the button
      * @param button A JSON-serialized object describing the button to be saved. The button must be of the type request_users, request_chat, or request_managed_bot.
      */
@@ -1134,13 +1199,13 @@ abstract class KittyBot {
         userId: Long,
         button: KeyboardButton,
         requestOptions: RequestOptions? = null
-    ): TResult<PreparedKeyboardButton> 
+    ): TResult<PreparedKeyboardButton>
 
     /**
      * Use this method to set the thumbnail of a regular or mask sticker set. The format of the thumbnail file must match the format of the stickers in the set. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setstickersetthumbnail): https://core.telegram.org/bots/api#setstickersetthumbnail
-     * 
+     *
      * @param name Sticker set name
      * @param userId User identifier of the sticker set owner
      * @param format Format of the thumbnail, must be one of "static" for a .WEBP or .PNG image, "animated" for a .TGS animation, or "video" for a .WEBM video
@@ -1151,58 +1216,58 @@ abstract class KittyBot {
         userId: Long,
         format: StickerFormat,
         thumbnail: TelegramFile? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to get the current default administrator rights of the bot. Returns ChatAdministratorRights on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getmydefaultadministratorrights): https://core.telegram.org/bots/api#getmydefaultadministratorrights
-     * 
+     *
      * @param forChannels Pass True to get default administrator rights of the bot in channels. Otherwise, default administrator rights of the bot for groups and supergroups will be returned.
      */
     abstract suspend fun getMyDefaultAdministratorRights(
         forChannels: Boolean? = null
-    ): TResult<ChatAdministratorRights> 
+    ): TResult<ChatAdministratorRights>
 
     /**
      * A simple method for testing your bot's authentication token. Requires no parameters. Returns basic information about the bot in form of a User object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getme): https://core.telegram.org/bots/api#getme
-     * 
+     *
      */
-    abstract suspend fun getMe(): TResult<User> 
+    abstract suspend fun getMe(): TResult<User>
 
     /**
      * Use this method to move a sticker in a set created by the bot to a specific position. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setstickerpositioninset): https://core.telegram.org/bots/api#setstickerpositioninset
-     * 
+     *
      * @param sticker File identifier of the sticker
      * @param position New sticker position in the set, zero-based
      */
     abstract suspend fun setStickerPositionInSet(
         sticker: String,
         position: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to set the thumbnail of a custom emoji sticker set. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setcustomemojistickersetthumbnail): https://core.telegram.org/bots/api#setcustomemojistickersetthumbnail
-     * 
+     *
      * @param name Sticker set name
      * @param customEmojiId Custom emoji identifier of a sticker from the sticker set; pass an empty string to drop the thumbnail and use the first sticker as the thumbnail
      */
     abstract suspend fun setCustomEmojiStickerSetThumbnail(
         name: String,
         customEmojiId: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to send live photos. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendlivephoto): https://core.telegram.org/bots/api#sendlivephoto
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param livePhoto Live photo video to send. The video must be no longer than 10 seconds and must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending live photos by a URL is currently unsupported.
      * @param photo The static photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending live photos by a URL is currently unsupported.
@@ -1241,35 +1306,34 @@ abstract class KittyBot {
         suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to get the last messages from the personal chat (i.e., the chat currently added to their profile) of a given user. On success, an array of Message objects is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getuserpersonalchatmessages): https://core.telegram.org/bots/api#getuserpersonalchatmessages
-     * 
+     *
      * @param userId Unique identifier for the target user
      * @param limit The maximum number of messages to return; 1-20
      */
     abstract suspend fun getUserPersonalChatMessages(
         userId: Long,
-        limit: Long,
-        requestOptions: RequestOptions? = null
-    ): TResult<List<Message>> 
+        limit: Long
+    ): TResult<List<Message>>
 
     /**
      * Use this method to close the bot instance before moving it from one local server to another. You need to delete the webhook before calling this method to ensure that the bot isn't launched again after server restart. The method will return error 429 in the first 10 minutes after the bot is launched. Returns True on success. Requires no parameters.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#close): https://core.telegram.org/bots/api#close
-     * 
+     *
      */
-    abstract suspend fun close(): TResult<Boolean> 
+    abstract suspend fun close(): TResult<Boolean>
 
     /**
      * Use this method to add a message to the list of pinned messages in a chat. In private chats and channel direct messages chats, all non-service messages can be pinned. Conversely, the bot must be an administrator with the 'can_pin_messages' right or the 'can_edit_messages' right to pin messages in groups and channels respectively. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#pinchatmessage): https://core.telegram.org/bots/api#pinchatmessage
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param messageId Identifier of a message to pin
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be pinned
@@ -1280,25 +1344,25 @@ abstract class KittyBot {
         messageId: Long,
         businessConnectionId: String? = null,
         disableNotification: Boolean? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to get information about custom emoji stickers by their identifiers. Returns an Array of Sticker objects.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getcustomemojistickers): https://core.telegram.org/bots/api#getcustomemojistickers
-     * 
+     *
      * @param customEmojiIds A JSON-serialized list of custom emoji identifiers. At most 200 custom emoji identifiers can be specified.
      */
     abstract suspend fun getCustomEmojiStickers(
         customEmojiIds: List<String>,
         requestOptions: RequestOptions? = null
-    ): TResult<List<Sticker>> 
+    ): TResult<List<Sticker>>
 
     /**
      * Upgrades a given regular gift to a unique gift. Requires the can_transfer_and_upgrade_gifts business bot right. Additionally requires the can_transfer_stars business bot right if the upgrade is paid. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#upgradegift): https://core.telegram.org/bots/api#upgradegift
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param ownedGiftId Unique identifier of the regular gift that should be upgraded to a unique one
      * @param keepOriginalDetails Pass True to keep the original gift text, sender and receiver in the upgraded gift
@@ -1309,14 +1373,14 @@ abstract class KittyBot {
         ownedGiftId: String,
         keepOriginalDetails: Boolean? = null,
         starCount: Long? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to send answers to an inline query. On success, True is returned.
      * No more than 50 results per query are allowed.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#answerinlinequery): https://core.telegram.org/bots/api#answerinlinequery
-     * 
+     *
      * @param inlineQueryId Unique identifier for the answered query
      * @param results A JSON-serialized array of results for the inline query
      * @param cacheTime The maximum amount of time in seconds that the result of the inline query may be cached on the server. Defaults to 300.
@@ -1332,39 +1396,39 @@ abstract class KittyBot {
         nextOffset: String? = null,
         button: InlineQueryResultsButton? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new link is automatically generated. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the revoked invite link as ChatInviteLink object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#revokechatinvitelink): https://core.telegram.org/bots/api#revokechatinvitelink
-     * 
+     *
      * @param chatId Unique identifier of the target chat or username of the target channel in the format @username
      * @param inviteLink The invite link to revoke
      */
     abstract suspend fun revokeChatInviteLink(
         chatId: ChatId,
         inviteLink: String
-    ): TResult<ChatInviteLink> 
+    ): TResult<ChatInviteLink>
 
     /**
      * Transfers Telegram Stars from the business account balance to the bot's balance. Requires the can_transfer_stars business bot right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#transferbusinessaccountstars): https://core.telegram.org/bots/api#transferbusinessaccountstars
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param starCount Number of Telegram Stars to transfer; 1-10000
      */
     abstract suspend fun transferBusinessAccountStars(
         businessConnectionId: String,
         starCount: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned. Note: The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#answerprecheckoutquery): https://core.telegram.org/bots/api#answerprecheckoutquery
-     * 
+     *
      * @param preCheckoutQueryId Unique identifier for the query to be answered
      * @param ok Specify True if everything is alright (goods are available, etc.) and the bot is ready to proceed with the order. Use False if there are any problems.
      * @param errorMessage Required if ok is False. Error message in human readable form that explains the reason for failure to proceed with the checkout (e.g. "Sorry, somebody just bought the last of our amazing black T-shirts while you were busy filling out your payment details. Please choose a different color or garment!"). Telegram will display this message to the user.
@@ -1373,13 +1437,13 @@ abstract class KittyBot {
         preCheckoutQueryId: String,
         ok: Boolean,
         errorMessage: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to send text messages. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendmessage): https://core.telegram.org/bots/api#sendmessage
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param text Text of the message to be sent, 1-4096 characters after entities parsing
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -1413,14 +1477,14 @@ abstract class KittyBot {
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
      * We only recommend using this method when a response from the bot will take a noticeable amount of time to arrive.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendchataction): https://core.telegram.org/bots/api#sendchataction
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot or supergroup in the format @username. Channel chats and channel direct messages chats aren't supported.
      * @param action Type of action to broadcast. Choose one, depending on what the user is about to receive: typing for text messages, upload_photo for photos, record_video or upload_video for videos, record_voice or upload_voice for voice notes, upload_document for general files, choose_sticker for stickers, find_location for location data, record_video_note or upload_video_note for video notes.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the action will be sent
@@ -1431,13 +1495,13 @@ abstract class KittyBot {
         action: ChatAction,
         businessConnectionId: String? = null,
         messageThreadId: Long? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to create a subscription invite link for a channel chat. The bot must have the can_invite_users administrator rights. The link can be edited using the method editChatSubscriptionInviteLink or revoked using the method revokeChatInviteLink. Returns the new invite link as a ChatInviteLink object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#createchatsubscriptioninvitelink): https://core.telegram.org/bots/api#createchatsubscriptioninvitelink
-     * 
+     *
      * @param chatId Unique identifier for the target channel chat or username of the target channel in the format @username
      * @param subscriptionPeriod The number of seconds the subscription will be active for before the next payment. Currently, it must always be 2592000 (30 days).
      * @param subscriptionPrice The amount of Telegram Stars a user must pay initially and after each subsequent subscription period to be a member of the chat; 1-10000
@@ -1448,7 +1512,7 @@ abstract class KittyBot {
         subscriptionPeriod: Long,
         subscriptionPrice: Long,
         name: String? = null
-    ): TResult<ChatInviteLink> 
+    ): TResult<ChatInviteLink>
 
     /**
      * Use this method to delete a message, including service messages, with the following limitations:
@@ -1462,33 +1526,33 @@ abstract class KittyBot {
      * - If the bot has can_delete_messages administrator right in a supergroup or a channel, it can delete any message there.
      * - If the bot has can_manage_direct_messages administrator right in a channel, it can delete any message in the corresponding direct messages chat.
      * Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deletemessage): https://core.telegram.org/bots/api#deletemessage
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param messageId Identifier of the message to delete
      */
     abstract suspend fun deleteMessage(
         chatId: ChatId,
         messageId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to get the current bot short description for the given user language. Returns BotShortDescription on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getmyshortdescription): https://core.telegram.org/bots/api#getmyshortdescription
-     * 
+     *
      * @param languageCode A two-letter ISO 639-1 language code or an empty string
      */
     abstract suspend fun getMyShortDescription(
         languageCode: String? = null
-    ): TResult<BotShortDescription> 
+    ): TResult<BotShortDescription>
 
     /**
      * If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the bot. Use this method to reply to shipping queries. On success, True is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#answershippingquery): https://core.telegram.org/bots/api#answershippingquery
-     * 
+     *
      * @param shippingQueryId Unique identifier for the query to be answered
      * @param ok Pass True if delivery to the specified address is possible and False if there are any problems (for example, if delivery to the specified address is not possible)
      * @param shippingOptions Required if ok is True. A JSON-serialized array of available shipping options.
@@ -1500,26 +1564,26 @@ abstract class KittyBot {
         shippingOptions: List<ShippingOption>? = null,
         errorMessage: String? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Converts a given regular gift to Telegram Stars. Requires the can_convert_gifts_to_stars business bot right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#convertgifttostars): https://core.telegram.org/bots/api#convertgifttostars
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param ownedGiftId Unique identifier of the regular gift that should be converted to Telegram Stars
      */
     abstract suspend fun convertGiftToStars(
         businessConnectionId: String,
         ownedGiftId: String
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Stores a message that can be sent by a user of a Mini App. Returns a PreparedInlineMessage object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#savepreparedinlinemessage): https://core.telegram.org/bots/api#savepreparedinlinemessage
-     * 
+     *
      * @param userId Unique identifier of the target user that can use the prepared message
      * @param result A JSON-serialized object describing the message to be sent
      * @param allowUserChats Pass True if the message can be sent to private chats with users
@@ -1535,26 +1599,26 @@ abstract class KittyBot {
         allowGroupChats: Boolean? = null,
         allowChannelChats: Boolean? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<PreparedInlineMessage> 
+    ): TResult<PreparedInlineMessage>
 
     /**
      * Deletes a story previously posted by the bot on behalf of a managed business account. Requires the can_manage_stories business bot right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deletestory): https://core.telegram.org/bots/api#deletestory
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param storyId Unique identifier of the story to delete
      */
     abstract suspend fun deleteStory(
         businessConnectionId: String,
         storyId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to change the access settings of a managed bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setmanagedbotaccesssettings): https://core.telegram.org/bots/api#setmanagedbotaccesssettings
-     * 
+     *
      * @param userId User identifier of the managed bot whose access settings will be changed
      * @param isAccessRestricted Pass True, if only selected users can access the bot. The bot's owner can always access it.
      * @param addedUserIds A JSON-serialized list of up to 10 identifiers of users who will have access to the bot in addition to its owner. Ignored if is_access_restricted is false.
@@ -1562,15 +1626,14 @@ abstract class KittyBot {
     abstract suspend fun setManagedBotAccessSettings(
         userId: Long,
         isAccessRestricted: Boolean,
-        addedUserIds: List<Long>? = null,
-        requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+        addedUserIds: List<Long>? = null
+    ): TResult<Boolean>
 
     /**
      * Gifts a Telegram Premium subscription to the given user. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#giftpremiumsubscription): https://core.telegram.org/bots/api#giftpremiumsubscription
-     * 
+     *
      * @param userId Unique identifier of the target user who will receive a Telegram Premium subscription
      * @param monthCount Number of months the Telegram Premium subscription will be active for the user; must be one of 3, 6, or 12
      * @param starCount Number of Telegram Stars to pay for the Telegram Premium subscription; must be 1000 for 3 months, 1500 for 6 months, and 2500 for 12 months
@@ -1586,13 +1649,13 @@ abstract class KittyBot {
         textParseMode: ParseMode? = null,
         textEntities: List<MessageEntity>? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to edit name and icon of a topic in a forum supergroup chat or a private chat with a user. In the case of a supergroup chat the bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#editforumtopic): https://core.telegram.org/bots/api#editforumtopic
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param messageThreadId Unique identifier for the target message thread of the forum topic
      * @param name New topic name, 0-128 characters. If not specified or empty, the current name of the topic will be kept.
@@ -1603,13 +1666,13 @@ abstract class KittyBot {
         messageThreadId: Long,
         name: String? = null,
         iconCustomEmojiId: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to send phone contacts. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendcontact): https://core.telegram.org/bots/api#sendcontact
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param phoneNumber Contact's phone number
      * @param firstName Contact's first name
@@ -1643,24 +1706,24 @@ abstract class KittyBot {
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to clear the list of pinned messages in a chat. In private chats and channel direct messages chats, no additional rights are required to unpin all pinned messages. Conversely, the bot must be an administrator with the 'can_pin_messages' right or the 'can_edit_messages' right to unpin all pinned messages in groups and channels respectively. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#unpinallchatmessages): https://core.telegram.org/bots/api#unpinallchatmessages
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      */
     abstract suspend fun unpinAllChatMessages(
         chatId: ChatId
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate administrator rights. Pass True for all permissions to lift restrictions from a user. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#restrictchatmember): https://core.telegram.org/bots/api#restrictchatmember
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param userId Unique identifier of the target user
      * @param permissions A JSON-serialized object for new user permissions
@@ -1673,13 +1736,13 @@ abstract class KittyBot {
         permissions: ChatPermissions,
         useIndependentChatPermissions: Boolean? = null,
         untilDate: Long? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Changes the profile photo of a managed business account. Requires the can_edit_profile_photo business bot right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setbusinessaccountprofilephoto): https://core.telegram.org/bots/api#setbusinessaccountprofilephoto
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param photo The new profile photo to set
      * @param isPublic Pass True to set the public photo, which will be visible even if the main photo is hidden by the business account's privacy settings. An account can have only one public photo.
@@ -1688,13 +1751,13 @@ abstract class KittyBot {
         businessConnectionId: String,
         photo: InputProfilePhoto,
         isPublic: Boolean? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Returns the gifts received and owned by a managed business account. Requires the can_view_gifts_and_stars business bot right. Returns OwnedGifts on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getbusinessaccountgifts): https://core.telegram.org/bots/api#getbusinessaccountgifts
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param excludeUnsaved Pass True to exclude gifts that aren't saved to the account's profile page
      * @param excludeSaved Pass True to exclude gifts that are saved to the account's profile page
@@ -1719,13 +1782,13 @@ abstract class KittyBot {
         sortByPrice: Boolean? = null,
         offset: String? = null,
         limit: Long? = null
-    ): TResult<OwnedGifts> 
+    ): TResult<OwnedGifts>
 
     /**
      * Use this method to forward messages of any kind. Service messages and messages with protected content can't be forwarded. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#forwardmessage): https://core.telegram.org/bots/api#forwardmessage
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param fromChatId Unique identifier for the chat where the original message was sent (or username of the target bot, supergroup or channel in the format @username)
      * @param messageId Message identifier in the chat specified in from_chat_id
@@ -1748,13 +1811,13 @@ abstract class KittyBot {
         protectContent: Boolean? = null,
         messageEffectId: String? = null,
         suggestedPostParameters: SuggestedPostParameters? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Allows the bot to cancel or re-enable extension of a subscription paid in Telegram Stars. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#edituserstarsubscription): https://core.telegram.org/bots/api#edituserstarsubscription
-     * 
+     *
      * @param userId Identifier of the user whose subscription will be edited
      * @param telegramPaymentChargeId Telegram payment identifier for the subscription
      * @param isCanceled Pass True to cancel extension of the user subscription; the subscription must be active up to the end of the current subscription period. Pass False to allow the user to re-enable a subscription that was previously canceled by the bot.
@@ -1763,21 +1826,21 @@ abstract class KittyBot {
         userId: Long,
         telegramPaymentChargeId: String,
         isCanceled: Boolean
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user. Requires no parameters. Returns an Array of Sticker objects.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getforumtopiciconstickers): https://core.telegram.org/bots/api#getforumtopiciconstickers
-     * 
+     *
      */
-    abstract suspend fun getForumTopicIconStickers(): TResult<List<Sticker>> 
+    abstract suspend fun getForumTopicIconStickers(): TResult<List<Sticker>>
 
     /**
      * Changes the privacy settings pertaining to incoming gifts in a managed business account. Requires the can_change_gift_settings business bot right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setbusinessaccountgiftsettings): https://core.telegram.org/bots/api#setbusinessaccountgiftsettings
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param showGiftButton Pass True, if a button for sending a gift to the user or by the business account must always be shown in the input field
      * @param acceptedGiftTypes Types of gifts accepted by the business account
@@ -1786,53 +1849,53 @@ abstract class KittyBot {
         businessConnectionId: String,
         showGiftButton: Boolean,
         acceptedGiftTypes: AcceptedGiftTypes
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Changes the bio of a managed business account. Requires the can_change_bio business bot right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setbusinessaccountbio): https://core.telegram.org/bots/api#setbusinessaccountbio
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param bio The new value of the bio for the business account; 0-140 characters
      */
     abstract suspend fun setBusinessAccountBio(
         businessConnectionId: String,
         bio: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to unban a previously banned channel chat in a supergroup or channel. The bot must be an administrator for this to work and must have the appropriate administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#unbanchatsenderchat): https://core.telegram.org/bots/api#unbanchatsenderchat
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param senderChatId Unique identifier of the target sender chat
      */
     abstract suspend fun unbanChatSenderChat(
         chatId: ChatId,
         senderChatId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to get the current list of the bot's commands for the given scope and user language. Returns an Array of BotCommand objects. If commands aren't set, an empty list is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getmycommands): https://core.telegram.org/bots/api#getmycommands
-     * 
+     *
      * @param scope A JSON-serialized object, describing scope of users. Defaults to BotCommandScopeDefault.
      * @param languageCode A two-letter ISO 639-1 language code or an empty string
      */
     abstract suspend fun getMyCommands(
         scope: BotCommandScope? = null,
         languageCode: String? = null
-    ): TResult<List<BotCommand>> 
+    ): TResult<List<BotCommand>>
 
     /**
      * Use this method to specify a URL and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified URL, containing a JSON-serialized Update. In case of an unsuccessful request (a request with response HTTP status code different from 2XY), we will repeat the request and give up after a reasonable amount of attempts. Returns True on success.
      * If you'd like to make sure that the webhook was set by you, you can specify secret data in the parameter secret_token. If specified, the request will contain a header "X-Telegram-Bot-Api-Secret-Token" with the secret token as content.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setwebhook): https://core.telegram.org/bots/api#setwebhook
-     * 
+     *
      * @param url HTTPS URL to send updates to. Use an empty string to remove webhook integration.
      * @param certificate Upload your public key certificate so that the root certificate in use can be checked. See our self-signed guide for details.
      * @param ipAddress The fixed IP address which will be used to send webhook requests instead of the IP address resolved through DNS
@@ -1849,13 +1912,13 @@ abstract class KittyBot {
         allowedUpdates: List<String>? = null,
         dropPendingUpdates: Boolean? = null,
         secretToken: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to set a tag for a regular member in a group or a supergroup. The bot must be an administrator in the chat for this to work and must have the can_manage_tags administrator right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setchatmembertag): https://core.telegram.org/bots/api#setchatmembertag
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param userId Unique identifier of the target user
      * @param tag New tag for the member; 0-16 characters, emoji are not allowed
@@ -1863,52 +1926,51 @@ abstract class KittyBot {
     abstract suspend fun setChatMemberTag(
         chatId: ChatId,
         userId: Long,
-        tag: String? = null,
-        requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+        tag: String? = null
+    ): TResult<Boolean>
 
     /**
      * Use this method to change the mask position of a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setstickermaskposition): https://core.telegram.org/bots/api#setstickermaskposition
-     * 
+     *
      * @param sticker File identifier of the sticker
      * @param maskPosition A JSON-serialized object with the position where the mask should be placed on faces. Omit the parameter to remove the mask position.
      */
     abstract suspend fun setStickerMaskPosition(
         sticker: String,
         maskPosition: MaskPosition? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Verifies a user on behalf of the organization which is represented by the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#verifyuser): https://core.telegram.org/bots/api#verifyuser
-     * 
+     *
      * @param userId Unique identifier of the target user
      * @param customDescription Custom description for the verification; 0-70 characters. Must be empty if the organization isn't allowed to provide a custom verification description.
      */
     abstract suspend fun verifyUser(
         userId: Long,
         customDescription: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to remove webhook integration if you decide to switch back to getUpdates. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deletewebhook): https://core.telegram.org/bots/api#deletewebhook
-     * 
+     *
      * @param dropPendingUpdates Pass True to drop all pending updates
      */
     abstract suspend fun deleteWebhook(
         dropPendingUpdates: Boolean? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Sends a gift to the given user or channel chat. The gift can't be converted to Telegram Stars by the receiver. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendgift): https://core.telegram.org/bots/api#sendgift
-     * 
+     *
      * @param giftId Identifier of the gift; limited gifts can't be sent to channel chats
      * @param userId Required if chat_id is not specified. Unique identifier of the target user who will receive the gift.
      * @param chatId Required if user_id is not specified. Unique identifier for the chat or username of the channel (in the format @username) that will receive the gift.
@@ -1926,13 +1988,13 @@ abstract class KittyBot {
         textParseMode: ParseMode? = null,
         textEntities: List<MessageEntity>? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Posts a story on behalf of a managed business account. Requires the can_manage_stories business bot right. Returns Story on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#poststory): https://core.telegram.org/bots/api#poststory
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param content Content of the story
      * @param activePeriod Period after which the story is moved to the archive, in seconds; must be one of 6 * 3600, 12 * 3600, 86400, or 2 * 86400
@@ -1953,25 +2015,25 @@ abstract class KittyBot {
         areas: List<StoryArea>? = null,
         postToChatPage: Boolean? = null,
         protectContent: Boolean? = null
-    ): TResult<Story> 
+    ): TResult<Story>
 
     /**
      * Use this method to get basic information about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.
      * Note: This function may not preserve the original file name and MIME type. You should save the file's MIME type and name (if available) when the File object is received.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getfile): https://core.telegram.org/bots/api#getfile
-     * 
+     *
      * @param fileId File identifier to get information about
      */
     abstract suspend fun getFile(
         fileId: String
-    ): TResult<File> 
+    ): TResult<File>
 
     /**
      * Transfers an owned unique gift to another user. Requires the can_transfer_and_upgrade_gifts business bot right. Requires can_transfer_stars business bot right if the transfer is paid. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#transfergift): https://core.telegram.org/bots/api#transfergift
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param ownedGiftId Unique identifier of the regular gift that should be transferred
      * @param newOwnerChatId Unique identifier of the chat which will own the gift. The chat must be active in the last 24 hours.
@@ -1982,13 +2044,13 @@ abstract class KittyBot {
         ownedGiftId: String,
         newOwnerChatId: Long,
         starCount: Long? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to change search keywords assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setstickerkeywords): https://core.telegram.org/bots/api#setstickerkeywords
-     * 
+     *
      * @param sticker File identifier of the sticker
      * @param keywords A JSON-serialized list of 0-20 search keywords for the sticker with total length of up to 64 characters
      */
@@ -1996,26 +2058,26 @@ abstract class KittyBot {
         sticker: String,
         keywords: List<String>? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to get the list of boosts added to a chat by a user. Requires administrator rights in the chat. Returns a UserChatBoosts object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getuserchatboosts): https://core.telegram.org/bots/api#getuserchatboosts
-     * 
+     *
      * @param chatId Unique identifier for the chat or username of the channel in the format @username
      * @param userId Unique identifier of the target user
      */
     abstract suspend fun getUserChatBoosts(
         chatId: ChatId,
         userId: Long
-    ): TResult<UserChatBoosts> 
+    ): TResult<UserChatBoosts>
 
     /**
      * Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. Returns an Array of GameHighScore objects.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getgamehighscores): https://core.telegram.org/bots/api#getgamehighscores
-     * 
+     *
      * @param userId Target user id
      * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat.
      * @param messageId Required if inline_message_id is not specified. Identifier of the sent message.
@@ -2026,13 +2088,13 @@ abstract class KittyBot {
         chatId: Long? = null,
         messageId: Long? = null,
         inlineMessageId: String? = null
-    ): TResult<List<GameHighScore>> 
+    ): TResult<List<GameHighScore>>
 
     /**
      * Use this method to create a link for an invoice. Returns the created invoice link as String on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#createinvoicelink): https://core.telegram.org/bots/api#createinvoicelink
-     * 
+     *
      * @param title Product name, 1-32 characters
      * @param description Product description, 1-255 characters
      * @param payload Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use it for your internal processes.
@@ -2080,48 +2142,48 @@ abstract class KittyBot {
         sendEmailToProvider: Boolean? = null,
         isFlexible: Boolean? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<String> 
+    ): TResult<String>
 
     /**
      * Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically unhidden if it was hidden. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#reopengeneralforumtopic): https://core.telegram.org/bots/api#reopengeneralforumtopic
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun reopenGeneralForumTopic(
         chatId: ChatId
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deletechatstickerset): https://core.telegram.org/bots/api#deletechatstickerset
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      */
     abstract suspend fun deleteChatStickerSet(
         chatId: ChatId
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#editgeneralforumtopic): https://core.telegram.org/bots/api#editgeneralforumtopic
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param name New topic name, 1-128 characters
      */
     abstract suspend fun editGeneralForumTopic(
         chatId: ChatId,
         name: String
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS, or in .MP3 format, or in .M4A format (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendvoice): https://core.telegram.org/bots/api#sendvoice
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param voice Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -2156,34 +2218,34 @@ abstract class KittyBot {
         suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to ban a channel chat in a supergroup or a channel. Until the chat is unbanned, the owner of the banned chat won't be able to send messages on behalf of any of their channels. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#banchatsenderchat): https://core.telegram.org/bots/api#banchatsenderchat
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param senderChatId Unique identifier of the target sender chat
      */
     abstract suspend fun banChatSenderChat(
         chatId: ChatId,
         senderChatId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getwebhookinfo): https://core.telegram.org/bots/api#getwebhookinfo
-     * 
+     *
      */
-    abstract suspend fun getWebhookInfo(): TResult<WebhookInfo> 
+    abstract suspend fun getWebhookInfo(): TResult<WebhookInfo>
 
     /**
      * Use this method to reply to a received guest message. On success, a SentGuestMessage object is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#answerguestquery): https://core.telegram.org/bots/api#answerguestquery
-     * 
+     *
      * @param guestQueryId Unique identifier for the query to be answered
      * @param result A JSON-serialized object describing the message to be sent
      */
@@ -2191,13 +2253,13 @@ abstract class KittyBot {
         guestQueryId: String,
         result: InlineQueryResult,
         requestOptions: RequestOptions? = null
-    ): TResult<SentGuestMessage> 
+    ): TResult<SentGuestMessage>
 
     /**
      * Use this method to change the list of the bot's commands. See this manual for more details about bot commands. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setmycommands): https://core.telegram.org/bots/api#setmycommands
-     * 
+     *
      * @param commands A JSON-serialized list of bot commands to be set as the list of the bot's commands. At most 100 commands can be specified.
      * @param scope A JSON-serialized object, describing scope of users for which the commands are relevant. Defaults to BotCommandScopeDefault.
      * @param languageCode A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands.
@@ -2207,41 +2269,43 @@ abstract class KittyBot {
         scope: BotCommandScope? = null,
         languageCode: String? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
-     * Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
-     * 
+     * Use this method to edit text, rich and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
+     *
      * [link](https://core.telegram.org/bots/api#editmessagetext): https://core.telegram.org/bots/api#editmessagetext
-     * 
-     * @param text New text of the message, 1-4096 characters after entities parsing
+     *
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
      * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
      * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit.
      * @param inlineMessageId Required if chat_id and message_id are not specified. Identifier of the inline message.
+     * @param text New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified
      * @param parseMode Mode for parsing entities in the message text. See formatting options for more details.
      * @param entities A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
      * @param linkPreviewOptions Link preview generation options for the message
+     * @param richMessage New rich content of the message; required if text isn't specified
      * @param replyMarkup A JSON-serialized object for an inline keyboard
      */
     abstract suspend fun editMessageText(
-        text: String,
         businessConnectionId: String? = null,
         chatId: ChatId? = null,
         messageId: Long? = null,
         inlineMessageId: String? = null,
+        text: String? = null,
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         linkPreviewOptions: LinkPreviewOptions? = null,
+        richMessage: InputRichMessage? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult.Either<Message, Boolean> 
+    ): TResult.Either<Message, Boolean>
 
     /**
      * Use this method to send invoices. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendinvoice): https://core.telegram.org/bots/api#sendinvoice
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param title Product name, 1-32 characters
      * @param description Product description, 1-255 characters
@@ -2307,24 +2371,24 @@ abstract class KittyBot {
         replyParameters: ReplyParameters? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to get the current bot name for the given user language. Returns BotName on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getmyname): https://core.telegram.org/bots/api#getmyname
-     * 
+     *
      * @param languageCode A two-letter ISO 639-1 language code or an empty string
      */
     abstract suspend fun getMyName(
         languageCode: String? = null
-    ): TResult<BotName> 
+    ): TResult<BotName>
 
     /**
      * Use this method to change the chosen reactions on a message. Service messages of some types can't be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. Bots can't use paid reactions. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setmessagereaction): https://core.telegram.org/bots/api#setmessagereaction
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param messageId Identifier of the target message. If the message belongs to a media group, the reaction is set to the first non-deleted message in the group instead.
      * @param reaction A JSON-serialized list of reaction types to set on the message. Currently, as non-premium users, bots can set up to one reaction per message. A custom emoji reaction can be used if it is either already present on the message or explicitly allowed by chat administrators. Paid reactions can't be used by bots.
@@ -2336,13 +2400,13 @@ abstract class KittyBot {
         reaction: List<ReactionType>? = null,
         isBig: Boolean? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to unban a previously banned user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. By default, this method guarantees that after the call the user is not a member of the chat, but will be able to join it. So if the user is a member of the chat they will also be removed from the chat. If you don't want this, use the parameter only_if_banned. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#unbanchatmember): https://core.telegram.org/bots/api#unbanchatmember
-     * 
+     *
      * @param chatId Unique identifier for the target group or username of the target supergroup or channel in the format @username
      * @param userId Unique identifier of the target user
      * @param onlyIfBanned Do nothing if the user is not banned
@@ -2351,13 +2415,13 @@ abstract class KittyBot {
         chatId: ChatId,
         userId: Long,
         onlyIfBanned: Boolean? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendvideonote): https://core.telegram.org/bots/api#sendvideonote
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param videoNote Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files. Sending video notes by a URL is currently unsupported.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -2390,26 +2454,26 @@ abstract class KittyBot {
         suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to change the default administrator rights requested by the bot when it's added as an administrator to groups or channels. These rights will be suggested to users, but they are free to modify the list before adding the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setmydefaultadministratorrights): https://core.telegram.org/bots/api#setmydefaultadministratorrights
-     * 
+     *
      * @param rights A JSON-serialized object describing new default administrator rights. If not specified, the default administrator rights will be cleared.
      * @param forChannels Pass True to change the default administrator rights of the bot in channels. Otherwise, the default administrator rights of the bot for groups and supergroups will be changed.
      */
     abstract suspend fun setMyDefaultAdministratorRights(
         rights: ChatAdministratorRights? = null,
         forChannels: Boolean? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to remove up to 10000 recent reactions in a group or a supergroup chat added by a given user or chat. The bot must have the 'can_delete_messages' administrator right in the chat. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deleteallmessagereactions): https://core.telegram.org/bots/api#deleteallmessagereactions
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param userId Identifier of the user whose reactions will be removed, if the reactions were added by a user
      * @param actorChatId Identifier of the chat whose reactions will be removed, if the reactions were added by a chat
@@ -2417,15 +2481,14 @@ abstract class KittyBot {
     abstract suspend fun deleteAllMessageReactions(
         chatId: ChatId,
         userId: Long? = null,
-        actorChatId: Long? = null,
-        requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+        actorChatId: Long? = null
+    ): TResult<Boolean>
 
     /**
      * Returns the gifts owned by a chat. Returns OwnedGifts on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getchatgifts): https://core.telegram.org/bots/api#getchatgifts
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param excludeUnsaved Pass True to exclude gifts that aren't saved to the chat's profile page. Always True, unless the bot has the can_post_messages administrator right in the channel.
      * @param excludeSaved Pass True to exclude gifts that are saved to the chat's profile page. Always False, unless the bot has the can_post_messages administrator right in the channel.
@@ -2449,41 +2512,40 @@ abstract class KittyBot {
         excludeUnique: Boolean? = null,
         sortByPrice: Boolean? = null,
         offset: String? = null,
-        limit: Long? = null,
-        requestOptions: RequestOptions? = null
-    ): TResult<OwnedGifts> 
+        limit: Long? = null
+    ): TResult<OwnedGifts>
 
     /**
      * Use this method to get up-to-date information about the chat. Returns a ChatFullInfo object on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getchat): https://core.telegram.org/bots/api#getchat
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup or channel in the format @username
      */
     abstract suspend fun getChat(
         chatId: ChatId
-    ): TResult<ChatFullInfo> 
+    ): TResult<ChatFullInfo>
 
     /**
      * Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, higher level commands will be shown to affected users. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deletemycommands): https://core.telegram.org/bots/api#deletemycommands
-     * 
+     *
      * @param scope A JSON-serialized object, describing scope of users for which the commands are relevant. Defaults to BotCommandScopeDefault.
      * @param languageCode A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands.
      */
     abstract suspend fun deleteMyCommands(
         scope: BotCommandScope? = null,
         languageCode: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to stream a partial message to a user while the message is being generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized, you must call sendMessage with the complete message to persist it in the user's chat. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendmessagedraft): https://core.telegram.org/bots/api#sendmessagedraft
-     * 
+     *
      * @param chatId Unique identifier for the target private chat
-     * @param draftId Unique identifier of the message draft; must be non-zero. Changes of drafts with the same identifier are animated.
+     * @param draftId Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.
      * @param messageThreadId Unique identifier for the target message thread
      * @param text Text of the message to be sent, 0-4096 characters after entities parsing. Pass an empty text to show a "Thinking..." placeholder.
      * @param parseMode Mode for parsing entities in the message text. See formatting options for more details.
@@ -2497,13 +2559,13 @@ abstract class KittyBot {
         parseMode: ParseMode? = null,
         entities: List<MessageEntity>? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to create a topic in a forum supergroup chat or a private chat with a user. In the case of a supergroup chat the bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator right. Returns information about the created topic as a ForumTopic object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#createforumtopic): https://core.telegram.org/bots/api#createforumtopic
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param name Topic name, 1-128 characters
      * @param iconColor Color of the topic icon in RGB format. Currently, must be one of 7322096 (0x6FB9F0), 16766590 (0xFFD67E), 13338331 (0xCB86DB), 9367192 (0x8EEE98), 16749490 (0xFF93B2), or 16478047 (0xFB6F5F).
@@ -2514,13 +2576,13 @@ abstract class KittyBot {
         name: String,
         iconColor: Long? = null,
         iconCustomEmojiId: String? = null
-    ): TResult<ForumTopic> 
+    ): TResult<ForumTopic>
 
     /**
      * Use this method to send a group of photos, live photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Message objects that were sent is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendmediagroup): https://core.telegram.org/bots/api#sendmediagroup
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param media A JSON-serialized array describing messages to be sent, must include 2-10 items
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -2543,13 +2605,13 @@ abstract class KittyBot {
         allowPaidBroadcast: Boolean? = null,
         messageEffectId: String? = null,
         replyParameters: ReplyParameters? = null
-    ): TResult<List<Message>> 
+    ): TResult<List<Message>>
 
     /**
      * Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendvideo): https://core.telegram.org/bots/api#sendvideo
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param video Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -2600,25 +2662,24 @@ abstract class KittyBot {
         suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to revoke the current token of a managed bot and generate a new one. Returns the new token as String on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#replacemanagedbottoken): https://core.telegram.org/bots/api#replacemanagedbottoken
-     * 
+     *
      * @param userId User identifier of the managed bot whose token will be replaced
      */
     abstract suspend fun replaceManagedBotToken(
-        userId: Long,
-        requestOptions: RequestOptions? = null
-    ): TResult<String> 
+        userId: Long
+    ): TResult<String>
 
     /**
      * Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Pass False for all boolean parameters to demote a user. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#promotechatmember): https://core.telegram.org/bots/api#promotechatmember
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param userId Unique identifier of the target user
      * @param isAnonymous Pass True if the administrator's presence in the chat is hidden
@@ -2659,39 +2720,39 @@ abstract class KittyBot {
         canManageTopics: Boolean? = null,
         canManageDirectMessages: Boolean? = null,
         canManageTags: Boolean? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to clear the list of pinned messages in a forum topic in a forum supergroup chat or a private chat with a user. In the case of a supergroup chat the bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#unpinallforumtopicmessages): https://core.telegram.org/bots/api#unpinallforumtopicmessages
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param messageThreadId Unique identifier for the target message thread of the forum topic
      */
     abstract suspend fun unpinAllForumTopicMessages(
         chatId: ChatId,
         messageThreadId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Changes the username of a managed business account. Requires the can_change_username business bot right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setbusinessaccountusername): https://core.telegram.org/bots/api#setbusinessaccountusername
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param username The new value of the username for the business account; 0-32 characters
      */
     abstract suspend fun setBusinessAccountUsername(
         businessConnectionId: String,
         username: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to set the score of the specified user in a game message. On success, if the message is not an inline message, the Message is returned, otherwise True is returned. Returns an error, if the new score is not greater than the user's current score in the chat and force is False.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setgamescore): https://core.telegram.org/bots/api#setgamescore
-     * 
+     *
      * @param userId User identifier
      * @param score New score, must be non-negative
      * @param force Pass True if the high score is allowed to decrease. This can be useful when fixing mistakes or banning cheaters.
@@ -2708,13 +2769,26 @@ abstract class KittyBot {
         chatId: Long? = null,
         messageId: Long? = null,
         inlineMessageId: String? = null
-    ): TResult.Either<Message, Boolean> 
+    ): TResult.Either<Message, Boolean>
+
+    /**
+     * Use this method to process a received chat join request query. Returns True on success.
+     *
+     * [link](https://core.telegram.org/bots/api#answerchatjoinrequestquery): https://core.telegram.org/bots/api#answerchatjoinrequestquery
+     *
+     * @param chatJoinRequestQueryId Unique identifier of the join request query
+     * @param result Result of the query. Must be either "approve" to allow the user to join the chat, "decline" to disallow the user to join the chat, or "queue" to leave the decision to other administrators.
+     */
+    abstract suspend fun answerChatJoinRequestQuery(
+        chatJoinRequestQueryId: String,
+        result: ChatJoinRequestQueryResult
+    ): TResult<Boolean>
 
     /**
      * Use this method to send paid media. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendpaidmedia): https://core.telegram.org/bots/api#sendpaidmedia
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username. If the chat is a channel, all Telegram Star proceeds from this media will be credited to the chat's balance. Otherwise, they will be credited to the bot's balance.
      * @param starCount The number of Telegram Stars that must be paid to buy access to the media; 1-25000
      * @param media A JSON-serialized array describing the media to be sent; up to 10 items
@@ -2751,35 +2825,35 @@ abstract class KittyBot {
         suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Removes verification from a chat that is currently verified on behalf of the organization represented by the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#removechatverification): https://core.telegram.org/bots/api#removechatverification
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot or channel in the format @username
      */
     abstract suspend fun removeChatVerification(
         chatId: ChatId
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to get information about the connection of the bot with a business account. Returns a BusinessConnection object on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getbusinessconnection): https://core.telegram.org/bots/api#getbusinessconnection
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      */
     abstract suspend fun getBusinessConnection(
         businessConnectionId: String
-    ): TResult<BusinessConnection> 
+    ): TResult<BusinessConnection>
 
     /**
      * Use this method to send a game. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendgame): https://core.telegram.org/bots/api#sendgame
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot in the format @username. Games can't be sent to channel direct messages chats and channel chats.
      * @param gameShortName Short name of the game, serves as the unique identifier for the game. Set up your games via @BotFather.
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -2803,13 +2877,13 @@ abstract class KittyBot {
         replyParameters: ReplyParameters? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Returns the gifts owned and hosted by a user. Returns OwnedGifts on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getusergifts): https://core.telegram.org/bots/api#getusergifts
-     * 
+     *
      * @param userId Unique identifier of the user
      * @param excludeUnlimited Pass True to exclude gifts that can be purchased an unlimited number of times
      * @param excludeLimitedUpgradable Pass True to exclude gifts that can be purchased a limited number of times and can be upgraded to unique
@@ -2829,28 +2903,27 @@ abstract class KittyBot {
         excludeUnique: Boolean? = null,
         sortByPrice: Boolean? = null,
         offset: String? = null,
-        limit: Long? = null,
-        requestOptions: RequestOptions? = null
-    ): TResult<OwnedGifts> 
+        limit: Long? = null
+    ): TResult<OwnedGifts>
 
     /**
      * Use this method to decline a chat join request. The bot must be an administrator in the chat for this to work and must have the can_invite_users administrator right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#declinechatjoinrequest): https://core.telegram.org/bots/api#declinechatjoinrequest
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param userId Unique identifier of the target user
      */
     abstract suspend fun declineChatJoinRequest(
         chatId: ChatId,
         userId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to send information about a venue. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendvenue): https://core.telegram.org/bots/api#sendvenue
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param latitude Latitude of the venue
      * @param longitude Longitude of the venue
@@ -2892,13 +2965,13 @@ abstract class KittyBot {
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to stop a poll which was sent by the bot. On success, the stopped Poll is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#stoppoll): https://core.telegram.org/bots/api#stoppoll
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param messageId Identifier of the original message with the poll
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
@@ -2910,26 +2983,26 @@ abstract class KittyBot {
         businessConnectionId: String? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Poll> 
+    ): TResult<Poll>
 
     /**
      * Use this method to approve a chat join request. The bot must be an administrator in the chat for this to work and must have the can_invite_users administrator right. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#approvechatjoinrequest): https://core.telegram.org/bots/api#approvechatjoinrequest
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      * @param userId Unique identifier of the target user
      */
     abstract suspend fun approveChatJoinRequest(
         chatId: ChatId,
         userId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendanimation): https://core.telegram.org/bots/api#sendanimation
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param animation Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -2974,13 +3047,13 @@ abstract class KittyBot {
         suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to send a checklist on behalf of a connected business account. On success, the sent Message is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendchecklist): https://core.telegram.org/bots/api#sendchecklist
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
      * @param chatId Unique identifier for the target chat or username of the target bot in the format @username
      * @param checklist A JSON-serialized object for the checklist to send
@@ -3000,13 +3073,13 @@ abstract class KittyBot {
         replyParameters: ReplyParameters? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to decline a suggested post in a direct messages chat. The bot must have the 'can_manage_direct_messages' administrator right in the corresponding channel chat. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#declinesuggestedpost): https://core.telegram.org/bots/api#declinesuggestedpost
-     * 
+     *
      * @param chatId Unique identifier for the target direct messages chat
      * @param messageId Identifier of a suggested post message to decline
      * @param comment Comment for the creator of the suggested post; 0-128 characters
@@ -3015,13 +3088,13 @@ abstract class KittyBot {
         chatId: Long,
         messageId: Long,
         comment: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to forward multiple messages of any kind. If some of the specified messages can't be found or forwarded, they are skipped. Service messages and messages with protected content can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of MessageId of the sent messages is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#forwardmessages): https://core.telegram.org/bots/api#forwardmessages
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param fromChatId Unique identifier for the chat where the original messages were sent (or username of the target bot, supergroup or channel in the format @username)
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages in the chat from_chat_id to forward. The identifiers must be specified in a strictly increasing order.
@@ -3038,24 +3111,58 @@ abstract class KittyBot {
         directMessagesTopicId: Long? = null,
         disableNotification: Boolean? = null,
         protectContent: Boolean? = null
-    ): TResult<List<MessageId>> 
+    ): TResult<List<MessageId>>
 
     /**
      * Use this method to get a sticker set. On success, a StickerSet object is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getstickerset): https://core.telegram.org/bots/api#getstickerset
-     * 
+     *
      * @param name Name of the sticker set
      */
     abstract suspend fun getStickerSet(
         name: String
-    ): TResult<StickerSet> 
+    ): TResult<StickerSet>
+
+    /**
+     * Use this method to send rich messages. If the message contains a block with a media element, then the bot must have the right to send the media to the chat. On success, the sent Message is returned.
+     *
+     * [link](https://core.telegram.org/bots/api#sendrichmessage): https://core.telegram.org/bots/api#sendrichmessage
+     *
+     * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
+     * @param richMessage The message to be sent
+     * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent. Bot can send rich messages on behalf of a business account only if the corresponding user can send rich messages.
+     * @param messageThreadId Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only
+     * @param directMessagesTopicId Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat
+     * @param disableNotification Sends the message silently. Users will receive a notification with no sound.
+     * @param protectContent Protects the contents of the sent message from forwarding and saving
+     * @param allowPaidBroadcast Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
+     * @param messageEffectId Unique identifier of the message effect to be added to the message; for private chats only
+     * @param suggestedPostParameters A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
+     * @param replyParameters Description of the message to reply to
+     * @param replyMarkup Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
+     */
+    abstract suspend fun sendRichMessage(
+        chatId: ChatId,
+        richMessage: InputRichMessage,
+        businessConnectionId: String? = null,
+        messageThreadId: Long? = null,
+        directMessagesTopicId: Long? = null,
+        disableNotification: Boolean? = null,
+        protectContent: Boolean? = null,
+        allowPaidBroadcast: Boolean? = null,
+        messageEffectId: String? = null,
+        suggestedPostParameters: SuggestedPostParameters? = null,
+        replyParameters: ReplyParameters? = null,
+        replyMarkup: ReplyMarkup? = null,
+        requestOptions: RequestOptions? = null
+    ): TResult<Message>
 
     /**
      * Use this method to edit live location messages. A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#editmessagelivelocation): https://core.telegram.org/bots/api#editmessagelivelocation
-     * 
+     *
      * @param latitude Latitude of new location
      * @param longitude Longitude of new location
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
@@ -3081,14 +3188,14 @@ abstract class KittyBot {
         proximityAlertRadius: Long? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult.Either<Message, Boolean> 
+    ): TResult.Either<Message, Boolean>
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
      * For sending voice messages, use the sendVoice method instead.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#sendaudio): https://core.telegram.org/bots/api#sendaudio
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username
      * @param audio Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files: https://core.telegram.org/bots/api#sending-files
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message will be sent
@@ -3129,24 +3236,24 @@ abstract class KittyBot {
         suggestedPostParameters: SuggestedPostParameters? = null,
         replyParameters: ReplyParameters? = null,
         replyMarkup: ReplyMarkup? = null
-    ): TResult<Message> 
+    ): TResult<Message>
 
     /**
      * Use this method to delete a sticker from a set created by the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deletestickerfromset): https://core.telegram.org/bots/api#deletestickerfromset
-     * 
+     *
      * @param sticker File identifier of the sticker
      */
     abstract suspend fun deleteStickerFromSet(
         sticker: String
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Delete messages on behalf of a business account. Requires the can_delete_sent_messages business bot right to delete messages sent by the bot itself, or the can_delete_all_messages business bot right to delete any message. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deletebusinessmessages): https://core.telegram.org/bots/api#deletebusinessmessages
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection on behalf of which to delete the messages
      * @param messageIds A JSON-serialized list of 1-100 identifiers of messages to delete. All messages must be from the same chat. See deleteMessage for limitations on which messages can be deleted.
      */
@@ -3154,24 +3261,24 @@ abstract class KittyBot {
         businessConnectionId: String,
         messageIds: List<Long>,
         requestOptions: RequestOptions? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to delete a sticker set that was created by the bot. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#deletestickerset): https://core.telegram.org/bots/api#deletestickerset
-     * 
+     *
      * @param name Sticker set name
      */
     abstract suspend fun deleteStickerSet(
         name: String
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Reposts a story on behalf of a business account from another business account. Both business accounts must be managed by the same bot, and the story on the source account must have been posted (or reposted) by the bot. Requires the can_manage_stories business bot right for both business accounts. Returns Story on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#repoststory): https://core.telegram.org/bots/api#repoststory
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection
      * @param fromChatId Unique identifier of the chat which posted the story that should be reposted
      * @param fromStoryId Unique identifier of the story that should be reposted
@@ -3185,15 +3292,14 @@ abstract class KittyBot {
         fromStoryId: Long,
         activePeriod: Long,
         postToChatPage: Boolean? = null,
-        protectContent: Boolean? = null,
-        requestOptions: RequestOptions? = null
-    ): TResult<Story> 
+        protectContent: Boolean? = null
+    ): TResult<Story>
 
     /**
      * Use this method to set the result of an interaction with a Web App and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a SentWebAppMessage object is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#answerwebappquery): https://core.telegram.org/bots/api#answerwebappquery
-     * 
+     *
      * @param webAppQueryId Unique identifier for the query to be answered
      * @param result A JSON-serialized object describing the message to be sent
      */
@@ -3201,45 +3307,45 @@ abstract class KittyBot {
         webAppQueryId: String,
         result: InlineQueryResult,
         requestOptions: RequestOptions? = null
-    ): TResult<SentWebAppMessage> 
+    ): TResult<SentWebAppMessage>
 
     /**
      * A method to get the current Telegram Stars balance of the bot. Requires no parameters. On success, returns a StarAmount object.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#getmystarbalance): https://core.telegram.org/bots/api#getmystarbalance
-     * 
+     *
      */
-    abstract suspend fun getMyStarBalance(): TResult<StarAmount> 
+    abstract suspend fun getMyStarBalance(): TResult<StarAmount>
 
     /**
      * Use this method to set the title of a created sticker set. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setstickersettitle): https://core.telegram.org/bots/api#setstickersettitle
-     * 
+     *
      * @param name Sticker set name
      * @param title Sticker set title, 1-64 characters
      */
     abstract suspend fun setStickerSetTitle(
         name: String,
         title: String
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to generate a new primary invite link for a chat; any previously generated primary link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the new invite link as String on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#exportchatinvitelink): https://core.telegram.org/bots/api#exportchatinvitelink
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target channel in the format @username
      */
     abstract suspend fun exportChatInviteLink(
         chatId: ChatId
-    ): TResult<String> 
+    ): TResult<String>
 
     /**
-     * Use this method to edit animation, audio, document, live photo, photo, or video messages, or to add media to text messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
-     * 
+     * Use this method to edit animation, audio, document, live photo, photo, or video messages, or to replace a text or a rich message with a media. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo, a live photo, or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
+     *
      * [link](https://core.telegram.org/bots/api#editmessagemedia): https://core.telegram.org/bots/api#editmessagemedia
-     * 
+     *
      * @param media A JSON-serialized object for a new media content of the message
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
      * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
@@ -3254,26 +3360,26 @@ abstract class KittyBot {
         messageId: Long? = null,
         inlineMessageId: String? = null,
         replyMarkup: InlineKeyboardMarkup? = null
-    ): TResult.Either<Message, Boolean> 
+    ): TResult.Either<Message, Boolean>
 
     /**
      * Use this method to close an open topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#closeforumtopic): https://core.telegram.org/bots/api#closeforumtopic
-     * 
+     *
      * @param chatId Unique identifier for the target chat or username of the target supergroup in the format @username
      * @param messageThreadId Unique identifier for the target message thread of the forum topic
      */
     abstract suspend fun closeForumTopic(
         chatId: ChatId,
         messageThreadId: Long
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to replace an existing sticker in a sticker set with a new one. The method is equivalent to calling deleteStickerFromSet, then addStickerToSet, then setStickerPositionInSet. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#replacestickerinset): https://core.telegram.org/bots/api#replacestickerinset
-     * 
+     *
      * @param userId User identifier of the sticker set owner
      * @param name Sticker set name
      * @param oldSticker File identifier of the replaced sticker
@@ -3284,13 +3390,13 @@ abstract class KittyBot {
         name: String,
         oldSticker: String,
         sticker: InputSticker
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#answercallbackquery): https://core.telegram.org/bots/api#answercallbackquery
-     * 
+     *
      * @param callbackQueryId Unique identifier for the query to be answered
      * @param text Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters.
      * @param showAlert If True, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to false.
@@ -3303,26 +3409,26 @@ abstract class KittyBot {
         showAlert: Boolean? = null,
         url: String? = null,
         cacheTime: Long? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to change the bot's description, which is shown in the chat with the bot if the chat is empty. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#setmydescription): https://core.telegram.org/bots/api#setmydescription
-     * 
+     *
      * @param description New bot description; 0-512 characters. Pass an empty string to remove the dedicated description for the given language.
      * @param languageCode A two-letter ISO 639-1 language code. If empty, the description will be applied to all users for whose language there is no dedicated description.
      */
     abstract suspend fun setMyDescription(
         description: String? = null,
         languageCode: String? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to approve a suggested post in a direct messages chat. The bot must have the 'can_post_messages' administrator right in the corresponding channel chat. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#approvesuggestedpost): https://core.telegram.org/bots/api#approvesuggestedpost
-     * 
+     *
      * @param chatId Unique identifier for the target direct messages chat
      * @param messageId Identifier of a suggested post message to approve
      * @param sendDate Point in time (Unix timestamp) when the post is expected to be published; omit if the date has already been specified when the suggested post was created. If specified, then the date must be not more than 2678400 seconds (30 days) in the future.
@@ -3331,13 +3437,13 @@ abstract class KittyBot {
         chatId: Long,
         messageId: Long,
         sendDate: Long? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to add a new sticker to a set created by the bot. Emoji sticker sets can have up to 200 stickers. Other sticker sets can have up to 120 stickers. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#addstickertoset): https://core.telegram.org/bots/api#addstickertoset
-     * 
+     *
      * @param userId User identifier of sticker set owner
      * @param name Sticker set name
      * @param sticker A JSON-serialized object with information about the added sticker. If exactly the same sticker had already been added to the set, then the set isn't changed.
@@ -3346,13 +3452,13 @@ abstract class KittyBot {
         userId: Long,
         name: String,
         sticker: InputSticker
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. Returns True on success.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#createnewstickerset): https://core.telegram.org/bots/api#createnewstickerset
-     * 
+     *
      * @param userId User identifier of created sticker set owner
      * @param name Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only English letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in "_by_<bot_username>". <bot_username> is case insensitive. 1-64 characters.
      * @param title Sticker set title, 1-64 characters
@@ -3367,13 +3473,13 @@ abstract class KittyBot {
         stickers: List<InputSticker>,
         stickerType: StickerType? = null,
         needsRepainting: Boolean? = null
-    ): TResult<Boolean> 
+    ): TResult<Boolean>
 
     /**
      * Use this method to edit captions of messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within 48 hours from the time they were sent.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#editmessagecaption): https://core.telegram.org/bots/api#editmessagecaption
-     * 
+     *
      * @param businessConnectionId Unique identifier of the business connection on behalf of which the message to be edited was sent
      * @param chatId Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
      * @param messageId Required if inline_message_id is not specified. Identifier of the message to edit.
@@ -3395,15 +3501,14 @@ abstract class KittyBot {
         showCaptionAboveMedia: Boolean? = null,
         replyMarkup: InlineKeyboardMarkup? = null,
         requestOptions: RequestOptions? = null
-    ): TResult.Either<Message, Boolean> 
+    ): TResult.Either<Message, Boolean>
 
     /**
      * Use this method to log out from the cloud Bot API server before launching the bot locally. You must log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes. Returns True on success. Requires no parameters.
-     * 
+     *
      * [link](https://core.telegram.org/bots/api#logout): https://core.telegram.org/bots/api#logout
-     * 
+     *
      */
-    abstract suspend fun logOut(): TResult<Boolean> 
+    abstract suspend fun logOut(): TResult<Boolean>
 
 }
-

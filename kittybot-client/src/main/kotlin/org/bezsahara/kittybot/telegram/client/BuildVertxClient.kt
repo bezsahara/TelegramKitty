@@ -49,7 +49,7 @@ class BuildVertxClient : ClientBuilder {
             counter = newCounter
 
             if (newCounter == 0) {
-                cache?.close() ?: error("Cache was null when counter was 0 for vertx")
+                (cache ?: error("Cache was null when counter was 0 for vertx")).close()
                 cache = null
             }
         }

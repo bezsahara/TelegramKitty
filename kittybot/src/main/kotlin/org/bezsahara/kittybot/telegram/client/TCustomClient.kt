@@ -38,6 +38,7 @@ import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
 import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
 import org.bezsahara.kittybot.telegram.classes.payments.StarAmount
 import org.bezsahara.kittybot.telegram.classes.payments.StarTransactions
+import org.bezsahara.kittybot.telegram.classes.rich.InputRichMessage
 import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.classes.user.UserProfileAudios
 import org.bezsahara.kittybot.telegram.classes.user.UserProfilePhotos
@@ -57,6 +58,7 @@ class TCustomClient internal constructor(
     internal val json: Json
 ) : KittyBot() {
     val dispatcher = client.requestDispatcher
+    private val emptyJsonBytes = "{}".toByteArray(Charsets.UTF_8)
     override suspend fun deleteMessages(
         chatId: ChatId,
         messageIds: List<Long>
@@ -68,7 +70,8 @@ class TCustomClient internal constructor(
                 putListOfLongUnsafe(TBytesInfo.message_ids, messageIds)
                 toByteArray()
             },
-            false
+            false,
+            0
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -85,7 +88,7 @@ class TCustomClient internal constructor(
         photo: TelegramFile
     ): TResult<Boolean> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.setChatPhoto, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.setChatPhoto, mpContentType(boundary44), 1) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         photo.asVertx().executeCustom(mpb, "photo")
@@ -110,7 +113,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            2
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -140,7 +144,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            3
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -163,7 +168,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
                 toByteArray()
             },
-            false
+            false,
+            4
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -193,7 +199,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            5
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -223,7 +230,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            6
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -239,7 +247,7 @@ class TCustomClient internal constructor(
         photo: InputProfilePhoto
     ): TResult<Boolean> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.setMyProfilePhoto, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.setMyProfilePhoto, mpContentType(boundary44), 7) }
         val mpb = CustomMPB(resultPre1, boundary44)
         photo.executeAll(mpb)
         mpb.writeJsonPart("photo", InputProfilePhoto.serializer(), photo, json)
@@ -278,7 +286,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            8
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -309,7 +318,8 @@ class TCustomClient internal constructor(
                 if (revokeMessages != null) putBoolUnsafe(TBytesInfo.revoke_messages, revokeMessages)
                 toByteArray()
             },
-            false
+            false,
+            9
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -335,7 +345,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            10
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -356,7 +367,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            11
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -379,7 +391,8 @@ class TCustomClient internal constructor(
                 if (customDescription != null) putStringUnsafe(TBytesInfo.custom_description, customDescription)
                 toByteArray()
             },
-            false
+            false,
+            12
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -401,7 +414,7 @@ class TCustomClient internal constructor(
         areas: List<StoryArea>?
     ): TResult<Story> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.editStory, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.editStory, mpContentType(boundary44), 13) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("business_connection_id", businessConnectionId)
         mpb.writeNormalPart("story_id", storyId.toString())
@@ -432,7 +445,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            14
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -491,7 +505,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            15
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -514,7 +529,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
                 toByteArray()
             },
-            false
+            false,
+            16
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -563,7 +579,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            17
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -576,7 +593,7 @@ class TCustomClient internal constructor(
     }
 
     override suspend fun removeMyProfilePhoto(): TResult<Boolean> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(tPathC.removeMyProfilePhoto, "{}".toByteArray(Charsets.UTF_8), false)
+        val result1 = client.sendJSONRequest(tPathC.removeMyProfilePhoto, emptyJsonBytes, false, 18)
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Boolean>(
@@ -603,7 +620,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            19
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -616,7 +634,7 @@ class TCustomClient internal constructor(
     }
 
     override suspend fun getAvailableGifts(): TResult<Gifts> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(tPathC.getAvailableGifts, "{}".toByteArray(Charsets.UTF_8), false)
+        val result1 = client.sendJSONRequest(tPathC.getAvailableGifts, emptyJsonBytes, false, 20)
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Gifts>(
@@ -674,7 +692,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            21
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -699,7 +718,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.custom_title, customTitle)
                 toByteArray()
             },
-            false
+            false,
+            22
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -729,7 +749,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            23
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -752,7 +773,42 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.title, title)
                 toByteArray()
             },
-            false
+            false,
+            24
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Boolean>(
+                json.decodeFromString(OkBoolOpt.serializer(), strResult).result
+            )
+        } else {
+            TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
+    private val sendRichMessageDraftBSP = BufferSizePredictor(44, 1073741824, 88, 176)
+    override suspend fun sendRichMessageDraft(
+        chatId: Long,
+        draftId: Long,
+        richMessage: InputRichMessage,
+        messageThreadId: Long?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.sendRichMessageDraft,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: sendRichMessageDraftBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putNumberUnsafe(TBytesInfo.chat_id, chatId)
+                    putNumberUnsafe(TBytesInfo.draft_id, draftId)
+                    putJsonObject(TBytesInfo.rich_message, InputRichMessage.serializer(), richMessage)
+                    if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
+                    if (requestOptions == null) sendRichMessageDraftBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false,
+            25
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -775,7 +831,8 @@ class TCustomClient internal constructor(
                 if (description != null) putStringUnsafe(TBytesInfo.description, description)
                 toByteArray()
             },
-            false
+            false,
+            26
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -798,7 +855,8 @@ class TCustomClient internal constructor(
                 if (returnBots != null) putBoolUnsafe(TBytesInfo.return_bots, returnBots)
                 toByteArray()
             },
-            false
+            false,
+            27
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -810,22 +868,17 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val getManagedBotTokenBSP = BufferSizePredictor(7, 1073741824, 14, 28)
     override suspend fun getManagedBotToken(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<String> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.getManagedBotToken,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: getManagedBotTokenBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putNumberUnsafe(TBytesInfo.user_id, userId)
-                    if (requestOptions == null) getManagedBotTokenBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
+            JsonByteBuffer(32).run {
+                putNumberUnsafe(TBytesInfo.user_id, userId)
+                toByteArray()
             },
-            false
+            false,
+            28
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -846,7 +899,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            29
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -867,7 +921,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.user_id, userId)
                 toByteArray()
             },
-            false
+            false,
+            30
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -895,7 +950,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            31
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -927,7 +983,7 @@ class TCustomClient internal constructor(
         replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendPhoto, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendPhoto, mpContentType(boundary44), 32) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         photo.asVertx().executeCustom(mpb, "photo")
@@ -958,28 +1014,23 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val deleteMessageReactionBSP = BufferSizePredictor(37, 1073741824, 74, 148)
     override suspend fun deleteMessageReaction(
         chatId: ChatId,
         messageId: Long,
         userId: Long?,
-        actorChatId: Long?,
-        requestOptions: RequestOptions?
+        actorChatId: Long?
     ): TResult<Boolean> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.deleteMessageReaction,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: deleteMessageReactionBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
-                    putNumberUnsafe(TBytesInfo.message_id, messageId)
-                    if (userId != null) putNumberUnsafe(TBytesInfo.user_id, userId)
-                    if (actorChatId != null) putNumberUnsafe(TBytesInfo.actor_chat_id, actorChatId)
-                    if (requestOptions == null) deleteMessageReactionBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
+            JsonByteBuffer(149).run {
+                putStringUnsafe(TBytesInfo.chat_id, chatId.value)
+                putNumberUnsafe(TBytesInfo.message_id, messageId)
+                if (userId != null) putNumberUnsafe(TBytesInfo.user_id, userId)
+                if (actorChatId != null) putNumberUnsafe(TBytesInfo.actor_chat_id, actorChatId)
+                toByteArray()
             },
-            false
+            false,
+            33
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1007,7 +1058,7 @@ class TCustomClient internal constructor(
         replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendSticker, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendSticker, mpContentType(boundary44), 34) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         sticker.asVertx().executeCustom(mpb, "sticker")
@@ -1034,26 +1085,21 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val getUserProfileAudiosBSP = BufferSizePredictor(18, 1073741824, 36, 72)
     override suspend fun getUserProfileAudios(
         userId: Long,
         offset: Long?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<UserProfileAudios> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.getUserProfileAudios,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: getUserProfileAudiosBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putNumberUnsafe(TBytesInfo.user_id, userId)
-                    if (offset != null) putNumberUnsafe(TBytesInfo.offset, offset)
-                    if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
-                    if (requestOptions == null) getUserProfileAudiosBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
+            JsonByteBuffer(91).run {
+                putNumberUnsafe(TBytesInfo.user_id, userId)
+                if (offset != null) putNumberUnsafe(TBytesInfo.offset, offset)
+                if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
+                toByteArray()
             },
-            false
+            false,
+            35
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1088,7 +1134,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            36
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1117,7 +1164,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            37
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1145,7 +1193,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            38
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1166,7 +1215,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            39
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1215,7 +1265,7 @@ class TCustomClient internal constructor(
         replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendPoll, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendPoll, mpContentType(boundary44), 40) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         mpb.writeNormalPart("question", question)
@@ -1275,7 +1325,8 @@ class TCustomClient internal constructor(
                 if (chatId != null) putNumberUnsafe(TBytesInfo.chat_id, chatId)
                 toByteArray()
             },
-            false
+            false,
+            41
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1308,7 +1359,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            true
+            true,
+            42
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1317,6 +1369,35 @@ class TCustomClient internal constructor(
             )
         } else {
             TResultFailure<List<Update>>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
+    private val sendChatJoinRequestWebAppBSP = BufferSizePredictor(37, 1073741824, 74, 148)
+    override suspend fun sendChatJoinRequestWebApp(
+        chatJoinRequestQueryId: String,
+        webAppUrl: String
+    ): TResult<Boolean> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.sendChatJoinRequestWebApp,
+            run {
+                val bbSize0 = sendChatJoinRequestWebAppBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putStringUnsafe(TBytesInfo.chat_join_request_query_id, chatJoinRequestQueryId)
+                    putStringUnsafe(TBytesInfo.web_app_url, webAppUrl)
+                    sendChatJoinRequestWebAppBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false,
+            43
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Boolean>(
+                json.decodeFromString(OkBoolOpt.serializer(), strResult).result
+            )
+        } else {
+            TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
         }
     }
 
@@ -1331,7 +1412,8 @@ class TCustomClient internal constructor(
                 if (languageCode != null) putStringUnsafe(TBytesInfo.language_code, languageCode)
                 toByteArray()
             },
-            false
+            false,
+            44
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1361,7 +1443,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            45
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1396,7 +1479,8 @@ class TCustomClient internal constructor(
                 if (removeCaption != null) putBoolUnsafe(TBytesInfo.remove_caption, removeCaption)
                 toByteArray()
             },
-            false
+            false,
+            46
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1426,7 +1510,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            47
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1461,7 +1546,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            48
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1494,7 +1580,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            49
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1515,7 +1602,8 @@ class TCustomClient internal constructor(
                 if (languageCode != null) putStringUnsafe(TBytesInfo.language_code, languageCode)
                 toByteArray()
             },
-            false
+            false,
+            50
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1538,7 +1626,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.user_id, userId)
                 toByteArray()
             },
-            false
+            false,
+            51
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1563,7 +1652,8 @@ class TCustomClient internal constructor(
                 if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
                 toByteArray()
             },
-            false
+            false,
+            52
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1595,7 +1685,7 @@ class TCustomClient internal constructor(
         replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendDocument, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendDocument, mpContentType(boundary44), 53) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         document.asVertx().executeCustom(mpb, "document")
@@ -1643,7 +1733,8 @@ class TCustomClient internal constructor(
                 if (createsJoinRequest != null) putBoolUnsafe(TBytesInfo.creates_join_request, createsJoinRequest)
                 toByteArray()
             },
-            false
+            false,
+            54
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1666,7 +1757,8 @@ class TCustomClient internal constructor(
                 if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
                 toByteArray()
             },
-            false
+            false,
+            55
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1694,7 +1786,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            56
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1717,7 +1810,8 @@ class TCustomClient internal constructor(
                 if (languageCode != null) putStringUnsafe(TBytesInfo.language_code, languageCode)
                 toByteArray()
             },
-            false
+            false,
+            57
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1735,7 +1829,7 @@ class TCustomClient internal constructor(
         stickerFormat: StickerFormat
     ): TResult<File> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.uploadStickerFile, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.uploadStickerFile, mpContentType(boundary44), 58) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("user_id", userId.toString())
         sticker.asVertx().executeCustom(mpb, "sticker")
@@ -1776,7 +1870,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            59
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1797,7 +1892,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            60
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1818,7 +1914,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            61
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1830,22 +1927,17 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val getManagedBotAccessSettingsBSP = BufferSizePredictor(7, 1073741824, 14, 28)
     override suspend fun getManagedBotAccessSettings(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<BotAccessSettings> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.getManagedBotAccessSettings,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: getManagedBotAccessSettingsBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putNumberUnsafe(TBytesInfo.user_id, userId)
-                    if (requestOptions == null) getManagedBotAccessSettingsBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
+            JsonByteBuffer(32).run {
+                putNumberUnsafe(TBytesInfo.user_id, userId)
+                toByteArray()
             },
-            false
+            false,
+            62
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1874,7 +1966,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            63
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1893,7 +1986,7 @@ class TCustomClient internal constructor(
         thumbnail: TelegramFile?
     ): TResult<Boolean> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.setStickerSetThumbnail, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.setStickerSetThumbnail, mpContentType(boundary44), 64) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("name", name)
         mpb.writeNormalPart("user_id", userId.toString())
@@ -1920,7 +2013,8 @@ class TCustomClient internal constructor(
                 if (forChannels != null) putBoolUnsafe(TBytesInfo.for_channels, forChannels)
                 toByteArray()
             },
-            false
+            false,
+            65
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1933,7 +2027,7 @@ class TCustomClient internal constructor(
     }
 
     override suspend fun getMe(): TResult<User> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(tPathC.getMe, "{}".toByteArray(Charsets.UTF_8), false)
+        val result1 = client.sendJSONRequest(tPathC.getMe, emptyJsonBytes, false, 66)
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<User>(
@@ -1960,7 +2054,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            67
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -1988,7 +2083,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            68
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2021,7 +2117,7 @@ class TCustomClient internal constructor(
         replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendLivePhoto, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendLivePhoto, mpContentType(boundary44), 69) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         livePhoto.asVertx().executeCustom(mpb, "live_photo")
@@ -2053,24 +2149,19 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val getUserPersonalChatMessagesBSP = BufferSizePredictor(12, 1073741824, 24, 48)
     override suspend fun getUserPersonalChatMessages(
         userId: Long,
-        limit: Long,
-        requestOptions: RequestOptions?
+        limit: Long
     ): TResult<List<Message>> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.getUserPersonalChatMessages,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: getUserPersonalChatMessagesBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putNumberUnsafe(TBytesInfo.user_id, userId)
-                    putNumberUnsafe(TBytesInfo.limit, limit)
-                    if (requestOptions == null) getUserPersonalChatMessagesBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
+            JsonByteBuffer(61).run {
+                putNumberUnsafe(TBytesInfo.user_id, userId)
+                putNumberUnsafe(TBytesInfo.limit, limit)
+                toByteArray()
             },
-            false
+            false,
+            70
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2083,7 +2174,7 @@ class TCustomClient internal constructor(
     }
 
     override suspend fun close(): TResult<Boolean> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(tPathC.close, "{}".toByteArray(Charsets.UTF_8), false)
+        val result1 = client.sendJSONRequest(tPathC.close, emptyJsonBytes, false, 71)
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Boolean>(
@@ -2114,7 +2205,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            72
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2141,7 +2233,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            73
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2173,7 +2266,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            74
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2210,7 +2304,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            75
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2238,7 +2333,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            76
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2266,7 +2362,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            77
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2296,7 +2393,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            78
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2351,7 +2449,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            79
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2383,7 +2482,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            80
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2410,7 +2510,8 @@ class TCustomClient internal constructor(
                 if (name != null) putStringUnsafe(TBytesInfo.name, name)
                 toByteArray()
             },
-            false
+            false,
+            81
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2433,7 +2534,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.message_id, messageId)
                 toByteArray()
             },
-            false
+            false,
+            82
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2454,7 +2556,8 @@ class TCustomClient internal constructor(
                 if (languageCode != null) putStringUnsafe(TBytesInfo.language_code, languageCode)
                 toByteArray()
             },
-            false
+            false,
+            83
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2487,7 +2590,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            84
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2515,7 +2619,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            85
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2552,7 +2657,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            86
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2580,7 +2686,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            87
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2592,26 +2699,21 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val setManagedBotAccessSettingsBSP = BufferSizePredictor(41, 1073741824, 82, 164)
     override suspend fun setManagedBotAccessSettings(
         userId: Long,
         isAccessRestricted: Boolean,
-        addedUserIds: List<Long>?,
-        requestOptions: RequestOptions?
+        addedUserIds: List<Long>?
     ): TResult<Boolean> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.setManagedBotAccessSettings,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: setManagedBotAccessSettingsBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putNumberUnsafe(TBytesInfo.user_id, userId)
-                    putBoolUnsafe(TBytesInfo.is_access_restricted, isAccessRestricted)
-                    if (addedUserIds != null) putListOfLongUnsafe(TBytesInfo.added_user_ids, addedUserIds)
-                    if (requestOptions == null) setManagedBotAccessSettingsBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
+            JsonByteBuffer(290).run {
+                putNumberUnsafe(TBytesInfo.user_id, userId)
+                putBoolUnsafe(TBytesInfo.is_access_restricted, isAccessRestricted)
+                if (addedUserIds != null) putListOfLongUnsafe(TBytesInfo.added_user_ids, addedUserIds)
+                toByteArray()
             },
-            false
+            false,
+            88
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2648,7 +2750,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            89
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2680,7 +2783,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            90
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2735,7 +2839,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            91
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2756,7 +2861,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            92
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2790,7 +2896,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            93
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2808,7 +2915,7 @@ class TCustomClient internal constructor(
         isPublic: Boolean?
     ): TResult<Boolean> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.setBusinessAccountProfilePhoto, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.setBusinessAccountProfilePhoto, mpContentType(boundary44), 94) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("business_connection_id", businessConnectionId)
         photo.executeAll(mpb)
@@ -2860,7 +2967,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            95
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2904,7 +3012,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            96
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2934,7 +3043,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            97
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -2947,7 +3057,7 @@ class TCustomClient internal constructor(
     }
 
     override suspend fun getForumTopicIconStickers(): TResult<List<Sticker>> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(tPathC.getForumTopicIconStickers, "{}".toByteArray(Charsets.UTF_8), false)
+        val result1 = client.sendJSONRequest(tPathC.getForumTopicIconStickers, emptyJsonBytes, false, 98)
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<List<Sticker>>(
@@ -2976,7 +3086,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            99
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3004,7 +3115,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            100
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3027,7 +3139,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.sender_chat_id, senderChatId)
                 toByteArray()
             },
-            false
+            false,
+            101
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3055,7 +3168,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            102
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3077,7 +3191,7 @@ class TCustomClient internal constructor(
         secretToken: String?
     ): TResult<Boolean> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.setWebhook, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.setWebhook, mpContentType(boundary44), 103) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("url", url)
         certificate?.asVertx()?.executeCustom(mpb, "certificate")
@@ -3098,26 +3212,21 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val setChatMemberTagBSP = BufferSizePredictor(17, 1073741824, 34, 68)
     override suspend fun setChatMemberTag(
         chatId: ChatId,
         userId: Long,
-        tag: String?,
-        requestOptions: RequestOptions?
+        tag: String?
     ): TResult<Boolean> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.setChatMemberTag,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: setChatMemberTagBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
-                    putNumberUnsafe(TBytesInfo.user_id, userId)
-                    if (tag != null) putStringUnsafe(TBytesInfo.tag, tag)
-                    if (requestOptions == null) setChatMemberTagBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
+            JsonByteBuffer(183).run {
+                putStringUnsafe(TBytesInfo.chat_id, chatId.value)
+                putNumberUnsafe(TBytesInfo.user_id, userId)
+                if (tag != null) putStringUnsafe(TBytesInfo.tag, tag)
+                toByteArray()
             },
-            false
+            false,
+            104
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3145,7 +3254,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            105
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3168,7 +3278,8 @@ class TCustomClient internal constructor(
                 if (customDescription != null) putStringUnsafe(TBytesInfo.custom_description, customDescription)
                 toByteArray()
             },
-            false
+            false,
+            106
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3189,7 +3300,8 @@ class TCustomClient internal constructor(
                 if (dropPendingUpdates != null) putBoolUnsafe(TBytesInfo.drop_pending_updates, dropPendingUpdates)
                 toByteArray()
             },
-            false
+            false,
+            107
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3228,7 +3340,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            108
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3252,7 +3365,7 @@ class TCustomClient internal constructor(
         protectContent: Boolean?
     ): TResult<Story> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.postStory, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.postStory, mpContentType(boundary44), 109) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("business_connection_id", businessConnectionId)
         content.executeAll(mpb)
@@ -3290,7 +3403,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            110
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3322,7 +3436,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            111
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3351,7 +3466,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            112
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3374,7 +3490,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.user_id, userId)
                 toByteArray()
             },
-            false
+            false,
+            113
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3406,7 +3523,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            114
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3475,7 +3593,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            115
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3496,7 +3615,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            116
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3517,7 +3637,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            117
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3540,7 +3661,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.name, name)
                 toByteArray()
             },
-            false
+            false,
+            118
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3571,7 +3693,7 @@ class TCustomClient internal constructor(
         replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendVoice, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendVoice, mpContentType(boundary44), 119) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         voice.asVertx().executeCustom(mpb, "voice")
@@ -3612,7 +3734,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.sender_chat_id, senderChatId)
                 toByteArray()
             },
-            false
+            false,
+            120
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3625,7 +3748,7 @@ class TCustomClient internal constructor(
     }
 
     override suspend fun getWebhookInfo(): TResult<WebhookInfo> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(tPathC.getWebhookInfo, "{}".toByteArray(Charsets.UTF_8), false)
+        val result1 = client.sendJSONRequest(tPathC.getWebhookInfo, emptyJsonBytes, false, 121)
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<WebhookInfo>(
@@ -3653,7 +3776,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            122
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3684,7 +3808,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            123
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3696,16 +3821,17 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val editMessageTextBSP = BufferSizePredictor(110, 1073741824, 220, 440)
+    private val editMessageTextBSP = BufferSizePredictor(122, 1073741824, 244, 488)
     override suspend fun editMessageText(
-        text: String,
         businessConnectionId: String?,
         chatId: ChatId?,
         messageId: Long?,
         inlineMessageId: String?,
+        text: String?,
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
+        richMessage: InputRichMessage?,
         replyMarkup: InlineKeyboardMarkup?,
         requestOptions: RequestOptions?
     ): TResult.Either<Message, Boolean> = withContext(dispatcher) {
@@ -3714,20 +3840,22 @@ class TCustomClient internal constructor(
             run {
                 val bbSize0 = requestOptions?.bufferSize ?: editMessageTextBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
-                    putStringUnsafe(TBytesInfo.text, text)
                     if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                     if (chatId != null) putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                     if (messageId != null) putNumberUnsafe(TBytesInfo.message_id, messageId)
                     if (inlineMessageId != null) putStringUnsafe(TBytesInfo.inline_message_id, inlineMessageId)
+                    if (text != null) putStringUnsafe(TBytesInfo.text, text)
                     if (parseMode != null) putStringUnsafe(TBytesInfo.parse_mode, parseMode.value)
                     if (entities != null) putListOfJsonObjects(TBytesInfo.entities, MessageEntity.serializer(), entities)
                     if (linkPreviewOptions != null) putJsonObject(TBytesInfo.link_preview_options, LinkPreviewOptions.serializer(), linkPreviewOptions)
+                    if (richMessage != null) putJsonObject(TBytesInfo.rich_message, InputRichMessage.serializer(), richMessage)
                     if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, InlineKeyboardMarkup.serializer(), replyMarkup)
                     if (requestOptions == null) editMessageTextBSP.record(size9, bbSize0)
                     toByteArray()
                 }
             },
-            false
+            false,
+            124
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3818,7 +3946,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            125
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3839,7 +3968,8 @@ class TCustomClient internal constructor(
                 if (languageCode != null) putStringUnsafe(TBytesInfo.language_code, languageCode)
                 toByteArray()
             },
-            false
+            false,
+            126
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3872,7 +4002,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            127
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3897,7 +4028,8 @@ class TCustomClient internal constructor(
                 if (onlyIfBanned != null) putBoolUnsafe(TBytesInfo.only_if_banned, onlyIfBanned)
                 toByteArray()
             },
-            false
+            false,
+            128
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3927,7 +4059,7 @@ class TCustomClient internal constructor(
         replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendVideoNote, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendVideoNote, mpContentType(boundary44), 129) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         videoNote.asVertx().executeCustom(mpb, "video_note")
@@ -3972,7 +4104,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            130
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -3984,26 +4117,21 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val deleteAllMessageReactionsBSP = BufferSizePredictor(27, 1073741824, 54, 108)
     override suspend fun deleteAllMessageReactions(
         chatId: ChatId,
         userId: Long?,
-        actorChatId: Long?,
-        requestOptions: RequestOptions?
+        actorChatId: Long?
     ): TResult<Boolean> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.deleteAllMessageReactions,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: deleteAllMessageReactionsBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
-                    if (userId != null) putNumberUnsafe(TBytesInfo.user_id, userId)
-                    if (actorChatId != null) putNumberUnsafe(TBytesInfo.actor_chat_id, actorChatId)
-                    if (requestOptions == null) deleteAllMessageReactionsBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
+            JsonByteBuffer(115).run {
+                putStringUnsafe(TBytesInfo.chat_id, chatId.value)
+                if (userId != null) putNumberUnsafe(TBytesInfo.user_id, userId)
+                if (actorChatId != null) putNumberUnsafe(TBytesInfo.actor_chat_id, actorChatId)
+                toByteArray()
             },
-            false
+            false,
+            131
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4027,13 +4155,12 @@ class TCustomClient internal constructor(
         excludeUnique: Boolean?,
         sortByPrice: Boolean?,
         offset: String?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<OwnedGifts> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.getChatGifts,
             run {
-                val bbSize0 = requestOptions?.bufferSize ?: getChatGiftsBSP.decideCapacity()
+                val bbSize0 = getChatGiftsBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                     if (excludeUnsaved != null) putBoolUnsafe(TBytesInfo.exclude_unsaved, excludeUnsaved)
@@ -4046,11 +4173,12 @@ class TCustomClient internal constructor(
                     if (sortByPrice != null) putBoolUnsafe(TBytesInfo.sort_by_price, sortByPrice)
                     if (offset != null) putStringUnsafe(TBytesInfo.offset, offset)
                     if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
-                    if (requestOptions == null) getChatGiftsBSP.record(size9, bbSize0)
+                    getChatGiftsBSP.record(size9, bbSize0)
                     toByteArray()
                 }
             },
-            false
+            false,
+            132
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4071,7 +4199,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            133
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4099,7 +4228,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            134
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4136,7 +4266,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            135
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4168,7 +4299,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            136
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4193,7 +4325,7 @@ class TCustomClient internal constructor(
         replyParameters: ReplyParameters?
     ): TResult<List<Message>> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendMediaGroup, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendMediaGroup, mpContentType(boundary44), 137) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         for (mIdx in media.indices) { media[mIdx].executeAll(mpb) }
@@ -4245,7 +4377,7 @@ class TCustomClient internal constructor(
         replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendVideo, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendVideo, mpContentType(boundary44), 138) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         video.asVertx().executeCustom(mpb, "video")
@@ -4283,22 +4415,17 @@ class TCustomClient internal constructor(
         }
     }
 
-    private val replaceManagedBotTokenBSP = BufferSizePredictor(7, 1073741824, 14, 28)
     override suspend fun replaceManagedBotToken(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<String> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.replaceManagedBotToken,
-            run {
-                val bbSize0 = requestOptions?.bufferSize ?: replaceManagedBotTokenBSP.decideCapacity()
-                JsonByteBuffer(bbSize0).run {
-                    putNumberUnsafe(TBytesInfo.user_id, userId)
-                    if (requestOptions == null) replaceManagedBotTokenBSP.record(size9, bbSize0)
-                    toByteArray()
-                }
+            JsonByteBuffer(32).run {
+                putNumberUnsafe(TBytesInfo.user_id, userId)
+                toByteArray()
             },
-            false
+            false,
+            139
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4355,7 +4482,8 @@ class TCustomClient internal constructor(
                 if (canManageTags != null) putBoolUnsafe(TBytesInfo.can_manage_tags, canManageTags)
                 toByteArray()
             },
-            false
+            false,
+            140
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4378,7 +4506,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
                 toByteArray()
             },
-            false
+            false,
+            141
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4406,7 +4535,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            142
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4444,7 +4574,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            143
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4457,6 +4588,35 @@ class TCustomClient internal constructor(
             }
         } else {
             TResultFailureEither(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
+    private val answerChatJoinRequestQueryBSP = BufferSizePredictor(32, 1073741824, 64, 128)
+    override suspend fun answerChatJoinRequestQuery(
+        chatJoinRequestQueryId: String,
+        result: ChatJoinRequestQueryResult
+    ): TResult<Boolean> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.answerChatJoinRequestQuery,
+            run {
+                val bbSize0 = answerChatJoinRequestQueryBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putStringUnsafe(TBytesInfo.chat_join_request_query_id, chatJoinRequestQueryId)
+                    putStringUnsafe(TBytesInfo.result, result.value)
+                    answerChatJoinRequestQueryBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false,
+            144
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Boolean>(
+                json.decodeFromString(OkBoolOpt.serializer(), strResult).result
+            )
+        } else {
+            TResultFailure<Boolean>(json.decodeFromString(TelegramError.serializer(), strResult))
         }
     }
 
@@ -4480,7 +4640,7 @@ class TCustomClient internal constructor(
         replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendPaidMedia, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendPaidMedia, mpContentType(boundary44), 145) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         mpb.writeNormalPart("star_count", starCount.toString())
@@ -4521,7 +4681,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            146
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4547,7 +4708,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            147
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4592,7 +4754,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            148
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4614,13 +4777,12 @@ class TCustomClient internal constructor(
         excludeUnique: Boolean?,
         sortByPrice: Boolean?,
         offset: String?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<OwnedGifts> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.getUserGifts,
             run {
-                val bbSize0 = requestOptions?.bufferSize ?: getUserGiftsBSP.decideCapacity()
+                val bbSize0 = getUserGiftsBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putNumberUnsafe(TBytesInfo.user_id, userId)
                     if (excludeUnlimited != null) putBoolUnsafe(TBytesInfo.exclude_unlimited, excludeUnlimited)
@@ -4631,11 +4793,12 @@ class TCustomClient internal constructor(
                     if (sortByPrice != null) putBoolUnsafe(TBytesInfo.sort_by_price, sortByPrice)
                     if (offset != null) putStringUnsafe(TBytesInfo.offset, offset)
                     if (limit != null) putNumberUnsafe(TBytesInfo.limit, limit)
-                    if (requestOptions == null) getUserGiftsBSP.record(size9, bbSize0)
+                    getUserGiftsBSP.record(size9, bbSize0)
                     toByteArray()
                 }
             },
-            false
+            false,
+            149
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4658,7 +4821,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.user_id, userId)
                 toByteArray()
             },
-            false
+            false,
+            150
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4721,7 +4885,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            151
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4754,7 +4919,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            152
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4777,7 +4943,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.user_id, userId)
                 toByteArray()
             },
-            false
+            false,
+            153
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4813,7 +4980,7 @@ class TCustomClient internal constructor(
         replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendAnimation, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendAnimation, mpContentType(boundary44), 154) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         animation.asVertx().executeCustom(mpb, "animation")
@@ -4877,7 +5044,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            155
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4902,7 +5070,8 @@ class TCustomClient internal constructor(
                 if (comment != null) putStringUnsafe(TBytesInfo.comment, comment)
                 toByteArray()
             },
-            false
+            false,
+            156
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4935,7 +5104,8 @@ class TCustomClient internal constructor(
                 if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
                 toByteArray()
             },
-            false
+            false,
+            157
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4961,7 +5131,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            158
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -4970,6 +5141,56 @@ class TCustomClient internal constructor(
             )
         } else {
             TResultFailure<StickerSet>(json.decodeFromString(TelegramError.serializer(), strResult))
+        }
+    }
+
+    private val sendRichMessageBSP = BufferSizePredictor(207, 1073741824, 414, 828)
+    override suspend fun sendRichMessage(
+        chatId: ChatId,
+        richMessage: InputRichMessage,
+        businessConnectionId: String?,
+        messageThreadId: Long?,
+        directMessagesTopicId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        allowPaidBroadcast: Boolean?,
+        messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: ReplyMarkup?,
+        requestOptions: RequestOptions?
+    ): TResult<Message> = withContext(dispatcher) {
+        val result1 = client.sendJSONRequest(
+            tPathC.sendRichMessage,
+            run {
+                val bbSize0 = requestOptions?.bufferSize ?: sendRichMessageBSP.decideCapacity()
+                JsonByteBuffer(bbSize0).run {
+                    putStringUnsafe(TBytesInfo.chat_id, chatId.value)
+                    putJsonObject(TBytesInfo.rich_message, InputRichMessage.serializer(), richMessage)
+                    if (businessConnectionId != null) putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
+                    if (messageThreadId != null) putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
+                    if (directMessagesTopicId != null) putNumberUnsafe(TBytesInfo.direct_messages_topic_id, directMessagesTopicId)
+                    if (disableNotification != null) putBoolUnsafe(TBytesInfo.disable_notification, disableNotification)
+                    if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
+                    if (allowPaidBroadcast != null) putBoolUnsafe(TBytesInfo.allow_paid_broadcast, allowPaidBroadcast)
+                    if (messageEffectId != null) putStringUnsafe(TBytesInfo.message_effect_id, messageEffectId)
+                    if (suggestedPostParameters != null) putJsonObject(TBytesInfo.suggested_post_parameters, SuggestedPostParameters.serializer(), suggestedPostParameters)
+                    if (replyParameters != null) putJsonObject(TBytesInfo.reply_parameters, ReplyParameters.serializer(), replyParameters)
+                    if (replyMarkup != null) putJsonObject(TBytesInfo.reply_markup, ReplyMarkup.serializer(), replyMarkup)
+                    if (requestOptions == null) sendRichMessageBSP.record(size9, bbSize0)
+                    toByteArray()
+                }
+            },
+            false,
+            159
+        )
+        val strResult = result1.body().toString(Charsets.UTF_8)
+        return@withContext if (result1.statusCode() in 200..299) {
+            TResult<Message>(
+                json.decodeFromString(TSerials.sMessage, strResult).result
+            )
+        } else {
+            TResultFailure<Message>(json.decodeFromString(TelegramError.serializer(), strResult))
         }
     }
 
@@ -5008,7 +5229,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            160
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5046,7 +5268,7 @@ class TCustomClient internal constructor(
         replyMarkup: ReplyMarkup?
     ): TResult<Message> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.sendAudio, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.sendAudio, mpContentType(boundary44), 161) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("chat_id", chatId.value)
         audio.asVertx().executeCustom(mpb, "audio")
@@ -5093,7 +5315,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            162
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5122,7 +5345,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            163
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5148,7 +5372,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            164
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5167,13 +5392,12 @@ class TCustomClient internal constructor(
         fromStoryId: Long,
         activePeriod: Long,
         postToChatPage: Boolean?,
-        protectContent: Boolean?,
-        requestOptions: RequestOptions?
+        protectContent: Boolean?
     ): TResult<Story> = withContext(dispatcher) {
         val result1 = client.sendJSONRequest(
             tPathC.repostStory,
             run {
-                val bbSize0 = requestOptions?.bufferSize ?: repostStoryBSP.decideCapacity()
+                val bbSize0 = repostStoryBSP.decideCapacity()
                 JsonByteBuffer(bbSize0).run {
                     putStringUnsafe(TBytesInfo.business_connection_id, businessConnectionId)
                     putNumberUnsafe(TBytesInfo.from_chat_id, fromChatId)
@@ -5181,11 +5405,12 @@ class TCustomClient internal constructor(
                     putNumberUnsafe(TBytesInfo.active_period, activePeriod)
                     if (postToChatPage != null) putBoolUnsafe(TBytesInfo.post_to_chat_page, postToChatPage)
                     if (protectContent != null) putBoolUnsafe(TBytesInfo.protect_content, protectContent)
-                    if (requestOptions == null) repostStoryBSP.record(size9, bbSize0)
+                    repostStoryBSP.record(size9, bbSize0)
                     toByteArray()
                 }
             },
-            false
+            false,
+            165
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5214,7 +5439,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            166
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5227,7 +5453,7 @@ class TCustomClient internal constructor(
     }
 
     override suspend fun getMyStarBalance(): TResult<StarAmount> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(tPathC.getMyStarBalance, "{}".toByteArray(Charsets.UTF_8), false)
+        val result1 = client.sendJSONRequest(tPathC.getMyStarBalance, emptyJsonBytes, false, 167)
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<StarAmount>(
@@ -5254,7 +5480,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            168
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5275,7 +5502,8 @@ class TCustomClient internal constructor(
                 putStringUnsafe(TBytesInfo.chat_id, chatId.value)
                 toByteArray()
             },
-            false
+            false,
+            169
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5296,7 +5524,7 @@ class TCustomClient internal constructor(
         replyMarkup: InlineKeyboardMarkup?
     ): TResult.Either<Message, Boolean> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.editMessageMedia, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.editMessageMedia, mpContentType(boundary44), 170) }
         val mpb = CustomMPB(resultPre1, boundary44)
         media.executeAll(mpb)
         mpb.writeJsonPart("media", InputMedia.serializer(), media, json)
@@ -5332,7 +5560,8 @@ class TCustomClient internal constructor(
                 putNumberUnsafe(TBytesInfo.message_thread_id, messageThreadId)
                 toByteArray()
             },
-            false
+            false,
+            171
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5351,7 +5580,7 @@ class TCustomClient internal constructor(
         sticker: InputSticker
     ): TResult<Boolean> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.replaceStickerInSet, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.replaceStickerInSet, mpContentType(boundary44), 172) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("user_id", userId.toString())
         mpb.writeNormalPart("name", name)
@@ -5392,7 +5621,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            173
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5415,7 +5645,8 @@ class TCustomClient internal constructor(
                 if (languageCode != null) putStringUnsafe(TBytesInfo.language_code, languageCode)
                 toByteArray()
             },
-            false
+            false,
+            174
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5440,7 +5671,8 @@ class TCustomClient internal constructor(
                 if (sendDate != null) putNumberUnsafe(TBytesInfo.send_date, sendDate)
                 toByteArray()
             },
-            false
+            false,
+            175
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5458,7 +5690,7 @@ class TCustomClient internal constructor(
         sticker: InputSticker
     ): TResult<Boolean> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.addStickerToSet, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.addStickerToSet, mpContentType(boundary44), 176) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("user_id", userId.toString())
         mpb.writeNormalPart("name", name)
@@ -5485,7 +5717,7 @@ class TCustomClient internal constructor(
         needsRepainting: Boolean?
     ): TResult<Boolean> = withContext(dispatcher) {
         val boundary44 = createBoundary()
-        val resultPre1 = client.run { createMPRequest(tPathC.createNewStickerSet, mpContentType(boundary44)) }
+        val resultPre1 = client.run { createMPRequest(tPathC.createNewStickerSet, mpContentType(boundary44), 177) }
         val mpb = CustomMPB(resultPre1, boundary44)
         mpb.writeNormalPart("user_id", userId.toString())
         mpb.writeNormalPart("name", name)
@@ -5537,7 +5769,8 @@ class TCustomClient internal constructor(
                     toByteArray()
                 }
             },
-            false
+            false,
+            178
         )
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
@@ -5554,7 +5787,7 @@ class TCustomClient internal constructor(
     }
 
     override suspend fun logOut(): TResult<Boolean> = withContext(dispatcher) {
-        val result1 = client.sendJSONRequest(tPathC.logOut, "{}".toByteArray(Charsets.UTF_8), false)
+        val result1 = client.sendJSONRequest(tPathC.logOut, emptyJsonBytes, false, 179)
         val strResult = result1.body().toString(Charsets.UTF_8)
         return@withContext if (result1.statusCode() in 200..299) {
             TResult<Boolean>(

@@ -10,6 +10,8 @@ suspend fun KittyBot.createCommandsSimpleExample(chatId: ChatId? = null) {
         command("/id", "Show the current chat id")
         command("/menu", "Inline keyboard example")
         command("/cat", "Send an http.cat image")
+        command("/rich", "Send and inspect a rich message")
+        command("/rich_draft", "Send a rich-message draft example")
         command("/route", "Choose a routing target")
         command("/route_clear", "Clear the active route")
         command("/wizard", "Start the flow example")

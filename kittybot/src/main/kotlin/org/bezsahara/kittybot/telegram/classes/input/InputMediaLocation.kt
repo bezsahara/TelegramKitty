@@ -11,7 +11,7 @@ import org.bezsahara.kittybot.telegram.client.file.MultiPartBuilder
  * 
  * [link](https://core.telegram.org/bots/api#inputmedialocation): https://core.telegram.org/bots/api#inputmedialocation
  * 
- * @param type Type of the result, must be location
+ * @param type Type of the media, must be location
  * @param latitude Latitude of the location
  * @param longitude Longitude of the location
  * @param horizontalAccuracy Optional. The radius of uncertainty for the location, measured in meters; 0-1500

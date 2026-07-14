@@ -1,43 +1,82 @@
 package org.bezsahara.kittybot.bot
 
-import org.bezsahara.kittybot.telegram.classes.bot.*
+import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
+import org.bezsahara.kittybot.telegram.classes.keyboard.PreparedKeyboardButton
+import org.bezsahara.kittybot.telegram.classes.rich.InputRichMessage
+import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
+import org.bezsahara.kittybot.telegram.values.StickerType
+import org.bezsahara.kittybot.telegram.classes.input.InputMedia
+import org.bezsahara.kittybot.telegram.classes.chat.ChatFullInfo
+import org.bezsahara.kittybot.telegram.values.ChatAction
+import org.bezsahara.kittybot.telegram.values.ChatJoinRequestQueryResult
+import org.bezsahara.kittybot.telegram.classes.message.MessageEntity
+import org.bezsahara.kittybot.telegram.classes.input.InputSticker
+import org.bezsahara.kittybot.telegram.utils.TResult
+import org.bezsahara.kittybot.telegram.values.DiceEmoji
+import org.bezsahara.kittybot.telegram.classes.core.MessageId
+import org.bezsahara.kittybot.telegram.classes.inline.PreparedInlineMessage
+import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
+import org.bezsahara.kittybot.telegram.classes.input.InputPaidMedia
+import org.bezsahara.kittybot.telegram.classes.inline.SentGuestMessage
+import org.bezsahara.kittybot.telegram.classes.input.InputProfilePhoto
+import org.bezsahara.kittybot.telegram.classes.core.WebhookInfo
+import org.bezsahara.kittybot.telegram.classes.bot.BotAccessSettings
+import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
+import org.bezsahara.kittybot.telegram.classes.user.User
+import org.bezsahara.kittybot.telegram.classes.chat.ChatId
+import org.bezsahara.kittybot.telegram.classes.user.UserProfilePhotos
 import org.bezsahara.kittybot.telegram.classes.business.BusinessConnection
-import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
-import org.bezsahara.kittybot.telegram.classes.chat.*
+import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResult
+import org.bezsahara.kittybot.telegram.classes.keyboard.MenuButton
+import org.bezsahara.kittybot.telegram.classes.inline.InlineQueryResultsButton
+import org.bezsahara.kittybot.telegram.classes.message.ReplyParameters
+import org.bezsahara.kittybot.telegram.classes.message.Message
+import org.bezsahara.kittybot.telegram.classes.message.polls.InputPollOption
+import org.bezsahara.kittybot.telegram.classes.input.InputChecklist
+import org.bezsahara.kittybot.telegram.classes.core.File
+import org.bezsahara.kittybot.telegram.classes.bot.BotShortDescription
+import org.bezsahara.kittybot.telegram.values.ParseMode
+import org.bezsahara.kittybot.telegram.classes.bot.BotCommandScope
+import org.bezsahara.kittybot.telegram.classes.passport.PassportElementError
+import org.bezsahara.kittybot.telegram.classes.message.LinkPreviewOptions
+import org.bezsahara.kittybot.telegram.classes.chat.ChatPermissions
+import org.bezsahara.kittybot.telegram.classes.chat.ChatInviteLink
+import org.bezsahara.kittybot.telegram.classes.user.UserProfileAudios
+import org.bezsahara.kittybot.telegram.classes.games.GameHighScore
+import org.bezsahara.kittybot.telegram.classes.payments.StarAmount
 import org.bezsahara.kittybot.telegram.classes.chat.boosts.UserChatBoosts
 import org.bezsahara.kittybot.telegram.classes.chat.member.ChatMember
-import org.bezsahara.kittybot.telegram.classes.core.File
-import org.bezsahara.kittybot.telegram.classes.core.MessageId
-import org.bezsahara.kittybot.telegram.classes.core.WebhookInfo
-import org.bezsahara.kittybot.telegram.classes.core.update.Update
-import org.bezsahara.kittybot.telegram.classes.games.GameHighScore
-import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
-import org.bezsahara.kittybot.telegram.classes.gifts.Gifts
+import org.bezsahara.kittybot.telegram.classes.input.MediaGroupAccepted
 import org.bezsahara.kittybot.telegram.classes.gifts.OwnedGifts
-import org.bezsahara.kittybot.telegram.classes.inline.*
-import org.bezsahara.kittybot.telegram.classes.input.*
-import org.bezsahara.kittybot.telegram.classes.keyboard.*
-import org.bezsahara.kittybot.telegram.classes.media.stickers.MaskPosition
+import org.bezsahara.kittybot.telegram.classes.bot.BotName
+import org.bezsahara.kittybot.telegram.classes.chat.ForumTopic
 import org.bezsahara.kittybot.telegram.classes.media.stickers.Sticker
-import org.bezsahara.kittybot.telegram.classes.media.stickers.StickerSet
 import org.bezsahara.kittybot.telegram.classes.media.story.Story
-import org.bezsahara.kittybot.telegram.classes.media.story.StoryArea
-import org.bezsahara.kittybot.telegram.classes.message.*
-import org.bezsahara.kittybot.telegram.classes.message.polls.InputPollOption
-import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
-import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
-import org.bezsahara.kittybot.telegram.classes.passport.PassportElementError
-import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
-import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
-import org.bezsahara.kittybot.telegram.classes.payments.StarAmount
+import org.bezsahara.kittybot.telegram.classes.gifts.Gifts
+import kotlin.collections.List
+import org.bezsahara.kittybot.telegram.classes.message.SuggestedPostParameters
+import org.bezsahara.kittybot.telegram.classes.input.InputStoryContent
+import org.bezsahara.kittybot.telegram.values.PollType
+import org.bezsahara.kittybot.telegram.classes.inline.SentWebAppMessage
+import org.bezsahara.kittybot.telegram.classes.keyboard.KeyboardButton
 import org.bezsahara.kittybot.telegram.classes.payments.StarTransactions
-import org.bezsahara.kittybot.telegram.classes.user.User
-import org.bezsahara.kittybot.telegram.classes.user.UserProfileAudios
-import org.bezsahara.kittybot.telegram.classes.user.UserProfilePhotos
-import org.bezsahara.kittybot.telegram.client.file.TelegramFile
+import org.bezsahara.kittybot.telegram.classes.keyboard.InlineKeyboardMarkup
+import org.bezsahara.kittybot.telegram.classes.input.InputPollMedia
+import org.bezsahara.kittybot.telegram.classes.keyboard.ReplyMarkup
+import org.bezsahara.kittybot.telegram.classes.chat.ChatAdministratorRights
+import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.client.opt.RequestOptions
-import org.bezsahara.kittybot.telegram.utils.TResult
-import org.bezsahara.kittybot.telegram.values.*
+import org.bezsahara.kittybot.telegram.classes.bot.BotDescription
+import org.bezsahara.kittybot.telegram.classes.media.stickers.StickerSet
+import org.bezsahara.kittybot.telegram.values.StickerFormat
+import org.bezsahara.kittybot.telegram.classes.gifts.AcceptedGiftTypes
+import org.bezsahara.kittybot.telegram.classes.message.polls.Poll
+import org.bezsahara.kittybot.telegram.classes.business.CurrencyKind
+import org.bezsahara.kittybot.bot.KittyBot
+import org.bezsahara.kittybot.telegram.classes.bot.BotCommand
+import org.bezsahara.kittybot.telegram.client.file.TelegramFile
+import org.bezsahara.kittybot.telegram.utils.TResult.Either
+import org.bezsahara.kittybot.telegram.classes.media.stickers.MaskPosition
 
 
 open class DelegatingKittyBot(
@@ -266,6 +305,16 @@ open class DelegatingKittyBot(
         return delegate.setChatTitle(chatId, title)
     }
 
+    override suspend fun sendRichMessageDraft(
+        chatId: Long,
+        draftId: Long,
+        richMessage: InputRichMessage,
+        messageThreadId: Long?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> {
+        return delegate.sendRichMessageDraft(chatId, draftId, richMessage, messageThreadId, requestOptions)
+    }
+
     override suspend fun setChatDescription(
         chatId: ChatId,
         description: String?
@@ -281,10 +330,9 @@ open class DelegatingKittyBot(
     }
 
     override suspend fun getManagedBotToken(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<String> {
-        return delegate.getManagedBotToken(userId, requestOptions)
+        return delegate.getManagedBotToken(userId)
     }
 
     override suspend fun getChatMemberCount(
@@ -332,10 +380,9 @@ open class DelegatingKittyBot(
         chatId: ChatId,
         messageId: Long,
         userId: Long?,
-        actorChatId: Long?,
-        requestOptions: RequestOptions?
+        actorChatId: Long?
     ): TResult<Boolean> {
-        return delegate.deleteMessageReaction(chatId, messageId, userId, actorChatId, requestOptions)
+        return delegate.deleteMessageReaction(chatId, messageId, userId, actorChatId)
     }
 
     override suspend fun sendSticker(
@@ -359,10 +406,9 @@ open class DelegatingKittyBot(
     override suspend fun getUserProfileAudios(
         userId: Long,
         offset: Long?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<UserProfileAudios> {
-        return delegate.getUserProfileAudios(userId, offset, limit, requestOptions)
+        return delegate.getUserProfileAudios(userId, offset, limit)
     }
 
     override suspend fun editMessageChecklist(
@@ -450,6 +496,13 @@ open class DelegatingKittyBot(
         requestOptions: RequestOptions?
     ): TResult<List<Update>> {
         return delegate.getUpdates(offset, limit, timeout, allowedUpdates, requestOptions)
+    }
+
+    override suspend fun sendChatJoinRequestWebApp(
+        chatJoinRequestQueryId: String,
+        webAppUrl: String
+    ): TResult<Boolean> {
+        return delegate.sendChatJoinRequestWebApp(chatJoinRequestQueryId, webAppUrl)
     }
 
     override suspend fun setMyName(
@@ -613,10 +666,9 @@ open class DelegatingKittyBot(
     }
 
     override suspend fun getManagedBotAccessSettings(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<BotAccessSettings> {
-        return delegate.getManagedBotAccessSettings(userId, requestOptions)
+        return delegate.getManagedBotAccessSettings(userId)
     }
 
     override suspend fun savePreparedKeyboardButton(
@@ -685,10 +737,9 @@ open class DelegatingKittyBot(
 
     override suspend fun getUserPersonalChatMessages(
         userId: Long,
-        limit: Long,
-        requestOptions: RequestOptions?
+        limit: Long
     ): TResult<List<Message>> {
-        return delegate.getUserPersonalChatMessages(userId, limit, requestOptions)
+        return delegate.getUserPersonalChatMessages(userId, limit)
     }
 
     override suspend fun close(): TResult<Boolean> {
@@ -845,10 +896,9 @@ open class DelegatingKittyBot(
     override suspend fun setManagedBotAccessSettings(
         userId: Long,
         isAccessRestricted: Boolean,
-        addedUserIds: List<Long>?,
-        requestOptions: RequestOptions?
+        addedUserIds: List<Long>?
     ): TResult<Boolean> {
-        return delegate.setManagedBotAccessSettings(userId, isAccessRestricted, addedUserIds, requestOptions)
+        return delegate.setManagedBotAccessSettings(userId, isAccessRestricted, addedUserIds)
     }
 
     override suspend fun giftPremiumSubscription(
@@ -1004,10 +1054,9 @@ open class DelegatingKittyBot(
     override suspend fun setChatMemberTag(
         chatId: ChatId,
         userId: Long,
-        tag: String?,
-        requestOptions: RequestOptions?
+        tag: String?
     ): TResult<Boolean> {
-        return delegate.setChatMemberTag(chatId, userId, tag, requestOptions)
+        return delegate.setChatMemberTag(chatId, userId, tag)
     }
 
     override suspend fun setStickerMaskPosition(
@@ -1193,18 +1242,19 @@ open class DelegatingKittyBot(
     }
 
     override suspend fun editMessageText(
-        text: String,
         businessConnectionId: String?,
         chatId: ChatId?,
         messageId: Long?,
         inlineMessageId: String?,
+        text: String?,
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
+        richMessage: InputRichMessage?,
         replyMarkup: InlineKeyboardMarkup?,
         requestOptions: RequestOptions?
     ): TResult.Either<Message, Boolean> {
-        return delegate.editMessageText(text, businessConnectionId, chatId, messageId, inlineMessageId, parseMode, entities, linkPreviewOptions, replyMarkup, requestOptions)
+        return delegate.editMessageText(businessConnectionId, chatId, messageId, inlineMessageId, text, parseMode, entities, linkPreviewOptions, richMessage, replyMarkup, requestOptions)
     }
 
     override suspend fun sendInvoice(
@@ -1298,10 +1348,9 @@ open class DelegatingKittyBot(
     override suspend fun deleteAllMessageReactions(
         chatId: ChatId,
         userId: Long?,
-        actorChatId: Long?,
-        requestOptions: RequestOptions?
+        actorChatId: Long?
     ): TResult<Boolean> {
-        return delegate.deleteAllMessageReactions(chatId, userId, actorChatId, requestOptions)
+        return delegate.deleteAllMessageReactions(chatId, userId, actorChatId)
     }
 
     override suspend fun getChatGifts(
@@ -1315,10 +1364,9 @@ open class DelegatingKittyBot(
         excludeUnique: Boolean?,
         sortByPrice: Boolean?,
         offset: String?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<OwnedGifts> {
-        return delegate.getChatGifts(chatId, excludeUnsaved, excludeSaved, excludeUnlimited, excludeLimitedUpgradable, excludeLimitedNonUpgradable, excludeFromBlockchain, excludeUnique, sortByPrice, offset, limit, requestOptions)
+        return delegate.getChatGifts(chatId, excludeUnsaved, excludeSaved, excludeUnlimited, excludeLimitedUpgradable, excludeLimitedNonUpgradable, excludeFromBlockchain, excludeUnique, sortByPrice, offset, limit)
     }
 
     override suspend fun getChat(
@@ -1400,10 +1448,9 @@ open class DelegatingKittyBot(
     }
 
     override suspend fun replaceManagedBotToken(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<String> {
-        return delegate.replaceManagedBotToken(userId, requestOptions)
+        return delegate.replaceManagedBotToken(userId)
     }
 
     override suspend fun promoteChatMember(
@@ -1454,6 +1501,13 @@ open class DelegatingKittyBot(
         inlineMessageId: String?
     ): TResult.Either<Message, Boolean> {
         return delegate.setGameScore(userId, score, force, disableEditMessage, chatId, messageId, inlineMessageId)
+    }
+
+    override suspend fun answerChatJoinRequestQuery(
+        chatJoinRequestQueryId: String,
+        result: ChatJoinRequestQueryResult
+    ): TResult<Boolean> {
+        return delegate.answerChatJoinRequestQuery(chatJoinRequestQueryId, result)
     }
 
     override suspend fun sendPaidMedia(
@@ -1515,10 +1569,9 @@ open class DelegatingKittyBot(
         excludeUnique: Boolean?,
         sortByPrice: Boolean?,
         offset: String?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<OwnedGifts> {
-        return delegate.getUserGifts(userId, excludeUnlimited, excludeLimitedUpgradable, excludeLimitedNonUpgradable, excludeFromBlockchain, excludeUnique, sortByPrice, offset, limit, requestOptions)
+        return delegate.getUserGifts(userId, excludeUnlimited, excludeLimitedUpgradable, excludeLimitedNonUpgradable, excludeFromBlockchain, excludeUnique, sortByPrice, offset, limit)
     }
 
     override suspend fun declineChatJoinRequest(
@@ -1636,6 +1689,24 @@ open class DelegatingKittyBot(
         return delegate.getStickerSet(name)
     }
 
+    override suspend fun sendRichMessage(
+        chatId: ChatId,
+        richMessage: InputRichMessage,
+        businessConnectionId: String?,
+        messageThreadId: Long?,
+        directMessagesTopicId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        allowPaidBroadcast: Boolean?,
+        messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: ReplyMarkup?,
+        requestOptions: RequestOptions?
+    ): TResult<Message> {
+        return delegate.sendRichMessage(chatId, richMessage, businessConnectionId, messageThreadId, directMessagesTopicId, disableNotification, protectContent, allowPaidBroadcast, messageEffectId, suggestedPostParameters, replyParameters, replyMarkup, requestOptions)
+    }
+
     override suspend fun editMessageLiveLocation(
         latitude: Double,
         longitude: Double,
@@ -1703,10 +1774,9 @@ open class DelegatingKittyBot(
         fromStoryId: Long,
         activePeriod: Long,
         postToChatPage: Boolean?,
-        protectContent: Boolean?,
-        requestOptions: RequestOptions?
+        protectContent: Boolean?
     ): TResult<Story> {
-        return delegate.repostStory(businessConnectionId, fromChatId, fromStoryId, activePeriod, postToChatPage, protectContent, requestOptions)
+        return delegate.repostStory(businessConnectionId, fromChatId, fromStoryId, activePeriod, postToChatPage, protectContent)
     }
 
     override suspend fun answerWebAppQuery(

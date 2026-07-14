@@ -27,6 +27,17 @@ interface CustomClient {
         contentType: String
     ): CustomRequest
 
+    // An id if u need to cache anything
+    // each method is guaranteed to have a unique id
+    // Smallest id is 0
+    suspend fun CoroutineScope.createMPRequest(
+        urlAbs: URI,
+        contentType: String,
+        id: Int
+    ): CustomRequest {
+        return createMPRequest(urlAbs, contentType)
+    }
+
     /**
      * Send a JSON POST request and return the raw HTTP response.
      *
@@ -37,6 +48,18 @@ interface CustomClient {
         json: ByteArray,
         isGetUpdates: Boolean
     ): CustomResponse
+
+    // An id if u need to cache anything
+    // each method is guaranteed to have a unique id
+    // Smallest id is 0
+    suspend fun sendJSONRequest(
+        urlAbs: URI,
+        json: ByteArray,
+        isGetUpdates: Boolean,
+        id: Int
+    ): CustomResponse {
+        return sendJSONRequest(urlAbs, json, isGetUpdates)
+    }
 
     /**
      * Dispatcher used by [TCustomClient] for all requests made through this SPI.

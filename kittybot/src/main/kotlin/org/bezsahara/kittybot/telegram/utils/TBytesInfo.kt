@@ -38,6 +38,7 @@ object TBytesInfo {
     @JvmField val caption: ByteArray = "caption".toByteArray()
     @JvmField val caption_entities: ByteArray = "caption_entities".toByteArray()
     @JvmField val chat_id: ByteArray = "chat_id".toByteArray()
+    @JvmField val chat_join_request_query_id: ByteArray = "chat_join_request_query_id".toByteArray()
     @JvmField val checklist: ByteArray = "checklist".toByteArray()
     @JvmField val commands: ByteArray = "commands".toByteArray()
     @JvmField val comment: ByteArray = "comment".toByteArray()
@@ -149,6 +150,7 @@ object TBytesInfo {
     @JvmField val results: ByteArray = "results".toByteArray()
     @JvmField val return_bots: ByteArray = "return_bots".toByteArray()
     @JvmField val revoke_messages: ByteArray = "revoke_messages".toByteArray()
+    @JvmField val rich_message: ByteArray = "rich_message".toByteArray()
     @JvmField val rights: ByteArray = "rights".toByteArray()
     @JvmField val scope: ByteArray = "scope".toByteArray()
     @JvmField val score: ByteArray = "score".toByteArray()
@@ -187,5 +189,6 @@ object TBytesInfo {
     @JvmField val vcard: ByteArray = "vcard".toByteArray()
     @JvmField val video_start_timestamp: ByteArray = "video_start_timestamp".toByteArray()
     @JvmField val web_app_query_id: ByteArray = "web_app_query_id".toByteArray()
+    @JvmField val web_app_url: ByteArray = "web_app_url".toByteArray()
 }
 

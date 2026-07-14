@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * 
  * [link](https://core.telegram.org/bots/api#chatpermissions): https://core.telegram.org/bots/api#chatpermissions
  * 
- * @param canSendMessages Optional. True, if the user is allowed to send text messages, contacts, giveaways, giveaway winners, invoices, locations and venues
+ * @param canSendMessages Optional. True, if the user is allowed to send text messages, rich messages, contacts, giveaways, giveaway winners, invoices, locations and venues
  * @param canSendAudios Optional. True, if the user is allowed to send audios
  * @param canSendDocuments Optional. True, if the user is allowed to send documents
  * @param canSendPhotos Optional. True, if the user is allowed to send photos

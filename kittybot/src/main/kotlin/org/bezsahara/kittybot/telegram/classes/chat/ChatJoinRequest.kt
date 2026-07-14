@@ -16,6 +16,7 @@ import org.bezsahara.kittybot.telegram.classes.user.User
  * @param date Date the request was sent in Unix time
  * @param bio Optional. Bio of the user
  * @param inviteLink Optional. Chat invite link that was used by the user to send the join request
+ * @param queryId Optional. Identifier of the join request query; for bots assigned to process join request only. If present, then the bot must call sendChatJoinRequestWebApp or directly call answerChatJoinRequestQuery within 10 seconds.
  */
 @Serializable
 data class ChatJoinRequest(
@@ -24,6 +25,7 @@ data class ChatJoinRequest(
     @SerialName("user_chat_id") val userChatId: Long,
     val date: Long,
     val bio: String? = null,
-    @SerialName("invite_link") val inviteLink: ChatInviteLink? = null
+    @SerialName("invite_link") val inviteLink: ChatInviteLink? = null,
+    @SerialName("query_id") val queryId: String? = null
 )
 

@@ -32,6 +32,7 @@ import org.bezsahara.kittybot.telegram.classes.payments.LabeledPrice
 import org.bezsahara.kittybot.telegram.classes.payments.ShippingOption
 import org.bezsahara.kittybot.telegram.classes.payments.StarAmount
 import org.bezsahara.kittybot.telegram.classes.payments.StarTransactions
+import org.bezsahara.kittybot.telegram.classes.rich.InputRichMessage
 import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.classes.user.UserProfileAudios
 import org.bezsahara.kittybot.telegram.classes.user.UserProfilePhotos
@@ -317,6 +318,18 @@ class TConsumeBot(
         return result
     }
 
+    override suspend fun sendRichMessageDraft(
+        chatId: Long,
+        draftId: Long,
+        richMessage: InputRichMessage,
+        messageThreadId: Long?,
+        requestOptions: RequestOptions?
+    ): TResult<Boolean> {
+        val result = delegate.sendRichMessageDraft(chatId, draftId, richMessage, messageThreadId, requestOptions)
+        result.consume()
+        return result
+    }
+
     override suspend fun setChatDescription(
         chatId: ChatId,
         description: String?
@@ -336,10 +349,9 @@ class TConsumeBot(
     }
 
     override suspend fun getManagedBotToken(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<String> {
-        val result = delegate.getManagedBotToken(userId, requestOptions)
+        val result = delegate.getManagedBotToken(userId)
         result.consume()
         return result
     }
@@ -397,10 +409,9 @@ class TConsumeBot(
         chatId: ChatId,
         messageId: Long,
         userId: Long?,
-        actorChatId: Long?,
-        requestOptions: RequestOptions?
+        actorChatId: Long?
     ): TResult<Boolean> {
-        val result = delegate.deleteMessageReaction(chatId, messageId, userId, actorChatId, requestOptions)
+        val result = delegate.deleteMessageReaction(chatId, messageId, userId, actorChatId)
         result.consume()
         return result
     }
@@ -428,10 +439,9 @@ class TConsumeBot(
     override suspend fun getUserProfileAudios(
         userId: Long,
         offset: Long?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<UserProfileAudios> {
-        val result = delegate.getUserProfileAudios(userId, offset, limit, requestOptions)
+        val result = delegate.getUserProfileAudios(userId, offset, limit)
         result.consume()
         return result
     }
@@ -533,6 +543,15 @@ class TConsumeBot(
         requestOptions: RequestOptions?
     ): TResult<List<Update>> {
         val result = delegate.getUpdates(offset, limit, timeout, allowedUpdates, requestOptions)
+        result.consume()
+        return result
+    }
+
+    override suspend fun sendChatJoinRequestWebApp(
+        chatJoinRequestQueryId: String,
+        webAppUrl: String
+    ): TResult<Boolean> {
+        val result = delegate.sendChatJoinRequestWebApp(chatJoinRequestQueryId, webAppUrl)
         result.consume()
         return result
     }
@@ -734,10 +753,9 @@ class TConsumeBot(
     }
 
     override suspend fun getManagedBotAccessSettings(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<BotAccessSettings> {
-        val result = delegate.getManagedBotAccessSettings(userId, requestOptions)
+        val result = delegate.getManagedBotAccessSettings(userId)
         result.consume()
         return result
     }
@@ -822,10 +840,9 @@ class TConsumeBot(
 
     override suspend fun getUserPersonalChatMessages(
         userId: Long,
-        limit: Long,
-        requestOptions: RequestOptions?
+        limit: Long
     ): TResult<List<Message>> {
-        val result = delegate.getUserPersonalChatMessages(userId, limit, requestOptions)
+        val result = delegate.getUserPersonalChatMessages(userId, limit)
         result.consume()
         return result
     }
@@ -1018,10 +1035,9 @@ class TConsumeBot(
     override suspend fun setManagedBotAccessSettings(
         userId: Long,
         isAccessRestricted: Boolean,
-        addedUserIds: List<Long>?,
-        requestOptions: RequestOptions?
+        addedUserIds: List<Long>?
     ): TResult<Boolean> {
-        val result = delegate.setManagedBotAccessSettings(userId, isAccessRestricted, addedUserIds, requestOptions)
+        val result = delegate.setManagedBotAccessSettings(userId, isAccessRestricted, addedUserIds)
         result.consume()
         return result
     }
@@ -1209,10 +1225,9 @@ class TConsumeBot(
     override suspend fun setChatMemberTag(
         chatId: ChatId,
         userId: Long,
-        tag: String?,
-        requestOptions: RequestOptions?
+        tag: String?
     ): TResult<Boolean> {
-        val result = delegate.setChatMemberTag(chatId, userId, tag, requestOptions)
+        val result = delegate.setChatMemberTag(chatId, userId, tag)
         result.consume()
         return result
     }
@@ -1438,18 +1453,19 @@ class TConsumeBot(
     }
 
     override suspend fun editMessageText(
-        text: String,
         businessConnectionId: String?,
         chatId: ChatId?,
         messageId: Long?,
         inlineMessageId: String?,
+        text: String?,
         parseMode: ParseMode?,
         entities: List<MessageEntity>?,
         linkPreviewOptions: LinkPreviewOptions?,
+        richMessage: InputRichMessage?,
         replyMarkup: InlineKeyboardMarkup?,
         requestOptions: RequestOptions?
     ): TResult.Either<Message, Boolean> {
-        val result = delegate.editMessageText(text, businessConnectionId, chatId, messageId, inlineMessageId, parseMode, entities, linkPreviewOptions, replyMarkup, requestOptions)
+        val result = delegate.editMessageText(businessConnectionId, chatId, messageId, inlineMessageId, text, parseMode, entities, linkPreviewOptions, richMessage, replyMarkup, requestOptions)
         result.consume()
         return result
     }
@@ -1557,10 +1573,9 @@ class TConsumeBot(
     override suspend fun deleteAllMessageReactions(
         chatId: ChatId,
         userId: Long?,
-        actorChatId: Long?,
-        requestOptions: RequestOptions?
+        actorChatId: Long?
     ): TResult<Boolean> {
-        val result = delegate.deleteAllMessageReactions(chatId, userId, actorChatId, requestOptions)
+        val result = delegate.deleteAllMessageReactions(chatId, userId, actorChatId)
         result.consume()
         return result
     }
@@ -1576,10 +1591,9 @@ class TConsumeBot(
         excludeUnique: Boolean?,
         sortByPrice: Boolean?,
         offset: String?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<OwnedGifts> {
-        val result = delegate.getChatGifts(chatId, excludeUnsaved, excludeSaved, excludeUnlimited, excludeLimitedUpgradable, excludeLimitedNonUpgradable, excludeFromBlockchain, excludeUnique, sortByPrice, offset, limit, requestOptions)
+        val result = delegate.getChatGifts(chatId, excludeUnsaved, excludeSaved, excludeUnlimited, excludeLimitedUpgradable, excludeLimitedNonUpgradable, excludeFromBlockchain, excludeUnique, sortByPrice, offset, limit)
         result.consume()
         return result
     }
@@ -1675,10 +1689,9 @@ class TConsumeBot(
     }
 
     override suspend fun replaceManagedBotToken(
-        userId: Long,
-        requestOptions: RequestOptions?
+        userId: Long
     ): TResult<String> {
-        val result = delegate.replaceManagedBotToken(userId, requestOptions)
+        val result = delegate.replaceManagedBotToken(userId)
         result.consume()
         return result
     }
@@ -1737,6 +1750,15 @@ class TConsumeBot(
         inlineMessageId: String?
     ): TResult.Either<Message, Boolean> {
         val result = delegate.setGameScore(userId, score, force, disableEditMessage, chatId, messageId, inlineMessageId)
+        result.consume()
+        return result
+    }
+
+    override suspend fun answerChatJoinRequestQuery(
+        chatJoinRequestQueryId: String,
+        result: ChatJoinRequestQueryResult
+    ): TResult<Boolean> {
+        val result = delegate.answerChatJoinRequestQuery(chatJoinRequestQueryId, result)
         result.consume()
         return result
     }
@@ -1808,10 +1830,9 @@ class TConsumeBot(
         excludeUnique: Boolean?,
         sortByPrice: Boolean?,
         offset: String?,
-        limit: Long?,
-        requestOptions: RequestOptions?
+        limit: Long?
     ): TResult<OwnedGifts> {
-        val result = delegate.getUserGifts(userId, excludeUnlimited, excludeLimitedUpgradable, excludeLimitedNonUpgradable, excludeFromBlockchain, excludeUnique, sortByPrice, offset, limit, requestOptions)
+        val result = delegate.getUserGifts(userId, excludeUnlimited, excludeLimitedUpgradable, excludeLimitedNonUpgradable, excludeFromBlockchain, excludeUnique, sortByPrice, offset, limit)
         result.consume()
         return result
     }
@@ -1949,6 +1970,26 @@ class TConsumeBot(
         return result
     }
 
+    override suspend fun sendRichMessage(
+        chatId: ChatId,
+        richMessage: InputRichMessage,
+        businessConnectionId: String?,
+        messageThreadId: Long?,
+        directMessagesTopicId: Long?,
+        disableNotification: Boolean?,
+        protectContent: Boolean?,
+        allowPaidBroadcast: Boolean?,
+        messageEffectId: String?,
+        suggestedPostParameters: SuggestedPostParameters?,
+        replyParameters: ReplyParameters?,
+        replyMarkup: ReplyMarkup?,
+        requestOptions: RequestOptions?
+    ): TResult<Message> {
+        val result = delegate.sendRichMessage(chatId, richMessage, businessConnectionId, messageThreadId, directMessagesTopicId, disableNotification, protectContent, allowPaidBroadcast, messageEffectId, suggestedPostParameters, replyParameters, replyMarkup, requestOptions)
+        result.consume()
+        return result
+    }
+
     override suspend fun editMessageLiveLocation(
         latitude: Double,
         longitude: Double,
@@ -2026,10 +2067,9 @@ class TConsumeBot(
         fromStoryId: Long,
         activePeriod: Long,
         postToChatPage: Boolean?,
-        protectContent: Boolean?,
-        requestOptions: RequestOptions?
+        protectContent: Boolean?
     ): TResult<Story> {
-        val result = delegate.repostStory(businessConnectionId, fromChatId, fromStoryId, activePeriod, postToChatPage, protectContent, requestOptions)
+        val result = delegate.repostStory(businessConnectionId, fromChatId, fromStoryId, activePeriod, postToChatPage, protectContent)
         result.consume()
         return result
     }

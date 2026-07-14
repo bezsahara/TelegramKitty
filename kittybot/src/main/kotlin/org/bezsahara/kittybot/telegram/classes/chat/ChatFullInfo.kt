@@ -11,6 +11,7 @@ import org.bezsahara.kittybot.telegram.classes.media.Audio
 import org.bezsahara.kittybot.telegram.classes.message.Message
 import org.bezsahara.kittybot.telegram.classes.message.reactions.ReactionType
 import org.bezsahara.kittybot.telegram.classes.user.Birthdate
+import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.classes.user.UserRating
 import org.bezsahara.kittybot.telegram.values.ChatType
 
@@ -70,7 +71,8 @@ import org.bezsahara.kittybot.telegram.values.ChatType
  * @param rating Optional. For private chats, the rating of the user if any
  * @param firstProfileAudio Optional. For private chats, the first audio added to the profile of the user
  * @param uniqueGiftColors Optional. The color scheme based on a unique gift that must be used for the chat's name, message replies and link previews
- * @param paidMessageStarCount Optional. The number of Telegram Stars a general user have to pay to send a message to the chat
+ * @param paidMessageStarCount Optional. The number of Telegram Stars a general user has to pay to send a message to the chat
+ * @param guardBot Optional. The bot that processes join request queries in the chat. The field is only available to chat administrators.
  */
 @Serializable
 data class ChatFullInfo(
@@ -124,6 +126,7 @@ data class ChatFullInfo(
     val rating: UserRating? = null,
     @SerialName("first_profile_audio") val firstProfileAudio: Audio? = null,
     @SerialName("unique_gift_colors") val uniqueGiftColors: UniqueGiftColors? = null,
-    @SerialName("paid_message_star_count") val paidMessageStarCount: Long? = null
+    @SerialName("paid_message_star_count") val paidMessageStarCount: Long? = null,
+    @SerialName("guard_bot") val guardBot: User? = null
 )
 

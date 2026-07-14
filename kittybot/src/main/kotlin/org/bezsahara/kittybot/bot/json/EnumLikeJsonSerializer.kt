@@ -26,6 +26,10 @@ abstract class EnumLike<E: Enum<*>> {
 
 abstract class ResolveEnumLike<T : EnumLike<*>> {
     abstract fun resolve(value: String): T
+
+    fun of(value: String): T {
+        return resolve(value)
+    }
 }
 
 abstract class ResolveEnumLikeBig<T : EnumLike<E>, E: Enum<E>>(enumClass: Class<E>) : ResolveEnumLike<T>() {

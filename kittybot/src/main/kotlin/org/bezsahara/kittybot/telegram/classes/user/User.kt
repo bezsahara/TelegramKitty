@@ -26,6 +26,7 @@ import kotlinx.serialization.Serializable
  * @param hasTopicsEnabled Optional. True, if the bot has forum topic mode enabled in private chats. Returned only in getMe.
  * @param allowsUsersToCreateTopics Optional. True, if the bot allows users to create and delete topics in private chats. Returned only in getMe.
  * @param canManageBots Optional. True, if other bots can be created to be controlled by the bot. Returned only in getMe.
+ * @param supportsJoinRequestQueries Optional. True, if the bot supports join request queries and can be assigned to process them. Returned only in getMe.
  */
 @Serializable
 data class User(
@@ -45,6 +46,7 @@ data class User(
     @SerialName("has_main_web_app") val hasMainWebApp: Boolean? = null,
     @SerialName("has_topics_enabled") val hasTopicsEnabled: Boolean? = null,
     @SerialName("allows_users_to_create_topics") val allowsUsersToCreateTopics: Boolean? = null,
-    @SerialName("can_manage_bots") val canManageBots: Boolean? = null
+    @SerialName("can_manage_bots") val canManageBots: Boolean? = null,
+    @SerialName("supports_join_request_queries") val supportsJoinRequestQueries: Boolean? = null
 )
 

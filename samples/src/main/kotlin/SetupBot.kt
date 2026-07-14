@@ -9,6 +9,7 @@ import org.bezsahara.kittybot.bot.builder.UpdaterMode
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.addHandler
 import org.bezsahara.kittybot.bot.dispatchers.attrKeyOf
+import org.bezsahara.kittybot.bot.dispatchers.dynamicContextMap
 import org.bezsahara.kittybot.bot.dispatchers.y.callbackQuery
 import org.bezsahara.kittybot.bot.dispatchers.y.command
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.chatId
@@ -39,6 +40,7 @@ fun FelineBuilder<*>.buildBot() {
             createCommandsSimpleExample()
             return@init
         }
+        getMe().consume()
 
         setMyCommands(
             listOf(
@@ -46,6 +48,8 @@ fun FelineBuilder<*>.buildBot() {
                 BotCommand("/id", "Show the current chat id"),
                 BotCommand("/menu", "Inline keyboard example"),
                 BotCommand("/cat", "Send an http.cat image"),
+                BotCommand("/rich", "Send and inspect a rich message"),
+                BotCommand("/rich_draft", "Send a rich-message draft example"),
                 BotCommand("/route", "Choose a routing target"),
                 BotCommand("/route_clear", "Clear the active route"),
                 BotCommand("/wizard", "Start the flow example"),
@@ -87,6 +91,8 @@ fun FelineBuilder<*>.buildBot() {
                 /id - basic command handler
                 /menu - inline keyboard + callback query
                 /cat - calling an API helper
+                /rich - send rich text and inspect Message.richMessage
+                /rich_draft - rich draft example
                 /route - routing example
                 /wizard - flow example
                 /files - files example
@@ -202,6 +208,7 @@ fun FelineBuilder<*>.buildBot() {
         }
 
         // More advanced dispatcher helpers live in their own sample files.
+        richTextExample()
         dynamicHandlersExample()
         routingExample()
         filesExample()
