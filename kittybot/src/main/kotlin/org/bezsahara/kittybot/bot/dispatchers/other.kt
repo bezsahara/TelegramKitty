@@ -13,7 +13,7 @@ fun FelineBuilder<*>.prepare() {
     setUpCommands()
 }
 
-internal val botCommandsKey = createTypeAwareKey<MutableList<BotCommand>>()
+internal val botCommandsKey = typeKeyOf<MutableList<BotCommand>>()
 
 private fun FelineBuilder<*>.setUpCommands() {
     val data = botContext[botCommandsKey] ?: return

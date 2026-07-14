@@ -30,3 +30,7 @@ internal fun createBoolUpdateKindArray(ofKinds: Collection<UpdKind>): BooleanArr
     }
     return array
 }
+
+fun <T: Map<*, *>> T.toImmutableMap(): T {
+    return java.util.Map.copyOf(this) as T
+}

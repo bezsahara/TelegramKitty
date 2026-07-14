@@ -1,3 +1,3 @@
 package org.bezsahara.kittybot.bot.updates
 
-class HandlerException(override val message: String?) : RuntimeException()
+class HandlerException(message: String?) : RuntimeException(message)

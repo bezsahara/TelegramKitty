@@ -1,6 +1,9 @@
 package org.bezsahara.kittybot.bot
 
 import org.bezsahara.kittybot.bot.dispatchers.AttrKey
+import org.bezsahara.kittybot.bot.dispatchers.TypeAwareMap
+import org.bezsahara.kittybot.bot.dispatchers.TypeKeyMap
+import org.bezsahara.kittybot.bot.updates.HandlerContext
 
 class IdentityScope {
     private var attrKeyIdGen = 0
@@ -35,5 +38,21 @@ class IdentityScope {
 
     fun <T> attrKeyOf(name: String? = null, clazz: Class<T>? = null): AttrKey<T> {
         return AttrKey(name, clazz, this)
+    }
+
+    val dynamicKey by lazy {
+        attrKeyOf<TypeKeyMap>("TypeAwareMap")
+    }
+
+    fun dynamicContextMap(): HandlerContext.() -> TypeKeyMap {
+        val key = dynamicKey
+        return {
+            var res = get(key)
+            if (res == null) {
+                res = TypeKeyMap()
+                set(key, res)
+            }
+            res
+        }
     }
 }

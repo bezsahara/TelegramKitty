@@ -4,6 +4,7 @@ import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
 import org.bezsahara.kittybot.bot.dispatchers.addHandler
+import org.bezsahara.kittybot.bot.dispatchers.addHandlerWithCheck
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.MessageScope
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
@@ -36,6 +37,10 @@ class DocumentScope(
     val document: Document
 ) : MessageScope(update, bot, handlerContext)
 
-//fun HandlerStore.document(block: suspend DocumentScope.() -> Unit) {
-//    add
-//}
+fun HandlerStore.document(block: suspend DocumentScope.() -> Unit) {
+    addHandler(MessageUpdate.toSet()) { update, bot, handlerContext ->
+        val document = (update as MessageUpdate).message.document ?: return@addHandler Decision.Next
+        DocumentScope(update, bot, handlerContext, document).block()
+        Decision.Consumed
+    }
+}

@@ -112,7 +112,7 @@ fun interface Handler {
 // avoid creating a coroutine state machine for the checking function.
 //
 // Reason: Kotlin coroutine codegen is pretty terrible, it may allocate a Continuation frame at the
-// start of a suspend function once a state machine is needed, even on paths
+// start of a suspend function, even on paths
 // that return before any suspension point.
 abstract class HandlerNonSuspend(override val allowedKinds: Set<UpdKind>?) : Handler {
     constructor() : this(null)

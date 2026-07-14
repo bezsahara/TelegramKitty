@@ -388,20 +388,10 @@ internal class RegistryState(val array: Array<HandlerInfo>) {
             }
 
             else -> {
-                if (lastIndex < 5) {
-                    Array(lastIndex) {
-                        if (it < index) {
-                            array[it]
-                        } else {
-                            array[it + 1]
-                        }
-                    }
-                } else {
-                    val new = arrayOfNulls<HandlerInfo>(lastIndex)
-                    System.arraycopy(array, 0, new, 0, index)
-                    System.arraycopy(array, index + 1, new, index, lastIndex - index)
-                    new as Array<HandlerInfo>
-                }
+                val new = arrayOfNulls<HandlerInfo>(lastIndex)
+                System.arraycopy(array, 0, new, 0, index)
+                System.arraycopy(array, index + 1, new, index, lastIndex - index)
+                new as Array<HandlerInfo>
             }
         }
         return RegistryState(arr)

@@ -1,10 +1,11 @@
 package org.bezsahara.kittybot.bot.action.route
 
 import org.bezsahara.kittybot.bot.KittyBot
+import org.bezsahara.kittybot.bot.action.other.toImmutableMap
 import org.bezsahara.kittybot.bot.dispatchers.Decision
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerStore
-import org.bezsahara.kittybot.bot.dispatchers.y.scopes.MessageScope
+import org.bezsahara.kittybot.bot.dispatchers.y.scopes.TextScope
 import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.MessageUpdate
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
@@ -17,21 +18,20 @@ inline fun HandlerStore.textMapHandler(block: MapTextRouteBuilder.() -> Unit) {
 }
 
 class MapTextRouteBuilder {
-    private val map = mutableMapOf<String, suspend MessageScope.() -> Unit>()
+    private val map = mutableMapOf<String, suspend TextScope.() -> Unit>()
 
-    fun text(vararg match: String, block: suspend MessageScope.() -> Unit) {
+    fun text(vararg match: String, block: suspend TextScope.() -> Unit) {
         match.forEach {
             map[it] = block
         }
     }
-
     fun build(): MapTextRouteHandler {
-        return MapTextRouteHandler(map)
+        return MapTextRouteHandler(map.toImmutableMap())
     }
 }
 
 class MapTextRouteHandler(
-    val map: Map<String, suspend MessageScope.() -> Unit>
+    val map: Map<String, suspend TextScope.() -> Unit>
 ) : Handler {
     override val allowedKinds: Set<UpdKind> = setOf(MessageUpdate)
 
@@ -42,10 +42,10 @@ class MapTextRouteHandler(
     ): Decision {
         val text = (update as MessageUpdate).message.text ?: return Decision.Next
         val func = map[text] ?: return Decision.Next
-        return apply(MessageScope(update, bot, handlerContext), func)
+        return apply(TextScope(update, bot, handlerContext, text), func)
     }
 
-    private suspend fun apply(scope: MessageScope, func: suspend MessageScope.() -> Unit): Decision {
+    private suspend fun apply(scope: TextScope, func: suspend TextScope.() -> Unit): Decision {
         func(scope)
         return Decision.Consumed
     }

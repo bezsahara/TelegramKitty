@@ -24,11 +24,11 @@ class HandlerDelegate(
         bot: KittyBot,
         handlerContext: HandlerContext,
     ): Decision {
-        error("This is HandlerDelegate. If you see this error from library methods, please report this! Otherwise you can use Handler.real()")
+        return originalHandler.handleUpdate(update, bot, handlerContext)
     }
 
     override fun toString(): String {
-        return "HandlerDelegate[id=${identity?.value},ak=$allowedKinds]$originalHandler(${originalHandler.identity?.value},${originalHandler.allowedKinds})"
+        return "HandlerDelegate[id=${identity?.value},ak=$allowedKinds]($originalHandler)"
     }
 }
 
@@ -61,6 +61,34 @@ fun HandlerStore.addHandler(
     handler: Handler,
 ) {
     addHandler(HandlerDelegate(identity, allowedTypes, handler))
+}
+
+inline fun HandlerStore.addHandlerWithCheck(
+    crossinline check: (Update, HandlerContext) -> Decision,
+    allowedTypes: Set<UpdKind>? = null,
+    identity: HandlerIdentity? = null,
+    crossinline handler: suspend (update: Update, bot: KittyBot, handlerContext: HandlerContext) -> Decision
+) {
+    addHandler(object : HandlerNonSuspend(allowedTypes) {
+        override fun check(
+            update: Update,
+            bot: KittyBot,
+            handlerContext: HandlerContext,
+        ): Decision {
+            return check.invoke(update, handlerContext)
+        }
+
+        override suspend fun handle(
+            update: Update,
+            bot: KittyBot,
+            handlerContext: HandlerContext,
+        ): Decision {
+            return handler.invoke(update, bot, handlerContext)
+        }
+
+        override val identity: HandlerIdentity?
+            get() = identity
+    })
 }
 
 

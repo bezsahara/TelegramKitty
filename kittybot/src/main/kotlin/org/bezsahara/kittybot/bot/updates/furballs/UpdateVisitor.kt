@@ -1,6 +1,8 @@
 package org.bezsahara.kittybot.bot.updates.furballs
 
 import org.bezsahara.kittybot.bot.KittyBot
+import org.bezsahara.kittybot.bot.dispatchers.Decision
+import org.bezsahara.kittybot.bot.updates.HandlerContext
 import org.bezsahara.kittybot.telegram.classes.core.update.*
 
 abstract class UpdateVisitor {
@@ -61,5 +63,11 @@ abstract class UpdateVisitor {
             25 -> return onSyntheticUpdate(bot, update as SyntheticUpdate)
             else -> error("Unexpected update type ${update.javaClass.name}")
         }
+    }
+
+    // Will be run only in visitor handler
+    open suspend fun handlerUpdate(bot: KittyBot, update: Update, context: HandlerContext): Decision {
+        onUpdate(bot, update)
+        return Decision.Consumed
     }
 }

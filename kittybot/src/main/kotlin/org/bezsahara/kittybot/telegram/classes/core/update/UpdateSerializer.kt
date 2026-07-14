@@ -11,8 +11,9 @@ import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.bezsahara.kittybot.other.KotlinxJsonAccessors
+import org.bezsahara.kittybot.other.KotlinxJsonAccessors.parseToJsonObject
 import org.bezsahara.kittybot.telegram.classes.business.BusinessConnection
 import org.bezsahara.kittybot.telegram.classes.business.BusinessMessagesDeleted
 import org.bezsahara.kittybot.telegram.classes.chat.ChatJoinRequest
@@ -63,7 +64,7 @@ internal object UpdateSerializer : KSerializer<Update> {
 
     override fun deserialize(decoder: Decoder): Update {
         var updateId: Long = Long.MIN_VALUE
-        val objectStartPos = decoder.getPos()
+        val objectStartPos = KotlinxJsonAccessors.getPos(decoder)
 
         val structure = decoder.beginStructure(descriptor)
         var value: UpdateLambda? = null
@@ -354,7 +355,7 @@ internal object UpdateSerializer : KSerializer<Update> {
                 "Update serializer could not reconstruct UnknownUpdate. For json: ${
                     (this as? JsonDecoder)?.let {
                         if (objectStartPos < 0) return@let null
-                        DecoderHandles.decoderSource(
+                        KotlinxJsonAccessors.decoderSource(
                             it
                         )?.let { str ->
                             str.substring(objectStartPos, str.length).take(4048)
@@ -371,7 +372,7 @@ internal object UpdateSerializer : KSerializer<Update> {
         val jsonDecoder = this as? JsonDecoder ?: return null
         if (objectStartPos == Int.MIN_VALUE) return null
 
-        val jsonObject = parseToJsonObject(jsonDecoder, this, objectStartPos) ?: return null
+        val jsonObject = parseToJsonObject(jsonDecoder.json, this, objectStartPos, descriptor) ?: return null
         val updateId = if (parsedUpdateId != Long.MIN_VALUE) {
             parsedUpdateId
         } else {
@@ -381,24 +382,4 @@ internal object UpdateSerializer : KSerializer<Update> {
         return UnknownUpdate(updateId, jsonObject)
     }
 
-    private fun parseToJsonObject(
-        jsonDecoder: JsonDecoder,
-        decoder: Decoder,
-        startPos: Int,
-    ): JsonObject? {
-        val source = DecoderHandles.decoderSource(decoder) ?: return null
-        val lexer = DecoderHandles.createFreshLexer(jsonDecoder.json, source) ?: return null
-        DecoderHandles.lexerCurrentPosition(lexer, startPos)
-
-        val freshDecoder = DecoderHandles.createFreshDecoder(jsonDecoder.json, lexer, descriptor) ?: return null
-        val element = freshDecoder.decodeJsonElement()
-        DecoderHandles.decoderCurrentPosition(decoder, DecoderHandles.lexerCurrentPosition(lexer))
-
-        return element as? JsonObject
-    }
-
-    @JvmStatic
-    private fun Decoder.getPos(): Int {
-        return DecoderHandles.decoderCurrentPosition(this)
-    }
 }

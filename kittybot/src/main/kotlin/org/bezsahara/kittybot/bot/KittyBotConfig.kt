@@ -6,22 +6,20 @@ import kotlinx.coroutines.channels.Channel
 import org.bezsahara.kittybot.bot.builder.*
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.TypeAwareMap
-import org.bezsahara.kittybot.bot.dispatchers.createTypeAwareKey
 import org.bezsahara.kittybot.bot.errors.HandlerErrorHandler
 import org.bezsahara.kittybot.bot.errors.hiss
 import org.bezsahara.kittybot.bot.json.jsonInstance
 import org.bezsahara.kittybot.bot.updates.FurballConfig
-import org.bezsahara.kittybot.bot.updates.furballs.Furball
-import org.bezsahara.kittybot.bot.updates.furballs.FurballDispatchers
-import org.bezsahara.kittybot.bot.updates.furballs.FurballVisitor
-import org.bezsahara.kittybot.bot.updates.furballs.UpdateVisitor
+import org.bezsahara.kittybot.bot.updates.furballs.*
 import org.bezsahara.kittybot.bot.updates.receiver.PollingReceiver
+import org.bezsahara.kittybot.bot.updates.receiver.PollingRecovery
 import org.bezsahara.kittybot.bot.updates.receiver.UpdateReceiver
 import org.bezsahara.kittybot.bot.updates.receiver.WebhookReceiver
 import org.bezsahara.kittybot.bot.updates.updaters.CustomUpdater
 import org.bezsahara.kittybot.bot.updates.updaters.MultiUpdater
 import org.bezsahara.kittybot.bot.updates.updaters.SingleUpdater
 import org.bezsahara.kittybot.bot.updates.updaters.Updater
+import org.bezsahara.kittybot.other.FDC
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 
 
@@ -40,7 +38,7 @@ data class KittyBotResult(
     val allowedUpdates: List<String>?,
     val supervisorJob: CompletableJob,
     val updaterMode: UpdaterMode,
-    val visitor: UpdateVisitor?
+    val visitor: UpdateVisitor?,
 )
 
 class KittyBotConfig<T : UpdateReceiver>(
@@ -65,6 +63,7 @@ class KittyBotConfig<T : UpdateReceiver>(
         Channel<Update>(1024)
 
     private val apiClientBuilder: ClientBuilder = result.apiClientBuilder
+
     @JvmField
     val kittyBot: KittyBot = apiClientBuilder.build(result.botApiServerConfig, json)//
 
@@ -81,7 +80,11 @@ class KittyBotConfig<T : UpdateReceiver>(
     }
 
     internal val furball: Furball = if (result.visitor != null) FurballVisitor(kittyBot, result.visitor)
-    else FurballDispatchers(kittyBot, updatesChannel, result)
+    else if (result.furballConfig.useFurballContVariant) FDC(
+        kittyBot,
+        updatesChannel,
+        result
+    ) else FurballDispatchers(kittyBot, updatesChannel, result)
 
     internal val updater: Updater = when (result.updaterMode) {
         is UpdaterMode.SingleThread -> SingleUpdater(
@@ -127,18 +130,20 @@ class KittyBotConfig<T : UpdateReceiver>(
         supervisorJob.invokeOnCompletion { close() }
     }
 
-    companion object {
-        @JvmField
-        internal val BOT_SUPERVISOR_JOB = createTypeAwareKey<CompletableJob>("BotSupervisorJob")
-    }
 }
 
-fun KittyBotConfig<PollingReceiver>.startPolling(wait: Boolean = true): Job {
+
+// PollingRecovery is a strategy for the polling to continue to live even when caught an error.
+//  Telegram sometimes enjoys sending back error results for whatever reason.
+fun KittyBotConfig<PollingReceiver>.startPolling(
+    wait: Boolean = true,
+    pollingRecovery: PollingRecovery = PollingRecovery.Default(),
+): Job {
     if (updateReceiver !is PollingReceiver) {
         hiss("To start polling, you need to set updateOrigin to UpdateOrigin.Polling")
     }
     val pollingAsync = CoroutineScope(Dispatchers.IO + supervisorJob).async {
-        updateReceiver.receiveUpdates(updatesChannel)
+        updateReceiver.receiveUpdates(updatesChannel, pollingRecovery)
     }
     pollingAsync.invokeOnCompletion { cause ->
         if (cause != null && cause !is CancellationException) {

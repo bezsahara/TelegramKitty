@@ -19,21 +19,21 @@ fun <T> HandlerStore.callbackQueryRoute(asConcurrent: Boolean = false, selector:
 class CallbackQueryRoute<T>(
     asConcurrent: Boolean,
     handlerStore: HandlerStore,
-    private val map: MutableMap<T, suspend CallQDataScope.() -> Unit>,
+    private val map: MutableMap<T, suspend CallQScope.() -> Unit>,
     selector: (CallbackQueryUpdate, HandlerContext) -> T?,
 ) {
-    private val defRef: TRef<(suspend CallQDataScope.() -> Unit)?> =
+    private val defRef: TRef<(suspend CallQScope.() -> Unit)?> =
         if (asConcurrent) TRefVolatile(null) else TRefRegular(null)
 
     init {
         handlerStore.addHandler(CallQHandler(map, selector, defRef))
     }
 
-    fun callbackQuery(key: T, block: suspend CallQDataScope.() -> Unit) {
+    fun callbackQuery(key: T, block: suspend CallQScope.() -> Unit) {
         map[key] = block
     }
 
-    fun default(block: suspend CallQDataScope.() -> Unit) {
+    fun default(block: suspend CallQScope.() -> Unit) {
         defRef.value = block
     }
 
@@ -49,9 +49,9 @@ class CallbackQueryRoute<T>(
 }
 
 class CallQHandler<T>(
-    private val map: MutableMap<T, suspend CallQDataScope.() -> Unit>,
+    private val map: MutableMap<T, suspend CallQScope.() -> Unit>,
     private val selector: (CallbackQueryUpdate, HandlerContext) -> T?,
-    private val defRef: TRef<(suspend CallQDataScope.() -> Unit)?>,
+    private val defRef: TRef<(suspend CallQScope.() -> Unit)?>,
 ) : Handler {
     override val allowedKinds: Set<UpdKind>
         get() = setOf(CallbackQueryUpdate)
@@ -63,11 +63,11 @@ class CallQHandler<T>(
     ): Decision {
         val key = selector.invoke(update as CallbackQueryUpdate, handlerContext) ?: return Decision.Next
         val block = map[key]
-        val scope = CallQDataScope(bot, handlerContext, update)
+        val scope = CallQScope(bot, handlerContext, update)
         return apply(block, scope, key)
     }
 
-    private suspend fun apply(block: (suspend CallQDataScope.() -> Unit)?,  scope: CallQDataScope, key: T): Decision {
+    private suspend fun apply(block: (suspend CallQScope.() -> Unit)?, scope: CallQScope, key: T): Decision {
         if (block == null) {
             defRef.value?.invoke(scope) ?: throw KittyError("CallbackQueryRoute received key of $key. But it was not defined")
         } else {
@@ -78,7 +78,7 @@ class CallQHandler<T>(
 }
 
 
-class CallQDataScope(
+class CallQScope(
     override val bot: KittyBot,
     override val handlerContext: HandlerContext,
     override val update: CallbackQueryUpdate,

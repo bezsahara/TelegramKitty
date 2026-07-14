@@ -483,7 +483,7 @@ final class JsonByteBuffer(initialCapacity: Int) : InternalJsonWriter {
         buf[pos++] = HEX[code and 0xF]
     }
 
-    private fun writeArr(bytes: ByteArray) {
+    private inline fun writeArr(bytes: ByteArray) {
         val bs = bytes.size
         ensure(bs)
         System.arraycopy(bytes, 0, buf, pos, bs)

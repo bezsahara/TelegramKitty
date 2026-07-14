@@ -1,7 +1,7 @@
 package org.bezsahara.kittybot.bot.conv
 
 import kotlinx.coroutines.CoroutineScope
-import org.bezsahara.kittybot.bot.dispatchers.createTypeAwareKey
+import org.bezsahara.kittybot.bot.dispatchers.typeKeyOf
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 import java.util.concurrent.ConcurrentHashMap
 
@@ -31,6 +31,6 @@ internal class ConversationRuntime(
 
     companion object {
         @JvmField
-        val BOT_CONTEXT_KEY = createTypeAwareKey<ConversationRuntime>("ConversationRuntime")
+        val BOT_CONTEXT_KEY = typeKeyOf<ConversationRuntime>("ConversationRuntime")
     }
 }

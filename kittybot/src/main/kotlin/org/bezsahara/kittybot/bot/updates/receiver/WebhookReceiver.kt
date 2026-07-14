@@ -9,6 +9,4 @@ import org.bezsahara.kittybot.telegram.classes.core.update.Update
  * @see org.bezsahara.kittybot.bot.KittyBot.setWebhook
  * @see org.bezsahara.kittybot.bot.onUpdate
  */
-data object WebhookReceiver : UpdateReceiver {
-    override suspend fun receiveUpdates(updateChannel: Channel<Update>) = Unit
-}
+data object WebhookReceiver : UpdateReceiver

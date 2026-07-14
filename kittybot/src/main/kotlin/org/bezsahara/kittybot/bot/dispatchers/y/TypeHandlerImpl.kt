@@ -34,7 +34,7 @@ class TypeHandlerImpl<T : Update>(
 }
 
 inline fun <reified T : Update> FelineDispatcher.handleTypeOf(
-    noinline check: (T) -> Boolean,
+    crossinline check: (T) -> Boolean,
     noinline onSuccess: suspend HandlerScope<T>.() -> Unit,
 ) {
     handleTypeOf({ u, _ -> check.invoke(u) }, onSuccess)

@@ -2,6 +2,7 @@ package org.bezsahara.kittybot.bot.dispatchers
 
 import org.bezsahara.kittybot.bot.IdentityScope
 import org.bezsahara.kittybot.bot.builder.FelineBuilder
+import org.bezsahara.kittybot.bot.updates.HandlerContext
 
 @KittyDsl
 class FelineDispatcher internal constructor(val felineBuilder: FelineBuilder<*>) : TransparentHandlerStore {
@@ -79,4 +80,8 @@ interface ChangingHandlerStore : HandlerStore
 
 inline fun <reified T> HandlerStore.attrKeyOf(name: String? = null): AttrKey<T> {
     return felineDispatcher.identityScope.attrKeyOf<T>(name)
+}
+
+fun HandlerStore.dynamicContextMap(): HandlerContext.() -> TypeKeyMap {
+    return felineDispatcher.identityScope.dynamicContextMap()
 }

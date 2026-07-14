@@ -1,7 +1,9 @@
 package org.bezsahara.kittybot.bot.updates
 
+import kotlinx.serialization.json.decodeFromStream
 import org.bezsahara.kittybot.bot.dispatchers.Handler
 import org.bezsahara.kittybot.bot.dispatchers.HandlerIdentity
+import org.bezsahara.kittybot.bot.json.jsonInstance
 import java.util.*
 import kotlin.math.max
 

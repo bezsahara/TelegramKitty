@@ -10,6 +10,7 @@ data class FurballConfig(
     val multiUpdaterUseMap: Boolean = false,
     val multiUpdaterMapLimit: Int = 50_000,
     val httpTimeout: (pollingTimeout: Long) -> Long = { max(it + 5, 10) },
+    val useFurballContVariant: Boolean = false
 ) {
     companion object {
         val Default = FurballConfig()

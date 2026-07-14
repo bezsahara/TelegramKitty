@@ -14,6 +14,8 @@ import org.bezsahara.kittybot.bot.updates.*
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
 import org.bezsahara.kittybot.telegram.classes.core.update.Update
 import org.bezsahara.kittybot.telegram.classes.core.update.telegramUpdateKinds
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.CoroutineContext
 
 // Base class for handling updates
 class FurballDispatchers(
@@ -109,6 +111,7 @@ class FurballDispatchers(
             hl[it].real()
         }
     }
+
 
     override suspend fun applyHandlers(update: Update) {
         val jumpTable = handlerByKindMap[update.ordinal] ?: return

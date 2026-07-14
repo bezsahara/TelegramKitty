@@ -8,10 +8,10 @@ sealed class RoutingStrategy<T>(val original: HandlerStore) {
 //    protected val sections by lazy { sectionsMap.toList().filter { !it.second.isEmpty() } }
 
     protected fun computeSections(): List<Pair<T, RoutingPart>> {
-        return sectionsMap.toList().filter { !it.second.isEmpty() }
+        return sectionsMap.get().toList().filter { !it.second.isEmpty() }
     }
 
-    protected val sectionsMap = linkedMapOf<T, RoutingPart>()
+    protected val sectionsMap = FreeRef(linkedMapOf<T, RoutingPart>())
 
     protected fun computeRoutingUpdKinds(sections: List<Pair<T, RoutingPart>>): Set<UpdKind>? {
         val set: MutableSet<UpdKind> = mutableSetOf()
@@ -28,10 +28,17 @@ sealed class RoutingStrategy<T>(val original: HandlerStore) {
         return set
     }
 
+    protected fun free() {
+        sectionsMap.get().values.forEach {
+            it.free()
+        }
+        sectionsMap.free()
+        default?.free()
+    }
+
     @PublishedApi
-    internal fun addOrGetSection(key: T, original: HandlerStore): RoutingPart {
-        val routingPart = sectionsMap.getOrPut(key) { RoutingPart(original) }
-        require(original === routingPart.original)
+    internal fun addOrGetSection(key: T): RoutingPart {
+        val routingPart = sectionsMap.get().getOrPut(key) { RoutingPart(original) }
         return routingPart
     }
 

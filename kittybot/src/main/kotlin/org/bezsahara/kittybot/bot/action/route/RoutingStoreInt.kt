@@ -22,8 +22,14 @@ class RoutingStrategyInt(
     ) : this(keyGeneratorAny, original)
 
     inline fun section(key: Int, block: TransparentHandlerStore.() -> Unit) {
-        val r = addOrGetSection(key, original)
+        checkKey(key)
+        val r = addOrGetSection(key)
         r.block()
+    }
+
+    @PublishedApi
+    internal fun checkKey(key: Int) {
+        if (key == Int.MIN_VALUE) error("Int.MIN_VALUE is not allowed as a key!")
     }
 
     fun build() {
@@ -69,10 +75,11 @@ class RoutingStrategyInt(
             if (default != null || sections.lastIndex != index) {
                 original.addHandler(EmptyHandler(actualExit, reduceAllowedKinds(part.handlers)))
             }
-            part.free()
         }
 
         default?.handlers?.forEach { original.addHandler(it) }
+
+        free()
     }
 }
 

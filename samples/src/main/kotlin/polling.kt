@@ -1,10 +1,12 @@
 package org.bezsahara.samples
 
+import kotlinx.coroutines.delay
 import org.bezsahara.kittybot.bot.KittyBotConfig
 import org.bezsahara.kittybot.bot.builder.KittyBot
 import org.bezsahara.kittybot.bot.builder.UpdaterMode
 import org.bezsahara.kittybot.bot.dispatchers.y.command
 import org.bezsahara.kittybot.bot.dispatchers.y.scopes.chatId
+import org.bezsahara.kittybot.bot.dispatchers.y.text
 import org.bezsahara.kittybot.bot.purrBlocking
 import org.bezsahara.kittybot.bot.startPolling
 import org.bezsahara.kittybot.bot.stopPolling
@@ -25,7 +27,7 @@ fun pollingBot(token: String) {
         // useCustomClient(JavaCustomClient.createDefault())
 
         dispatchers {
-            command("/shutdown", "Shutdown the bot", addToBotCommands = true) {
+            command("/shutdown") {
                 bot.sendMessage(chatId, "Bot is shut down")
                 botRef!!.stopPolling()
                 botRef = null

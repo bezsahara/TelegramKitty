@@ -18,6 +18,15 @@ sealed class HandlerContext(internal val channel: Channel<Update>) {
 
     abstract fun <T> remove(attrKey: AttrKey<T>): T?
 
+    inline fun <T> getOrPut(attrKey: AttrKey<T>, block: () -> T): T {
+        var res: T? = get(attrKey)
+        if (res == null) {
+            res = block()
+            set(attrKey, res)
+        }
+        return res as T
+    }
+
     suspend fun emitUpdate(u: SyntheticUpdate) {
         channel.send(u)
     }

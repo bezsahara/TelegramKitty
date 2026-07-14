@@ -22,6 +22,13 @@ open class MessageScope(
     val message: Message get() = update.message
 }
 
+open class TextScope(
+    update: MessageUpdate,
+    bot: KittyBot,
+    handlerContext: HandlerContext,
+    val text: String
+) : MessageScope(update, bot, handlerContext)
+
 open class UpdateScope(
     override val update: Update,
     override val bot: KittyBot,

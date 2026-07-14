@@ -22,6 +22,7 @@ import org.bezsahara.kittybot.bot.updates.receiver.WebhookReceiver
 import org.bezsahara.kittybot.bot.updates.updaters.CustomUpdaterSetup
 import org.bezsahara.kittybot.bot.updates.updaters.MultiIdentity
 import org.bezsahara.kittybot.telegram.classes.core.update.UpdKind
+import org.bezsahara.kittybot.telegram.classes.core.update.telegramUpdateKinds
 import org.bezsahara.kittybot.telegram.client.CustomClient
 import org.bezsahara.kittybot.telegram.client.TCustomClient
 import org.bezsahara.kittybot.telegram.client.TPathCustom
@@ -87,13 +88,6 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
     val botContext = TypeAwareMap()
 
     val supervisorJob = SupervisorJob(parentJob)
-    init {
-        // TODO need to change job init
-        val r = botContext.getOrPut(KittyBotConfig.BOT_SUPERVISOR_JOB) { supervisorJob }
-        require(r == supervisorJob) {
-            "KittyBot internal error. KittyBotConfig.BOT_SUPERVISOR_JOB was defined before needed definition"
-        }
-    }
 
     // Bot token
     var token: String by Delegates.notNull()
@@ -129,6 +123,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
      * Same as [ensureOnlyNewUpdatesWithFile] but allows you
      * to implement your own logic of where to save this id.
      */
+    @Deprecated("for removal")
     fun ensureOnlyNewUpdatesCustom(engine: RecoverLastId) {
         checkClosed()
         lastIdRecovery = engine
@@ -138,6 +133,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
      * Saves last update's id to a file. Functions with the same idea as [ensureOnlyNewUpdates] but
      * does not wait 1 second.
      */
+    @Deprecated("for removal")
     fun ensureOnlyNewUpdatesWithFile(file: File) {
         checkClosed()
         if (!file.exists()) {
@@ -160,6 +156,7 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
         }
     }
 
+    @Deprecated("for removal")
     fun ensureOnlyNewUpdates(onSave: (Long?) -> Unit, onRecover: () -> Long?) {
         checkClosed()
         lastIdRecovery = object : RecoverLastId {
@@ -173,15 +170,16 @@ class FelineBuilder<T : UpdateReceiver> internal constructor(
      * It Can be used if you do not want the bot to get updates from when it was offline
      * or if it was killed without a chance to invalidate the last update.
      */
-    fun ensureOnlyNewUpdates(tries: Int = 2, timeout: Long? = 1) {
+    fun ensureOnlyNewUpdates(tries: Int = 2, timeout: Long? = 0, kinds: Set<UpdKind> = telegramUpdateKinds) {
         init {
             var offset: Long? = -1
+            val allUpd = kinds.map { it.name }
             repeat(tries) { i ->
                 val result = getUpdates(
                     offset,
                     null,
                     timeout,
-                    null,
+                    allUpd,
                     null
                 ).unwrapOrNull()
                 if (!result.isNullOrEmpty()) {

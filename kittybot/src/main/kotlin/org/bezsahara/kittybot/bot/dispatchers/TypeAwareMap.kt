@@ -3,34 +3,55 @@ package org.bezsahara.kittybot.bot.dispatchers
 import org.bezsahara.kittybot.bot.KittyBotConfig
 
 
-interface TAKey<T>
+interface TypeKey<T>
 
-open class TAKeyImpl<T>(val name: String? = null) : TAKey<T> {
+open class TypeKeyImpl<T>(val name: String? = null) : TypeKey<T> {
     override fun toString(): String = "TAKeyImpl($name)"
 }
 
-fun <T> createTypeAwareKey(name: String? = null): TAKey<T> {
-    return TAKeyImpl(name)
+fun <T> typeKeyOf(name: String? = null): TypeKey<T> {
+    return TypeKeyImpl(name)
 }
 
 class TypeAwareMap {
-    @PublishedApi internal val map = HashMap<TAKey<*>, Any>()
+    @PublishedApi internal val map = HashMap<TypeKey<*>, Any>()
 
-    operator fun <T> get(key: TAKey<T>): T? {
+    operator fun <T> get(key: TypeKey<T>): T? {
         return map[key] as T?
     }
 
-    operator fun <T> set(key: TAKey<T>, value: T) {
+    operator fun <T> set(key: TypeKey<T>, value: T) {
         map[key] = value as Any
     }
 
-    inline fun <T: Any> getOrPut(key: TAKey<T>, value: () -> T): T {
+    inline fun <T: Any> getOrPut(key: TypeKey<T>, value: () -> T): T {
         return map.getOrPut(key, value) as T
     }
 
     lateinit var kittyBotConfig: KittyBotConfig<*>
 
-    fun <T: Any> getOrInitInBot(key: TAKey<T>, init: KittyBotConfig<*>.() -> T): T {
+    fun <T: Any> getOrInitInBot(key: TypeKey<T>, init: KittyBotConfig<*>.() -> T): T {
         return map.getOrPut(key) { kittyBotConfig.init() } as T
+    }
+}
+
+
+class TypeKeyMap {
+    @PublishedApi internal val map = HashMap<TypeKey<*>, Any?>()
+
+    operator fun <T> get(key: TypeKey<T>): T? {
+        return map[key] as T?
+    }
+
+    operator fun <T> set(key: TypeKey<T>, value: T) {
+        map[key] = value as Any
+    }
+
+    inline fun <T> getOrPut(key: TypeKey<T>, init: () -> T): T {
+        return map.getOrPut(key, init) as T
+    }
+
+    fun <T> remove(key: TypeKey<T>): T? {
+        return map.remove(key) as T?
     }
 }

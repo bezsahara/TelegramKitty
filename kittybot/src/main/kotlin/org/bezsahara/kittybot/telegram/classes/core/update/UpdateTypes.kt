@@ -21,7 +21,10 @@ import org.bezsahara.kittybot.telegram.classes.payments.PaidMediaPurchased
 import org.bezsahara.kittybot.telegram.classes.payments.PreCheckoutQuery
 import org.bezsahara.kittybot.telegram.classes.payments.ShippingQuery
 
-val telegramUpdateKinds: Set<UpdKind> = setOf(
+/**
+ * Use [telegramUpdateKinds] as a set for all update kinds
+ */
+@JvmField internal val _telegramUpdateKinds = arrayOf(
     MessageUpdate,
     EditedMessageUpdate,
     ChannelPostUpdate,
@@ -48,7 +51,7 @@ val telegramUpdateKinds: Set<UpdKind> = setOf(
     ManagedBotUpdate,
     UnknownUpdate,
     SyntheticUpdate
-)
+).also { it.sort() }
 
 /**
  * This object represents an incoming update containing a new message.

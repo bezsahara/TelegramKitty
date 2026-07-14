@@ -21,7 +21,7 @@ import org.intellij.lang.annotations.Language
 fun FelineDispatcher.filesExample() {
     flowHandler<Unit>(FlowIdentityFinder.OfMessageUpdateChatId) {
         section {
-            command("/files", "Files example", addToBotCommands = true) {
+            command("/files") {
                 handlerContext.nextSection()
                 @Language("html")
                 val msg = "Bot will now echo <b>images</b> you send it"

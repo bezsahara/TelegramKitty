@@ -1,5 +1,6 @@
 package org.bezsahara.kittybot.bot.action.route
 
+import io.ktor.util.Hash
 import org.bezsahara.kittybot.bot.KittyBot
 import org.bezsahara.kittybot.bot.action.other.EmptyHandler
 import org.bezsahara.kittybot.bot.action.other.createBoolUpdateKindArray
@@ -21,15 +22,17 @@ class RoutingStrategyAny<T>(
     ) : this(keyGeneratorAny, original)
 
     inline fun section(key: T, block: TransparentHandlerStore.() -> Unit) {
-        val r = addOrGetSection(key, original)
+        val r = addOrGetSection(key)
         r.block()
     }
+
+    var map: MutableMap<T, HandlerIdentity>? = null
 
     fun build() {
         val sections = computeSections()
         if (sections.isEmpty()) return
 
-        val map = HashMap<T, HandlerIdentity>(sections.size * 2)
+        val map = map ?: hashMapOf()
         sections.forEach { (key, part) ->
             if (!part.isEmpty()) {
                 val id = part.handlers[0].identity!!
@@ -42,11 +45,14 @@ class RoutingStrategyAny<T>(
 
         val (exitHandlerIdentityD, actualExit) = computeExits(sections)
 
+        val finalMap = if (map.isJavaHashMap() && map.size < 1024) {
+            java.util.Map.copyOf(map)
+        } else map
         original.addHandler(
             if (common != null) {
                 RoutingMainAnyWithCommon(
                     keyGeneratorAny,
-                    map,
+                    finalMap,
                     exitDecisionWithDefault = exitHandlerIdentityD,
                     exitDecision = actualExit,
                     common!!,
@@ -55,7 +61,7 @@ class RoutingStrategyAny<T>(
             } else {
                 RoutingMainAny(
                     keyGeneratorAny,
-                    map,
+                    finalMap,
                     exitDecisionWithDefault = exitHandlerIdentityD,
                     exitDecision = actualExit,
                     computeRoutingUpdKinds(sections)
@@ -68,17 +74,19 @@ class RoutingStrategyAny<T>(
             if (default != null || sections.lastIndex != index) {
                 original.addHandler(EmptyHandler(actualExit, reduceAllowedKinds(part.handlers)))
             }
-            part.free()
         }
 
         default?.handlers?.forEach { original.addHandler(it) }
+
+        free()
     }
 }
 
+private fun Map<*, *>.isJavaHashMap() = javaClass === java.util.HashMap::class.java || javaClass === java.util.LinkedHashMap::class.java
 
 class RoutingMainAny(
     private val keyGeneratorAny: KeyGeneratorAny<*>,
-    private val map: HashMap<*, HandlerIdentity>,
+    private val map: Map<*, HandlerIdentity>,
     private val exitDecisionWithDefault: Decision?,
     private val exitDecision: Decision,
     override val allowedKinds: Set<UpdKind>?,
@@ -100,7 +108,7 @@ class RoutingMainAny(
 
 class RoutingMainAnyWithCommon(
     private val keyGeneratorAny: KeyGeneratorAny<*>,
-    private val map: HashMap<*, HandlerIdentity>,
+    private val map: Map<*, HandlerIdentity>,
     private val exitDecisionWithDefault: Decision?,
     private val exitDecision: Decision,
     commonHandler: Handler,
