@@ -12,7 +12,9 @@
 /GenerateAPIV2/
 /data/
 /dataOld/
-/docs/
+/docs/*
+!/docs/agents/
+!/docs/agents/**
 /compiler-bug-repro/
 
 # Build outputs in any subproject

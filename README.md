@@ -15,16 +15,11 @@ Project layout:
 - `kittybot-client` - default Vert.x HTTP client, file helpers, and cat helpers
 - `samples` - runnable examples
 
-## For AI Agents
+## Using TelegramKitty With AI Agents
 
-This repository includes [FOR_AGENTS.md](FOR_AGENTS.md), an extensive usage guide
-for AI coding agents and tool-using assistants. It explains configuration,
-dispatcher mechanics, handler identity, update kinds, and the preferred DSL
-patterns with imports and code snippets.
-
-When an agent uses TelegramKitty in another project, it should first try to find
-the local library sources through the user's build system, dependency cache,
-source jars, included builds, or IDE external library paths before guessing APIs.
+Using an AI coding agent? Give it [FOR_AGENTS.md](FOR_AGENTS.md) for a concise
+overview of the library, its conventions, and where to find the correct APIs.
+More focused reference material is available in [docs/agents](docs/agents).
 
 ## Features
 
@@ -46,8 +41,8 @@ Use the default Vert.x client:
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:4.1.1")
-    implementation("org.bezsahara:kittybot-client:4.1.1")
+    implementation("org.bezsahara:kittybot:5.0.0")
+    implementation("org.bezsahara:kittybot-client:5.0.0")
 }
 ```
 
@@ -55,7 +50,7 @@ If you want to provide your own HTTP client, `kittybot-client` is not required:
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:4.1.1")
+    implementation("org.bezsahara:kittybot:5.0.0")
 }
 ```
 
@@ -176,7 +171,7 @@ Ktor is also supported. Add your own Ktor client dependencies and engine:
 
 ```kotlin
 dependencies {
-    implementation("org.bezsahara:kittybot:4.1.1")
+    implementation("org.bezsahara:kittybot:5.0.0")
     implementation("io.ktor:ktor-client-core:3.4.0")
     implementation("io.ktor:ktor-client-cio:3.4.0")
 }
