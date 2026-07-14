@@ -21,11 +21,10 @@ fun List<List<InlineKeyboardButton>>.toMarkup() = InlineKeyboardMarkup(this)
 
 @Suppress("NOTHING_TO_INLINE")
 class InlineKeyboardBuilder(size: Int) {
-    constructor() : this(16)
+    constructor() : this(8)
 
     private val horizontal = ArrayList<List<InlineKeyboardButton>>(size)
-    var vertical: ArrayList<InlineKeyboardButton>? = null
-        private set
+    private var vertical: ArrayList<InlineKeyboardButton>? = null
 
     fun addButton(inlineKeyboardButton: InlineKeyboardButton) {
         vertical?.let {
@@ -43,29 +42,31 @@ class InlineKeyboardBuilder(size: Int) {
         horizontal.add(inlineKeyboardButtons.asList())
     }
 
-    fun newVertical(size: Int): ArrayList<InlineKeyboardButton> {
-        val a = ArrayList<InlineKeyboardButton>(size)
-        vertical = a
-        return a
+    fun addButtons(inlineKeyboardButtons: List<InlineKeyboardButton>) {
+        vertical?.let {
+            it.addAll(inlineKeyboardButtons)
+            return
+        }
+        horizontal.add(inlineKeyboardButtons)
     }
 
-    fun resetVertical(a: ArrayList<InlineKeyboardButton>) {
+    fun newVertical(size: Int) {
+        require(vertical == null) { "You can't create a row in another row!" }
+        vertical = ArrayList<InlineKeyboardButton>(size)
+    }
+
+    fun resetVertical() {
+        horizontal.add(vertical ?: error("You need to create a raw to close it!"))
         vertical = null
-        horizontal.add(a)
     }
 
-    inline fun addRow(size: Int, block: () -> Unit) {
-        require(vertical == null) { "You can't create a row in another row!" }
-        val buttons = newVertical(size)
-        block()
-        resetVertical(buttons)
-    }
-
-    inline fun addRow(block: () -> Unit) {
-        require(vertical == null) { "You can't create a row in another row!" }
-        val buttons = newVertical(6)
-        block()
-        resetVertical(buttons)
+    inline fun addRow(size: Int = 6, block: () -> Unit) {
+        newVertical(size)
+        try {
+            block()
+        } finally {
+            resetVertical()
+        }
     }
 
     inline fun url(text: String, url: String, iconCustomEmojiId: String? = null, style: KeyboardButtonStyle? = null) =

@@ -3,6 +3,7 @@
 package org.bezsahara.kittybot.telegram.utils.entity
 
 import org.bezsahara.kittybot.bot.KittyBot
+import org.bezsahara.kittybot.other.KotlinHelpers
 import org.bezsahara.kittybot.telegram.classes.chat.ChatId
 import org.bezsahara.kittybot.telegram.classes.keyboard.ReplyMarkup
 import org.bezsahara.kittybot.telegram.classes.message.LinkPreviewOptions
@@ -12,7 +13,7 @@ import org.bezsahara.kittybot.telegram.classes.message.SuggestedPostParameters
 import org.bezsahara.kittybot.telegram.values.ParseMode
 
 class EntityBuilder(stringSize: Int, entitySize: Int) : Appendable {
-    constructor() : this(32,32)
+    constructor() : this(32, 8)
     private val entityList = ArrayList<MessageEntity>(entitySize)
 
     private val stringBuilder = StringBuilder(stringSize)
@@ -21,12 +22,10 @@ class EntityBuilder(stringSize: Int, entitySize: Int) : Appendable {
     override fun append(csq: CharSequence?): EntityBuilder {
         stringBuilder.append(csq)
         if (csq == null) {
-            gatherStyles(4)
             index += 4
             return this
         }
         val s = csq.length.toLong()
-        gatherStyles(s)
         index += s
         return this
     }
@@ -39,52 +38,71 @@ class EntityBuilder(stringSize: Int, entitySize: Int) : Appendable {
     override fun append(csq: CharSequence?, start: Int, end: Int): EntityBuilder {
         stringBuilder.append(csq, start, end)
         val l = (end - start).toLong()
-        gatherStyles(l)
         index += l
         return this
     }
 
+    fun append(char: Char, type: EntityKind): EntityBuilder {
+        addChar(char, type)
+        return this
+    }
+
+    fun append(
+        string: String?,
+        type: EntityKind
+    ): EntityBuilder {
+        addString(string, type)
+        return this
+    }
+
+    fun append(
+        string: String?,
+        vararg type: EntityKind
+    ): EntityBuilder {
+        return KotlinHelpers.append(this, string, type)
+    }
+
     fun addChar(char: Char) {
         stringBuilder.append(char)
-        gatherStyles(1)
         index += 1
     }
 
-    fun addChar(char: Char, type: MessageEntityKind) {
+    fun addChar(char: Char, type: EntityKind) {
         stringBuilder.append(char)
-        gatherStyles(1)
         addStyle(type, 1)
         index += 1
     }
 
-    private fun gatherStyles(utf16Length: Long) {
-        val deque = innerDeque ?: return
-        for (i in 0 until deque.size) {
-            val finalType = deque[i]
-            addStyle(finalType, utf16Length)
-        }
-    }
-
-    fun addString(string: String) {
+    fun addString(string: String?) {
         stringBuilder.append(string)
-        val utf16Length = string.length.toLong()
-        gatherStyles(utf16Length)
+        val utf16Length = string?.length?.toLong() ?: 4
         index += utf16Length
     }
 
     fun addString(
-        string: String,
-        type: MessageEntityKind
+        string: String?,
+        type: EntityKind
     ) {
         stringBuilder.append(string)
-        val utf16Length = string.length.toLong()
-        gatherStyles(utf16Length)
+        val utf16Length = string?.length?.toLong() ?: 4
         addStyle(type, utf16Length)
         index += utf16Length
     }
 
-    private fun addStyle(type: MessageEntityKind, utf16Length: Long) {
-        if (type is MessageEntityKind.Combined) {
+    fun addString(
+        string: String?,
+        vararg types: EntityKind
+    ) {
+        stringBuilder.append(string)
+        val utf16Length = string?.length?.toLong() ?: 4
+        types.forEach { type ->
+            addStyle(type, utf16Length)
+        }
+        index += utf16Length
+    }
+
+    private fun addStyle(type: EntityKind, utf16Length: Long) {
+        if (type is EntityKind.Combined) {
             type.mek.forEach {
                 entityList.add(it.toWire(index, utf16Length))
             }
@@ -93,28 +111,25 @@ class EntityBuilder(stringSize: Int, entitySize: Int) : Appendable {
         }
     }
 
-    private var innerDeque: ArrayDeque<MessageEntityKind>? = null
 
-    fun addScope(type: MessageEntityKind) {
-        var deque = innerDeque
-        if (deque == null) {
-            deque = ArrayDeque<MessageEntityKind>(8)
-            innerDeque = deque
-        }
-        deque.addLast(type)
+    @PublishedApi
+    internal fun index(): Long {
+        return index
     }
 
-    fun removeLastScope() {
-        val d = innerDeque ?: error("No deque was initialized!")
-        d.removeLast()
+    @PublishedApi
+    internal fun removeScope(type: EntityKind, lastIndex: Long) {
+        val i = index
+        if (i == lastIndex) return
+        addStyle(type, i - lastIndex)
     }
 
-    inline fun styleOf(type: MessageEntityKind, block: () -> Unit) {
-        addScope(type)
+    inline fun styleOf(type: EntityKind, block: () -> Unit) {
+        val lastIndex = index()
         try {
             block()
         } finally {
-            removeLastScope()
+            removeScope(type, lastIndex)
         }
     }
 
@@ -127,13 +142,8 @@ class EntityBuilder(stringSize: Int, entitySize: Int) : Appendable {
      * }
      * ```
      */
-    inline operator fun MessageEntityKind.invoke(block: () -> Unit) {
-        addScope(this)
-        try {
-            block()
-        } finally {
-            removeLastScope()
-        }
+    inline operator fun EntityKind.invoke(block: () -> Unit) {
+        styleOf(this, block)
     }
 
     fun getResult() = EntityString(entityList, stringBuilder.toString())
@@ -187,7 +197,9 @@ internal fun example0() {
     buildEntityString {
         addString("Hi!", Italic + Bold + TextLink("google.com"))
         appendLine()
-        addString("Hi!", MessageEntityKind.of(Italic))
+        addString("Hi!", EntityKind.of(Italic))
+        appendLine()
+        addString("Hi!", TextLink("google.com"), Italic, Bold)
 
         styleOf(Bold) {
             Italic {

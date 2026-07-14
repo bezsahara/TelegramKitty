@@ -5,114 +5,164 @@ import org.bezsahara.kittybot.telegram.classes.user.User
 import org.bezsahara.kittybot.telegram.values.MsgEntityType
 import java.util.*
 
-object Mention : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.MENTION, offset, length)
-}
+typealias Mention = EntityKind.Mention
 
-object Hashtag : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.HASHTAG, offset, length)
-}
+typealias Hashtag = EntityKind.Hashtag
 
-object Cashtag : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.CASHTAG, offset, length)
-}
+typealias Cashtag = EntityKind.Cashtag
 
-object BotCommand : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.BOT_COMMAND, offset, length)
-}
+typealias BotCommand = EntityKind.BotCommand
 
-object Url : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.URL, offset, length)
-}
+typealias Url = EntityKind.Url
 
-object Email : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.EMAIL, offset, length)
-}
+typealias Email = EntityKind.Email
 
-object PhoneNumber : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.PHONE_NUMBER, offset, length)
-}
+typealias PhoneNumber = EntityKind.PhoneNumber
 
-object Bold : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.BOLD, offset, length)
-}
+typealias Bold = EntityKind.Bold
 
-object Italic : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.ITALIC, offset, length)
-}
+typealias Italic = EntityKind.Italic
 
-object Underline : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.UNDERLINE, offset, length)
-}
+typealias Underline = EntityKind.Underline
 
-object Strikethrough : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.STRIKETHROUGH, offset, length)
-}
+typealias Strikethrough = EntityKind.Strikethrough
 
-object Spoiler : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.SPOILER, offset, length)
-}
+typealias Spoiler = EntityKind.Spoiler
 
-object Blockquote : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.BLOCKQUOTE, offset, length)
-}
+typealias Blockquote = EntityKind.Blockquote
 
-object Code : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.CODE, offset, length)
-}
+typealias Code = EntityKind.Code
 
 // kinds with payload
-class Pre(val language: String? = null) : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.PRE, offset, length, language = language)
-}
+typealias Pre = EntityKind.Pre
 
-class TextLink(val url: String) : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.TEXT_LINK, offset, length, url = url)
-}
+typealias TextLink = EntityKind.TextLink
 
-class TextMention(val user: User) : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.TEXT_MENTION, offset, length, user = user)
-}
+typealias TextMention = EntityKind.TextMention
 
-class CustomEmoji(val customEmojiId: String) : MessageEntityKind() {
-    override fun toWire(offset: Long, length: Long) =
-        MessageEntity(MsgEntityType.CUSTOM_EMOJI, offset, length, customEmojiId = customEmojiId)
-}
+typealias CustomEmoji = EntityKind.CustomEmoji
 
-class DateTime(val unixTime: Long, val dateTimeFormat: String? = null) : MessageEntityKind() {
-    override fun toWire(
-        offset: Long,
-        length: Long,
-    ): MessageEntity {
-        return MessageEntity(MsgEntityType.DATE_TIME, offset, length, dateTimeFormat = dateTimeFormat, unixTime = unixTime)
+typealias DateTime = EntityKind.DateTime
+
+typealias MessageEntityKind = EntityKind
+
+sealed class EntityKind {
+
+    object Mention : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.MENTION, offset, length)
     }
-}
 
-sealed class MessageEntityKind {
+    object Hashtag : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.HASHTAG, offset, length)
+    }
+
+    object Cashtag : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.CASHTAG, offset, length)
+    }
+
+    object BotCommand : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.BOT_COMMAND, offset, length)
+    }
+
+    object Url : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.URL, offset, length)
+    }
+
+    object Email : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.EMAIL, offset, length)
+    }
+
+    object PhoneNumber : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.PHONE_NUMBER, offset, length)
+    }
+
+    object Bold : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.BOLD, offset, length)
+    }
+
+    object Italic : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.ITALIC, offset, length)
+    }
+
+    object Underline : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.UNDERLINE, offset, length)
+    }
+
+    object Strikethrough : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.STRIKETHROUGH, offset, length)
+    }
+
+    object Spoiler : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.SPOILER, offset, length)
+    }
+
+    object Blockquote : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.BLOCKQUOTE, offset, length)
+    }
+
+    object Code : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.CODE, offset, length)
+    }
+
+    // kinds with payload
+    class Pre(val language: String? = null) : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.PRE, offset, length, language = language)
+    }
+
+    class TextLink(val url: String) : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.TEXT_LINK, offset, length, url = url)
+    }
+
+    class TextMention(val user: User) : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.TEXT_MENTION, offset, length, user = user)
+    }
+
+    class CustomEmoji(val customEmojiId: String) : EntityKind() {
+        override fun toWire(offset: Long, length: Long) =
+            MessageEntity(MsgEntityType.CUSTOM_EMOJI, offset, length, customEmojiId = customEmojiId)
+    }
+
+    class DateTime(val unixTime: Long, val dateTimeFormat: String? = null) : EntityKind() {
+        override fun toWire(
+            offset: Long,
+            length: Long,
+        ): MessageEntity {
+            return MessageEntity(MsgEntityType.DATE_TIME, offset, length, dateTimeFormat = dateTimeFormat, unixTime = unixTime)
+        }
+    }
+
+    class CustomClass(val entityKind: MessageEntity) : EntityKind() {
+        override fun toWire(
+            offset: Long,
+            length: Long,
+        ): MessageEntity {
+            return entityKind.copy(offset = offset, length = length)
+        }
+    }
 
     abstract fun toWire(offset: Long, length: Long): MessageEntity
 
-    open operator fun plus(other: MessageEntityKind): MessageEntityKind {
+    open operator fun plus(other: EntityKind): EntityKind {
         val arr = if (other is Combined) {
             val mek = other.mek
-            Arrays.copyOf(mek, mek.size + 1, Array<MessageEntityKind>::class.java).also { it[mek.size] = this }
+            Arrays.copyOf(mek, mek.size + 1, Array<EntityKind>::class.java).also { it[mek.size] = this }
         } else {
             arrayOf(this, other)
         }
@@ -120,20 +170,20 @@ sealed class MessageEntityKind {
         return Combined(arr)
     }
 
-    class Combined(val mek: Array<MessageEntityKind>) : MessageEntityKind() {
+    class Combined(val mek: Array<EntityKind>) : EntityKind() {
         override fun toWire(
             offset: Long,
             length: Long,
         ): MessageEntity { error("Not supported") }
 
-        override fun plus(other: MessageEntityKind): MessageEntityKind {
+        override fun plus(other: EntityKind): EntityKind {
             val arr = if (other is Combined) {
-                arrayOfNulls<MessageEntityKind>(mek.size + other.mek.size).also {
+                arrayOfNulls<EntityKind>(mek.size + other.mek.size).also {
                     System.arraycopy(mek, 0, it, 0, mek.size)
                     System.arraycopy(other.mek, 0, it, mek.size, other.mek.size)
-                } as Array<MessageEntityKind>
+                } as Array<EntityKind>
             } else {
-                Arrays.copyOf(mek, mek.size + 1, Array<MessageEntityKind>::class.java).also { it[mek.size] = other }
+                Arrays.copyOf(mek, mek.size + 1, Array<EntityKind>::class.java).also { it[mek.size] = other }
             }
 
             return Combined(arr)
@@ -141,11 +191,11 @@ sealed class MessageEntityKind {
     }
 
     companion object {
-        fun of(vararg mek: MessageEntityKind): MessageEntityKind {
+        fun of(vararg mek: EntityKind): EntityKind {
             if (mek.size == 1) {
                 return mek[0]
             }
-            return Combined(mek as Array<MessageEntityKind>)
+            return Combined(mek as Array<EntityKind>)
         }
     }
 }
