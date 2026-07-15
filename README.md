@@ -5,7 +5,7 @@ TelegramKitty is a Kotlin-first Telegram Bot API wrapper for fast JVM bots.
 It gives you generated Telegram methods and models, a coroutine-friendly handler DSL,
 predictable update processing, and a pluggable HTTP layer.
 
-Current generated API target: **Telegram Bot API 10**.
+Current generated API target: **Telegram Bot API 10.1**.
 
 And yes, it can send [cat pictures](#cats).
 
